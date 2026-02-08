@@ -1,3 +1,4 @@
+import { getSession } from '@/components/data/session'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/web/sidebar/app-sidebar'
@@ -6,12 +7,20 @@ import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/dashboard')({
     component: RouteComponent,
+    loader: async () => {
+        const session = await getSession()
+
+        return {
+            user: session.user
+        }
+    }
 })
 
 function RouteComponent() {
+    const { user } = Route.useLoaderData()
     return (
         <SidebarProvider>
-            <AppSidebar />
+            <AppSidebar user={user} />
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
                     <div className="flex items-center gap-2 px-4">

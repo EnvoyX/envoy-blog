@@ -1,13 +1,9 @@
 "use client"
 
-import * as React from "react"
 import {
     BookmarkIcon,
     Compass,
-    Frame,
     Import,
-    Map,
-    PieChart,
     UserIcon,
 } from "lucide-react"
 
@@ -24,26 +20,7 @@ import { Link, linkOptions } from "@tanstack/react-router"
 import { NavPrimary } from "./nav-primary"
 import { NavUser } from "./nav-user"
 import { NavPrimaryProps } from "@/lib/types"
-
-const data = {
-    projects: [
-        {
-            name: "Design Engineering",
-            url: "#",
-            icon: Frame,
-        },
-        {
-            name: "Sales & Marketing",
-            url: "#",
-            icon: PieChart,
-        },
-        {
-            name: "Travel",
-            url: "#",
-            icon: Map,
-        },
-    ],
-}
+import { UserSession } from "@/components/data/session"
 
 const navItems: NavPrimaryProps["items"] = linkOptions([
     {
@@ -80,13 +57,13 @@ const navItems: NavPrimaryProps["items"] = linkOptions([
     }
 ])
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ user }: UserSession) {
     return (
-        <Sidebar collapsible="icon" {...props}>
+        <Sidebar collapsible="icon" >
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuButton size="lg" asChild>
-                        <Link to="/dashboard" className="flex items-center">
+                        <Link to="/" className="flex items-center">
                             <div className="flex items-center justify-center aspect-square size-8">
                                 <img src="https://tanstack.com/images/logos/logo-color-600.png" alt="TanStack Logo" />
                             </div>
@@ -102,7 +79,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <NavPrimary items={navItems} />
             </SidebarContent>
             <SidebarFooter>
-                <NavUser />
+                <NavUser user={user} />
             </SidebarFooter>
             <SidebarRail />
         </Sidebar>

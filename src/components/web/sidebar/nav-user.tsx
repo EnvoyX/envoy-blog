@@ -1,3 +1,4 @@
+import { UserSession } from "@/components/data/session"
 import {
     Avatar,
     AvatarFallback,
@@ -26,9 +27,8 @@ import { ChevronsUpDownIcon, LogOutIcon, UserIcon } from "lucide-react"
 import { Suspense, useTransition } from "react"
 import { toast } from "sonner"
 
-export function NavUser() {
+export function NavUser({ user }: UserSession) {
     const { isMobile } = useSidebar()
-    const { data, isPending } = authClient.useSession()
     const navigate = useNavigate()
     const [isTransition, startTransition] = useTransition()
     const handleLogout = () => {
@@ -68,9 +68,9 @@ export function NavUser() {
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
                             <Avatar className="h-8 w-8 rounded-lg">
-                                <AvatarImage src={data?.user.image as string} alt={data?.user.name} />
+                                <AvatarImage src={user.image as string} alt={user.name} />
                                 <AvatarFallback className="rounded-lg">
-                                    {data?.user?.name?.split(" ")
+                                    {user?.name?.split(" ")
                                         .map((n) => n[0])
                                         .join("")}
                                 </AvatarFallback>
@@ -79,12 +79,12 @@ export function NavUser() {
                                 <Suspense fallback={
                                     <Skeleton className="w-12 h-2" />
                                 }>
-                                    <span className="truncate font-medium">{data?.user.name}</span>
+                                    <span className="truncate font-medium">{user.name}</span>
                                 </Suspense>
                                 <Suspense fallback={
                                     <Skeleton className="w-12 h-1" />
                                 }>
-                                    <span className="truncate text-xs">{data?.user.email}</span>
+                                    <span className="truncate text-xs">{user.email}</span>
                                 </Suspense>
                             </div>
                             <ChevronsUpDownIcon className="ml-auto size-4" />
@@ -99,14 +99,14 @@ export function NavUser() {
                         <DropdownMenuLabel className="p-0 font-normal">
                             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                 <Avatar className="h-8 w-8 rounded-lg">
-                                    <AvatarImage src={data?.user.image as string} alt={data?.user.name} />
-                                    <AvatarFallback className="rounded-lg">{data?.user?.name?.split(" ")
+                                    <AvatarImage src={user.image as string} alt={user.name} />
+                                    <AvatarFallback className="rounded-lg">{user?.name?.split(" ")
                                         .map((n) => n[0])
                                         .join("")}</AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-medium">{data?.user.name}</span>
-                                    <span className="truncate text-xs">{data?.user.email}</span>
+                                    <span className="truncate font-medium">{user.name}</span>
+                                    <span className="truncate text-xs">{user.email}</span>
                                 </div>
                             </div>
                         </DropdownMenuLabel>
@@ -127,7 +127,7 @@ export function NavUser() {
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleLogout} disabled={isTransition || isPending}>
+                        <DropdownMenuItem onClick={handleLogout} disabled={isTransition}>
                             <LogOutIcon
                             />
                             Log out

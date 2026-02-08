@@ -1,9 +1,18 @@
+import { getSession } from '@/components/data/session'
 import { createFileRoute } from '@tanstack/react-router'
+import { redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/dashboard/')({
-  component: RouteComponent,
+    component: RouteComponent,
+    beforeLoad: () => {
+        throw redirect({
+            to: "/dashboard/import"
+        })
+    },
+    loader: () => getSession()
 })
 
 function RouteComponent() {
-  return <div>Hello "/dashboard/"!</div>
+    const data = Route.useLoaderData()
+    return <div>Hello {data.user.name}</div>
 }
