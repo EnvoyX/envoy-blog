@@ -20,10 +20,11 @@ import { useForm } from "@tanstack/react-form"
 import { toast } from "sonner"
 import { authClient } from "@/lib/auth-client"
 import AuthButtons from "./auth-buttons"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useTransition } from "react"
 
 export function SignupForm() {
     const navigate = useNavigate()
+    const [isPending, startTransition] = useTransition()
     const form = useForm({
         defaultValues: {
             fullName: "",
@@ -34,26 +35,28 @@ export function SignupForm() {
         validators: {
             onSubmit: signUpSchema,
         },
-        onSubmit: async ({ value }) => {
+        onSubmit: ({ value }) => {
             console.log(value)
-            await authClient.signUp.email({
-                name: value.fullName,
-                email: value.email,
-                password: value.password,
-                fetchOptions: {
-                    onSuccess: () => {
-                        toast.success("Successfully signed up!")
-                        navigate({
-                            to: "/",
+            startTransition(async () => {
+                await authClient.signUp.email({
+                    name: value.fullName,
+                    email: value.email,
+                    password: value.password,
+                    fetchOptions: {
+                        onSuccess: () => {
+                            toast.success("Successfully signed up!")
+                            navigate({
+                                to: "/dashboard",
 
-                        })
-                    },
-                    onError: ({ error }) => {
-                        toast.error("Error signing up", {
-                            description: error.message,
-                        })
+                            })
+                        },
+                        onError: ({ error }) => {
+                            toast.error("Error signing up", {
+                                description: error.message,
+                            })
+                        }
                     }
-                }
+                })
             })
         },
     })
@@ -156,7 +159,9 @@ export function SignupForm() {
                         />
                         <FieldGroup>
                             <Field>
-                                <Button type="submit">Create Account</Button>
+                                <Button type="submit" disabled={isPending}>
+                                    {isPending ? 'Creating Account...' : 'Create Account'}
+                                </Button>
                                 <AuthButtons />
                                 <FieldDescription className="px-6 text-center">
                                     Already have an account? <Link to="/login">Sign in</Link>

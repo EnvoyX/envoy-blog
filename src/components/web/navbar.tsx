@@ -19,35 +19,35 @@ export function Navbar() {
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
     const [isTransition, startTransition] = useTransition()
-    const handleLogout = async () => {
+    const handleLogout = () => {
         setIsLoading(true);
-        await authClient.signOut({
-            fetchOptions: {
-                onRequest: () => {
-                    toast.loading("Logging out...", {
-                        id: "logout"
-                    })
-                    setIsLoading(true);
-                },
-                onError: ({ error }) => {
-                    setIsLoading(false);
-                    toast.dismiss("logout")
-                    toast.error("Failed to log out", {
-                        description: error.message
-                    });
-                },
-                onSuccess: () => {
-                    setIsLoading(false);
-                    toast.dismiss("logout")
-                    toast.success("Logged out successfully");
-                    startTransition(() => {
+        startTransition(async () => {
+            await authClient.signOut({
+                fetchOptions: {
+                    onRequest: () => {
+                        toast.loading("Logging out...", {
+                            id: "logout"
+                        })
+                        setIsLoading(true);
+                    },
+                    onError: ({ error }) => {
+                        setIsLoading(false);
+                        toast.dismiss("logout")
+                        toast.error("Failed to log out", {
+                            description: error.message
+                        });
+                    },
+                    onSuccess: () => {
+                        setIsLoading(false);
+                        toast.dismiss("logout")
+                        toast.success("Logged out successfully");
                         navigate({
                             to: "/login"
                         })
-                    });
+                    }
                 }
-            }
-        });
+            });
+        })
     };
 
     return (

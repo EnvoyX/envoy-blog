@@ -20,10 +20,11 @@ import { useForm } from "@tanstack/react-form"
 import { Link, useNavigate } from "@tanstack/react-router"
 import { toast } from "sonner"
 import AuthButtons from "./auth-buttons"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useTransition } from "react"
 
 export function LoginForm() {
     const navigate = useNavigate()
+    const [isPending, startTransition] = useTransition()
     const form = useForm({
         defaultValues: {
             email: "",
@@ -33,22 +34,25 @@ export function LoginForm() {
         validators: {
             onSubmit: loginSchema,
         },
-        onSubmit: async ({ value }) => {
-            await authClient.signIn.email({
-                email: value.email,
-                password: value.password,
-                fetchOptions: {
-                    onSuccess: () => {
-                        toast.success("Logged in successfully!")
-                        navigate({
-                            to: "/",
+        onSubmit: ({ value }) => {
+            console.log(value)
+            startTransition(async () => {
+                await authClient.signIn.email({
+                    email: value.email,
+                    password: value.password,
+                    fetchOptions: {
+                        onSuccess: () => {
+                            toast.success("Logged in successfully!")
+                            navigate({
+                                to: "/dashboard",
 
-                        })
-                    },
-                    onError: ({ error }) => {
-                        toast.error(error.message)
+                            })
+                        },
+                        onError: ({ error }) => {
+                            toast.error(error.message)
+                        }
                     }
-                }
+                })
             })
         },
     })
@@ -126,7 +130,9 @@ export function LoginForm() {
                             }}
                         />
                         <Field>
-                            <Button type="submit">Login</Button>
+                            <Button disabled={isPending} type="submit">
+                                {isPending ? 'Logging in...' : 'Login'}
+                            </Button>
                             <AuthButtons />
                             <FieldDescription className="text-center">
                                 Don&apos;t have an account? <Link to="/signup">Sign up</Link>
