@@ -1,9 +1,4 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createTRPCClient, httpBatchLink } from '@trpc/client';
-import { useState } from 'react';
-import { AppRouter } from '@/server/trpc-root';
-import { env } from '@/env';
-import { TRPCProvider } from '@/utils/trpc';
 function makeQueryClient() {
     return new QueryClient({
         defaultOptions: {
@@ -31,20 +26,9 @@ function getQueryClient() {
 }
 export function QueryProvider({ children }: { children: React.ReactNode }) {
     const queryClient = getQueryClient();
-    const [trpcClient] = useState(() =>
-        createTRPCClient<AppRouter>({
-            links: [
-                httpBatchLink({
-                    url: env.VITE_BASE_URL,
-                }),
-            ],
-        }),
-    );
     return (
         <QueryClientProvider client={queryClient}>
-            <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-                {children}
-            </TRPCProvider>
+            {children}
         </QueryClientProvider>
     );
 }

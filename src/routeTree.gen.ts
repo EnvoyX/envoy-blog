@@ -19,7 +19,6 @@ import { Route as DashboardDiscoverRouteImport } from './routes/dashboard/discov
 import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
 import { Route as AuthSignupIndexRouteImport } from './routes/_auth/signup/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
-import { Route as ApiTrpcTrpcRouteImport } from './routes/api/trpc/$trpc'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
@@ -71,11 +70,6 @@ const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const ApiTrpcTrpcRoute = ApiTrpcTrpcRouteImport.update({
-  id: '/api/trpc/$trpc',
-  path: '/api/trpc/$trpc',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -90,7 +84,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/trpc/$trpc': typeof ApiTrpcTrpcRoute
   '/login/': typeof AuthLoginIndexRoute
   '/signup/': typeof AuthSignupIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
@@ -102,7 +95,6 @@ export interface FileRoutesByTo {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/trpc/$trpc': typeof ApiTrpcTrpcRoute
   '/login': typeof AuthLoginIndexRoute
   '/signup': typeof AuthSignupIndexRoute
   '/dashboard/items': typeof DashboardItemsIndexRoute
@@ -117,7 +109,6 @@ export interface FileRoutesById {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/trpc/$trpc': typeof ApiTrpcTrpcRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_auth/signup/': typeof AuthSignupIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
@@ -132,7 +123,6 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/'
     | '/api/auth/$'
-    | '/api/trpc/$trpc'
     | '/login/'
     | '/signup/'
     | '/dashboard/items/'
@@ -144,7 +134,6 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard'
     | '/api/auth/$'
-    | '/api/trpc/$trpc'
     | '/login'
     | '/signup'
     | '/dashboard/items'
@@ -158,7 +147,6 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/'
     | '/api/auth/$'
-    | '/api/trpc/$trpc'
     | '/_auth/login/'
     | '/_auth/signup/'
     | '/dashboard/items/'
@@ -169,7 +157,6 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  ApiTrpcTrpcRoute: typeof ApiTrpcTrpcRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -244,13 +231,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/api/trpc/$trpc': {
-      id: '/api/trpc/$trpc'
-      path: '/api/trpc/$trpc'
-      fullPath: '/api/trpc/$trpc'
-      preLoaderRoute: typeof ApiTrpcTrpcRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -300,17 +280,17 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  ApiTrpcTrpcRoute: ApiTrpcTrpcRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
+import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

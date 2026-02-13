@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { scrapeUrl } from '@/data/items'
 import { bulkImportSchema, singleImportSchema } from '@/schemas/import'
 import { useForm } from '@tanstack/react-form'
 import { useNavigate } from '@tanstack/react-router'
@@ -18,10 +19,16 @@ export const Route = createFileRoute('/dashboard/import')({
 function RouteComponent() {
     const navigate = useNavigate()
     const [isPending, startTransition] = useTransition()
+    const hasInitialized = useRef(false)
+    useEffect(() => {
+        if (hasInitialized.current) return
+
+        hasInitialized.current = true
+    })
     const form = useForm({
         defaultValues: {
             url: "",
-
+            prompt: "",
         },
         validators: {
             onSubmit: singleImportSchema,
@@ -31,6 +38,7 @@ function RouteComponent() {
             toast.success("Successfully submitted")
             startTransition(async () => {
                 console.log("Form values: ", value)
+                await scrapeUrl({ data: value })
             })
         },
     })
@@ -50,12 +58,7 @@ function RouteComponent() {
             })
         },
     })
-    const hasInitialized = useRef(false)
-    useEffect(() => {
-        if (hasInitialized.current) return
 
-        hasInitialized.current = true
-    })
     return <section className='flex flex-1 justify-center items-center py-8'>
         <div className='w-full max-w-2xl space-y-6 px-4'>
             <div className="text-center">
@@ -111,11 +114,36 @@ function RouteComponent() {
                                             )
                                         }}
                                     />
+                                    <form.Field
+                                        name="prompt"
+                                        children={(field) => {
+                                            const isInvalid =
+                                                field.state.meta.isTouched && !field.state.meta.isValid
+                                            return (
+                                                <Field data-invalid={isInvalid}>
+                                                    <FieldLabel htmlFor={field.name}>Prompt (Optional)</FieldLabel>
+                                                    <Input
+                                                        id={field.name}
+                                                        name={field.name}
+                                                        value={field.state.value}
+                                                        onBlur={field.handleBlur}
+                                                        onChange={(e) => field.handleChange(e.target.value)}
+                                                        aria-invalid={isInvalid}
+                                                        placeholder="Enter a prompt"
+                                                        autoComplete="off"
+                                                    />
+                                                    {isInvalid && (
+                                                        <FieldError errors={field.state.meta.errors} />
+                                                    )}
+                                                </Field>
+                                            )
+                                        }}
+                                    />
                                     <Button type="submit" disabled={isPending}>
                                         {isPending ? (
                                             <>
                                                 <Loader2 className='size-4 animate-spin' />
-                                                "Processing..."
+                                                Processing...
                                             </>
                                         ) : "Import URL"}
                                     </Button>
@@ -190,7 +218,7 @@ function RouteComponent() {
                                         {isPending ? (
                                             <>
                                                 <Loader2 className='size-4 animate-spin' />
-                                                "Processing..."
+                                                Processing...
                                             </>
                                         ) : "Import URLs"}
                                     </Button>

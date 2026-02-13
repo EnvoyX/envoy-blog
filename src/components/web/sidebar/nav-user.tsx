@@ -1,4 +1,4 @@
-import { UserSession } from "@/components/data/session"
+import { UserSession } from "@/data/session"
 import {
     Avatar,
     AvatarFallback,

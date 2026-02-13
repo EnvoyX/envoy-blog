@@ -20,7 +20,7 @@ import { Link, linkOptions } from "@tanstack/react-router"
 import { NavPrimary } from "./nav-primary"
 import { NavUser } from "./nav-user"
 import { NavPrimaryProps } from "@/lib/types"
-import { UserSession } from "@/components/data/session"
+import { UserSession } from "@/data/session"
 
 const navItems: NavPrimaryProps["items"] = linkOptions([
     {

@@ -4,14 +4,15 @@ import { z } from 'zod'
 export const env = createEnv({
     server: {
         NODE_ENV: z.enum(["development", "production"]).default("development"),
-        DATABASE_URL: z.url(),
-        DIRECT_URL: z.url(),
+        DATABASE_URL: z.string().url(),
+        DIRECT_URL: z.string().url(),
         BETTER_AUTH_SECRET: z.string().min(1),
-        BETTER_AUTH_URL: z.url(),
+        BETTER_AUTH_URL: z.string().url(),
         GOOGLE_CLIENT_ID: z.string().min(1),
         GOOGLE_CLIENT_SECRET: z.string().min(1),
         GITHUB_CLIENT_ID: z.string().min(1),
         GITHUB_CLIENT_SECRET: z.string().min(1),
+        FIRECRAWL_API_KEY: z.string().min(1),
     },
 
     /**
@@ -39,6 +40,7 @@ export const env = createEnv({
         GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
         GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
         VITE_BASE_URL: import.meta.env.VITE_BASE_URL,
+        FIRECRAWL_API_KEY: process.env.FIRECRAWL_API_KEY,
 
     },
 

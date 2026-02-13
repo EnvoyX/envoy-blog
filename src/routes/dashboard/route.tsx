@@ -1,4 +1,4 @@
-import { getSession } from '@/components/data/session'
+import { getSession } from '@/data/session'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/web/sidebar/app-sidebar'
