@@ -3,6 +3,15 @@ import { createFileRoute } from '@tanstack/react-router'
 import { redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/dashboard/')({
+    head: () => ({
+        meta: [
+            { title: 'Dashboard | Envoy Blog' },
+            {
+                name: 'Envoy Blog',
+                content: 'Welcome to TanStack Start playground!',
+            },
+        ],
+    }),
     component: RouteComponent,
     beforeLoad: () => {
         throw redirect({

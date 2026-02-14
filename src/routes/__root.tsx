@@ -5,6 +5,9 @@ import appCss from '../styles.css?url'
 import { ThemeProvider } from '@/lib/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { QueryProvider } from '@/components/web/query-provider'
+import { formDevtoolsPlugin } from '@tanstack/react-form-devtools'
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
+import { pacerDevtoolsPlugin } from '@tanstack/react-pacer-devtools'
 
 export const Route = createRootRoute({
     head: () => ({
@@ -43,19 +46,30 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                         {children}
                         <Toaster closeButton position='top-center' />
                     </ThemeProvider>
+                    <TanStackDevtools
+                        config={{
+                            position: 'bottom-right',
+                            defaultOpen: true,
+                            hideUntilHover: true,
+                            panelLocation: "bottom"
+                        }}
+                        plugins={[
+                            {
+                                name: 'TanStack Query',
+                                render: <ReactQueryDevtoolsPanel />,
+                                defaultOpen: true
+                            },
+                            {
+                                name: 'Tanstack Router',
+                                render: <TanStackRouterDevtoolsPanel />,
+                                defaultOpen: true,
+                            },
+                            formDevtoolsPlugin(),
+                            pacerDevtoolsPlugin(),
+                        ]}
+                    />
+                    <Scripts />
                 </QueryProvider>
-                <TanStackDevtools
-                    config={{
-                        position: 'bottom-right',
-                    }}
-                    plugins={[
-                        {
-                            name: 'Tanstack Router',
-                            render: <TanStackRouterDevtoolsPanel />,
-                        },
-                    ]}
-                />
-                <Scripts />
             </body>
         </html>
     )
