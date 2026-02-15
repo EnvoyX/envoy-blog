@@ -90,7 +90,6 @@ export const mapUrl = createServerFn({ method: "POST" }).middleware([authMiddlew
             languages: ["en"]
         }
     })
-    console.log(result)
     return result.links
 })
 
@@ -177,6 +176,5 @@ export const getItems = createServerFn({ method: "GET" }).middleware([authMiddle
             createdAt: "desc"
         }
     })
-
     return items
 })

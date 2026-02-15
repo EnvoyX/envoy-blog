@@ -22,7 +22,7 @@ export const authGlobalMiddleware = createMiddleware({ type: "request" }).server
 
     // Public route access
     const url = new URL(request.url)
-    if (!url.password.startsWith("/dashboard")) {
+    if (!url.pathname.includes("/dashboard")) {
         return next()
     }
 
