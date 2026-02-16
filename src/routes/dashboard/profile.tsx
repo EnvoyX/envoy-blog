@@ -33,7 +33,7 @@ function RouteComponent() {
     if (isPending) {
         return (
             <section className="min-h-[80vh] flex items-center justify-center">
-                <Loader2 className='size-10 animate-spin text-yellow-500' />
+                <Loader2 className='size-10 animate-spin text-cyan-500' />
             </section>
         )
     }
@@ -56,7 +56,7 @@ function RouteComponent() {
         <main className="max-w-4xl mx-auto py-12 px-6">
             <header className="mb-10 flex flex-col md:flex-row items-center gap-6">
                 <div className="relative group">
-                    <div className="size-32 rounded-2xl overflow-hidden bg-gradient-to-br from-yellow-400 to-orange-600 p-1">
+                    <div className="size-32 rounded-2xl overflow-hidden bg-gradient-to-br from-cyan-400 to-teal-600 p-1">
                         <div className="w-full h-full rounded-[14px] bg-background flex items-center justify-center overflow-hidden">
                             {user.image ? (
                                 <img src={user.image} alt={user.name ?? 'User'} className="w-full h-full object-cover" />
@@ -65,7 +65,7 @@ function RouteComponent() {
                             )}
                         </div>
                     </div>
-                    <button className="absolute -bottom-2 -right-2 p-2 bg-surface border border-border rounded-full shadow-lg hover:text-yellow-500 transition-colors">
+                    <button className="absolute -bottom-2 -right-2 p-2 bg-surface border border-border rounded-full shadow-lg hover:text-cyan-500 transition-colors">
                         <Camera className="size-4" />
                     </button>
                 </div>
@@ -80,13 +80,13 @@ function RouteComponent() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="p-6 rounded-xl border border-border bg-card/50 backdrop-blur-sm">
-                    <h2 className="text-sm font-semibold uppercase tracking-wider text-yellow-600 mb-4">Account Details</h2>
+                    <h2 className="text-sm font-semibold uppercase tracking-wider text-cyan-600 mb-4">Account Details</h2>
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
                             <span className="text-muted-foreground flex items-center gap-2 text-sm">
                                 <ShieldCheck className="size-4" /> Status
                             </span>
-                            <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${user.emailVerified ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
+                            <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${user.emailVerified ? 'bg-green-500/10 text-green-500' : 'bg-cyan-500/10 text-cyan-500'}`}>
                                 {user.emailVerified ? 'Verified' : 'Pending Verification'}
                             </span>
                         </div>
@@ -102,13 +102,13 @@ function RouteComponent() {
                 </div>
 
                 <div className="p-6 rounded-xl border border-border bg-card/50 backdrop-blur-sm">
-                    <h2 className="text-sm font-semibold uppercase tracking-wider text-yellow-600 mb-4">System Info</h2>
+                    <h2 className="text-sm font-semibold uppercase tracking-wider text-cyan-600 mb-4">System Info</h2>
                     <div className="space-y-4 text-sm">
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">User ID</span>
                             <code className="text-xs bg-muted px-1.5 py-0.5 rounded">{user.id?.slice(0, 8)}...</code>
                         </div>
-                        <div className="flex justify-between">
+                        <div className="flex items-center gap-5">
                             <span className="text-muted-foreground">Linked Accounts</span>
                             <span className="font-medium truncate">
                                 {user.accounts.map((account) => account.providerId.toUpperCase()).join(" | ")}

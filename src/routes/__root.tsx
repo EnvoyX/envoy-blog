@@ -42,7 +42,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             </head>
             <body>
                 <QueryProvider>
-                    <ThemeProvider>
+                    <ThemeProvider defaultTheme='dark'>
                         {children}
                         <Toaster closeButton position='top-center' />
                     </ThemeProvider>

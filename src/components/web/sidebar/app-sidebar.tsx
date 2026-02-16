@@ -68,7 +68,7 @@ export function AppSidebar({ user }: UserSession) {
                                 <img src="https://tanstack.com/images/logos/logo-color-600.png" alt="TanStack Logo" />
                             </div>
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="font-bold">Enlogs</span>
+                                <span className="font-bold">Envoy Mindpalace</span>
                                 <span className="text-xs">My Own Personal Blog</span>
                             </div>
                         </Link>

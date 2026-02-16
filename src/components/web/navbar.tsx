@@ -59,10 +59,10 @@ export function Navbar() {
                         alt="TanStack Start logo"
                         className="size-12"
                     />
-                    <h1 className="text-lg font-bold text-white">TanStack Start Blog</h1>
+                    <h1 className="text-lg font-bold text-white">Envoy Mindpalace</h1>
                 </Link>
                 <div className="flex items-center gap-3">
-                    <ThemeToggle />
+                    {/*<ThemeToggle />*/}
                     <div className="flex items-center justify-between gap-4">
                         {session.isPending ? (
                             <Loader2 className="animate-spin size-5" />

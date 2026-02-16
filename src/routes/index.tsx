@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ComponentExample } from '@/components/component-example'
 import { Navbar } from '@/components/web/navbar'
+import LandingPage from '@/components/landing-page'
 
 export const Route = createFileRoute('/')({
 
@@ -24,7 +24,7 @@ function App() {
     return (
         <main>
             <Navbar />
-            <ComponentExample />
+            <LandingPage />
         </main>
     )
 }
