@@ -7,7 +7,7 @@ import { SearchResultWeb } from "@mendable/firecrawl-js";
 
 export const searchWeb = createServerFn({ method: "POST" }).middleware([authMiddleware]).inputValidator(searchSchema).handler(async ({ data, context }) => {
     const result = await firecrawl.search(data.query, {
-        limit: 20,
+        limit: 15,
         tbs: 'qdr:d', // past day
     })
 

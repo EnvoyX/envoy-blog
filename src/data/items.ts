@@ -8,6 +8,14 @@ import { notFound } from "@tanstack/react-router"
 import { generateText } from "ai";
 import { openRouter } from "@/lib/open-router";
 
+
+export type BulkScrapeProgress = {
+    completed: number;
+    total: number;
+    url: string;
+    status: "Success" | "Progress" | "Failed"
+}
+
 export const scrapeUrl = createServerFn({ method: "POST" }).middleware([authMiddleware]).inputValidator(singleImportSchema).handler(async ({ data, context }) => {
     const item = await db.savedItem.create({
         data: {
@@ -96,12 +104,13 @@ export const mapUrl = createServerFn({ method: "POST" }).middleware([authMiddlew
     return result.links
 })
 
+
 export const bulkScrapeUrl = createServerFn({ method: "POST" }).middleware([authMiddleware]).inputValidator(z.object({
     urls: z.array(z.string().url()),
-})).handler(async ({ data, context }) => {
+})).handler(async function* ({ data, context }) {
+    const total = data.urls.length;
     for (let i = 0; i < data.urls.length; i++) {
         const currentUrl = data.urls[i]
-
         const item = await db.savedItem.create({
             data: {
                 url: currentUrl,
@@ -109,6 +118,7 @@ export const bulkScrapeUrl = createServerFn({ method: "POST" }).middleware([auth
                 status: "PENDING",
             }
         })
+        let status: BulkScrapeProgress["status"] = "Progress"
         try {
             const result = await firecrawl.scrape(currentUrl, {
                 formats: ["markdown",
@@ -156,8 +166,10 @@ export const bulkScrapeUrl = createServerFn({ method: "POST" }).middleware([auth
                     sourceUrl: result.metadata?.sourceURL || null,
                 }
             })
+            status = "Success"
         }
         catch (error) {
+            status = "Failed"
             await db.savedItem.update({
                 where: {
                     id: item.id
@@ -167,6 +179,13 @@ export const bulkScrapeUrl = createServerFn({ method: "POST" }).middleware([auth
                 }
             })
         }
+        const progress: BulkScrapeProgress = {
+            completed: i + 1,
+            total: total,
+            url: currentUrl,
+            status: status
+        }
+        yield progress
     }
 })
 

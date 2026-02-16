@@ -78,9 +78,11 @@ function RouteComponent() {
             </div>
             <div className='space-y-3 flex flex-wrap items-center justify-between'>
                 <h1 className="text-3xl font-bold tracking-tight">{data?.title ?? "Untitled"}</h1>
-                <Badge variant={"default"} >
-                    {data?.ogSiteName}
-                </Badge>
+                {data?.ogSiteName && (
+                    <Badge variant={"default"} >
+                        {data.ogSiteName}
+                    </Badge>
+                )}
             </div>
             <div className='flex flex-wrap items-center justify-between'>
                 <p className="text-lg text-foreground">{data?.description ?? "No Description found"}</p>

@@ -19,7 +19,7 @@ export const Route = createFileRoute('/dashboard/')({
     component: RouteComponent,
     beforeLoad: () => {
         throw redirect({
-            to: "/dashboard/import"
+            to: "/dashboard/items"
         })
     },
     loader: () => getSession()

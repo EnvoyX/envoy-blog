@@ -5,7 +5,8 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { bulkScrapeUrl } from '@/data/items'
+import { Progress } from '@/components/ui/progress'
+import { BulkScrapeProgress, bulkScrapeUrl } from '@/data/items'
 import { searchWeb } from '@/data/search'
 import { searchSchema } from '@/schemas/discover'
 import { SearchResultWeb } from '@mendable/firecrawl-js'
@@ -36,6 +37,7 @@ function RouteComponent() {
     const navigate = useNavigate()
     const [searchResult, setSearchResult] = useState<Array<SearchResultWeb>>([])
     const [selectedLinks, setSelectedLinks] = useState<Set<string>>(new Set())
+    const [progress, setProgress] = useState<BulkScrapeProgress | null>(null)
     const [isPending, startTransition] = useTransition()
     const [bulkIsPending, startBulkTransition] = useTransition()
     const form = useForm({
@@ -80,8 +82,33 @@ function RouteComponent() {
                 toast.error("Please select at least one link url to import")
                 return
             }
-            await bulkScrapeUrl({ data: { urls: Array.from(selectedLinks) } })
-            toast.success(`Bulk scrape for ${selectedLinks.size} links successful!`)
+            setProgress({
+                completed: 0,
+                total: selectedLinks.size,
+                url: "",
+                status: "Progress"
+            })
+
+            let successCount = 0
+            let failedCount = 0
+
+            for await (const update of await bulkScrapeUrl({ data: { urls: Array.from(selectedLinks) } })) {
+                setProgress(update)
+                if (update.status === "Success") {
+                    successCount++
+                } else {
+                    failedCount++
+                }
+            }
+
+            setProgress(null)
+
+            if (failedCount > 0) {
+                toast.success(`Bulk scrape for ${successCount} links successful! (${failedCount} failed)`)
+            } else {
+                toast.success(`Bulk scrape for ${successCount} links successful!`)
+
+            }
         })
     }
     const hasInitialized = useRef(false)
@@ -138,7 +165,7 @@ function RouteComponent() {
                                         )
                                     }}
                                 />
-                                <Button type="submit" disabled={isPending}>
+                                <Button type="submit" disabled={isPending || bulkIsPending}>
                                     {isPending ? (<>
                                         <Loader2 className='size-4 animate-spin' />
                                         Searching...
@@ -156,7 +183,7 @@ function RouteComponent() {
                             <div className="space-y-4">
                                 <div className='flex items-center justify-between'>
                                     <p className='text-sm font-medium'>Found {searchResult.length} links</p>
-                                    <Button variant={"outline"} size={'sm'} onClick={handleSelectAll} >
+                                    <Button variant={"outline"} size={'sm'} onClick={handleSelectAll} disabled={bulkIsPending || isPending} >
                                         {selectedLinks.size === searchResult.length ? "Deselect All" : "Select All"}
                                     </Button>
                                 </div>
@@ -166,6 +193,7 @@ function RouteComponent() {
                                             <Label key={link.url} className="hover:bg-muted/50 flex cursor-pointer items-start gap-3 rounded-md p-2">
                                                 <Checkbox checked={selectedLinks.has(link.url)}
                                                     onCheckedChange={() => handleSelectLink(link.url)}
+                                                    disabled={bulkIsPending || isPending}
                                                     className='mt-0.5 ' />
                                                 <div className="min-w-0 flex-1">
                                                     <p className="truncate text-sm font-medium">
@@ -185,11 +213,24 @@ function RouteComponent() {
                                         )
                                     })}
                                 </div>
-                                <Button className='w-full' onClick={handleBulkImport} disabled={bulkIsPending} type="button">
+                                {progress && (
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span className="text-muted-foreground">
+                                                Importing : {progress.completed} / {progress.total}
+                                            </span>
+                                            <span className="font-medium">
+                                                {Math.round((progress.completed / progress.total) * 100)}%
+                                            </span>
+                                        </div>
+                                        <Progress value={(progress.completed / progress.total) * 100} />
+                                    </div>
+                                )}
+                                <Button className='w-full' onClick={handleBulkImport} disabled={bulkIsPending || isPending} type="button">
                                     {bulkIsPending ? (
                                         <>
                                             <Loader2 className='size-4 animate-spin' />
-                                            Processing...
+                                            {progress ? `Importing ${progress.completed} / ${progress.total}` : 'Importing...'}
                                         </>
                                     ) : (
                                         `Bulk Scrape ${selectedLinks.size ? selectedLinks.size : ""} links`
