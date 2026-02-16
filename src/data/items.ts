@@ -30,8 +30,8 @@ export const scrapeUrl = createServerFn({ method: "POST" }).middleware([authMidd
             formats: ["markdown",
                 {
                     type: "json",
-                    schema: extractSchema,
-                    prompt: item.prompt
+                    // schema: extractSchema,
+                    prompt: item.prompt ? item.prompt : "Please extract the author and also publishedAt timestamp if available, otherwise put the author same as website name and publishedAt as current date"
                 }
             ],
             location: {
@@ -124,7 +124,8 @@ export const bulkScrapeUrl = createServerFn({ method: "POST" }).middleware([auth
                 formats: ["markdown",
                     {
                         type: "json",
-                        schema: extractSchema,
+                        // schema: extractSchema,
+                        prompt: item.prompt ? item.prompt : "Please extract the author and also publishedAt timestamp if available, otherwise put the author same as website name and publishedAt as current date"
                     }
                 ],
                 location: {
