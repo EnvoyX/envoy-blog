@@ -9,8 +9,12 @@ export const Route = createFileRoute('/')({
             { title: 'Home | Envoy Blog' },
             {
                 name: 'Envoy Blog',
-                content: 'Welcome to TanStack Start playground!',
+                content: 'Welcome to my TanStack Start playground!',
             },
+            { property: 'og:title', content: "Home | Envoy Blog" },
+            { property: 'og:description', content: "Welcome to my TanStack Start playground" },
+            { property: 'og:image', content: "https://tanstack.com/assets/og-C0HGjoLl.png" },
+            { property: 'og:type', content: 'website' },
         ],
     }),
     component: App

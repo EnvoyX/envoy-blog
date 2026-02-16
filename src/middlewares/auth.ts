@@ -18,6 +18,21 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(asyn
     })
 })
 
+export const authRouteMiddleware = createMiddleware({ type: "request" }).server(async ({ next }) => {
+    const headers = getRequestHeaders();
+    const session = await auth.api.getSession({ headers })
+    if (!session) {
+        throw redirect({ to: "/login" })
+    }
+
+    return next({
+        context: {
+            user: session.user,
+            session: session
+        }
+    })
+})
+
 export const authGlobalMiddleware = createMiddleware({ type: "request" }).server(async ({ next, request }) => {
 
     // Public route access

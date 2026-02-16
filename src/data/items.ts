@@ -4,6 +4,9 @@ import { bulkImportSchema, extractSchema, singleImportSchema } from "@/schemas/i
 import { createServerFn } from "@tanstack/react-start";
 import z from "zod";
 import { authMiddleware } from "@/middlewares/auth";
+import { notFound } from "@tanstack/react-router"
+import { generateText } from "ai";
+import { openRouter } from "@/lib/open-router";
 
 export const scrapeUrl = createServerFn({ method: "POST" }).middleware([authMiddleware]).inputValidator(singleImportSchema).handler(async ({ data, context }) => {
     const item = await db.savedItem.create({
@@ -178,3 +181,63 @@ export const getItems = createServerFn({ method: "GET" }).middleware([authMiddle
     })
     return items
 })
+
+export const getItemById = createServerFn({ method: "GET" }).middleware([authMiddleware]).inputValidator(z.object({
+    itemId: z.string()
+})).handler(async ({ context, data }) => {
+    const item = await db.savedItem.findUnique(
+        {
+            where: {
+                userId: context.user.id,
+                id: data.itemId
+            }
+        }
+    )
+    if (!item) {
+        throw notFound()
+    }
+
+    return item
+})
+
+export const saveSummaryAndGenerateTags = createServerFn({ method: "POST" })
+    .middleware([authMiddleware]).inputValidator(z.object({
+        itemId: z.string(),
+        summary: z.string()
+    })).handler(async ({ data, context }) => {
+        const existing = await db.savedItem.findUnique({
+            where: {
+                id: data.itemId,
+                userId: context.user.id
+            }
+        })
+
+        if (!existing) {
+            console.log('Item not found')
+            throw notFound()
+        }
+
+        const { text } = await generateText({
+            model: openRouter.chat('z-ai/glm-4.5-air:free'),
+            system: `You are a helpful assistant that extracts relevant tags from content summaries.
+        Extract 3-5 short, relevant tags that categorize the content.
+        Return ONLY a comma-separated list of tags, nothing else.
+        Example: Technology, Programming, Web Development, Javascript`,
+            prompt: `Extract tags from this summary: \n\n${data.summary}`,
+        })
+
+        const tags = text.split(",").map((tag) => tag.trim().toLowerCase()).filter((tag) => tag.length > 0).slice(0, 5)
+
+        const item = await db.savedItem.update({
+            where: {
+                id: data.itemId,
+                userId: context.user.id
+            },
+            data: {
+                summary: data.summary,
+                tags: tags
+            }
+        })
+
+        return item
+    })

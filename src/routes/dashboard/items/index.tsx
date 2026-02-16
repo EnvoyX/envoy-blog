@@ -8,13 +8,14 @@ import { ItemStatus } from '@/generated/prisma/enums'
 import { copyToClipboard } from '@/lib/clipboard'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { createFileRoute } from '@tanstack/react-router'
-import { Copy, Search } from 'lucide-react'
+import { Copy, Loader2, Search } from 'lucide-react'
 import { toast } from 'sonner'
 import z from 'zod'
 import { zodValidator } from "@tanstack/zod-adapter"
-import { useEffect, useState } from 'react'
+import { Suspense, use, useEffect, useState } from 'react'
 import { useDebouncedCallback } from "@tanstack/react-pacer"
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const itemsSearchSchema = z.object({
     query: z.string().default(""),
@@ -26,20 +27,51 @@ type ItemSearch = z.infer<typeof itemsSearchSchema>
 export const Route = createFileRoute('/dashboard/items/')({
     head: () => ({
         meta: [
-            { title: 'Items | Envoy Blog' },
+            { title: 'Saved Items | Envoy Blog' },
             {
                 name: 'Envoy Blog',
                 content: 'Welcome to TanStack Start playground!',
             },
+            { property: 'og:title', content: "Saved Items | Envoy Blog" },
+            { property: 'og:description', content: "View your saved items on Envoy Blog" },
+            { property: 'og:image', content: "https://tanstack.com/assets/og-C0HGjoLl.png" },
+            { property: 'og:type', content: 'website' },
         ],
     }),
     component: RouteComponent,
-    loader: () => getItems(),
+    loader: () => ({ datasPromise: getItems() }),
     validateSearch: zodValidator(itemsSearchSchema)
 })
 
-function ItemLists({ query, status, datas }: { query: ItemSearch["query"], status: ItemSearch["status"], datas: Awaited<ReturnType<typeof getItems>> }) {
-    const filteredDatas = datas.filter((data) => {
+function ItemsGridSkeleton() {
+    return (
+        <div className="grid gap-6 md:grid-cols-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
+                return (
+                    <Card key={i} className='overflow-hidden pt-0'>
+                        <Skeleton className='aspect-video w-full' />
+                        <CardHeader className='space-y-3'>
+                            <div className="flex items-center justify-between">
+                                <Skeleton className='h-5 w-20 rounded-full' />
+                                <Skeleton className='size-8 rounded-md' />
+                            </div>
+
+                            {/* Title */}
+                            <Skeleton className='h-6 w-full rounded-full' />
+
+                            {/* Author */}
+                            <Skeleton className='h-4 w-40 rounded-full' />
+                        </CardHeader>
+                    </Card>
+                )
+            })}
+        </div>
+    )
+}
+
+function ItemLists({ query, status, datas }: { query: ItemSearch["query"], status: ItemSearch["status"], datas: ReturnType<typeof getItems> }) {
+    const items = use(datas)
+    const filteredDatas = items.filter((data) => {
         const matchedQuery = query === "" || data.title?.toLowerCase().includes(query.toLowerCase()) || data.tags?.some((tag) => tag.toLowerCase().includes(query.toLowerCase()))
         const matchedStatus = status === "all" || data.status === status
 
@@ -54,13 +86,13 @@ function ItemLists({ query, status, datas }: { query: ItemSearch["query"], statu
                         <Search className='size-10' />
                     </EmptyMedia>
                     <EmptyTitle>
-                        {datas.length === 0 ? "No Items saved yet" : "No Items found"}
+                        {items.length === 0 ? "No Items saved yet" : "No Items found"}
                     </EmptyTitle>
                     <EmptyDescription>
-                        {datas.length === 0 ? "Import a URL to get started with saving your content" : "No Items match your current search filters"}
+                        {items.length === 0 ? "Import a URL to get started with saving your content" : "No Items match your current search filters"}
                     </EmptyDescription>
                 </EmptyHeader>
-                {datas.length === 0 && (
+                {items.length === 0 && (
                     <EmptyContent>
                         <Link className={buttonVariants({ variant: "secondary" })} to="/dashboard/import">Import URL</Link>
                     </EmptyContent>
@@ -70,15 +102,13 @@ function ItemLists({ query, status, datas }: { query: ItemSearch["query"], statu
     }
 
     return (
-        <div className='grid gap-6 md:grid-cols-3'>
+        <div className='grid gap-6 md:grid-cols-4'>
             {filteredDatas.map((data) => (
                 <Card key={data.id} className="group overflow-hidden transition-all hover:shadow-lg hover:scale-105 pt-0">
-                    <Link to="/dashboard" className="block">
-                        {data.ogImage && (
-                            <div className='aspect-video w-full overflow-hidden bg-muted'>
-                                <img src={data.ogImage} alt={data.title ?? "Blog Thumbnail"} className='h-full w-full object-cover group-hover:scale-105' />
-                            </div>
-                        )}
+                    <Link to="/dashboard/items/$itemId" params={{ itemId: data.id }} className="block">
+                        <div className='aspect-video w-full overflow-hidden bg-muted'>
+                            <img src={data.ogImage ?? "https://tanstack.com/assets/og-C0HGjoLl.png"} alt={data.title ?? "Blog Thumbnail"} className='h-full w-full object-cover group-hover:scale-105 transition-transform ' />
+                        </div>
                         <CardHeader className='space-y-3 pt-4'>
                             <div className="flex items-center justify-between gap-2">
                                 <Badge variant={data.status === "COMPLETED" ? "default" : "secondary"}>{data.status}</Badge>
@@ -98,6 +128,13 @@ function ItemLists({ query, status, datas }: { query: ItemSearch["query"], statu
                             <CardDescription className="line-clamp-3">
                                 {data.description ?? "No Description available"}
                             </CardDescription>
+                            {data.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1.5 pt-2">
+                                    {data.tags.map((tag) => (
+                                        <Badge key={tag} variant={"secondary"}>{tag}</Badge>
+                                    ))}
+                                </div>
+                            )}
                         </CardContent>
                         <CardFooter className="flex items-center justify-between gap-2 mt-5">
                             {data.author ? <p className='text-xs text-muted-foreground'>
@@ -113,7 +150,7 @@ function ItemLists({ query, status, datas }: { query: ItemSearch["query"], statu
 }
 
 function RouteComponent() {
-    const datas = Route.useLoaderData()
+    const { datasPromise } = Route.useLoaderData()
     const { status, query } = Route.useSearch()
     const [searchInput, setSearchInput] = useState(query)
     const navigate = useNavigate({ from: Route.fullPath })
@@ -154,13 +191,9 @@ function RouteComponent() {
                     </SelectContent>
                 </Select>
             </div>
-
-            {!datas && <div className='flex justify-center items-center h-full'>
-                <div className='text-muted-foreground text-sm'>No items found</div>
-            </div>}
-            {datas && (
-                <ItemLists query={query} status={status} datas={datas} />
-            )}
+            <Suspense fallback={<ItemsGridSkeleton />}>
+                <ItemLists query={query} status={status} datas={datasPromise} />
+            </Suspense>
         </main>
     )
 
