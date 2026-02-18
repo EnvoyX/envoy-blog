@@ -3,12 +3,12 @@ import { ShieldCheck, Zap, Globe, ArrowRight, Code2 } from 'lucide-react';
 
 const LandingPage = () => {
     return (
-        <div className="min-h-screen bg-linear-to-b from-slate-950 to-cyan-500/30 linear text-slate-50 selection:bg-cyan-500/30">
+        <div>
             <section className="relative pt-20 pb-32 px-8 overflow-hidden">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-125 bg-cyan-500/10 blur-[120px] rounded-full -z-10" />
 
                 <div className="max-w-4xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium text-cyan-400 mb-6">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900  text-xs font-medium text-cyan-400 mb-6">
                         <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
@@ -33,7 +33,7 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            <section className="max-w-7xl mx-auto px-8 py-24 border-t border-slate-900">
+            <section className="max-w-7xl mx-auto px-8 py-24">
                 <div className="grid md:grid-cols-3 gap-12">
                     <FeatureCard
                         icon={<Zap className="text-cyan-400" />}

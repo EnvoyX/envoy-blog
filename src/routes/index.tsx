@@ -22,7 +22,7 @@ export const Route = createFileRoute('/')({
 
 function App() {
     return (
-        <main>
+        <main className="min-h-screen bg-linear-to-b from-slate-950 to-cyan-500/30 linear text-slate-50 selection:bg-cyan-500/30">
             <Navbar />
             <LandingPage />
         </main>

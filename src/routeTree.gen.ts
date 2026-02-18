@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
+import { Route as GeneralRouteRouteImport } from './routes/_general/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
@@ -17,7 +18,9 @@ import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile
 import { Route as DashboardImportRouteImport } from './routes/dashboard/import'
 import { Route as DashboardDiscoverRouteImport } from './routes/dashboard/discover'
 import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
-import { Route as AuthSignupIndexRouteImport } from './routes/_auth/signup/index'
+import { Route as GeneralJournalIndexRouteImport } from './routes/_general/journal/index'
+import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog/index'
+import { Route as GeneralAboutIndexRouteImport } from './routes/_general/about/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as DashboardItemsItemIdRouteImport } from './routes/dashboard/items/$itemId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -26,6 +29,10 @@ import { Route as ApiAiSummaryRouteImport } from './routes/api/ai/summary'
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GeneralRouteRoute = GeneralRouteRouteImport.update({
+  id: '/_general',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -62,10 +69,20 @@ const DashboardItemsIndexRoute = DashboardItemsIndexRouteImport.update({
   path: '/items/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const AuthSignupIndexRoute = AuthSignupIndexRouteImport.update({
-  id: '/signup/',
-  path: '/signup/',
-  getParentRoute: () => AuthRouteRoute,
+const GeneralJournalIndexRoute = GeneralJournalIndexRouteImport.update({
+  id: '/journal/',
+  path: '/journal/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
+const GeneralBlogIndexRoute = GeneralBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
+const GeneralAboutIndexRoute = GeneralAboutIndexRouteImport.update({
+  id: '/about/',
+  path: '/about/',
+  getParentRoute: () => GeneralRouteRoute,
 } as any)
 const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   id: '/login/',
@@ -99,7 +116,9 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/login/': typeof AuthLoginIndexRoute
-  '/signup/': typeof AuthSignupIndexRoute
+  '/about/': typeof GeneralAboutIndexRoute
+  '/blog/': typeof GeneralBlogIndexRoute
+  '/journal/': typeof GeneralJournalIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -112,13 +131,16 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/login': typeof AuthLoginIndexRoute
-  '/signup': typeof AuthSignupIndexRoute
+  '/about': typeof GeneralAboutIndexRoute
+  '/blog': typeof GeneralBlogIndexRoute
+  '/journal': typeof GeneralJournalIndexRoute
   '/dashboard/items': typeof DashboardItemsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
+  '/_general': typeof GeneralRouteRouteWithChildren
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/dashboard/discover': typeof DashboardDiscoverRoute
   '/dashboard/import': typeof DashboardImportRoute
@@ -128,7 +150,9 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
-  '/_auth/signup/': typeof AuthSignupIndexRoute
+  '/_general/about/': typeof GeneralAboutIndexRoute
+  '/_general/blog/': typeof GeneralBlogIndexRoute
+  '/_general/journal/': typeof GeneralJournalIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
 }
 export interface FileRouteTypes {
@@ -144,7 +168,9 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/dashboard/items/$itemId'
     | '/login/'
-    | '/signup/'
+    | '/about/'
+    | '/blog/'
+    | '/journal/'
     | '/dashboard/items/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -157,12 +183,15 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/dashboard/items/$itemId'
     | '/login'
-    | '/signup'
+    | '/about'
+    | '/blog'
+    | '/journal'
     | '/dashboard/items'
   id:
     | '__root__'
     | '/'
     | '/_auth'
+    | '/_general'
     | '/dashboard'
     | '/dashboard/discover'
     | '/dashboard/import'
@@ -172,13 +201,16 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/dashboard/items/$itemId'
     | '/_auth/login/'
-    | '/_auth/signup/'
+    | '/_general/about/'
+    | '/_general/blog/'
+    | '/_general/journal/'
     | '/dashboard/items/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  GeneralRouteRoute: typeof GeneralRouteRouteWithChildren
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   ApiAiSummaryRoute: typeof ApiAiSummaryRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -191,6 +223,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_general': {
+      id: '/_general'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof GeneralRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -242,12 +281,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardItemsIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/_auth/signup/': {
-      id: '/_auth/signup/'
-      path: '/signup'
-      fullPath: '/signup/'
-      preLoaderRoute: typeof AuthSignupIndexRouteImport
-      parentRoute: typeof AuthRouteRoute
+    '/_general/journal/': {
+      id: '/_general/journal/'
+      path: '/journal'
+      fullPath: '/journal/'
+      preLoaderRoute: typeof GeneralJournalIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
+    }
+    '/_general/blog/': {
+      id: '/_general/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof GeneralBlogIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
+    }
+    '/_general/about/': {
+      id: '/_general/about/'
+      path: '/about'
+      fullPath: '/about/'
+      preLoaderRoute: typeof GeneralAboutIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
     }
     '/_auth/login/': {
       id: '/_auth/login/'
@@ -282,16 +335,30 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteRouteChildren {
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
-  AuthSignupIndexRoute: typeof AuthSignupIndexRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLoginIndexRoute: AuthLoginIndexRoute,
-  AuthSignupIndexRoute: AuthSignupIndexRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
+)
+
+interface GeneralRouteRouteChildren {
+  GeneralAboutIndexRoute: typeof GeneralAboutIndexRoute
+  GeneralBlogIndexRoute: typeof GeneralBlogIndexRoute
+  GeneralJournalIndexRoute: typeof GeneralJournalIndexRoute
+}
+
+const GeneralRouteRouteChildren: GeneralRouteRouteChildren = {
+  GeneralAboutIndexRoute: GeneralAboutIndexRoute,
+  GeneralBlogIndexRoute: GeneralBlogIndexRoute,
+  GeneralJournalIndexRoute: GeneralJournalIndexRoute,
+}
+
+const GeneralRouteRouteWithChildren = GeneralRouteRoute._addFileChildren(
+  GeneralRouteRouteChildren,
 )
 
 interface DashboardRouteRouteChildren {
@@ -319,6 +386,7 @@ const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  GeneralRouteRoute: GeneralRouteRouteWithChildren,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   ApiAiSummaryRoute: ApiAiSummaryRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

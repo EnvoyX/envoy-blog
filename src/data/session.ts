@@ -45,3 +45,12 @@ export const getProfileData = createServerFn({ method: "GET" }).handler(async ()
 })
 
 export type UserSession = Awaited<ReturnType<typeof getUser>>
+
+export const getUserData = createServerFn({ method: "GET" }).handler(async () => {
+    const headers = getRequestHeaders();
+    const session = await auth.api.getSession({ headers })
+    return {
+        session: session,
+        user: session?.user
+    }
+})

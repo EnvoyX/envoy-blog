@@ -1,6 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Button, buttonVariants } from '../ui/button'
-import { ThemeToggle } from './theme-toggle'
+// import { ThemeToggle } from './theme-toggle'
 import { authClient } from '@/lib/auth-client'
 import { LayoutDashboard, Loader2, LogOut, User } from 'lucide-react'
 import {
@@ -59,8 +59,19 @@ export function Navbar() {
                         alt="TanStack Start logo"
                         className="size-12"
                     />
-                    <h1 className="text-lg font-bold text-white">Envoy Mindpalace</h1>
+                    {/*<h1 className="text-lg font-bold text-white">Envoy Mindpalace</h1>*/}
                 </Link>
+                <ul className="flex items-center gap-3 font-bold">
+                    <Link to="/blog" className="hover:scale-105 hover:underline transition-transform">
+                        Blog
+                    </Link>
+                    <Link to="/journal" className="hover:scale-105 hover:underline transition-transform">
+                        Journal
+                    </Link>
+                    <Link to="/about" className="hover:scale-105 hover:underline transition-transform">
+                        About
+                    </Link>
+                </ul>
                 <div className="flex items-center gap-3">
                     {/*<ThemeToggle />*/}
                     <div className="flex items-center justify-between gap-4">
@@ -140,7 +151,6 @@ export function Navbar() {
                             </>) : (
                             <>
                                 <Link to="/login" className={buttonVariants({ variant: "secondary" })}>Login</Link>
-                                <Link to="/signup" className={buttonVariants({ variant: "default" })}>Get Started</Link>
                             </>
                         )}
                     </div>

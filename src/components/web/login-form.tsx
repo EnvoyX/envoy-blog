@@ -134,9 +134,6 @@ export function LoginForm() {
                                 {isPending ? 'Logging in...' : 'Login'}
                             </Button>
                             <AuthButtons />
-                            <FieldDescription className="text-center">
-                                Don&apos;t have an account? <Link to="/signup">Sign up</Link>
-                            </FieldDescription>
                         </Field>
                     </FieldGroup>
                 </form>
