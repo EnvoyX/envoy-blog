@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
-import { getProfileData } from '@/data/session'
+// import { getProfileData } from '@/data/session'
+import { useTRPC } from '@/lib/trpc/context'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { Calendar, Camera, Loader2, Mail, ShieldCheck, UserIcon } from 'lucide-react'
@@ -22,13 +23,18 @@ export const Route = createFileRoute('/dashboard/profile')({
 })
 
 function RouteComponent() {
+    const trpc = useTRPC()
     const { data: user, isPending, isError } = useQuery({
-        queryKey: ["user"],
-        queryFn: async () => {
-            const user = await getProfileData()
-            return user
-        }
+        ...trpc.user.getUserData.queryOptions()
     })
+    // Without tRPC (still have type-safety due to tanStack Start's end-to-end type-safe)
+    // const { data: user, isPending, isError } = useQuery({
+    //     queryKey: ["user"],
+    //     queryFn: async () => {
+    //         const user = await getProfileData()
+    //         return user
+    //     }
+    // })
 
     if (isPending) {
         return (
@@ -56,7 +62,7 @@ function RouteComponent() {
         <main className="max-w-4xl mx-auto py-12 px-6">
             <header className="mb-10 flex flex-col md:flex-row items-center gap-6">
                 <div className="relative group">
-                    <div className="size-32 rounded-2xl overflow-hidden bg-gradient-to-br from-cyan-400 to-teal-600 p-1">
+                    <div className="size-32 rounded-2xl overflow-hidden bg-linear-to-br from-cyan-400 to-teal-600 p-1">
                         <div className="w-full h-full rounded-[14px] bg-background flex items-center justify-center overflow-hidden">
                             {user.image ? (
                                 <img src={user.image} alt={user.name ?? 'User'} className="w-full h-full object-cover" />
