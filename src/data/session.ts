@@ -41,7 +41,9 @@ export const getProfileData = createServerFn({ method: "GET" }).handler(async ()
 
     })
 
-    return user
+    return {
+        user
+    }
 })
 
 export type UserSession = Awaited<ReturnType<typeof getUser>>
@@ -50,7 +52,7 @@ export const getUserData = createServerFn({ method: "GET" }).handler(async () =>
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers })
     return {
-        session: session,
+        session: session?.session,
         user: session?.user
     }
 })

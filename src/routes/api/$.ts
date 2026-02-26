@@ -1,12 +1,14 @@
 import { Elysia } from 'elysia'
+import { openapi } from '@elysiajs/openapi'
 
 import { createFileRoute } from '@tanstack/react-router'
 import { createIsomorphicFn } from '@tanstack/react-start'
 import { treaty } from '@elysiajs/eden'
+import { user } from './elysia/user'
 
 const app = new Elysia({
     prefix: '/api'
-}).get('/', 'Hello Elysia!')
+}).get('/', 'Hello Elysia!').use(openapi()).use(user)
 
 const handle = ({ request }: { request: Request }) => app.fetch(request)
 

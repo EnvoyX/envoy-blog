@@ -13,7 +13,24 @@ function RouteComponent() {
         queryKey: ['hello-elysia'],
         queryFn: () => getTreaty().get()
     })
-    return <div>Hello Blog Page
+    const { data } = useQuery({
+        queryKey: ['user'],
+        queryFn: async () => {
+            const res = await getTreaty().user.profile.get()
+            return res
+        }
+    })
+    const { data: session } = useQuery({
+        queryKey: ['session'],
+        queryFn: async () => {
+            const res = await getTreaty().user.session.get()
+            return res
+        }
+    })
+    return <div>
+        <span>Hello World</span>
         <span>{response?.data}</span>
+        <span>{data?.data?.user?.email}</span>
+        <span>User Id : {session?.data?.session?.userId}</span>
     </div>
 }

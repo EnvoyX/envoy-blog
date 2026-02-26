@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button'
-// import { getProfileData } from '@/data/session'
-import { useTRPC } from '@/lib/trpc/context'
 import { useQuery } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Calendar, Camera, Loader2, Mail, ShieldCheck, UserIcon } from 'lucide-react'
+import { getTreaty } from '../api/$'
+import { useTransition } from 'react'
+import { authClient } from '@/lib/auth-client'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/dashboard/profile')({
     head: () => ({
@@ -23,18 +25,42 @@ export const Route = createFileRoute('/dashboard/profile')({
 })
 
 function RouteComponent() {
-    const trpc = useTRPC()
     const { data: user, isPending, isError } = useQuery({
-        ...trpc.user.getUserData.queryOptions()
+        queryKey: ["user-profile"],
+        queryFn: async () => {
+            const res = await getTreaty().user.profile.get()
+
+            return res.data?.user
+        }
     })
-    // Without tRPC (still have type-safety due to tanStack Start's end-to-end type-safe)
-    // const { data: user, isPending, isError } = useQuery({
-    //     queryKey: ["user"],
-    //     queryFn: async () => {
-    //         const user = await getProfileData()
-    //         return user
-    //     }
-    // })
+    const navigate = useNavigate()
+    const [isTransition, startTransition] = useTransition()
+    const handleLogout = () => {
+        startTransition(async () => {
+            await authClient.signOut({
+                fetchOptions: {
+                    onRequest: () => {
+                        toast.loading("Logging out...", {
+                            id: "logout"
+                        })
+                    },
+                    onError: ({ error }) => {
+                        toast.dismiss("logout")
+                        toast.error("Failed to log out", {
+                            description: error.message
+                        });
+                    },
+                    onSuccess: () => {
+                        toast.dismiss("logout")
+                        toast.success("Logged out successfully");
+                        navigate({
+                            to: "/login"
+                        })
+                    }
+                }
+            });
+        })
+    };
 
     if (isPending) {
         return (
@@ -128,7 +154,7 @@ function RouteComponent() {
                 <Button variant="default" className="px-5 py-2.5 bg-foreground text-background font-medium rounded-lg hover:opacity-90 transition-opacity">
                     Edit Profile
                 </Button>
-                <Button variant={"outline"} className="px-5 py-2.5 bg-background border border-border font-medium rounded-lg hover:bg-muted transition-colors text-destructive">
+                <Button variant={"outline"} onClick={handleLogout} className="px-5 py-2.5 bg-background border border-border font-medium rounded-lg hover:bg-muted transition-colors text-destructive cursor-pointer">
                     Logout
                 </Button>
             </footer>
