@@ -4,7 +4,7 @@ import { openapi } from '@elysiajs/openapi'
 import { createFileRoute } from '@tanstack/react-router'
 import { createIsomorphicFn } from '@tanstack/react-start'
 import { treaty } from '@elysiajs/eden'
-import { user } from './elysia/user'
+import { user } from '../../data/elysia/user'
 
 const app = new Elysia({
     prefix: '/api'
