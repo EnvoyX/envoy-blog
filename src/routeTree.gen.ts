@@ -19,6 +19,7 @@ import { Route as DashboardImportRouteImport } from './routes/dashboard/import'
 import { Route as DashboardDiscoverRouteImport } from './routes/dashboard/discover'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
+import { Route as DashboardDiariesIndexRouteImport } from './routes/dashboard/diaries/index'
 import { Route as GeneralJournalIndexRouteImport } from './routes/_general/journal/index'
 import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog/index'
 import { Route as GeneralAboutIndexRouteImport } from './routes/_general/about/index'
@@ -74,6 +75,11 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
 const DashboardItemsIndexRoute = DashboardItemsIndexRouteImport.update({
   id: '/items/',
   path: '/items/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardDiariesIndexRoute = DashboardDiariesIndexRouteImport.update({
+  id: '/diaries/',
+  path: '/diaries/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
 const GeneralJournalIndexRoute = GeneralJournalIndexRouteImport.update({
@@ -133,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/about/': typeof GeneralAboutIndexRoute
   '/blog/': typeof GeneralBlogIndexRoute
   '/journal/': typeof GeneralJournalIndexRoute
+  '/dashboard/diaries/': typeof DashboardDiariesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -150,6 +157,7 @@ export interface FileRoutesByTo {
   '/about': typeof GeneralAboutIndexRoute
   '/blog': typeof GeneralBlogIndexRoute
   '/journal': typeof GeneralJournalIndexRoute
+  '/dashboard/diaries': typeof DashboardDiariesIndexRoute
   '/dashboard/items': typeof DashboardItemsIndexRoute
 }
 export interface FileRoutesById {
@@ -171,6 +179,7 @@ export interface FileRoutesById {
   '/_general/about/': typeof GeneralAboutIndexRoute
   '/_general/blog/': typeof GeneralBlogIndexRoute
   '/_general/journal/': typeof GeneralJournalIndexRoute
+  '/dashboard/diaries/': typeof DashboardDiariesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
 }
 export interface FileRouteTypes {
@@ -191,6 +200,7 @@ export interface FileRouteTypes {
     | '/about/'
     | '/blog/'
     | '/journal/'
+    | '/dashboard/diaries/'
     | '/dashboard/items/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/blog'
     | '/journal'
+    | '/dashboard/diaries'
     | '/dashboard/items'
   id:
     | '__root__'
@@ -228,6 +239,7 @@ export interface FileRouteTypes {
     | '/_general/about/'
     | '/_general/blog/'
     | '/_general/journal/'
+    | '/dashboard/diaries/'
     | '/dashboard/items/'
   fileRoutesById: FileRoutesById
 }
@@ -312,6 +324,13 @@ declare module '@tanstack/react-router' {
       path: '/items'
       fullPath: '/dashboard/items/'
       preLoaderRoute: typeof DashboardItemsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/diaries/': {
+      id: '/dashboard/diaries/'
+      path: '/diaries'
+      fullPath: '/dashboard/diaries/'
+      preLoaderRoute: typeof DashboardDiariesIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/_general/journal/': {
@@ -407,6 +426,7 @@ interface DashboardRouteRouteChildren {
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardItemsItemIdRoute: typeof DashboardItemsItemIdRoute
+  DashboardDiariesIndexRoute: typeof DashboardDiariesIndexRoute
   DashboardItemsIndexRoute: typeof DashboardItemsIndexRoute
 }
 
@@ -416,6 +436,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardItemsItemIdRoute: DashboardItemsItemIdRoute,
+  DashboardDiariesIndexRoute: DashboardDiariesIndexRoute,
   DashboardItemsIndexRoute: DashboardItemsIndexRoute,
 }
 

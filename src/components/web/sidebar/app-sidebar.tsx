@@ -1,6 +1,7 @@
 "use client"
 
 import {
+    BookIcon,
     BookmarkIcon,
     Compass,
     Import,
@@ -27,6 +28,14 @@ const navItems: NavPrimaryProps["items"] = linkOptions([
         title: "Profile",
         icon: UserIcon,
         to: "/dashboard/profile",
+        activeOptions: {
+            exact: false
+        }
+    },
+    {
+        title: "Diaries",
+        icon: BookIcon,
+        to: "/dashboard/diaries",
         activeOptions: {
             exact: false
         }
@@ -69,7 +78,7 @@ export function AppSidebar({ user }: UserSession) {
                             </div>
                             <div className="grid flex-1 text-left text-sm leading-tight">
                                 <span className="font-bold">Envoy Mindpalace</span>
-                                <span className="text-xs">My Own Personal Blog</span>
+                                <span className="text-xs">TanStack Ecosystem Playground</span>
                             </div>
                         </Link>
                     </SidebarMenuButton>
