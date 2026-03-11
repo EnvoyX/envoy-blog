@@ -13,9 +13,16 @@ import {
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { UserAvatar } from './user-profile'
+import { useQuery } from '@tanstack/react-query';
 
 export function Navbar() {
-    const session = authClient.useSession()
+    const session = useQuery({
+        queryKey: ["session"],
+        queryFn: async () => {
+            const data = await authClient.getSession()
+            return data.data
+        }
+    })
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
     const [isTransition, startTransition] = useTransition()
