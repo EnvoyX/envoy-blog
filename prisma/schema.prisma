@@ -34,11 +34,45 @@ model SavedItem {
   sourceUrl     String?
 
   status ItemStatus @default(PENDING)
-  user   User       @relation(fields: [userId], references: [id])
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   prompt String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Diary {
+  id    String @id @default(uuid())
+  slug   String @unique
+  userId String
+  title String
+  description String
+  content     String   @db.Text
+  image       String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  slug        String   @unique
+  excerpt     String?
+  content     String   @db.Text    
+  published   Boolean  @default(false)    // Public or private
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+  tags        Tag[]
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String @unique
+  posts Post[]
 }
 
 model User {
@@ -53,6 +87,8 @@ model User {
   sessions      Session[]
   accounts      Account[]
   savedItems    SavedItem[]
+  diaries       Diary[]
+  posts         Post[]
 
   @@unique([email])
   @@map("user")

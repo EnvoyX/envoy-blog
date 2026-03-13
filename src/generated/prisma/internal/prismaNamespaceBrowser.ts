@@ -52,6 +52,9 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   SavedItem: 'SavedItem',
+  Diary: 'Diary',
+  Post: 'Post',
+  Tag: 'Tag',
   User: 'User',
   Session: 'Session',
   Account: 'Account',
@@ -98,6 +101,45 @@ export const SavedItemScalarFieldEnum = {
 } as const
 
 export type SavedItemScalarFieldEnum = (typeof SavedItemScalarFieldEnum)[keyof typeof SavedItemScalarFieldEnum]
+
+
+export const DiaryScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  userId: 'userId',
+  title: 'title',
+  description: 'description',
+  content: 'content',
+  image: 'image',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DiaryScalarFieldEnum = (typeof DiaryScalarFieldEnum)[keyof typeof DiaryScalarFieldEnum]
+
+
+export const PostScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  authorId: 'authorId'
+} as const
+
+export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+
+
+export const TagScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+} as const
+
+export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {

@@ -45,6 +45,21 @@ export { Prisma }
  */
 export type SavedItem = Prisma.SavedItemModel
 /**
+ * Model Diary
+ * 
+ */
+export type Diary = Prisma.DiaryModel
+/**
+ * Model Post
+ * 
+ */
+export type Post = Prisma.PostModel
+/**
+ * Model Tag
+ * 
+ */
+export type Tag = Prisma.TagModel
+/**
  * Model User
  * 
  */

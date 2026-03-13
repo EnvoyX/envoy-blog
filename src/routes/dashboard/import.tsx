@@ -10,7 +10,6 @@ import { BulkScrapeProgress, bulkScrapeUrl, mapUrl, scrapeUrl } from '@/data/ite
 import { bulkImportSchema, singleImportSchema } from '@/schemas/import'
 import { SearchResultWeb } from '@mendable/firecrawl-js'
 import { useForm } from '@tanstack/react-form'
-import { useNavigate } from '@tanstack/react-router'
 import { createFileRoute } from '@tanstack/react-router'
 import { GlobeIcon, LinkIcon, Loader2, Workflow } from 'lucide-react'
 import { useEffect, useRef, useState, useTransition } from 'react'
@@ -40,7 +39,6 @@ function RouteComponent() {
 
         hasInitialized.current = true
     })
-    const navigate = useNavigate()
     const [isPending, startTransition] = useTransition()
     const [bulkIsPending, startBulkTransition] = useTransition()
     const [discoveredLinks, setDiscoveredLinks] = useState<Array<SearchResultWeb>>([])

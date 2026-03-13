@@ -9,6 +9,9 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/SavedItem.ts'
+export type * from './models/Diary.ts'
+export type * from './models/Post.ts'
+export type * from './models/Tag.ts'
 export type * from './models/User.ts'
 export type * from './models/Session.ts'
 export type * from './models/Account.ts'

@@ -20,11 +20,14 @@ import { Route as DashboardDiscoverRouteImport } from './routes/dashboard/discov
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
 import { Route as DashboardDiariesIndexRouteImport } from './routes/dashboard/diaries/index'
+import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
 import { Route as GeneralJournalIndexRouteImport } from './routes/_general/journal/index'
 import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog/index'
 import { Route as GeneralAboutIndexRouteImport } from './routes/_general/about/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as DashboardItemsItemIdRouteImport } from './routes/dashboard/items/$itemId'
+import { Route as DashboardDiariesSlugRouteImport } from './routes/dashboard/diaries/$slug'
+import { Route as DashboardBlogSlugRouteImport } from './routes/dashboard/blog/$slug'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiAiSummaryRouteImport } from './routes/api/ai/summary'
@@ -82,6 +85,11 @@ const DashboardDiariesIndexRoute = DashboardDiariesIndexRouteImport.update({
   path: '/diaries/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardBlogIndexRoute = DashboardBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const GeneralJournalIndexRoute = GeneralJournalIndexRouteImport.update({
   id: '/journal/',
   path: '/journal/',
@@ -105,6 +113,16 @@ const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
 const DashboardItemsItemIdRoute = DashboardItemsItemIdRouteImport.update({
   id: '/items/$itemId',
   path: '/items/$itemId',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardDiariesSlugRoute = DashboardDiariesSlugRouteImport.update({
+  id: '/diaries/$slug',
+  path: '/diaries/$slug',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardBlogSlugRoute = DashboardBlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
 const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
@@ -134,11 +152,14 @@ export interface FileRoutesByFullPath {
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/dashboard/blog/$slug': typeof DashboardBlogSlugRoute
+  '/dashboard/diaries/$slug': typeof DashboardDiariesSlugRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/login/': typeof AuthLoginIndexRoute
   '/about/': typeof GeneralAboutIndexRoute
   '/blog/': typeof GeneralBlogIndexRoute
   '/journal/': typeof GeneralJournalIndexRoute
+  '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/diaries/': typeof DashboardDiariesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
 }
@@ -152,11 +173,14 @@ export interface FileRoutesByTo {
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/dashboard/blog/$slug': typeof DashboardBlogSlugRoute
+  '/dashboard/diaries/$slug': typeof DashboardDiariesSlugRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/login': typeof AuthLoginIndexRoute
   '/about': typeof GeneralAboutIndexRoute
   '/blog': typeof GeneralBlogIndexRoute
   '/journal': typeof GeneralJournalIndexRoute
+  '/dashboard/blog': typeof DashboardBlogIndexRoute
   '/dashboard/diaries': typeof DashboardDiariesIndexRoute
   '/dashboard/items': typeof DashboardItemsIndexRoute
 }
@@ -174,11 +198,14 @@ export interface FileRoutesById {
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/dashboard/blog/$slug': typeof DashboardBlogSlugRoute
+  '/dashboard/diaries/$slug': typeof DashboardDiariesSlugRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_general/about/': typeof GeneralAboutIndexRoute
   '/_general/blog/': typeof GeneralBlogIndexRoute
   '/_general/journal/': typeof GeneralJournalIndexRoute
+  '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/diaries/': typeof DashboardDiariesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
 }
@@ -195,11 +222,14 @@ export interface FileRouteTypes {
     | '/api/ai/summary'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/dashboard/blog/$slug'
+    | '/dashboard/diaries/$slug'
     | '/dashboard/items/$itemId'
     | '/login/'
     | '/about/'
     | '/blog/'
     | '/journal/'
+    | '/dashboard/blog/'
     | '/dashboard/diaries/'
     | '/dashboard/items/'
   fileRoutesByTo: FileRoutesByTo
@@ -213,11 +243,14 @@ export interface FileRouteTypes {
     | '/api/ai/summary'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/dashboard/blog/$slug'
+    | '/dashboard/diaries/$slug'
     | '/dashboard/items/$itemId'
     | '/login'
     | '/about'
     | '/blog'
     | '/journal'
+    | '/dashboard/blog'
     | '/dashboard/diaries'
     | '/dashboard/items'
   id:
@@ -234,11 +267,14 @@ export interface FileRouteTypes {
     | '/api/ai/summary'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/dashboard/blog/$slug'
+    | '/dashboard/diaries/$slug'
     | '/dashboard/items/$itemId'
     | '/_auth/login/'
     | '/_general/about/'
     | '/_general/blog/'
     | '/_general/journal/'
+    | '/dashboard/blog/'
     | '/dashboard/diaries/'
     | '/dashboard/items/'
   fileRoutesById: FileRoutesById
@@ -333,6 +369,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardDiariesIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/blog/': {
+      id: '/dashboard/blog/'
+      path: '/blog'
+      fullPath: '/dashboard/blog/'
+      preLoaderRoute: typeof DashboardBlogIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/_general/journal/': {
       id: '/_general/journal/'
       path: '/journal'
@@ -366,6 +409,20 @@ declare module '@tanstack/react-router' {
       path: '/items/$itemId'
       fullPath: '/dashboard/items/$itemId'
       preLoaderRoute: typeof DashboardItemsItemIdRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/diaries/$slug': {
+      id: '/dashboard/diaries/$slug'
+      path: '/diaries/$slug'
+      fullPath: '/dashboard/diaries/$slug'
+      preLoaderRoute: typeof DashboardDiariesSlugRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/blog/$slug': {
+      id: '/dashboard/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/dashboard/blog/$slug'
+      preLoaderRoute: typeof DashboardBlogSlugRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/api/trpc/$': {
@@ -425,7 +482,10 @@ interface DashboardRouteRouteChildren {
   DashboardImportRoute: typeof DashboardImportRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardBlogSlugRoute: typeof DashboardBlogSlugRoute
+  DashboardDiariesSlugRoute: typeof DashboardDiariesSlugRoute
   DashboardItemsItemIdRoute: typeof DashboardItemsItemIdRoute
+  DashboardBlogIndexRoute: typeof DashboardBlogIndexRoute
   DashboardDiariesIndexRoute: typeof DashboardDiariesIndexRoute
   DashboardItemsIndexRoute: typeof DashboardItemsIndexRoute
 }
@@ -435,7 +495,10 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardImportRoute: DashboardImportRoute,
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardBlogSlugRoute: DashboardBlogSlugRoute,
+  DashboardDiariesSlugRoute: DashboardDiariesSlugRoute,
   DashboardItemsItemIdRoute: DashboardItemsItemIdRoute,
+  DashboardBlogIndexRoute: DashboardBlogIndexRoute,
   DashboardDiariesIndexRoute: DashboardDiariesIndexRoute,
   DashboardItemsIndexRoute: DashboardItemsIndexRoute,
 }

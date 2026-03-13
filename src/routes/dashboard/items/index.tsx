@@ -8,12 +8,11 @@ import { ItemStatus } from '@/generated/prisma/enums'
 import { copyToClipboard } from '@/lib/clipboard'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { createFileRoute } from '@tanstack/react-router'
-import { Copy, Loader2, Search } from 'lucide-react'
+import { Copy, Search } from 'lucide-react'
 import { toast } from 'sonner'
 import z from 'zod'
 import { zodValidator } from "@tanstack/zod-adapter"
 import { Suspense, use, useEffect, useState } from 'react'
-import { useDebouncedCallback } from "@tanstack/react-pacer"
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { Skeleton } from '@/components/ui/skeleton'
 
