@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.4.0
- * Query Engine version: ab56fe763f921d033a6c195e7ddeb3e255bdbb57
+ * Prisma Client JS version: 7.6.0
+ * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.4.0",
-  engine: "ab56fe763f921d033a6c195e7ddeb3e255bdbb57"
+  client: "7.6.0",
+  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
 /**
@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   SavedItem: 'SavedItem',
+  QuranTrack: 'QuranTrack',
   Diary: 'Diary',
   Post: 'Post',
   Tag: 'Tag',
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "savedItem" | "diary" | "post" | "tag" | "user" | "session" | "account" | "verification"
+    modelProps: "savedItem" | "quranTrack" | "diary" | "post" | "tag" | "user" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -482,6 +483,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SavedItemCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SavedItemCountAggregateOutputType> | number
+        }
+      }
+    }
+    QuranTrack: {
+      payload: Prisma.$QuranTrackPayload<ExtArgs>
+      fields: Prisma.QuranTrackFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.QuranTrackFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuranTrackPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.QuranTrackFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuranTrackPayload>
+        }
+        findFirst: {
+          args: Prisma.QuranTrackFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuranTrackPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.QuranTrackFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuranTrackPayload>
+        }
+        findMany: {
+          args: Prisma.QuranTrackFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuranTrackPayload>[]
+        }
+        create: {
+          args: Prisma.QuranTrackCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuranTrackPayload>
+        }
+        createMany: {
+          args: Prisma.QuranTrackCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.QuranTrackCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuranTrackPayload>[]
+        }
+        delete: {
+          args: Prisma.QuranTrackDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuranTrackPayload>
+        }
+        update: {
+          args: Prisma.QuranTrackUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuranTrackPayload>
+        }
+        deleteMany: {
+          args: Prisma.QuranTrackDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.QuranTrackUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.QuranTrackUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuranTrackPayload>[]
+        }
+        upsert: {
+          args: Prisma.QuranTrackUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuranTrackPayload>
+        }
+        aggregate: {
+          args: Prisma.QuranTrackAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQuranTrack>
+        }
+        groupBy: {
+          args: Prisma.QuranTrackGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuranTrackGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.QuranTrackCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuranTrackCountAggregateOutputType> | number
         }
       }
     }
@@ -1068,6 +1143,20 @@ export const SavedItemScalarFieldEnum = {
 export type SavedItemScalarFieldEnum = (typeof SavedItemScalarFieldEnum)[keyof typeof SavedItemScalarFieldEnum]
 
 
+export const QuranTrackScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  currentSurah: 'currentSurah',
+  currentAyat: 'currentAyat',
+  currentJuz: 'currentJuz',
+  currentStreak: 'currentStreak',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuranTrackScalarFieldEnum = (typeof QuranTrackScalarFieldEnum)[keyof typeof QuranTrackScalarFieldEnum]
+
+
 export const DiaryScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
@@ -1239,13 +1328,6 @@ export type ListEnumItemStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1256,6 +1338,27 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -1354,6 +1457,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   savedItem?: Prisma.SavedItemOmit
+  quranTrack?: Prisma.QuranTrackOmit
   diary?: Prisma.DiaryOmit
   post?: Prisma.PostOmit
   tag?: Prisma.TagOmit

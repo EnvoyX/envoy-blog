@@ -41,6 +41,19 @@ model SavedItem {
   updatedAt DateTime @updatedAt
 }
 
+model QuranTrack {
+  id            String @id @default(cuid())
+  userId        String @unique
+  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentSurah  String
+  currentAyat   String
+  currentJuz    String
+  currentStreak Int
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
 model Diary {
   id    String @id @default(uuid())
   slug   String @unique
@@ -89,6 +102,7 @@ model User {
   savedItems    SavedItem[]
   diaries       Diary[]
   posts         Post[]
+  quranTrack    QuranTrack?
 
   @@unique([email])
   @@map("user")

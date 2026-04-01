@@ -23,6 +23,11 @@ export * from './enums.ts';
  */
 export type SavedItem = Prisma.SavedItemModel
 /**
+ * Model QuranTrack
+ * 
+ */
+export type QuranTrack = Prisma.QuranTrackModel
+/**
  * Model Diary
  * 
  */

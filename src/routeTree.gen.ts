@@ -18,6 +18,7 @@ import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile
 import { Route as DashboardImportRouteImport } from './routes/dashboard/import'
 import { Route as DashboardDiscoverRouteImport } from './routes/dashboard/discover'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as DashboardQuranTrackerIndexRouteImport } from './routes/dashboard/quran-tracker/index'
 import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
 import { Route as DashboardDiariesIndexRouteImport } from './routes/dashboard/diaries/index'
 import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
@@ -75,6 +76,12 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardQuranTrackerIndexRoute =
+  DashboardQuranTrackerIndexRouteImport.update({
+    id: '/quran-tracker/',
+    path: '/quran-tracker/',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 const DashboardItemsIndexRoute = DashboardItemsIndexRouteImport.update({
   id: '/items/',
   path: '/items/',
@@ -162,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/diaries/': typeof DashboardDiariesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
+  '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -183,6 +191,7 @@ export interface FileRoutesByTo {
   '/dashboard/blog': typeof DashboardBlogIndexRoute
   '/dashboard/diaries': typeof DashboardDiariesIndexRoute
   '/dashboard/items': typeof DashboardItemsIndexRoute
+  '/dashboard/quran-tracker': typeof DashboardQuranTrackerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -208,6 +217,7 @@ export interface FileRoutesById {
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/diaries/': typeof DashboardDiariesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
+  '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -232,6 +242,7 @@ export interface FileRouteTypes {
     | '/dashboard/blog/'
     | '/dashboard/diaries/'
     | '/dashboard/items/'
+    | '/dashboard/quran-tracker/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/dashboard/blog'
     | '/dashboard/diaries'
     | '/dashboard/items'
+    | '/dashboard/quran-tracker'
   id:
     | '__root__'
     | '/'
@@ -277,6 +289,7 @@ export interface FileRouteTypes {
     | '/dashboard/blog/'
     | '/dashboard/diaries/'
     | '/dashboard/items/'
+    | '/dashboard/quran-tracker/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -354,6 +367,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/$'
       preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/quran-tracker/': {
+      id: '/dashboard/quran-tracker/'
+      path: '/quran-tracker'
+      fullPath: '/dashboard/quran-tracker/'
+      preLoaderRoute: typeof DashboardQuranTrackerIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/items/': {
       id: '/dashboard/items/'
@@ -488,6 +508,7 @@ interface DashboardRouteRouteChildren {
   DashboardBlogIndexRoute: typeof DashboardBlogIndexRoute
   DashboardDiariesIndexRoute: typeof DashboardDiariesIndexRoute
   DashboardItemsIndexRoute: typeof DashboardItemsIndexRoute
+  DashboardQuranTrackerIndexRoute: typeof DashboardQuranTrackerIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
@@ -501,6 +522,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardBlogIndexRoute: DashboardBlogIndexRoute,
   DashboardDiariesIndexRoute: DashboardDiariesIndexRoute,
   DashboardItemsIndexRoute: DashboardItemsIndexRoute,
+  DashboardQuranTrackerIndexRoute: DashboardQuranTrackerIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(

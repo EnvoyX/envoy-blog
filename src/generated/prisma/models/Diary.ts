@@ -186,7 +186,7 @@ export type DiaryGroupByOutputType = {
   _max: DiaryMaxAggregateOutputType | null
 }
 
-type GetDiaryGroupByPayload<T extends DiaryGroupByArgs> = Prisma.PrismaPromise<
+export type GetDiaryGroupByPayload<T extends DiaryGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<DiaryGroupByOutputType, T['by']> &
       {
@@ -1262,6 +1262,11 @@ export type DiaryFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Skip the first `n` Diaries.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Diaries.
+   */
   distinct?: Prisma.DiaryScalarFieldEnum | Prisma.DiaryScalarFieldEnum[]
 }
 

@@ -179,7 +179,7 @@ export type UserGroupByOutputType = {
   _max: UserMaxAggregateOutputType | null
 }
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserGroupByOutputType, T['by']> &
       {
@@ -211,6 +211,7 @@ export type UserWhereInput = {
   savedItems?: Prisma.SavedItemListRelationFilter
   diaries?: Prisma.DiaryListRelationFilter
   posts?: Prisma.PostListRelationFilter
+  quranTrack?: Prisma.XOR<Prisma.QuranTrackNullableScalarRelationFilter, Prisma.QuranTrackWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -227,6 +228,7 @@ export type UserOrderByWithRelationInput = {
   savedItems?: Prisma.SavedItemOrderByRelationAggregateInput
   diaries?: Prisma.DiaryOrderByRelationAggregateInput
   posts?: Prisma.PostOrderByRelationAggregateInput
+  quranTrack?: Prisma.QuranTrackOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -246,6 +248,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   savedItems?: Prisma.SavedItemListRelationFilter
   diaries?: Prisma.DiaryListRelationFilter
   posts?: Prisma.PostListRelationFilter
+  quranTrack?: Prisma.XOR<Prisma.QuranTrackNullableScalarRelationFilter, Prisma.QuranTrackWhereInput> | null
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -290,6 +293,7 @@ export type UserCreateInput = {
   savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   diaries?: Prisma.DiaryCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -306,6 +310,7 @@ export type UserUncheckedCreateInput = {
   savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   diaries?: Prisma.DiaryUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -322,6 +327,7 @@ export type UserUpdateInput = {
   savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   diaries?: Prisma.DiaryUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -338,6 +344,7 @@ export type UserUncheckedUpdateInput = {
   savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   diaries?: Prisma.DiaryUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -425,6 +432,20 @@ export type UserUpdateOneRequiredWithoutSavedItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSavedItemsInput, Prisma.UserUpdateWithoutSavedItemsInput>, Prisma.UserUncheckedUpdateWithoutSavedItemsInput>
 }
 
+export type UserCreateNestedOneWithoutQuranTrackInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQuranTrackInput, Prisma.UserUncheckedCreateWithoutQuranTrackInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQuranTrackInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutQuranTrackNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQuranTrackInput, Prisma.UserUncheckedCreateWithoutQuranTrackInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQuranTrackInput
+  upsert?: Prisma.UserUpsertWithoutQuranTrackInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQuranTrackInput, Prisma.UserUpdateWithoutQuranTrackInput>, Prisma.UserUncheckedUpdateWithoutQuranTrackInput>
+}
+
 export type UserCreateNestedOneWithoutDiariesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutDiariesInput, Prisma.UserUncheckedCreateWithoutDiariesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutDiariesInput
@@ -494,6 +515,7 @@ export type UserCreateWithoutSavedItemsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   diaries?: Prisma.DiaryCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedItemsInput = {
@@ -509,6 +531,7 @@ export type UserUncheckedCreateWithoutSavedItemsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   diaries?: Prisma.DiaryUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedItemsInput = {
@@ -540,6 +563,7 @@ export type UserUpdateWithoutSavedItemsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   diaries?: Prisma.DiaryUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedItemsInput = {
@@ -553,6 +577,87 @@ export type UserUncheckedUpdateWithoutSavedItemsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  diaries?: Prisma.DiaryUncheckedUpdateManyWithoutUserNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutQuranTrackInput = {
+  id: string
+  name: string
+  email: string
+  password?: string | null
+  emailVerified: boolean
+  image?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
+  diaries?: Prisma.DiaryCreateNestedManyWithoutUserInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+}
+
+export type UserUncheckedCreateWithoutQuranTrackInput = {
+  id: string
+  name: string
+  email: string
+  password?: string | null
+  emailVerified: boolean
+  image?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
+  diaries?: Prisma.DiaryUncheckedCreateNestedManyWithoutUserInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+}
+
+export type UserCreateOrConnectWithoutQuranTrackInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutQuranTrackInput, Prisma.UserUncheckedCreateWithoutQuranTrackInput>
+}
+
+export type UserUpsertWithoutQuranTrackInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutQuranTrackInput, Prisma.UserUncheckedUpdateWithoutQuranTrackInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutQuranTrackInput, Prisma.UserUncheckedCreateWithoutQuranTrackInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutQuranTrackInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutQuranTrackInput, Prisma.UserUncheckedUpdateWithoutQuranTrackInput>
+}
+
+export type UserUpdateWithoutQuranTrackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
+  diaries?: Prisma.DiaryUpdateManyWithoutUserNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutQuranTrackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   diaries?: Prisma.DiaryUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
 }
@@ -570,6 +675,7 @@ export type UserCreateWithoutDiariesInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDiariesInput = {
@@ -585,6 +691,7 @@ export type UserUncheckedCreateWithoutDiariesInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDiariesInput = {
@@ -616,6 +723,7 @@ export type UserUpdateWithoutDiariesInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDiariesInput = {
@@ -631,6 +739,7 @@ export type UserUncheckedUpdateWithoutDiariesInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {
@@ -646,6 +755,7 @@ export type UserCreateWithoutPostsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   diaries?: Prisma.DiaryCreateNestedManyWithoutUserInput
+  quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
@@ -661,6 +771,7 @@ export type UserUncheckedCreateWithoutPostsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   diaries?: Prisma.DiaryUncheckedCreateNestedManyWithoutUserInput
+  quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -692,6 +803,7 @@ export type UserUpdateWithoutPostsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   diaries?: Prisma.DiaryUpdateManyWithoutUserNestedInput
+  quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
@@ -707,6 +819,7 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   diaries?: Prisma.DiaryUncheckedUpdateManyWithoutUserNestedInput
+  quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -722,6 +835,7 @@ export type UserCreateWithoutSessionsInput = {
   savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   diaries?: Prisma.DiaryCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -737,6 +851,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   diaries?: Prisma.DiaryUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -768,6 +883,7 @@ export type UserUpdateWithoutSessionsInput = {
   savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   diaries?: Prisma.DiaryUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -783,6 +899,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   diaries?: Prisma.DiaryUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -798,6 +915,7 @@ export type UserCreateWithoutAccountsInput = {
   savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   diaries?: Prisma.DiaryCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -813,6 +931,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   diaries?: Prisma.DiaryUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -844,6 +963,7 @@ export type UserUpdateWithoutAccountsInput = {
   savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   diaries?: Prisma.DiaryUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -859,6 +979,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   diaries?: Prisma.DiaryUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -942,6 +1063,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   savedItems?: boolean | Prisma.User$savedItemsArgs<ExtArgs>
   diaries?: boolean | Prisma.User$diariesArgs<ExtArgs>
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
+  quranTrack?: boolean | Prisma.User$quranTrackArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -985,6 +1107,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   savedItems?: boolean | Prisma.User$savedItemsArgs<ExtArgs>
   diaries?: boolean | Prisma.User$diariesArgs<ExtArgs>
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
+  quranTrack?: boolean | Prisma.User$quranTrackArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -998,6 +1121,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     savedItems: Prisma.$SavedItemPayload<ExtArgs>[]
     diaries: Prisma.$DiaryPayload<ExtArgs>[]
     posts: Prisma.$PostPayload<ExtArgs>[]
+    quranTrack: Prisma.$QuranTrackPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1407,6 +1531,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   savedItems<T extends Prisma.User$savedItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   diaries<T extends Prisma.User$diariesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$diariesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiaryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   posts<T extends Prisma.User$postsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$postsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  quranTrack<T extends Prisma.User$quranTrackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$quranTrackArgs<ExtArgs>>): Prisma.Prisma__QuranTrackClient<runtime.Types.Result.GetResult<Prisma.$QuranTrackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1640,6 +1765,11 @@ export type UserFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Users.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Users.
+   */
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
@@ -1949,6 +2079,25 @@ export type User$postsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.PostScalarFieldEnum | Prisma.PostScalarFieldEnum[]
+}
+
+/**
+ * User.quranTrack
+ */
+export type User$quranTrackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuranTrack
+   */
+  select?: Prisma.QuranTrackSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QuranTrack
+   */
+  omit?: Prisma.QuranTrackOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuranTrackInclude<ExtArgs> | null
+  where?: Prisma.QuranTrackWhereInput
 }
 
 /**

@@ -2,6 +2,7 @@
 
 import {
     BookIcon,
+    BookMarkedIcon,
     BookmarkIcon,
     Compass,
     Import,
@@ -29,6 +30,14 @@ const navItems: NavPrimaryProps["items"] = linkOptions([
         title: "Profile",
         icon: UserIcon,
         to: "/dashboard/profile",
+        activeOptions: {
+            exact: false
+        }
+    },
+    {
+        title: "Qur'an Tracker",
+        icon: BookMarkedIcon,
+        to: "/dashboard/quran-tracker",
         activeOptions: {
             exact: false
         }
