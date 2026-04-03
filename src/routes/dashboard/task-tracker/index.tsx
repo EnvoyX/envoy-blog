@@ -14,12 +14,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -31,7 +25,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { createFileRoute } from '@tanstack/react-router'
 import {
+  ClockIcon,
   ListPlusIcon,
+  ListStart,
+  ListXIcon,
   Loader2,
   MoreHorizontal,
   PencilLine,
@@ -39,19 +36,18 @@ import {
   Trash2,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import {
-  startTransition,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from 'react'
+import { useEffect, useRef, useState, useTransition } from 'react'
 import { useForm } from '@tanstack/react-form'
-import { taskListSchema } from '@/schemas/task-tracker'
+import { taskListSchema, updateTaskListSchema } from '@/schemas/task-tracker'
 import { toast } from 'sonner'
 import { Textarea } from '@/components/ui/textarea'
-import { createTaskListFn, fetchTaskListsFn } from '@/data/task-tracker'
-import { useQuery } from '@tanstack/react-query'
+import {
+  createTaskListFn,
+  deleteTaskListFn,
+  fetchTaskListsFn,
+  updateTaskListFn,
+} from '@/data/task-tracker'
+import { QueryClient, useQuery } from '@tanstack/react-query'
 import { intlFormat } from 'date-fns'
 
 export const Route = createFileRoute('/dashboard/task-tracker/')({
@@ -75,7 +71,12 @@ export const Route = createFileRoute('/dashboard/task-tracker/')({
 })
 
 function RouteComponent() {
+  const queryClient = new QueryClient()
+  const [isLoading, setIsLoading] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [activeId, setActiveId] = useState('')
   const hasInitialized = useRef(false)
   useEffect(() => {
     if (hasInitialized.current) return
@@ -83,6 +84,18 @@ function RouteComponent() {
     hasInitialized.current = true
   })
   const [isPending, startTransition] = useTransition()
+  const {
+    data: taskLists,
+    isPending: isPendingQuery,
+    isError,
+  } = useQuery({
+    queryKey: ['query-task-lists'],
+    queryFn: async () => {
+      const data = await fetchTaskListsFn()
+
+      return data
+    },
+  })
   const form = useForm({
     defaultValues: {
       title: '',
@@ -101,16 +114,23 @@ function RouteComponent() {
       setDialogOpen((prev) => !prev)
     },
   })
-  const {
-    data: taskLists,
-    isPending: isPendingQuery,
-    isError,
-  } = useQuery({
-    queryKey: ['query-task-lists'],
-    queryFn: async () => {
-      const data = await fetchTaskListsFn()
-
-      return data
+  const updateForm = useForm({
+    defaultValues: {
+      title: '',
+      description: '',
+      taskListId: '',
+    },
+    validators: {
+      onSubmit: updateTaskListSchema,
+    },
+    onSubmit: ({ value }) => {
+      console.log(value)
+      startTransition(async () => {
+        console.log('Form values: ', value)
+        updateTaskListFn({ data: value })
+        toast.success('Task list updated successfully!')
+      })
+      setUpdateDialogOpen((prev) => !prev)
     },
   })
 
@@ -140,6 +160,9 @@ function RouteComponent() {
                   onSubmit={(e) => {
                     e.preventDefault()
                     form.handleSubmit()
+                    queryClient.invalidateQueries({
+                      queryKey: ['query-task-lists'],
+                    })
                   }}
                 >
                   <DialogHeader className="mb-6">
@@ -239,7 +262,7 @@ function RouteComponent() {
               <>
                 <h1 className="text-2xl font-bold mb-4">Task List</h1>
                 {taskLists ? (
-                  <div className="grid grid-cols-4 max-sm:grid-cols-1 max-md:grid-cols-2 max-lg:grid-cols-3">
+                  <div className="grid grid-cols-4 max-sm:grid-cols-1 max-md:grid-cols-2 max-lg:grid-cols-3 gap-4">
                     {taskLists?.map((item) => {
                       return (
                         <div
@@ -262,19 +285,265 @@ function RouteComponent() {
                                     <DropdownMenuLabel>
                                       Action
                                     </DropdownMenuLabel>
-                                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                                    <DropdownMenuItem variant="destructive">
-                                      Delete
+                                    <DropdownMenuItem
+                                      onSelect={() => {
+                                        setUpdateDialogOpen((prev) => !prev)
+                                        setActiveId(item.id)
+                                      }}
+                                    >
+                                      <>
+                                        <PencilLine />
+                                        <span>Edit</span>
+                                      </>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      variant="destructive"
+                                      onSelect={() => {
+                                        setDeleteDialogOpen((prev) => !prev)
+                                        setActiveId(item.id)
+                                      }}
+                                    >
+                                      <>
+                                        <Trash2 />
+                                        <span>Delete</span>
+                                      </>
                                     </DropdownMenuItem>
                                   </DropdownMenuGroup>
                                 </DropdownMenuContent>
                               </DropdownMenu>
+                              <Dialog
+                                open={updateDialogOpen && activeId === item.id}
+                                onOpenChange={() => {
+                                  setUpdateDialogOpen((prev) => !prev)
+                                  setActiveId(item.id)
+                                }}
+                              >
+                                <DialogContent className="sm:max-w-sm">
+                                  <form
+                                    onSubmit={(e) => {
+                                      e.preventDefault()
+                                      updateForm.setFieldValue(
+                                        'taskListId',
+                                        item.id,
+                                      )
+                                      updateForm.handleSubmit()
+                                      queryClient.invalidateQueries({
+                                        queryKey: ['query-task-lists'],
+                                      })
+                                    }}
+                                  >
+                                    <DialogHeader className="mb-6">
+                                      <DialogTitle>
+                                        Update Task List
+                                      </DialogTitle>
+                                      <DialogDescription>
+                                        Fill form below to update the list.
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <FieldGroup>
+                                      <updateForm.Field
+                                        name="taskListId"
+                                        children={(field) => {
+                                          const isInvalid =
+                                            field.state.meta.isTouched &&
+                                            !field.state.meta.isValid
+                                          return (
+                                            <Field data-invalid={isInvalid}>
+                                              <FieldLabel htmlFor={field.name}>
+                                                Task List Id
+                                              </FieldLabel>
+                                              <Input
+                                                id={field.name}
+                                                name={field.name}
+                                                value={activeId}
+                                                onBlur={field.handleBlur}
+                                                onChange={(e) =>
+                                                  field.handleChange(
+                                                    e.target.value,
+                                                  )
+                                                }
+                                                defaultValue={activeId}
+                                                aria-invalid={isInvalid}
+                                                placeholder={activeId}
+                                                autoComplete="off"
+                                                disabled
+                                                readOnly
+                                              />
+                                              {isInvalid && (
+                                                <FieldError
+                                                  errors={
+                                                    field.state.meta.errors
+                                                  }
+                                                />
+                                              )}
+                                            </Field>
+                                          )
+                                        }}
+                                      />
+                                      <updateForm.Field
+                                        name="title"
+                                        children={(field) => {
+                                          const isInvalid =
+                                            field.state.meta.isTouched &&
+                                            !field.state.meta.isValid
+                                          return (
+                                            <Field data-invalid={isInvalid}>
+                                              <FieldLabel htmlFor={field.name}>
+                                                Title
+                                              </FieldLabel>
+                                              <Input
+                                                id={field.name}
+                                                name={field.name}
+                                                value={field.state.value}
+                                                onBlur={field.handleBlur}
+                                                onChange={(e) =>
+                                                  field.handleChange(
+                                                    e.target.value,
+                                                  )
+                                                }
+                                                aria-invalid={isInvalid}
+                                                placeholder="Study Calculus"
+                                                autoComplete="off"
+                                              />
+                                              {isInvalid && (
+                                                <FieldError
+                                                  errors={
+                                                    field.state.meta.errors
+                                                  }
+                                                />
+                                              )}
+                                            </Field>
+                                          )
+                                        }}
+                                      />
+                                      <updateForm.Field
+                                        name="description"
+                                        children={(field) => {
+                                          const isInvalid =
+                                            field.state.meta.isTouched &&
+                                            !field.state.meta.isValid
+                                          return (
+                                            <Field data-invalid={isInvalid}>
+                                              <FieldLabel htmlFor={field.name}>
+                                                Description
+                                              </FieldLabel>
+                                              <Textarea
+                                                id={field.name}
+                                                name={field.name}
+                                                value={field.state.value}
+                                                onBlur={field.handleBlur}
+                                                onChange={(e) =>
+                                                  field.handleChange(
+                                                    e.target.value,
+                                                  )
+                                                }
+                                                aria-invalid={isInvalid}
+                                                placeholder="My own study plan for learning Calculus"
+                                                autoComplete="off"
+                                              />
+                                              {isInvalid && (
+                                                <FieldError
+                                                  errors={
+                                                    field.state.meta.errors
+                                                  }
+                                                />
+                                              )}
+                                            </Field>
+                                          )
+                                        }}
+                                      />
+                                    </FieldGroup>
+                                    <DialogFooter className="mt-6">
+                                      <DialogClose asChild>
+                                        <Button variant="outline">
+                                          Cancel
+                                        </Button>
+                                      </DialogClose>
+                                      <Button
+                                        type="submit"
+                                        disabled={isPending}
+                                      >
+                                        {isPending ? (
+                                          <>
+                                            <Loader2 className="size-4 animate-spin" />
+                                            Updating...
+                                          </>
+                                        ) : (
+                                          <>
+                                            <ListStart className="size-4" />
+                                            Update list
+                                          </>
+                                        )}
+                                      </Button>
+                                    </DialogFooter>
+                                  </form>
+                                </DialogContent>
+                              </Dialog>
+                              {/* Delete Dialog */}
+                              <Dialog
+                                open={deleteDialogOpen && activeId === item.id}
+                                onOpenChange={() => {
+                                  setDeleteDialogOpen((prev) => !prev)
+                                  setActiveId(item.id)
+                                }}
+                              >
+                                <DialogContent className="sm:max-w-sm">
+                                  <form
+                                    onSubmit={async (e) => {
+                                      e.preventDefault()
+                                      await deleteTaskListFn({
+                                        data: {
+                                          taskListId: item.id,
+                                        },
+                                      })
+                                      setDeleteDialogOpen((prev) => !prev)
+                                      setActiveId('')
+                                      queryClient.invalidateQueries({
+                                        queryKey: ['query-task-lists'],
+                                      })
+                                    }}
+                                  >
+                                    <DialogHeader className="mb-6">
+                                      <DialogTitle>
+                                        Delete Task List
+                                      </DialogTitle>
+                                      <DialogDescription>
+                                        Are you sure to delete this task list?
+                                        This action cannot be undone.
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter className="mt-6">
+                                      <DialogClose asChild>
+                                        <Button variant="outline">
+                                          Cancel
+                                        </Button>
+                                      </DialogClose>
+                                      <Button
+                                        type="submit"
+                                        disabled={isLoading}
+                                      >
+                                        {isLoading ? (
+                                          <>
+                                            <Loader2 className="size-4 animate-spin" />
+                                            Deleting...
+                                          </>
+                                        ) : (
+                                          <>
+                                            <ListXIcon className="size-4" />
+                                            Delete
+                                          </>
+                                        )}
+                                      </Button>
+                                    </DialogFooter>
+                                  </form>
+                                </DialogContent>
+                              </Dialog>
                             </div>
 
                             <p>{item.description}</p>
-                            <p>
+                            <p className="flex items-center gap-1 text-sm mt-2 italic">
                               {intlFormat(
-                                item?.createdAt as Date,
+                                item?.updatedAt as Date,
                                 {
                                   weekday: 'long',
                                   year: 'numeric',
