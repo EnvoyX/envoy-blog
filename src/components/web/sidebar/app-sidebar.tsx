@@ -7,6 +7,7 @@ import {
   Check,
   Compass,
   Import,
+  LayoutDashboardIcon,
   Newspaper,
   UserIcon,
 } from 'lucide-react'
@@ -27,6 +28,14 @@ import { NavPrimaryProps } from '@/lib/types'
 import { UserSession } from '@/data/session'
 
 const navItems: NavPrimaryProps['items'] = linkOptions([
+  {
+    title: 'Dashboard',
+    icon: LayoutDashboardIcon,
+    to: '/dashboard',
+    activeOptions: {
+      exact: false,
+    },
+  },
   {
     title: 'Profile',
     icon: UserIcon,

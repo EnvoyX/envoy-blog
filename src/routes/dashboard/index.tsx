@@ -1,31 +1,250 @@
-import { getSession } from '@/data/session'
-import { createFileRoute } from '@tanstack/react-router'
-import { redirect } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
+import {
+  Activity,
+  BookOpen,
+  CheckCircle2,
+  Clock,
+  Flame,
+  LayoutGrid,
+  ListTodo,
+  Zap,
+} from 'lucide-react'
+import { fetchDashboardData, fetchDashboardTasksData } from '@/data/dashboard'
+import { Separator } from '@/components/ui/separator'
 
 export const Route = createFileRoute('/dashboard/')({
-    head: () => ({
-        meta: [
-            { title: 'Dashboard | Envoy Blog' },
-            {
-                name: 'Envoy Blog',
-                content: 'Welcome to TanStack Start playground!',
-            },
-            { property: 'og:title', content: "Dashboard | Envoy Blog" },
-            { property: 'og:description', content: "Dashboard Overview | Envoy Blog" },
-            { property: 'og:image', content: "https://tanstack.com/assets/og-C0HGjoLl.png" },
-            { property: 'og:type', content: 'website' },
-        ],
-    }),
-    component: RouteComponent,
-    beforeLoad: () => {
-        throw redirect({
-            to: "/dashboard/items"
-        })
-    },
-    loader: () => getSession()
+  head: () => ({
+    meta: [
+      { title: 'Dashboard | Envoy Blog' },
+      {
+        name: 'Envoy Blog',
+        content: 'Welcome to TanStack Start playground!',
+      },
+      { property: 'og:title', content: 'Dashboard | Envoy Blog' },
+      {
+        property: 'og:description',
+        content: 'Dashboard Overview | Envoy Blog',
+      },
+      {
+        property: 'og:image',
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+      },
+      { property: 'og:type', content: 'website' },
+    ],
+  }),
+  component: RouteComponent,
 })
 
 function RouteComponent() {
-    const data = Route.useLoaderData()
-    return <div>Hello {data.user.name}</div>
+  const { data, isLoading } = useQuery({
+    queryKey: ['dashboard-summary'],
+    queryFn: fetchDashboardData,
+  })
+  const { data: tasksData } = useQuery({
+    queryKey: ['dashboard-summary-tasks'],
+    queryFn: fetchDashboardTasksData,
+  })
+
+  return (
+    <div className="p-6 space-y-8 bg-[#09090b] min-h-screen text-zinc-100">
+      <section className="relative overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900/40 p-1 backdrop-blur-md">
+        {/* <div className="absolute top-0 right-0 p-8 opacity-10">
+          <BookOpen size={120} />
+        </div> */}
+
+        <div className="flex flex-col md:flex-row items-center gap-6 p-6">
+          <div className="relative">
+            <div className="absolute inset-0 bg-amber-500/20 blur-2xl rounded-full" />
+            <div className="relative h-20 w-20 rounded-2xl bg-linear-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-lg">
+              <Flame className="text-white size-10" />
+            </div>
+          </div>
+
+          <div className="flex-1 space-y-1">
+            <h2 className="text-zinc-400 text-sm font-medium tracking-widest uppercase">
+              Current Tilawah
+            </h2>
+            <div className="flex items-baseline gap-3">
+              <span className="text-4xl font-bold italic tracking-tighter">
+                {data?.quranTrack?.currentSurah}
+              </span>
+              <span className="text-amber-400 font-mono text-lg">
+                Ayat: {data?.quranTrack?.currentAyat}
+              </span>
+            </div>
+            <p className="text-zinc-500 text-sm italic">
+              Keep the streak alive: {data?.quranTrack?.currentStreak} days
+            </p>
+          </div>
+
+          <div className="flex gap-4">
+            <StatMini
+              label="Juz"
+              value={data?.quranTrack?.currentJuz as string}
+            />
+            {/* <StatMini label="Progress" value="84%" color="text-emerald-400" /> */}
+          </div>
+        </div>
+      </section>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1 space-y-6">
+          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-6">
+            <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
+              <Activity className="text-blue-400 size-5" />
+              Activity Overview
+            </h3>
+            <div className="space-y-4">
+              <ProgressRow
+                label="Tasks Done"
+                current={tasksData?.doneTasks.length as number}
+                total={tasksData?.tasks?.length as number}
+                color="bg-emerald-400"
+              />
+              <ProgressRow
+                label="In Progress"
+                current={tasksData?.inProgressTasks.length as number}
+                total={tasksData?.tasks?.length as number}
+                color="bg-sky-400"
+              />
+              <ProgressRow
+                label="Unassigned Status"
+                current={tasksData?.todoTasks.length as number}
+                total={tasksData?.tasks?.length as number}
+                color="bg-zinc-400"
+              />
+              <Separator className="bg-white/25" />
+              <ProgressRow
+                label="Urgent Priority"
+                current={tasksData?.urgentTasks.length as number}
+                total={tasksData?.tasks?.length as number}
+                color="bg-red-400"
+              />
+              <ProgressRow
+                label="High Priority"
+                current={tasksData?.highTasks.length as number}
+                total={tasksData?.tasks?.length as number}
+                color="bg-orange-400"
+              />
+              <ProgressRow
+                label="Medium Priority"
+                current={tasksData?.mediumTasks.length as number}
+                total={tasksData?.tasks?.length as number}
+                color="bg-amber-400"
+              />
+              <ProgressRow
+                label="Low Priority"
+                current={tasksData?.lowTasks.length as number}
+                total={tasksData?.tasks?.length as number}
+                color="bg-amber-200"
+              />
+            </div>
+          </div>
+
+          <Link to="/dashboard/task-tracker">
+            <button className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all active:scale-95">
+              <Zap className="fill-current size-4" />
+              Create Task
+            </button>
+          </Link>
+        </div>
+
+        <div className="lg:col-span-2 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold flex items-center gap-2">
+              <LayoutGrid className="size-5 text-zinc-500" />
+              Active Task Lists
+            </h3>
+            <span className="text-xs text-zinc-500 font-mono uppercase">
+              View All
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {data?.taksLists?.map((list) => (
+              <Link
+                to="/dashboard/task-tracker/$taskListId"
+                params={{
+                  taskListId: list.id,
+                }}
+              >
+                <div
+                  key={list.id}
+                  className="group relative p-5 rounded-2xl border border-zinc-800 bg-zinc-900/20 hover:bg-zinc-800/40 transition-all cursor-pointer"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <h4 className="font-bold text-zinc-200 group-hover:text-white">
+                      {list.title}
+                    </h4>
+                    <div className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                  </div>
+                  <p className="text-sm text-zinc-500 line-clamp-1 mb-4">
+                    {list.description}
+                  </p>
+                  <div className="flex items-center gap-3 text-xs text-zinc-400">
+                    <span className="flex items-center gap-1">
+                      <ListTodo size={12} /> {list.tasks.length} tasks
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock size={12} /> Updated 2h ago
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function StatMini({
+  label,
+  value,
+  color = 'text-white',
+}: {
+  label: string
+  value: string
+  color?: string
+}) {
+  return (
+    <div className="px-4 py-2 rounded-xl bg-zinc-800/50 border border-zinc-700/50">
+      <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">
+        {label}
+      </p>
+      <p className={`text-lg font-bold ${color}`}>{value}</p>
+    </div>
+  )
+}
+
+function ProgressRow({
+  label,
+  current,
+  total,
+  color,
+}: {
+  label: string
+  current: number
+  total: number
+  color: string
+}) {
+  const percentage = (current / total) * 100
+  return (
+    <div className="space-y-1.5">
+      <div className="flex justify-between text-xs font-medium">
+        <span className="text-zinc-400">{label}</span>
+        <span className="text-zinc-200">
+          {current}/{total}
+        </span>
+      </div>
+      <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+        <div
+          className={`h-full ${color} transition-all duration-1000`}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+    </div>
+  )
 }
