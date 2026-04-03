@@ -20,7 +20,7 @@ import {
 } from '@/data/quran-tracker'
 import { quranTrackSchema } from '@/schemas/quran-tracker'
 import { useForm } from '@tanstack/react-form'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { intlFormat } from 'date-fns'
 import { Loader2, Pencil, Save } from 'lucide-react'
@@ -48,6 +48,7 @@ export const Route = createFileRoute('/dashboard/quran-tracker/')({
 })
 
 function RouteComponent() {
+  const queryClient = useQueryClient()
   const hasInitialized = useRef(false)
   useEffect(() => {
     if (hasInitialized.current) return
@@ -69,6 +70,9 @@ function RouteComponent() {
       startTransition(async () => {
         console.log('Form values: ', value)
         savedQuranProgressFn({ data: value })
+        queryClient.invalidateQueries({
+          queryKey: ['quran-track'],
+        })
         toast.success('Progress saved successfully!')
       })
     },
