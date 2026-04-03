@@ -60,6 +60,9 @@ export const fetchTaskListsFn = createServerFn({ method: 'GET' })
       where: {
         userId: context.user.id,
       },
+      include: {
+        tasks: true,
+      },
     })
 
     return taksLists

@@ -49,6 +49,33 @@ interface TaskList {
   tasks: Task[]
 }
 
+interface TaskFormModalProps {
+  open: boolean
+  onClose: () => void
+  onSubmit: (values: {
+    title: string
+    description: string
+    status: Status
+    priority: Priority
+    dueDate: string
+  }) => void
+  initialValues?: {
+    title: string
+    description: string
+    status: Status
+    priority: Priority
+    dueDate: string
+    taskId?: string
+  }
+  mode: 'create' | 'update'
+  isPending: boolean
+}
+interface TaskCardProps {
+  task: Task
+  onEdit: (task: Task) => void
+  onDelete: (id: string) => void
+}
+
 const STATUS_CONFIG: Record<
   Status,
   { label: string; icon: React.ReactNode; color: string; bg: string }
@@ -89,8 +116,6 @@ const PRIORITY_CONFIG: Record<
   URGENT: { label: 'Urgent', color: 'text-red-400', dot: 'bg-red-500' },
 }
 
-// ─── Shared Components ────────────────────────────────────
-
 function StatusBadge({ status }: { status: Status }) {
   const cfg = STATUS_CONFIG[status]
   return (
@@ -111,6 +136,49 @@ function PriorityDot({ priority }: { priority?: Priority }) {
       <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
       {cfg.label}
     </span>
+  )
+}
+
+function Skeleton({ className }: { className?: string }) {
+  return (
+    <div className={`animate-pulse rounded-md bg-zinc-800/60 ${className}`} />
+  )
+}
+
+function TaskListSkeleton() {
+  return (
+    <div className="flex flex-col gap-3">
+      {[1, 2, 3].map((i) => (
+        <div
+          key={i}
+          className="p-4 rounded-xl border border-zinc-800/40 bg-zinc-900/40 flex flex-col gap-3"
+        >
+          <Skeleton className="h-4 w-3/5" />
+          <Skeleton className="h-3 w-2/5" />
+          <div className="flex gap-2">
+            <Skeleton className="h-5 w-20 rounded-md" />
+            <Skeleton className="h-5 w-14 rounded-md" />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function SidebarSkeleton() {
+  return (
+    <div className="flex flex-col gap-4">
+      <Skeleton className="h-7 w-32" />
+      <Skeleton className="h-9 w-52" />
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-4 w-3/4" />
+      <Skeleton className="h-10 w-full rounded-xl mt-2" />
+      <div className="grid grid-cols-2 gap-2 mt-2">
+        {[1, 2, 3, 4].map((i) => (
+          <Skeleton key={i} className="h-16 rounded-xl" />
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -146,34 +214,6 @@ function SelectField({
       </div>
     </div>
   )
-}
-
-function Skeleton({ className }: { className?: string }) {
-  return (
-    <div className={`animate-pulse rounded-md bg-zinc-800/60 ${className}`} />
-  )
-}
-
-interface TaskFormModalProps {
-  open: boolean
-  onClose: () => void
-  onSubmit: (values: {
-    title: string
-    description: string
-    status: Status
-    priority: Priority
-    dueDate: string
-  }) => void
-  initialValues?: {
-    title: string
-    description: string
-    status: Status
-    priority: Priority
-    dueDate: string
-    taskId?: string
-  }
-  mode: 'create' | 'update'
-  isPending: boolean
 }
 
 function TaskFormModal({
@@ -416,12 +456,6 @@ function DeleteModal({
   )
 }
 
-interface TaskCardProps {
-  task: Task
-  onEdit: (task: Task) => void
-  onDelete: (id: string) => void
-}
-
 function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const isDone = task.status === 'DONE'
@@ -531,65 +565,6 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
             </span>
           )}
         </div>
-      </div>
-    </div>
-  )
-}
-
-function EmptyState({ onAdd }: { onAdd: () => void }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 gap-5">
-      <div className="w-16 h-16 rounded-2xl border border-dashed border-zinc-700 flex items-center justify-center">
-        <CheckCircle2 className="w-7 h-7 text-zinc-600" />
-      </div>
-      <div className="text-center">
-        <p className="text-sm font-medium text-zinc-400">No tasks yet</p>
-        <p className="text-xs text-zinc-600 mt-1">
-          Add your first task to get started
-        </p>
-      </div>
-      <button
-        onClick={onAdd}
-        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700/60 text-sm text-zinc-300 font-medium transition-colors"
-      >
-        <Plus className="w-3.5 h-3.5" /> Add a task
-      </button>
-    </div>
-  )
-}
-
-function TaskListSkeleton() {
-  return (
-    <div className="flex flex-col gap-3">
-      {[1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="p-4 rounded-xl border border-zinc-800/40 bg-zinc-900/40 flex flex-col gap-3"
-        >
-          <Skeleton className="h-4 w-3/5" />
-          <Skeleton className="h-3 w-2/5" />
-          <div className="flex gap-2">
-            <Skeleton className="h-5 w-20 rounded-md" />
-            <Skeleton className="h-5 w-14 rounded-md" />
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function SidebarSkeleton() {
-  return (
-    <div className="flex flex-col gap-4">
-      <Skeleton className="h-7 w-32" />
-      <Skeleton className="h-9 w-52" />
-      <Skeleton className="h-4 w-full" />
-      <Skeleton className="h-4 w-3/4" />
-      <Skeleton className="h-10 w-full rounded-xl mt-2" />
-      <div className="grid grid-cols-2 gap-2 mt-2">
-        {[1, 2, 3, 4].map((i) => (
-          <Skeleton key={i} className="h-16 rounded-xl" />
-        ))}
       </div>
     </div>
   )
@@ -758,6 +733,28 @@ function DesktopSidebar({
         </>
       )}
     </aside>
+  )
+}
+
+function EmptyState({ onAdd }: { onAdd: () => void }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 gap-5">
+      <div className="w-16 h-16 rounded-2xl border border-dashed border-zinc-700 flex items-center justify-center">
+        <CheckCircle2 className="w-7 h-7 text-zinc-600" />
+      </div>
+      <div className="text-center">
+        <p className="text-sm font-medium text-zinc-400">No tasks yet</p>
+        <p className="text-xs text-zinc-600 mt-1">
+          Add your first task to get started
+        </p>
+      </div>
+      <button
+        onClick={onAdd}
+        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700/60 text-sm text-zinc-300 font-medium transition-colors"
+      >
+        <Plus className="w-3.5 h-3.5" /> Add a task
+      </button>
+    </div>
   )
 }
 

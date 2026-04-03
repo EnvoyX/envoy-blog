@@ -11,9 +11,9 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -25,19 +25,22 @@ import {
 import { Button } from '@/components/ui/button'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import {
-  ArrowRightSquare,
-  ClockIcon,
+  ArrowRight,
+  CalendarDays,
+  Clock,
+  Layers,
   ListPlusIcon,
   ListStart,
   ListXIcon,
   Loader2,
-  MoreHorizontal,
-  PencilLine,
-  PlusIcon,
+  LogIn,
+  MoreVertical,
+  Pencil,
+  Plus,
   Trash2,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { useEffect, useRef, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { taskListSchema, updateTaskListSchema } from '@/schemas/task-tracker'
 import { toast } from 'sonner'
@@ -48,8 +51,10 @@ import {
   fetchTaskListsFn,
   updateTaskListFn,
 } from '@/data/task-tracker'
-import { QueryClient, useQuery } from '@tanstack/react-query'
-import { intlFormat } from 'date-fns'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { format } from 'date-fns'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 export const Route = createFileRoute('/dashboard/task-tracker/')({
   head: () => ({
@@ -60,7 +65,10 @@ export const Route = createFileRoute('/dashboard/task-tracker/')({
         content: 'Welcome to my TanStack Start playground!',
       },
       { property: 'og:title', content: 'Task Tracker | Envoy Blog' },
-      { property: 'og:description', content: 'Track your tilawah progress!' },
+      {
+        property: 'og:description',
+        content: 'Track your project, task, and todos!',
+      },
       {
         property: 'og:image',
         content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
@@ -72,521 +80,470 @@ export const Route = createFileRoute('/dashboard/task-tracker/')({
 })
 
 function RouteComponent() {
-  const queryClient = new QueryClient()
+  const queryClient = useQueryClient()
   const [isLoading, setIsLoading] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [activeId, setActiveId] = useState('')
-  const hasInitialized = useRef(false)
-  useEffect(() => {
-    if (hasInitialized.current) return
-
-    hasInitialized.current = true
-  })
   const [isPending, startTransition] = useTransition()
-  const {
-    data: taskLists,
-    isPending: isPendingQuery,
-    isError,
-  } = useQuery({
-    queryKey: ['query-task-lists'],
-    queryFn: async () => {
-      const data = await fetchTaskListsFn()
 
-      return data
-    },
+  const { data: taskLists, isPending: isPendingQuery } = useQuery({
+    queryKey: ['query-task-lists'],
+    queryFn: fetchTaskListsFn,
   })
+
   const form = useForm({
-    defaultValues: {
-      title: '',
-      description: '',
-    },
-    validators: {
-      onSubmit: taskListSchema,
-    },
-    onSubmit: ({ value }) => {
-      console.log(value)
+    defaultValues: { title: '', description: '' },
+    validators: { onSubmit: taskListSchema },
+    onSubmit: async ({ value }) => {
       startTransition(async () => {
-        console.log('Form values: ', value)
-        createTaskListFn({ data: value })
-        toast.success('Task list created successfully!')
+        await createTaskListFn({ data: value })
+        toast.success('Task list created!')
+        queryClient.invalidateQueries({ queryKey: ['query-task-lists'] })
+        setDialogOpen(false)
+        form.reset()
       })
-      setDialogOpen((prev) => !prev)
     },
   })
+
   const updateForm = useForm({
-    defaultValues: {
-      title: '',
-      description: '',
-      taskListId: '',
-    },
-    validators: {
-      onSubmit: updateTaskListSchema,
-    },
-    onSubmit: ({ value }) => {
-      console.log(value)
+    defaultValues: { title: '', description: '', taskListId: '' },
+    validators: { onSubmit: updateTaskListSchema },
+    onSubmit: async ({ value }) => {
       startTransition(async () => {
-        console.log('Form values: ', value)
-        updateTaskListFn({ data: value })
-        toast.success('Task list updated successfully!')
+        await updateTaskListFn({ data: value })
+        toast.success('Task list updated!')
+        queryClient.invalidateQueries({ queryKey: ['query-task-lists'] })
+        setDialogOpen(false)
+        form.reset()
       })
-      setUpdateDialogOpen((prev) => !prev)
     },
   })
 
   return (
-    <div className="px-4 min-h-screen flex flex-col">
-      <div className="flex flex-col">
-        <h1 className="text-3xl font-bold">{`Task Tracker`}</h1>
-        <p className="text-muted-foreground">
-          Update and track your {`tasks or todos`}.
-        </p>
-        <div className="flex flex-col gap-2 mt-4">
-          <div className="flex items-center">
-            <Dialog
-              open={dialogOpen}
-              onOpenChange={() => {
-                setDialogOpen((prev) => !prev)
+    <div className="min-h-screen bg-[#09090b] text-zinc-100 p-6 lg:p-10">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+        <div>
+          <h1 className="text-4xl font-extrabold tracking-tight bg-linear-to-r from-white to-zinc-500 bg-clip-text text-transparent">
+            Task Tracker
+          </h1>
+          <p className="text-zinc-400 mt-2">
+            Manage your projects, tasks and todos.
+          </p>
+        </div>
+
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/20">
+              <Plus className="mr-2 h-4 w-4" /> Create New List
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                form.handleSubmit()
               }}
             >
-              <DialogTrigger asChild>
-                <Button variant={'default'}>
-                  <PlusIcon />
-                  <span>Create new list</span>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-sm">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault()
-                    form.handleSubmit()
-                    queryClient.invalidateQueries({
-                      queryKey: ['query-task-lists'],
-                    })
+              <FieldGroup>
+                <form.Field
+                  name="title"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid
+                    return (
+                      <Field data-invalid={isInvalid}>
+                        <FieldLabel htmlFor={field.name}>Title</FieldLabel>
+                        <Input
+                          id={field.name}
+                          name={field.name}
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          aria-invalid={isInvalid}
+                          placeholder="Study Calculus"
+                          autoComplete="off"
+                        />
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </Field>
+                    )
                   }}
-                >
-                  <DialogHeader className="mb-6">
-                    <DialogTitle>New Task List</DialogTitle>
-                    <DialogDescription>
-                      Fill form below to create new list.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <FieldGroup>
-                    <form.Field
-                      name="title"
-                      children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid
-                        return (
-                          <Field data-invalid={isInvalid}>
-                            <FieldLabel htmlFor={field.name}>Title</FieldLabel>
-                            <Input
-                              id={field.name}
-                              name={field.name}
-                              value={field.state.value}
-                              onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.value)
-                              }
-                              aria-invalid={isInvalid}
-                              placeholder="Study Calculus"
-                              autoComplete="off"
-                            />
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
-                          </Field>
-                        )
-                      }}
-                    />
-                    <form.Field
-                      name="description"
-                      children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid
-                        return (
-                          <Field data-invalid={isInvalid}>
-                            <FieldLabel htmlFor={field.name}>
-                              Description
-                            </FieldLabel>
-                            <Textarea
-                              id={field.name}
-                              name={field.name}
-                              value={field.state.value}
-                              onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.value)
-                              }
-                              aria-invalid={isInvalid}
-                              placeholder="My own study plan for learning Calculus"
-                              autoComplete="off"
-                            />
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
-                          </Field>
-                        )
-                      }}
-                    />
-                  </FieldGroup>
-                  <DialogFooter className="mt-6">
-                    <DialogClose asChild>
-                      <Button variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <Button type="submit" disabled={isPending}>
-                      {isPending ? (
-                        <>
-                          <Loader2 className="size-4 animate-spin" />
-                          Updating...
-                        </>
-                      ) : (
-                        <>
-                          <ListPlusIcon className="size-4" />
-                          Add List
-                        </>
-                      )}
-                    </Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
-          <div className="flex flex-col border-2 rounded-lg p-4 bg-white/5">
-            {isPendingQuery ? (
-              <div className="text-center flex justify-center">
-                <Loader2 className="size-6 animate-spin" />
-              </div>
-            ) : (
-              <>
-                <h1 className="text-2xl font-bold mb-4">Task List</h1>
-                {taskLists ? (
-                  <div className="grid grid-cols-4 max-sm:grid-cols-1 max-md:grid-cols-2 max-lg:grid-cols-3 gap-4">
-                    {taskLists?.map((item) => {
-                      return (
-                        <div
-                          className="flex flex-col gap-4 bg-white/10 p-4 rounded-lg"
-                          key={item.id}
-                        >
-                          <div className="flex flex-col ">
-                            <div className="flex items-center justify-between">
-                              <h3 className="text-xl font-bold text-emerald-500 line-clamp-1">
-                                {item.title}
-                              </h3>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="outline">
-                                    <MoreHorizontal />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                  <DropdownMenuGroup>
-                                    <DropdownMenuLabel>
-                                      Action
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuItem
-                                      onSelect={() => {
-                                        setUpdateDialogOpen((prev) => !prev)
-                                        setActiveId(item.id)
-                                      }}
-                                    >
-                                      <>
-                                        <PencilLine />
-                                        <span>Edit</span>
-                                      </>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      variant="destructive"
-                                      onSelect={() => {
-                                        setDeleteDialogOpen((prev) => !prev)
-                                        setActiveId(item.id)
-                                      }}
-                                    >
-                                      <>
-                                        <Trash2 />
-                                        <span>Delete</span>
-                                      </>
-                                    </DropdownMenuItem>
-                                  </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                              <Dialog
-                                open={updateDialogOpen && activeId === item.id}
-                                onOpenChange={() => {
-                                  setUpdateDialogOpen((prev) => !prev)
-                                  setActiveId(item.id)
-                                }}
-                              >
-                                <DialogContent className="sm:max-w-sm">
-                                  <form
-                                    onSubmit={(e) => {
-                                      e.preventDefault()
-                                      updateForm.setFieldValue(
-                                        'taskListId',
-                                        item.id,
-                                      )
-                                      updateForm.handleSubmit()
-                                      queryClient.invalidateQueries({
-                                        queryKey: ['query-task-lists'],
-                                      })
-                                    }}
-                                  >
-                                    <DialogHeader className="mb-6">
-                                      <DialogTitle>
-                                        Update Task List
-                                      </DialogTitle>
-                                      <DialogDescription>
-                                        Fill form below to update the list.
-                                      </DialogDescription>
-                                    </DialogHeader>
-                                    <FieldGroup>
-                                      <updateForm.Field
-                                        name="taskListId"
-                                        children={(field) => {
-                                          const isInvalid =
-                                            field.state.meta.isTouched &&
-                                            !field.state.meta.isValid
-                                          return (
-                                            <Field data-invalid={isInvalid}>
-                                              <FieldLabel htmlFor={field.name}>
-                                                Task List Id
-                                              </FieldLabel>
-                                              <Input
-                                                id={field.name}
-                                                name={field.name}
-                                                value={activeId}
-                                                onBlur={field.handleBlur}
-                                                onChange={(e) =>
-                                                  field.handleChange(
-                                                    e.target.value,
-                                                  )
-                                                }
-                                                defaultValue={activeId}
-                                                aria-invalid={isInvalid}
-                                                placeholder={activeId}
-                                                autoComplete="off"
-                                                disabled
-                                                readOnly
-                                              />
-                                              {isInvalid && (
-                                                <FieldError
-                                                  errors={
-                                                    field.state.meta.errors
-                                                  }
-                                                />
-                                              )}
-                                            </Field>
-                                          )
-                                        }}
-                                      />
-                                      <updateForm.Field
-                                        name="title"
-                                        children={(field) => {
-                                          const isInvalid =
-                                            field.state.meta.isTouched &&
-                                            !field.state.meta.isValid
-                                          return (
-                                            <Field data-invalid={isInvalid}>
-                                              <FieldLabel htmlFor={field.name}>
-                                                Title
-                                              </FieldLabel>
-                                              <Input
-                                                id={field.name}
-                                                name={field.name}
-                                                value={field.state.value}
-                                                onBlur={field.handleBlur}
-                                                onChange={(e) =>
-                                                  field.handleChange(
-                                                    e.target.value,
-                                                  )
-                                                }
-                                                aria-invalid={isInvalid}
-                                                placeholder="Study Calculus"
-                                                autoComplete="off"
-                                              />
-                                              {isInvalid && (
-                                                <FieldError
-                                                  errors={
-                                                    field.state.meta.errors
-                                                  }
-                                                />
-                                              )}
-                                            </Field>
-                                          )
-                                        }}
-                                      />
-                                      <updateForm.Field
-                                        name="description"
-                                        children={(field) => {
-                                          const isInvalid =
-                                            field.state.meta.isTouched &&
-                                            !field.state.meta.isValid
-                                          return (
-                                            <Field data-invalid={isInvalid}>
-                                              <FieldLabel htmlFor={field.name}>
-                                                Description
-                                              </FieldLabel>
-                                              <Textarea
-                                                id={field.name}
-                                                name={field.name}
-                                                value={field.state.value}
-                                                onBlur={field.handleBlur}
-                                                onChange={(e) =>
-                                                  field.handleChange(
-                                                    e.target.value,
-                                                  )
-                                                }
-                                                aria-invalid={isInvalid}
-                                                placeholder="My own study plan for learning Calculus"
-                                                autoComplete="off"
-                                              />
-                                              {isInvalid && (
-                                                <FieldError
-                                                  errors={
-                                                    field.state.meta.errors
-                                                  }
-                                                />
-                                              )}
-                                            </Field>
-                                          )
-                                        }}
-                                      />
-                                    </FieldGroup>
-                                    <DialogFooter className="mt-6">
-                                      <DialogClose asChild>
-                                        <Button variant="outline">
-                                          Cancel
-                                        </Button>
-                                      </DialogClose>
-                                      <Button
-                                        type="submit"
-                                        disabled={isPending}
-                                      >
-                                        {isPending ? (
-                                          <>
-                                            <Loader2 className="size-4 animate-spin" />
-                                            Updating...
-                                          </>
-                                        ) : (
-                                          <>
-                                            <ListStart className="size-4" />
-                                            Update list
-                                          </>
-                                        )}
-                                      </Button>
-                                    </DialogFooter>
-                                  </form>
-                                </DialogContent>
-                              </Dialog>
-                              {/* Delete Dialog */}
-                              <Dialog
-                                open={deleteDialogOpen && activeId === item.id}
-                                onOpenChange={() => {
-                                  setDeleteDialogOpen((prev) => !prev)
-                                  setActiveId(item.id)
-                                }}
-                              >
-                                <DialogContent className="sm:max-w-sm">
-                                  <form
-                                    onSubmit={async (e) => {
-                                      e.preventDefault()
-                                      await deleteTaskListFn({
-                                        data: {
-                                          taskListId: item.id,
-                                        },
-                                      })
-                                      setDeleteDialogOpen((prev) => !prev)
-                                      setActiveId('')
-                                      queryClient.invalidateQueries({
-                                        queryKey: ['query-task-lists'],
-                                      })
-                                    }}
-                                  >
-                                    <DialogHeader className="mb-6">
-                                      <DialogTitle>
-                                        Delete Task List
-                                      </DialogTitle>
-                                      <DialogDescription>
-                                        Are you sure to delete this task list?
-                                        This action cannot be undone.
-                                      </DialogDescription>
-                                    </DialogHeader>
-                                    <DialogFooter className="mt-6">
-                                      <DialogClose asChild>
-                                        <Button variant="outline">
-                                          Cancel
-                                        </Button>
-                                      </DialogClose>
-                                      <Button
-                                        type="submit"
-                                        disabled={isLoading}
-                                      >
-                                        {isLoading ? (
-                                          <>
-                                            <Loader2 className="size-4 animate-spin" />
-                                            Deleting...
-                                          </>
-                                        ) : (
-                                          <>
-                                            <ListXIcon className="size-4" />
-                                            Delete
-                                          </>
-                                        )}
-                                      </Button>
-                                    </DialogFooter>
-                                  </form>
-                                </DialogContent>
-                              </Dialog>
-                            </div>
+                />
+                <form.Field
+                  name="description"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid
+                    return (
+                      <Field data-invalid={isInvalid}>
+                        <FieldLabel htmlFor={field.name}>
+                          Description
+                        </FieldLabel>
+                        <Textarea
+                          id={field.name}
+                          name={field.name}
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          aria-invalid={isInvalid}
+                          placeholder="My own study plan for learning Calculus"
+                          autoComplete="off"
+                        />
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </Field>
+                    )
+                  }}
+                />
+              </FieldGroup>
+              <DialogFooter className="mt-6">
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      Adding list...
+                    </>
+                  ) : (
+                    <>
+                      <ListPlusIcon className="size-4" />
+                      Add List
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </header>
 
-                            <p className="line-clamp-1">{item.description}</p>
-                            <p className="flex items-center sm:justify-between gap-1 text-sm mt-2 italic">
-                              <span>
-                                {' '}
-                                {intlFormat(
-                                  item?.updatedAt as Date,
-                                  {
-                                    weekday: 'long',
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: false,
-                                  },
-                                  {
-                                    locale: 'en-ID',
-                                  },
-                                )}
-                              </span>
-                              <Link
-                                to="/dashboard/task-tracker/$taskListId"
-                                params={{
-                                  taskListId: item.id,
+      <main>
+        {isPendingQuery ? (
+          <div className="flex flex-col items-center justify-center h-64 gap-4">
+            <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+            <p className="text-zinc-500 animate-pulse">Loading your tasks...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+            {taskLists?.map((item) => (
+              <Link
+                to="/dashboard/task-tracker/$taskListId"
+                params={{ taskListId: item.id }}
+              >
+                <Card
+                  key={item.id}
+                  className="group relative bg-zinc-900/50 border-zinc-800 hover:border-emerald-500/50 transition-all duration-300 overflow-hidden"
+                >
+                  <div className="absolute top-0 left-0 w-1 h-full bg-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <h3 className="text-lg font-bold text-zinc-100 group-hover:text-emerald-400 transition-colors truncate pr-4">
+                          {item.title}
+                        </h3>
+                        <Badge
+                          variant="secondary"
+                          className="bg-zinc-800 text-zinc-400 hover:bg-zinc-700 font-normal"
+                        >
+                          <Layers className="mr-1 h-3 w-3" />
+                          {item.tasks.length} tasks
+                        </Badge>
+                      </div>
+
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-800"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="bg-zinc-950 border-zinc-800 text-zinc-300"
+                        >
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuSeparator className="bg-zinc-800" />
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setActiveId(item.id)
+                              setUpdateDialogOpen(true)
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <Pencil className="mr-2 h-4 w-4" /> Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setActiveId(item.id)
+                              setDeleteDialogOpen(true)
+                            }}
+                            className="text-red-400 focus:text-red-400 cursor-pointer"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      <Dialog
+                        open={updateDialogOpen && activeId === item.id}
+                        onOpenChange={() => {
+                          setUpdateDialogOpen((prev) => !prev)
+                          setActiveId(item.id)
+                        }}
+                      >
+                        <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
+                          <form
+                            onSubmit={(e) => {
+                              e.preventDefault()
+                              updateForm.setFieldValue('taskListId', item.id)
+                              updateForm.handleSubmit()
+                            }}
+                          >
+                            <DialogHeader className="mb-6">
+                              <DialogTitle>Update Task List</DialogTitle>
+                              <DialogDescription>
+                                Fill form below to update the list.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <FieldGroup>
+                              <updateForm.Field
+                                name="taskListId"
+                                children={(field) => {
+                                  const isInvalid =
+                                    field.state.meta.isTouched &&
+                                    !field.state.meta.isValid
+                                  return (
+                                    <Field data-invalid={isInvalid}>
+                                      <FieldLabel htmlFor={field.name}>
+                                        Task List Id
+                                      </FieldLabel>
+                                      <Input
+                                        id={field.name}
+                                        name={field.name}
+                                        value={activeId}
+                                        onBlur={field.handleBlur}
+                                        onChange={(e) =>
+                                          field.handleChange(e.target.value)
+                                        }
+                                        defaultValue={activeId}
+                                        aria-invalid={isInvalid}
+                                        placeholder={activeId}
+                                        autoComplete="off"
+                                        disabled
+                                        readOnly
+                                      />
+                                      {isInvalid && (
+                                        <FieldError
+                                          errors={field.state.meta.errors}
+                                        />
+                                      )}
+                                    </Field>
+                                  )
                                 }}
-                              >
-                                <Button variant={'outline'}>
-                                  <ArrowRightSquare />
-                                </Button>
-                              </Link>
-                            </p>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                ) : (
-                  <div className="text-center flex justify-center">
-                    No task list available.
-                  </div>
-                )}
-              </>
+                              />
+                              <updateForm.Field
+                                name="title"
+                                children={(field) => {
+                                  const isInvalid =
+                                    field.state.meta.isTouched &&
+                                    !field.state.meta.isValid
+                                  return (
+                                    <Field data-invalid={isInvalid}>
+                                      <FieldLabel htmlFor={field.name}>
+                                        Title
+                                      </FieldLabel>
+                                      <Input
+                                        id={field.name}
+                                        name={field.name}
+                                        value={field.state.value}
+                                        onBlur={field.handleBlur}
+                                        onChange={(e) =>
+                                          field.handleChange(e.target.value)
+                                        }
+                                        aria-invalid={isInvalid}
+                                        placeholder="Study Calculus"
+                                        autoComplete="off"
+                                      />
+                                      {isInvalid && (
+                                        <FieldError
+                                          errors={field.state.meta.errors}
+                                        />
+                                      )}
+                                    </Field>
+                                  )
+                                }}
+                              />
+                              <updateForm.Field
+                                name="description"
+                                children={(field) => {
+                                  const isInvalid =
+                                    field.state.meta.isTouched &&
+                                    !field.state.meta.isValid
+                                  return (
+                                    <Field data-invalid={isInvalid}>
+                                      <FieldLabel htmlFor={field.name}>
+                                        Description
+                                      </FieldLabel>
+                                      <Textarea
+                                        id={field.name}
+                                        name={field.name}
+                                        value={field.state.value}
+                                        onBlur={field.handleBlur}
+                                        onChange={(e) =>
+                                          field.handleChange(e.target.value)
+                                        }
+                                        aria-invalid={isInvalid}
+                                        placeholder="My own study plan for learning Calculus"
+                                        autoComplete="off"
+                                      />
+                                      {isInvalid && (
+                                        <FieldError
+                                          errors={field.state.meta.errors}
+                                        />
+                                      )}
+                                    </Field>
+                                  )
+                                }}
+                              />
+                            </FieldGroup>
+                            <DialogFooter className="mt-6">
+                              <DialogClose asChild>
+                                <Button variant="outline">Cancel</Button>
+                              </DialogClose>
+                              <Button type="submit" disabled={isPending}>
+                                {isPending ? (
+                                  <>
+                                    <Loader2 className="size-4 animate-spin" />
+                                    Updating...
+                                  </>
+                                ) : (
+                                  <>
+                                    <ListStart className="size-4" />
+                                    Update list
+                                  </>
+                                )}
+                              </Button>
+                            </DialogFooter>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
+
+                      {/* Delete Dialog */}
+                      <Dialog
+                        open={deleteDialogOpen && activeId === item.id}
+                        onOpenChange={() => {
+                          setDeleteDialogOpen((prev) => !prev)
+                          setActiveId(item.id)
+                        }}
+                      >
+                        <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
+                          <form
+                            onSubmit={async (e) => {
+                              setIsLoading(true)
+                              e.preventDefault()
+                              await deleteTaskListFn({
+                                data: {
+                                  taskListId: item.id,
+                                },
+                              })
+                              setIsLoading(false)
+                              setDeleteDialogOpen((prev) => !prev)
+                              setActiveId('')
+                              queryClient.invalidateQueries({
+                                queryKey: ['query-task-lists'],
+                              })
+                            }}
+                          >
+                            <DialogHeader className="mb-6">
+                              <DialogTitle>Delete Task List</DialogTitle>
+                              <DialogDescription>
+                                Are you sure to delete this task list? This
+                                action cannot be undone.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter className="mt-6">
+                              <DialogClose asChild>
+                                <Button variant="outline">Cancel</Button>
+                              </DialogClose>
+                              <Button type="submit" disabled={isLoading}>
+                                {isLoading ? (
+                                  <>
+                                    <Loader2 className="size-4 animate-spin" />
+                                    Deleting...
+                                  </>
+                                ) : (
+                                  <>
+                                    <ListXIcon className="size-4" />
+                                    Delete
+                                  </>
+                                )}
+                              </Button>
+                            </DialogFooter>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="pb-6">
+                    <p className="text-sm text-zinc-400 line-clamp-2 min-h-10">
+                      {item.description || 'No description provided.'}
+                    </p>
+                  </CardContent>
+
+                  <CardFooter className="pt-4 border-t border-zinc-800/50 flex flex-col items-start gap-2 text-[11px] text-zinc-500">
+                    <div className="flex items-center gap-2">
+                      <CalendarDays className="h-3 w-3" />
+                      <span>
+                        Created:{' '}
+                        {format(new Date(item.createdAt), 'MMM dd, yyyy')}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-3 w-3" />
+                        <span className="italic text-zinc-600">
+                          Updated:{' '}
+                          {format(new Date(item.updatedAt), 'HH:mm, dd/MM')}
+                        </span>
+                      </div>
+                      <Link
+                        to="/dashboard/task-tracker/$taskListId"
+                        params={{ taskListId: item.id }}
+                      >
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="h-8 w-8 p-0 bg-zinc-800 hover:bg-emerald-600 hover:text-white"
+                        >
+                          <LogIn className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardFooter>
+                </Card>
+              </Link>
+            ))}
+
+            {!taskLists?.length && (
+              <div className="col-span-full border-2 border-dashed border-zinc-800 rounded-xl p-12 text-center">
+                <p className="text-zinc-500 text-lg">
+                  No task lists found. Start by creating one!
+                </p>
+              </div>
             )}
           </div>
-        </div>
-      </div>
+        )}
+      </main>
     </div>
   )
 }
