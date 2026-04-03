@@ -23,8 +23,9 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import {
+  ArrowRightSquare,
   ClockIcon,
   ListPlusIcon,
   ListStart,
@@ -271,7 +272,7 @@ function RouteComponent() {
                         >
                           <div className="flex flex-col ">
                             <div className="flex items-center justify-between">
-                              <h3 className="text-xl font-bold text-emerald-500">
+                              <h3 className="text-xl font-bold text-emerald-500 line-clamp-1">
                                 {item.title}
                               </h3>
                               <DropdownMenu>
@@ -540,23 +541,36 @@ function RouteComponent() {
                               </Dialog>
                             </div>
 
-                            <p>{item.description}</p>
-                            <p className="flex items-center gap-1 text-sm mt-2 italic">
-                              {intlFormat(
-                                item?.updatedAt as Date,
-                                {
-                                  weekday: 'long',
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric',
-                                  hour: 'numeric',
-                                  minute: 'numeric',
-                                  hour12: false,
-                                },
-                                {
-                                  locale: 'en-ID',
-                                },
-                              )}
+                            <p className="line-clamp-1">{item.description}</p>
+                            <p className="flex items-center sm:justify-between gap-1 text-sm mt-2 italic">
+                              <span>
+                                {' '}
+                                {intlFormat(
+                                  item?.updatedAt as Date,
+                                  {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: false,
+                                  },
+                                  {
+                                    locale: 'en-ID',
+                                  },
+                                )}
+                              </span>
+                              <Link
+                                to="/dashboard/task-tracker/$taskListId"
+                                params={{
+                                  taskListId: item.id,
+                                }}
+                              >
+                                <Button variant={'outline'}>
+                                  <ArrowRightSquare />
+                                </Button>
+                              </Link>
                             </p>
                           </div>
                         </div>

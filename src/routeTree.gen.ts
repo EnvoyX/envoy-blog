@@ -27,6 +27,7 @@ import { Route as GeneralJournalIndexRouteImport } from './routes/_general/journ
 import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog/index'
 import { Route as GeneralAboutIndexRouteImport } from './routes/_general/about/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
+import { Route as DashboardTaskTrackerTaskListIdRouteImport } from './routes/dashboard/task-tracker/$taskListId'
 import { Route as DashboardItemsItemIdRouteImport } from './routes/dashboard/items/$itemId'
 import { Route as DashboardDiariesSlugRouteImport } from './routes/dashboard/diaries/$slug'
 import { Route as DashboardBlogSlugRouteImport } from './routes/dashboard/blog/$slug'
@@ -124,6 +125,12 @@ const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const DashboardTaskTrackerTaskListIdRoute =
+  DashboardTaskTrackerTaskListIdRouteImport.update({
+    id: '/task-tracker/$taskListId',
+    path: '/task-tracker/$taskListId',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 const DashboardItemsItemIdRoute = DashboardItemsItemIdRouteImport.update({
   id: '/items/$itemId',
   path: '/items/$itemId',
@@ -169,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/blog/$slug': typeof DashboardBlogSlugRoute
   '/dashboard/diaries/$slug': typeof DashboardDiariesSlugRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
+  '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/login/': typeof AuthLoginIndexRoute
   '/about/': typeof GeneralAboutIndexRoute
   '/blog/': typeof GeneralBlogIndexRoute
@@ -192,6 +200,7 @@ export interface FileRoutesByTo {
   '/dashboard/blog/$slug': typeof DashboardBlogSlugRoute
   '/dashboard/diaries/$slug': typeof DashboardDiariesSlugRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
+  '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/login': typeof AuthLoginIndexRoute
   '/about': typeof GeneralAboutIndexRoute
   '/blog': typeof GeneralBlogIndexRoute
@@ -219,6 +228,7 @@ export interface FileRoutesById {
   '/dashboard/blog/$slug': typeof DashboardBlogSlugRoute
   '/dashboard/diaries/$slug': typeof DashboardDiariesSlugRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
+  '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_general/about/': typeof GeneralAboutIndexRoute
   '/_general/blog/': typeof GeneralBlogIndexRoute
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | '/dashboard/blog/$slug'
     | '/dashboard/diaries/$slug'
     | '/dashboard/items/$itemId'
+    | '/dashboard/task-tracker/$taskListId'
     | '/login/'
     | '/about/'
     | '/blog/'
@@ -268,6 +279,7 @@ export interface FileRouteTypes {
     | '/dashboard/blog/$slug'
     | '/dashboard/diaries/$slug'
     | '/dashboard/items/$itemId'
+    | '/dashboard/task-tracker/$taskListId'
     | '/login'
     | '/about'
     | '/blog'
@@ -294,6 +306,7 @@ export interface FileRouteTypes {
     | '/dashboard/blog/$slug'
     | '/dashboard/diaries/$slug'
     | '/dashboard/items/$itemId'
+    | '/dashboard/task-tracker/$taskListId'
     | '/_auth/login/'
     | '/_general/about/'
     | '/_general/blog/'
@@ -444,6 +457,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/dashboard/task-tracker/$taskListId': {
+      id: '/dashboard/task-tracker/$taskListId'
+      path: '/task-tracker/$taskListId'
+      fullPath: '/dashboard/task-tracker/$taskListId'
+      preLoaderRoute: typeof DashboardTaskTrackerTaskListIdRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/items/$itemId': {
       id: '/dashboard/items/$itemId'
       path: '/items/$itemId'
@@ -525,6 +545,7 @@ interface DashboardRouteRouteChildren {
   DashboardBlogSlugRoute: typeof DashboardBlogSlugRoute
   DashboardDiariesSlugRoute: typeof DashboardDiariesSlugRoute
   DashboardItemsItemIdRoute: typeof DashboardItemsItemIdRoute
+  DashboardTaskTrackerTaskListIdRoute: typeof DashboardTaskTrackerTaskListIdRoute
   DashboardBlogIndexRoute: typeof DashboardBlogIndexRoute
   DashboardDiariesIndexRoute: typeof DashboardDiariesIndexRoute
   DashboardItemsIndexRoute: typeof DashboardItemsIndexRoute
@@ -540,6 +561,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardBlogSlugRoute: DashboardBlogSlugRoute,
   DashboardDiariesSlugRoute: DashboardDiariesSlugRoute,
   DashboardItemsItemIdRoute: DashboardItemsItemIdRoute,
+  DashboardTaskTrackerTaskListIdRoute: DashboardTaskTrackerTaskListIdRoute,
   DashboardBlogIndexRoute: DashboardBlogIndexRoute,
   DashboardDiariesIndexRoute: DashboardDiariesIndexRoute,
   DashboardItemsIndexRoute: DashboardItemsIndexRoute,
