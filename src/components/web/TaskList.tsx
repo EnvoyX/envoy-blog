@@ -1,4 +1,4 @@
-import { useState, useTransition, useEffect } from 'react'
+import { useState, useTransition, useEffect, startTransition } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from '@tanstack/react-form'
 import { toast } from 'sonner'
@@ -16,12 +16,15 @@ import {
   X,
   AlertTriangle,
   ListTodo,
+  TimerResetIcon,
+  ListXIcon,
 } from 'lucide-react'
 import {
   createTaskFn,
   deleteTaskFn,
   fetchTaskListByIdFn,
   updateTaskFn,
+  updateTaskStatusFn,
 } from '@/data/task-tracker'
 import {
   Select,
@@ -219,6 +222,7 @@ function TaskFormModal({
 
   if (initialValues?.priority)
     form.setFieldValue('priority', initialValues.priority)
+  if (initialValues?.status) form.setFieldValue('status', initialValues.status)
 
   useEffect(() => {
     if (open && initialValues) {
@@ -511,13 +515,13 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
     new Date(task.dueDate) < new Date() &&
     !isDone &&
     !isCancelled
-
+  const queryClient = useQueryClient()
   return (
     <div
       className={`group relative flex items-start gap-4 p-4 rounded-xl border transition-all duration-200
         ${
           isDone || isCancelled
-            ? 'bg-zinc-900/30 border-zinc-800/40 opacity-60'
+            ? 'bg-zinc-900/30 border-zinc-800/40  opacity-60'
             : 'bg-zinc-900/60 border-zinc-700/50 hover:border-zinc-600/70 hover:bg-zinc-900/80'
         }`}
     >
@@ -566,6 +570,98 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
                   >
                     <Pencil className="w-3.5 h-3.5" /> Edit task
+                  </button>
+                  <button
+                    onClick={() => {
+                      startTransition(async () => {
+                        toast.loading('Updating task status...', {
+                          id: 'task-status',
+                        })
+                        await updateTaskStatusFn({
+                          data: {
+                            taskId: task.id,
+                            status: 'DONE',
+                          },
+                        })
+                        queryClient.invalidateQueries({
+                          queryKey: ['query-task-list-id', task.listId],
+                        })
+                        toast.dismiss('task-status')
+                        toast.success('Task status updated!')
+                      })
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Mark as Done
+                  </button>
+                  <button
+                    onClick={() => {
+                      startTransition(async () => {
+                        toast.loading('Updating task status...', {
+                          id: 'task-status',
+                        })
+                        await updateTaskStatusFn({
+                          data: {
+                            taskId: task.id,
+                            status: 'IN_PROGRESS',
+                          },
+                        })
+                        queryClient.invalidateQueries({
+                          queryKey: ['query-task-list-id', task.listId],
+                        })
+                        toast.dismiss('task-status')
+                        toast.success('Task status updated!')
+                      })
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
+                  >
+                    <Clock className="w-3.5 h-3.5" /> Set in Progress
+                  </button>
+                  <button
+                    onClick={() => {
+                      startTransition(async () => {
+                        toast.loading('Updating task status...', {
+                          id: 'task-status',
+                        })
+                        await updateTaskStatusFn({
+                          data: {
+                            taskId: task.id,
+                            status: 'TODO',
+                          },
+                        })
+                        queryClient.invalidateQueries({
+                          queryKey: ['query-task-list-id', task.listId],
+                        })
+                        toast.dismiss('task-status')
+                        toast.success('Task status updated!')
+                      })
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
+                  >
+                    <TimerResetIcon className="w-3.5 h-3.5" /> Set Unassigned
+                  </button>
+                  <button
+                    onClick={() => {
+                      startTransition(async () => {
+                        toast.loading('Updating task status...', {
+                          id: 'task-status',
+                        })
+                        await updateTaskStatusFn({
+                          data: {
+                            taskId: task.id,
+                            status: 'CANCELLED',
+                          },
+                        })
+                        queryClient.invalidateQueries({
+                          queryKey: ['query-task-list-id', task.listId],
+                        })
+                        toast.dismiss('task-status')
+                        toast.success('Task status updated!')
+                      })
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
+                  >
+                    <ListXIcon className="w-3.5 h-3.5" /> Set Cancelled
                   </button>
                   <button
                     onClick={() => {

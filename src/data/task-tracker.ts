@@ -1,3 +1,4 @@
+import { Status } from '@/generated/prisma/enums'
 import { db } from '@/lib/db'
 import { authMiddleware } from '@/middlewares/auth'
 import {
@@ -121,6 +122,26 @@ export const updateTaskFn = createServerFn({ method: 'POST' })
       },
     })
   })
+
+export const updateTaskStatusFn = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .inputValidator(
+    z.object({
+      taskId: z.string(),
+      status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED']),
+    }),
+  )
+  .handler(async ({ data }) => {
+    await db.task.update({
+      where: {
+        id: data.taskId,
+      },
+      data: {
+        status: data.status,
+      },
+    })
+  })
+
 export const deleteTaskFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(
