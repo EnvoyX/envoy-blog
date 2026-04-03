@@ -14,6 +14,20 @@ enum ItemStatus {
   FAILED
 }
 
+enum Status {
+  TODO
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
 model SavedItem {
   id          String   @id @default(uuid())
   userId      String
@@ -88,6 +102,36 @@ model Tag {
   posts Post[]
 }
 
+model TaskList {
+  id          String  @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks  Task[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  listId      String
+  userId      String
+  title       String
+  description String?
+  status      Status    @default(TODO)
+  priority    Priority?
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskList    TaskList? @relation(fields: [listId], references: [id], onDelete: Cascade)
+}
+
 model User {
   id            String      @id
   name          String
@@ -102,6 +146,8 @@ model User {
   savedItems    SavedItem[]
   diaries       Diary[]
   posts         Post[]
+  tasks         Task[]
+  taskLists     TaskList[]
   quranTrack    QuranTrack?
 
   @@unique([email])

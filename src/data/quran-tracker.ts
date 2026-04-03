@@ -5,7 +5,7 @@ import { differenceInHours } from 'date-fns'
 import { createServerFn } from '@tanstack/react-start'
 import { getCurrentDate } from '@/lib/utils'
 
-export const savedQuranProgress = createServerFn({ method: 'POST' })
+export const savedQuranProgressFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(quranTrackSchema)
   .handler(async ({ data, context }) => {
@@ -55,7 +55,7 @@ export const savedQuranProgress = createServerFn({ method: 'POST' })
     })
   })
 
-export const fetchCurrentQuranProgress = createServerFn({ method: 'POST' })
+export const fetchCurrentQuranProgressFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     const existingProgress = await db.quranTrack.findUnique({

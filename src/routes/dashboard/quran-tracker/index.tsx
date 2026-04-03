@@ -15,8 +15,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  fetchCurrentQuranProgress,
-  savedQuranProgress,
+  fetchCurrentQuranProgressFn,
+  savedQuranProgressFn,
 } from '@/data/quran-tracker'
 import { quranTrackSchema } from '@/schemas/quran-tracker'
 import { useForm } from '@tanstack/react-form'
@@ -68,7 +68,7 @@ function RouteComponent() {
       console.log(value)
       startTransition(async () => {
         console.log('Form values: ', value)
-        savedQuranProgress({ data: value })
+        savedQuranProgressFn({ data: value })
         toast.success('Progress saved successfully!')
       })
     },
@@ -81,7 +81,7 @@ function RouteComponent() {
   } = useQuery({
     queryKey: ['quran-track'],
     queryFn: async () => {
-      const data = await fetchCurrentQuranProgress()
+      const data = await fetchCurrentQuranProgressFn()
 
       return data
     },

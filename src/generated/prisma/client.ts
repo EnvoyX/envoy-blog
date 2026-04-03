@@ -67,6 +67,16 @@ export type Post = Prisma.PostModel
  */
 export type Tag = Prisma.TagModel
 /**
+ * Model TaskList
+ * 
+ */
+export type TaskList = Prisma.TaskListModel
+/**
+ * Model Task
+ * 
+ */
+export type Task = Prisma.TaskModel
+/**
  * Model User
  * 
  */
