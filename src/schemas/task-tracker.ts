@@ -28,3 +28,11 @@ export const updateTaskSchema = z.object({
   dueDate: z.date(),
   taskId: z.string().min(1, 'Task Id is required'),
 })
+
+export const validatorTaskSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  description: z.string(),
+  status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED']),
+  priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']),
+  dueDate: z.string().min(1, 'Date is required'),
+})

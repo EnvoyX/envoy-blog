@@ -32,6 +32,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { intlFormat } from 'date-fns'
+import { FieldError } from '../ui/field'
+import { validatorTaskSchema } from '@/schemas/task-tracker'
 
 type Status = 'TODO' | 'IN_PROGRESS' | 'DONE' | 'CANCELLED'
 type Priority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
@@ -207,8 +209,11 @@ function TaskFormModal({
       priority: 'LOW' as Priority,
       dueDate: today,
     },
+    validators: {
+      onSubmit: validatorTaskSchema,
+    },
     onSubmit: ({ value }) => {
-      onSubmit(value as any)
+      onSubmit(value)
     },
   })
 
@@ -267,114 +272,156 @@ function TaskFormModal({
           }}
           className="px-6 pb-6 flex flex-col gap-4"
         >
-          <form.Field name="title">
-            {(field) => (
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider font-mono">
-                  Title
-                </label>
-                <input
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="What needs to be done?"
-                  className="w-full bg-zinc-900 border border-zinc-700/70 rounded-lg px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30"
-                />
-              </div>
-            )}
-          </form.Field>
-
-          <form.Field name="description">
-            {(field) => (
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider font-mono">
-                  Description{' '}
-                  <span className="normal-case text-zinc-600">(optional)</span>
-                </label>
-                <textarea
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Add more context..."
-                  rows={3}
-                  className="w-full bg-zinc-900 border border-zinc-700/70 rounded-lg px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 resize-none"
-                />
-              </div>
-            )}
-          </form.Field>
-
-          <div className="grid grid-cols-2 gap-3">
-            <form.Field name="status">
-              {(field) => (
-                <Select
-                  value={field.state.value}
-                  onValueChange={field.handleChange}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {[
-                        { value: 'TODO', label: 'To Do' },
-                        { value: 'IN_PROGRESS', label: 'In Progress' },
-                        { value: 'DONE', label: 'Done' },
-                        { value: 'CANCELLED', label: 'Cancelled' },
-                      ].map((data) => (
-                        <SelectItem key={data.label} value={data.value}>
-                          {data.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              )}
-            </form.Field>
-            <form.Field name="priority">
-              {(field) => (
-                <Select
-                  value={field.state.value}
-                  onValueChange={field.handleChange}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Priority" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {[
-                        { value: 'LOW', label: 'Low' },
-                        { value: 'MEDIUM', label: 'Medium' },
-                        { value: 'HIGH', label: 'High' },
-                        { value: 'URGENT', label: 'Urgent' },
-                      ].map((data) => (
-                        <SelectItem key={data.label} value={data.value}>
-                          {data.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              )}
-            </form.Field>
-          </div>
-
-          <form.Field name="dueDate">
-            {(field) => (
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider font-mono">
-                  Due Date{' '}
-                  <span className="normal-case text-zinc-600">(optional)</span>
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
+          <form.Field
+            name="title"
+            children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid
+              return (
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider font-mono">
+                    Title
+                  </label>
                   <input
-                    type="date"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-700/70 rounded-lg pl-9 pr-3 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 [scheme:dark]"
+                    placeholder="What needs to be done?"
+                    className="w-full bg-zinc-900 border border-zinc-700/70 rounded-lg px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30"
                   />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </div>
-              </div>
-            )}
-          </form.Field>
+              )
+            }}
+          ></form.Field>
+
+          <form.Field
+            name="description"
+            children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid
+              return (
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider font-mono">
+                    Description{' '}
+                    <span className="normal-case text-zinc-600">
+                      (optional)
+                    </span>
+                  </label>
+                  <textarea
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Add more context..."
+                    rows={3}
+                    className="w-full bg-zinc-900 border border-zinc-700/70 rounded-lg px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 resize-none"
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </div>
+              )
+            }}
+          ></form.Field>
+
+          <div className="grid grid-cols-2 gap-3">
+            <form.Field
+              name="status"
+              children={(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid
+                return (
+                  <>
+                    <Select
+                      value={field.state.value}
+                      onValueChange={field.handleChange}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {[
+                            { value: 'TODO', label: 'To Do' },
+                            { value: 'IN_PROGRESS', label: 'In Progress' },
+                            { value: 'DONE', label: 'Done' },
+                            { value: 'CANCELLED', label: 'Cancelled' },
+                          ].map((data) => (
+                            <SelectItem key={data.label} value={data.value}>
+                              {data.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </>
+                )
+              }}
+            ></form.Field>
+            <form.Field
+              name="priority"
+              children={(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid
+                return (
+                  <>
+                    <Select
+                      value={field.state.value}
+                      onValueChange={field.handleChange}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {[
+                            { value: 'LOW', label: 'Low' },
+                            { value: 'MEDIUM', label: 'Medium' },
+                            { value: 'HIGH', label: 'High' },
+                            { value: 'URGENT', label: 'Urgent' },
+                          ].map((data) => (
+                            <SelectItem key={data.label} value={data.value}>
+                              {data.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </>
+                )
+              }}
+            ></form.Field>
+          </div>
+
+          <form.Field
+            name="dueDate"
+            children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid
+              return (
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider font-mono">
+                    Due Date{' '}
+                    <span className="normal-case text-zinc-600">
+                      (optional)
+                    </span>
+                  </label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
+                    <input
+                      type="date"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      className="w-full bg-zinc-900 border border-zinc-700/70 rounded-lg pl-9 pr-3 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 [scheme:dark]"
+                    />
+                  </div>
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </div>
+              )
+            }}
+          ></form.Field>
 
           <div className="flex gap-2 pt-1">
             <button
