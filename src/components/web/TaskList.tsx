@@ -7,7 +7,6 @@ import {
   Loader2,
   Pencil,
   Trash2,
-  ChevronDown,
   Calendar,
   Circle,
   CheckCircle2,
@@ -24,6 +23,14 @@ import {
   fetchTaskListByIdFn,
   updateTaskFn,
 } from '@/data/task-tracker'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { intlFormat } from 'date-fns'
 
 type Status = 'TODO' | 'IN_PROGRESS' | 'DONE' | 'CANCELLED'
@@ -36,7 +43,7 @@ interface Task {
   title: string
   description?: string
   status: Status
-  priority?: Priority
+  priority: Priority
   dueDate?: string
   createdAt: string
   updatedAt: string
@@ -182,40 +189,6 @@ function SidebarSkeleton() {
   )
 }
 
-function SelectField({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string
-  value: string
-  onChange: (v: string) => void
-  options: { value: string; label: string }[]
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider font-mono">
-        {label}
-      </label>
-      <div className="relative">
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-full appearance-none bg-zinc-900 border border-zinc-700/70 rounded-lg px-3 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 pr-8 cursor-pointer"
-        >
-          {options.map((o) => (
-            <option key={o.value} value={o.value} className="bg-zinc-900">
-              {o.label}
-            </option>
-          ))}
-        </select>
-        <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
-      </div>
-    </div>
-  )
-}
-
 function TaskFormModal({
   open,
   onClose,
@@ -239,8 +212,12 @@ function TaskFormModal({
     },
   })
 
+  if (initialValues?.priority)
+    form.setFieldValue('priority', initialValues.priority)
+
   useEffect(() => {
     if (open && initialValues) {
+      console.log(initialValues)
       form.reset(initialValues)
     } else if (open && !initialValues) {
       form.reset({
@@ -264,7 +241,7 @@ function TaskFormModal({
     >
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
       <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-700/60 rounded-2xl shadow-2xl shadow-black/60 overflow-hidden">
-        <div className="h-px bg-gradient-to-r from-transparent via-zinc-500/40 to-transparent" />
+        <div className="h-px bg-linear-to-r from-transparent via-zinc-500/40 to-transparent" />
         <div className="flex items-center justify-between px-6 pt-5 pb-4">
           <div>
             <h2 className="text-base font-semibold text-zinc-100 task-syne">
@@ -327,32 +304,54 @@ function TaskFormModal({
           <div className="grid grid-cols-2 gap-3">
             <form.Field name="status">
               {(field) => (
-                <SelectField
-                  label="Status"
+                <Select
                   value={field.state.value}
-                  onChange={field.handleChange}
-                  options={[
-                    { value: 'TODO', label: 'To Do' },
-                    { value: 'IN_PROGRESS', label: 'In Progress' },
-                    { value: 'DONE', label: 'Done' },
-                    { value: 'CANCELLED', label: 'Cancelled' },
-                  ]}
-                />
+                  onValueChange={field.handleChange}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {[
+                        { value: 'TODO', label: 'To Do' },
+                        { value: 'IN_PROGRESS', label: 'In Progress' },
+                        { value: 'DONE', label: 'Done' },
+                        { value: 'CANCELLED', label: 'Cancelled' },
+                      ].map((data) => (
+                        <SelectItem key={data.label} value={data.value}>
+                          {data.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               )}
             </form.Field>
             <form.Field name="priority">
               {(field) => (
-                <SelectField
-                  label="Priority"
+                <Select
                   value={field.state.value}
-                  onChange={field.handleChange}
-                  options={[
-                    { value: 'LOW', label: 'Low' },
-                    { value: 'MEDIUM', label: 'Medium' },
-                    { value: 'HIGH', label: 'High' },
-                    { value: 'URGENT', label: 'Urgent' },
-                  ]}
-                />
+                  onValueChange={field.handleChange}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {[
+                        { value: 'LOW', label: 'Low' },
+                        { value: 'MEDIUM', label: 'Medium' },
+                        { value: 'HIGH', label: 'High' },
+                        { value: 'URGENT', label: 'Urgent' },
+                      ].map((data) => (
+                        <SelectItem key={data.label} value={data.value}>
+                          {data.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               )}
             </form.Field>
           </div>
@@ -370,7 +369,7 @@ function TaskFormModal({
                     type="date"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-700/70 rounded-lg pl-9 pr-3 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 [color-scheme:dark]"
+                    className="w-full bg-zinc-900 border border-zinc-700/70 rounded-lg pl-9 pr-3 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 [scheme:dark]"
                   />
                 </div>
               </div>
@@ -421,7 +420,7 @@ function DeleteModal({
     >
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
       <div className="relative w-full max-w-sm bg-zinc-900 border border-zinc-700/60 rounded-2xl shadow-2xl shadow-black/60 overflow-hidden">
-        <div className="h-px bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
+        <div className="h-px bg-linear-to-r from-transparent via-red-500/40 to-transparent" />
         <div className="p-6 flex flex-col items-center text-center gap-4">
           <div className="w-12 h-12 rounded-full bg-red-950/60 border border-red-800/50 flex items-center justify-center">
             <AlertTriangle className="w-5 h-5 text-red-400" />
@@ -501,7 +500,7 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
           <div className="relative flex-shrink-0">
             <button
               onClick={() => setMenuOpen((p) => !p)}
-              className="p-1 rounded-md text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 transition-colors opacity-0 group-hover:opacity-100"
+              className="p-1 rounded-md text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 transition-colors  group-hover:opacity-100"
             >
               <MoreHorizontal className="w-4 h-4" />
             </button>
@@ -1026,9 +1025,11 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
                 title: activeTask.title,
                 description: activeTask.description ?? '',
                 status: activeTask.status,
-                priority: activeTask.priority ?? 'LOW',
+                priority: activeTask.priority,
                 dueDate:
-                  activeTask.dueDate ?? new Date().toISOString().split('T')[0],
+                  new Date(activeTask.dueDate as string)
+                    .toISOString()
+                    .split('T')[0] ?? new Date().toISOString().split('T')[0],
                 taskId: activeTask.id,
               }
             : undefined
