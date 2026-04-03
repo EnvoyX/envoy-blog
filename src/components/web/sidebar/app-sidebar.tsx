@@ -33,7 +33,7 @@ const navItems: NavPrimaryProps['items'] = linkOptions([
     icon: LayoutDashboardIcon,
     to: '/dashboard',
     activeOptions: {
-      exact: false,
+      exact: true,
     },
   },
   {

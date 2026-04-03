@@ -69,7 +69,7 @@ function RouteComponent() {
       console.log(value)
       startTransition(async () => {
         console.log('Form values: ', value)
-        savedQuranProgressFn({ data: value })
+        await savedQuranProgressFn({ data: value })
         queryClient.invalidateQueries({
           queryKey: ['quran-track'],
         })
