@@ -152,7 +152,7 @@ function RouteComponent() {
                               STREAK
                             </p>
                             <h3 className="text-5xl font-black text-white leading-none">
-                              {progress?.currentStreak}{' '}
+                              {progress?.currentStreak ?? '0'}{' '}
                               <span className="text-2xl text-emerald-500/80">
                                 days
                               </span>
