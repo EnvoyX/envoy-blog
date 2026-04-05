@@ -128,11 +128,17 @@ const PRIORITY_CONFIG: Record<
   URGENT: { label: 'Urgent', color: 'text-red-400', dot: 'bg-red-500' },
 }
 
-function StatusBadge({ status }: { status: Status }) {
+function StatusBadge({
+  status,
+  className,
+}: {
+  status: Status
+  className?: string
+}) {
   const cfg = STATUS_CONFIG[status]
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-xs font-medium ${cfg.color} ${cfg.bg}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-xs font-medium ${cfg.color} ${cfg.bg} ${className}`}
     >
       {cfg.icon}
       {cfg.label}
@@ -140,11 +146,19 @@ function StatusBadge({ status }: { status: Status }) {
   )
 }
 
-function PriorityDot({ priority }: { priority?: Priority }) {
+function PriorityDot({
+  priority,
+  className,
+}: {
+  priority?: Priority
+  className?: string
+}) {
   if (!priority) return null
   const cfg = PRIORITY_CONFIG[priority]
   return (
-    <span className={`inline-flex items-center gap-1.5 text-xs ${cfg.color}`}>
+    <span
+      className={`inline-flex items-center gap-1.5 text-xs ${cfg.color} ${className}`}
+    >
       <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
       {cfg.label}
     </span>
@@ -521,7 +535,7 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
       className={`group relative flex items-start gap-4 p-4 rounded-xl border transition-all duration-200
         ${
           isDone || isCancelled
-            ? 'bg-zinc-900/30 border-zinc-800/40  opacity-60'
+            ? 'bg-zinc-900/30 border-zinc-800/40'
             : 'bg-zinc-900/60 border-zinc-700/50 hover:border-zinc-600/70 hover:bg-zinc-900/80'
         }`}
     >
@@ -685,11 +699,19 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
         )}
 
         <div className="flex items-center flex-wrap gap-2 mt-3">
-          <StatusBadge status={task.status} />
-          {task.priority && <PriorityDot priority={task.priority} />}
+          <StatusBadge
+            status={task.status}
+            className={`${isDone && 'opacity-60'}`}
+          />
+          {task.priority && (
+            <PriorityDot
+              priority={task.priority}
+              className={`${isDone && 'opacity-60'}`}
+            />
+          )}
           {task.dueDate && (
             <span
-              className={`inline-flex items-center gap-1 text-xs font-mono ${isOverdue ? 'text-red-400' : 'text-zinc-500'}`}
+              className={`inline-flex items-center gap-1 text-xs font-mono ${isOverdue ? 'text-red-400' : 'text-zinc-500'} ${isDone && 'opacity-60'}`}
             >
               <Calendar className="w-3 h-3" />
               {isOverdue && '⚠ '}
