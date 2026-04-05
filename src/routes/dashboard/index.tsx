@@ -95,7 +95,7 @@ function RouteComponent() {
                 Current Tilawah
               </h2>
               <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-bold italic tracking-tighter">
+                <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold italic tracking-tighter">
                   {data?.quranTrack?.currentSurah ?? 'No Surah tracked yet'}
                 </span>
                 <span className="text-amber-400 font-mono text-lg">
@@ -272,7 +272,7 @@ function StatMini({
       <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">
         {label}
       </p>
-      <p className={`text-lg font-bold ${color}`}>{value}</p>
+      <p className={`text-lg font-bold text-center ${color}`}>{value}</p>
     </div>
   )
 }
