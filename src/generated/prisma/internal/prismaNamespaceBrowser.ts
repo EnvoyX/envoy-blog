@@ -164,6 +164,7 @@ export const TaskListScalarFieldEnum = {
   userId: 'userId',
   title: 'title',
   description: 'description',
+  active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

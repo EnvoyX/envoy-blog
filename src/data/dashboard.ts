@@ -8,6 +8,7 @@ export const fetchDashboardData = createServerFn({ method: 'GET' })
     const taksLists = await db.taskList.findMany({
       where: {
         userId: context.user.id,
+        active: true,
       },
       include: {
         tasks: true,
@@ -32,6 +33,7 @@ export const fetchDashboardTasksData = createServerFn({ method: 'GET' })
     const taksLists = await db.taskList.findMany({
       where: {
         userId: context.user.id,
+        active: true,
       },
       include: {
         tasks: true,
@@ -41,6 +43,9 @@ export const fetchDashboardTasksData = createServerFn({ method: 'GET' })
     const tasks = await db.task.findMany({
       where: {
         userId: context.user.id,
+        taskList: {
+          active: true,
+        },
       },
     })
 

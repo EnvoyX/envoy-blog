@@ -107,6 +107,7 @@ model TaskList {
   userId      String
   title       String
   description String?
+  active      Boolean @default(true)
 
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)

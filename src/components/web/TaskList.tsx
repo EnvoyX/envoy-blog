@@ -18,6 +18,7 @@ import {
   ListTodo,
   TimerResetIcon,
   ListXIcon,
+  LogOutIcon,
 } from 'lucide-react'
 import {
   createTaskFn,
@@ -37,6 +38,7 @@ import {
 import { intlFormat } from 'date-fns'
 import { FieldError } from '../ui/field'
 import { validatorTaskSchema } from '@/schemas/task-tracker'
+import { Link } from '@tanstack/react-router'
 
 type Status = 'TODO' | 'IN_PROGRESS' | 'DONE' | 'CANCELLED'
 type Priority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
@@ -595,6 +597,7 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
                           data: {
                             taskId: task.id,
                             status: 'DONE',
+                            listId: task.listId,
                           },
                         })
                         queryClient.invalidateQueries({
@@ -618,6 +621,7 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
                           data: {
                             taskId: task.id,
                             status: 'IN_PROGRESS',
+                            listId: task.listId,
                           },
                         })
                         queryClient.invalidateQueries({
@@ -641,6 +645,7 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
                           data: {
                             taskId: task.id,
                             status: 'TODO',
+                            listId: task.listId,
                           },
                         })
                         queryClient.invalidateQueries({
@@ -664,6 +669,7 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
                           data: {
                             taskId: task.id,
                             status: 'CANCELLED',
+                            listId: task.listId,
                           },
                         })
                         queryClient.invalidateQueries({
@@ -978,6 +984,7 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
           ...values,
           dueDate: new Date(values.dueDate),
           taskId: activeTask?.id as string,
+          listId: taskListId,
         },
       })
       queryClient.invalidateQueries({
@@ -991,7 +998,9 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
 
   function handleDelete() {
     startTransition(async () => {
-      await deleteTaskFn({ data: { taskId: activeTask?.id as string } })
+      await deleteTaskFn({
+        data: { taskId: activeTask?.id as string, listId: taskListId },
+      })
       queryClient.invalidateQueries({
         queryKey: ['query-task-list-id', taskListId],
       })
@@ -1011,6 +1020,17 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
 
       <div className="min-h-screen bg-zinc-950 text-zinc-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+          <div className="flex items-center w-full my-6">
+            <Link
+              to="/dashboard/task-tracker"
+              className="flex items-center gap-2 group"
+            >
+              <LogOutIcon className="rotate-180 size-5 text-zinc-500 group-hover:text-white transition-colors" />
+              <p className="task-mono text-zinc-500 tracking-widest text-sm group-hover:text-white transition-colors">
+                Back
+              </p>
+            </Link>
+          </div>
           <div className="flex gap-10 xl:gap-16 items-start">
             <DesktopSidebar
               data={data}

@@ -104,10 +104,28 @@ export const createTaskFn = createServerFn({ method: 'POST' })
         dueDate: data.dueDate,
       },
     })
+    await db.taskList.update({
+      where: {
+        id: data.listId,
+      },
+      data: {
+        updatedAt: new Date(),
+      },
+    })
   })
 export const updateTaskFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(updateTaskSchema)
+  .inputValidator(
+    z.object({
+      title: z.string(),
+      description: z.string().optional(),
+      status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED']),
+      priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']),
+      dueDate: z.date(),
+      taskId: z.string(),
+      listId: z.string(),
+    }),
+  )
   .handler(async ({ data }) => {
     await db.task.update({
       where: {
@@ -121,6 +139,15 @@ export const updateTaskFn = createServerFn({ method: 'POST' })
         dueDate: data.dueDate,
       },
     })
+
+    await db.taskList.update({
+      where: {
+        id: data.listId,
+      },
+      data: {
+        updatedAt: new Date(),
+      },
+    })
   })
 
 export const updateTaskStatusFn = createServerFn({ method: 'POST' })
@@ -128,6 +155,7 @@ export const updateTaskStatusFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
       taskId: z.string(),
+      listId: z.string(),
       status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED']),
     }),
   )
@@ -140,6 +168,14 @@ export const updateTaskStatusFn = createServerFn({ method: 'POST' })
         status: data.status,
       },
     })
+    await db.taskList.update({
+      where: {
+        id: data.listId,
+      },
+      data: {
+        updatedAt: new Date(),
+      },
+    })
   })
 
 export const deleteTaskFn = createServerFn({ method: 'POST' })
@@ -147,6 +183,7 @@ export const deleteTaskFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
       taskId: z.string(),
+      listId: z.string(),
     }),
   )
   .handler(async ({ data }) => {
@@ -155,4 +192,44 @@ export const deleteTaskFn = createServerFn({ method: 'POST' })
         id: data.taskId,
       },
     })
+    await db.taskList.update({
+      where: {
+        id: data.listId,
+      },
+      data: {
+        updatedAt: new Date(),
+      },
+    })
+  })
+
+export const setStatusTaskListFn = createServerFn({
+  method: 'POST',
+})
+  .middleware([authMiddleware])
+  .inputValidator(
+    z.object({
+      taskId: z.string(),
+      status: z.enum(['ACTIVE', 'INACTIVE']),
+    }),
+  )
+  .handler(async ({ data }) => {
+    if (data.status === 'ACTIVE') {
+      await db.taskList.update({
+        where: {
+          id: data.taskId,
+        },
+        data: {
+          active: true,
+        },
+      })
+    } else if (data.status === 'INACTIVE') {
+      await db.taskList.update({
+        where: {
+          id: data.taskId,
+        },
+        data: {
+          active: false,
+        },
+      })
+    }
   })

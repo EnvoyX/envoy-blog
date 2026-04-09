@@ -17,6 +17,7 @@ import {
   TaskListSkeleton,
 } from '@/components/web/skeleton/dashboard-skeletons'
 import { EmptyState } from '@/components/web/skeleton/dashboard-empty'
+import { intlFormatDistance } from 'date-fns'
 
 export const Route = createFileRoute('/dashboard/')({
   head: () => ({
@@ -137,7 +138,7 @@ function RouteComponent() {
               </div>
             ) : tasksData?.tasks?.length === 0 ? (
               <p className="text-zinc-500 text-sm py-4">
-                No task data available yet.
+                No active task data available yet.
               </p>
             ) : (
               <div className="space-y-4">
@@ -214,7 +215,7 @@ function RouteComponent() {
           ) : !data?.taksLists || data.taksLists.length === 0 ? (
             <EmptyState
               icon={ListTodo}
-              title="No Task Lists"
+              title="No active Task Lists available"
               message="Organize your work by creating your first list."
             />
           ) : (
@@ -244,7 +245,11 @@ function RouteComponent() {
                         <ListTodo size={12} /> {list.tasks.length} tasks
                       </span>
                       <span className="flex items-center gap-1">
-                        <Clock size={12} /> Updated 2h ago
+                        <Clock size={12} /> Updated{' '}
+                        {intlFormatDistance(
+                          new Date(list.updatedAt),
+                          new Date(),
+                        )}
                       </span>
                     </div>
                   </div>
