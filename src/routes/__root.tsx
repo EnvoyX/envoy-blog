@@ -10,71 +10,75 @@ import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { pacerDevtoolsPlugin } from '@tanstack/react-pacer-devtools'
 
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: `Envoy's TanStack Start Blog`,
-      },
-    ],
-    links: [
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap',
-      },
-    ],
-  }),
+    head: () => ({
+        meta: [
+            {
+                charSet: 'utf-8',
+            },
+            {
+                name: 'viewport',
+                content: 'width=device-width, initial-scale=1',
+            },
+            {
+                title: `Envoy's TanStack Start Blog`,
+            },
+        ],
+        links: [
+            {
+                rel: 'stylesheet',
+                href: appCss,
+            },
+            {
+                rel: 'stylesheet',
+                href: 'https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap',
+            },
+        ],
+    }),
 
-  shellComponent: RootDocument,
+    shellComponent: RootDocument,
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <QueryProvider>
-          <ThemeProvider defaultTheme="dark">
-            {children}
-            <Toaster closeButton position="top-center" />
-          </ThemeProvider>
-          <TanStackDevtools
-            config={{
-              position: 'bottom-right',
-              defaultOpen: true,
-              hideUntilHover: true,
-              panelLocation: 'bottom',
-            }}
-            plugins={[
-              {
-                name: 'TanStack Query',
-                render: <ReactQueryDevtoolsPanel />,
-                defaultOpen: true,
-              },
-              {
-                name: 'Tanstack Router',
-                render: <TanStackRouterDevtoolsPanel />,
-                defaultOpen: true,
-              },
-              formDevtoolsPlugin(),
-              pacerDevtoolsPlugin(),
-            ]}
-          />
-          <Scripts />
-        </QueryProvider>
-      </body>
-    </html>
-  )
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <head>
+                <HeadContent />
+                {/*<script
+                    crossOrigin="anonymous"
+                    src="//unpkg.com/react-scan/dist/auto.global.js"
+                ></script>*/}
+            </head>
+            <body>
+                <QueryProvider>
+                    <ThemeProvider defaultTheme="dark">
+                        {children}
+                        <Toaster closeButton position="top-center" />
+                    </ThemeProvider>
+                    <TanStackDevtools
+                        config={{
+                            position: 'bottom-right',
+                            defaultOpen: true,
+                            hideUntilHover: true,
+                            panelLocation: 'bottom',
+                        }}
+                        plugins={[
+                            {
+                                name: 'TanStack Query',
+                                render: <ReactQueryDevtoolsPanel />,
+                                defaultOpen: true,
+                            },
+                            {
+                                name: 'Tanstack Router',
+                                render: <TanStackRouterDevtoolsPanel />,
+                                defaultOpen: true,
+                            },
+                            formDevtoolsPlugin(),
+                            pacerDevtoolsPlugin(),
+                        ]}
+                    />
+                    <Scripts />
+                </QueryProvider>
+            </body>
+        </html>
+    )
 }
