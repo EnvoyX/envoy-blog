@@ -28,6 +28,7 @@ export type PostMinAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  image: string | null
   slug: string | null
   excerpt: string | null
   content: string | null
@@ -41,6 +42,7 @@ export type PostMaxAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  image: string | null
   slug: string | null
   excerpt: string | null
   content: string | null
@@ -54,6 +56,7 @@ export type PostCountAggregateOutputType = {
   id: number
   title: number
   description: number
+  image: number
   slug: number
   excerpt: number
   content: number
@@ -69,6 +72,7 @@ export type PostMinAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  image?: true
   slug?: true
   excerpt?: true
   content?: true
@@ -82,6 +86,7 @@ export type PostMaxAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  image?: true
   slug?: true
   excerpt?: true
   content?: true
@@ -95,6 +100,7 @@ export type PostCountAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  image?: true
   slug?: true
   excerpt?: true
   content?: true
@@ -181,6 +187,7 @@ export type PostGroupByOutputType = {
   id: string
   title: string
   description: string
+  image: string | null
   slug: string
   excerpt: string | null
   content: string
@@ -215,6 +222,7 @@ export type PostWhereInput = {
   id?: Prisma.StringFilter<"Post"> | string
   title?: Prisma.StringFilter<"Post"> | string
   description?: Prisma.StringFilter<"Post"> | string
+  image?: Prisma.StringNullableFilter<"Post"> | string | null
   slug?: Prisma.StringFilter<"Post"> | string
   excerpt?: Prisma.StringNullableFilter<"Post"> | string | null
   content?: Prisma.StringFilter<"Post"> | string
@@ -230,6 +238,7 @@ export type PostOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
   slug?: Prisma.SortOrder
   excerpt?: Prisma.SortOrderInput | Prisma.SortOrder
   content?: Prisma.SortOrder
@@ -249,6 +258,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.PostWhereInput | Prisma.PostWhereInput[]
   title?: Prisma.StringFilter<"Post"> | string
   description?: Prisma.StringFilter<"Post"> | string
+  image?: Prisma.StringNullableFilter<"Post"> | string | null
   excerpt?: Prisma.StringNullableFilter<"Post"> | string | null
   content?: Prisma.StringFilter<"Post"> | string
   published?: Prisma.BoolFilter<"Post"> | boolean
@@ -263,6 +273,7 @@ export type PostOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
   slug?: Prisma.SortOrder
   excerpt?: Prisma.SortOrderInput | Prisma.SortOrder
   content?: Prisma.SortOrder
@@ -282,6 +293,7 @@ export type PostScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Post"> | string
   title?: Prisma.StringWithAggregatesFilter<"Post"> | string
   description?: Prisma.StringWithAggregatesFilter<"Post"> | string
+  image?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
   slug?: Prisma.StringWithAggregatesFilter<"Post"> | string
   excerpt?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
   content?: Prisma.StringWithAggregatesFilter<"Post"> | string
@@ -295,6 +307,7 @@ export type PostCreateInput = {
   id?: string
   title: string
   description: string
+  image?: string | null
   slug: string
   excerpt?: string | null
   content: string
@@ -309,6 +322,7 @@ export type PostUncheckedCreateInput = {
   id?: string
   title: string
   description: string
+  image?: string | null
   slug: string
   excerpt?: string | null
   content: string
@@ -323,6 +337,7 @@ export type PostUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -337,6 +352,7 @@ export type PostUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -351,6 +367,7 @@ export type PostCreateManyInput = {
   id?: string
   title: string
   description: string
+  image?: string | null
   slug: string
   excerpt?: string | null
   content: string
@@ -364,6 +381,7 @@ export type PostUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -376,6 +394,7 @@ export type PostUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -389,6 +408,7 @@ export type PostCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   excerpt?: Prisma.SortOrder
   content?: Prisma.SortOrder
@@ -402,6 +422,7 @@ export type PostMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   excerpt?: Prisma.SortOrder
   content?: Prisma.SortOrder
@@ -415,6 +436,7 @@ export type PostMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   excerpt?: Prisma.SortOrder
   content?: Prisma.SortOrder
@@ -522,6 +544,7 @@ export type PostCreateWithoutTagsInput = {
   id?: string
   title: string
   description: string
+  image?: string | null
   slug: string
   excerpt?: string | null
   content: string
@@ -535,6 +558,7 @@ export type PostUncheckedCreateWithoutTagsInput = {
   id?: string
   title: string
   description: string
+  image?: string | null
   slug: string
   excerpt?: string | null
   content: string
@@ -572,6 +596,7 @@ export type PostScalarWhereInput = {
   id?: Prisma.StringFilter<"Post"> | string
   title?: Prisma.StringFilter<"Post"> | string
   description?: Prisma.StringFilter<"Post"> | string
+  image?: Prisma.StringNullableFilter<"Post"> | string | null
   slug?: Prisma.StringFilter<"Post"> | string
   excerpt?: Prisma.StringNullableFilter<"Post"> | string | null
   content?: Prisma.StringFilter<"Post"> | string
@@ -585,6 +610,7 @@ export type PostCreateWithoutAuthorInput = {
   id?: string
   title: string
   description: string
+  image?: string | null
   slug: string
   excerpt?: string | null
   content: string
@@ -598,6 +624,7 @@ export type PostUncheckedCreateWithoutAuthorInput = {
   id?: string
   title: string
   description: string
+  image?: string | null
   slug: string
   excerpt?: string | null
   content: string
@@ -637,6 +664,7 @@ export type PostUpdateWithoutTagsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -650,6 +678,7 @@ export type PostUncheckedUpdateWithoutTagsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -663,6 +692,7 @@ export type PostUncheckedUpdateManyWithoutTagsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -676,6 +706,7 @@ export type PostCreateManyAuthorInput = {
   id?: string
   title: string
   description: string
+  image?: string | null
   slug: string
   excerpt?: string | null
   content: string
@@ -688,6 +719,7 @@ export type PostUpdateWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -701,6 +733,7 @@ export type PostUncheckedUpdateWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -714,6 +747,7 @@ export type PostUncheckedUpdateManyWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -757,6 +791,7 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   title?: boolean
   description?: boolean
+  image?: boolean
   slug?: boolean
   excerpt?: boolean
   content?: boolean
@@ -773,6 +808,7 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   title?: boolean
   description?: boolean
+  image?: boolean
   slug?: boolean
   excerpt?: boolean
   content?: boolean
@@ -787,6 +823,7 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   title?: boolean
   description?: boolean
+  image?: boolean
   slug?: boolean
   excerpt?: boolean
   content?: boolean
@@ -801,6 +838,7 @@ export type PostSelectScalar = {
   id?: boolean
   title?: boolean
   description?: boolean
+  image?: boolean
   slug?: boolean
   excerpt?: boolean
   content?: boolean
@@ -810,7 +848,7 @@ export type PostSelectScalar = {
   authorId?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "slug" | "excerpt" | "content" | "published" | "createdAt" | "updatedAt" | "authorId", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "image" | "slug" | "excerpt" | "content" | "published" | "createdAt" | "updatedAt" | "authorId", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tags?: boolean | Prisma.Post$tagsArgs<ExtArgs>
@@ -833,6 +871,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     title: string
     description: string
+    image: string | null
     slug: string
     excerpt: string | null
     content: string
@@ -1268,6 +1307,7 @@ export interface PostFieldRefs {
   readonly id: Prisma.FieldRef<"Post", 'String'>
   readonly title: Prisma.FieldRef<"Post", 'String'>
   readonly description: Prisma.FieldRef<"Post", 'String'>
+  readonly image: Prisma.FieldRef<"Post", 'String'>
   readonly slug: Prisma.FieldRef<"Post", 'String'>
   readonly excerpt: Prisma.FieldRef<"Post", 'String'>
   readonly content: Prisma.FieldRef<"Post", 'String'>

@@ -1,38 +1,66 @@
-// src/components/Markdown.tsx
-import  { ReactNode, useEffect, useMemo, useState } from 'react'
-import { unified } from 'unified'
-import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
-import remarkRehype from 'remark-rehype'
-import rehypeReact from 'rehype-react'
 import rehypeSlug from 'rehype-slug'
-import * as prod from 'react/jsx-runtime'
+import Markdown from 'react-markdown'
+import rehypeKatex from 'rehype-katex'
+import remarkMath from 'remark-math'
+import remarkToc from 'remark-toc'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeToc from '@jsdevtools/rehype-toc'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+// import 'katex/dist/katex.min.css'
 
-const production = {
-  Fragment: prod.Fragment,
-  jsx: prod.jsx,
-  jsxs: prod.jsxs,
-}
-
-export function Markdown({ content }: { content: string }) {
-  const processor = useMemo(() => {
-    return unified()
-      .use(remarkParse) // Parse markdown
-      .use(remarkGfm) // Support Tables, Checklists, etc.
-      .use(remarkRehype) // Convert to HTML AST
-      .use(rehypeSlug) // Add IDs to headings for linking
-      .use(rehypeReact, production) // Final step: Convert to React
-  }, [])
-
-  const [ReactContent, setReactContent] = useState<ReactNode>(null)
-
-  useEffect(() => {
-    processor.process(content).then((file) => {
-      setReactContent(file.result)
-    })
-  }, [content, processor])
-
+export function MarkdownRenderer({ markdown }: { markdown: string }) {
   return (
-    <article className="prose lg:prose-xl">{ReactContent}</article>
+    <Markdown
+      remarkPlugins={[
+        remarkMath,
+        remarkGfm,
+        [remarkToc, { heading: 'contents', maxDepth: 3 }],
+      ]}
+      rehypePlugins={[
+        rehypeKatex,
+        rehypeSlug,
+        [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+        [
+          rehypeToc,
+          {
+            cssClasses: {
+              toc: 'toc-content',
+              list: 'toc-list',
+            },
+          },
+        ],
+      ]}
+      components={{
+        // this function intercepts the "code" tag in markdown
+        code({ node, inline, className, children, ...props }: any) {
+          const match = /language-(\w+)/.exec(className || '')
+
+          return !inline && match ? (
+            <SyntaxHighlighter
+              {...props}
+              style={oneDark} // code's theme
+              language={match[1]}
+              PreTag="div"
+              // makes the code block look cleaner
+              customStyle={{
+                margin: 0,
+                borderRadius: '0.5rem',
+                fontSize: '0.9rem',
+              }}
+            >
+              {String(children).replace(/\n$/, '')}
+            </SyntaxHighlighter>
+          ) : (
+            <code className={className} {...props}>
+              {children}
+            </code>
+          )
+        },
+      }}
+    >
+      {markdown}
+    </Markdown>
   )
 }

@@ -85,6 +85,7 @@ model Post {
   id          String   @id @default(cuid())
   title       String
   description String
+  image       String?
   slug        String   @unique
   excerpt     String?
   content     String   @db.Text    

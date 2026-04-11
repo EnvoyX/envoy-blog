@@ -1,0 +1,245 @@
+import { MarkdownRenderer } from '@/components/web/Markdown'
+import { getPostFn } from '@/data/blog'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { ChevronLeft, ListIcon } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { intlFormat, intlFormatDistance } from 'date-fns'
+
+export const Route = createFileRoute('/dashboard/blog/$slug/')({
+  component: PostComponent,
+  loader: ({ params }) => getPostFn({ data: params.slug }),
+  head: ({ loaderData }) => ({
+    meta: [
+      { title: `${loaderData?.title} | Blog | Envoy Mindpalace` },
+      {
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
+      },
+      { property: 'og:title', content: `${loaderData?.title} | Envoy Blog` },
+      {
+        property: 'og:description',
+        content: `${loaderData?.description}`,
+      },
+      {
+        property: 'og:image',
+        content: `${loaderData?.image}`,
+      },
+      { property: 'og:type', content: 'website' },
+    ],
+  }),
+})
+
+function extractHeadings(markdown: string) {
+  const lines = markdown.split('\n')
+  const headings: { text: string; id: string; level: number }[] = []
+
+  lines.forEach((line) => {
+    const match = line.match(/^(#{2,3})\s+(.*)/)
+    if (match) {
+      const level = match[1].length
+      const text = match[2]
+      const id = text
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]/g, '')
+
+      headings.push({ text, id, level })
+    }
+  })
+  return headings
+}
+
+function PostComponent() {
+  const post = Route.useLoaderData()
+  const [activeId, setActiveId] = useState('')
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id)
+          }
+        })
+      },
+      { rootMargin: '-20% 0% -35% 0%' }, // adjusts when the link triggers
+    )
+
+    document.querySelectorAll('h2, h3').forEach((h) => observer.observe(h))
+    return () => observer.disconnect()
+  }, [])
+
+  const headings = post?.content ? extractHeadings(post.content) : []
+
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-black text-slate-50 antialiased flex flex-col">
+        <nav className="sticky top-0 z-40 border-b border-slate-800 bg-black backdrop-blur-md">
+          <div className="mx-auto flex max-w-7xl items-center px-4 py-3">
+            <Button
+              variant="ghost"
+              asChild
+              className="text-slate-400 hover:text-white"
+            >
+              <Link to="/dashboard/blog">
+                <ChevronLeft className="mr-2 size-4" />
+                Back to Blog
+              </Link>
+            </Button>
+          </div>
+        </nav>
+
+        <main className="flex-1 flex items-center justify-center px-4">
+          <div className="text-center space-y-6 max-w-md">
+            <div className="inline-flex items-center justify-center size-16 rounded-2xl bg-slate-900 border border-slate-800 mb-4">
+              <span className="text-2xl font-bold text-slate-400">404</span>
+            </div>
+            <h1 className="text-4xl font-extrabold tracking-tight bg-linear-to-r from-white to-slate-500 bg-clip-text text-transparent">
+              Post Not Found
+            </h1>
+            <p className="text-slate-400 text-lg leading-relaxed">
+              The blog post you're looking for doesn't exist or may have been
+              moved.
+            </p>
+            <div className="pt-4">
+              <Button asChild size="lg" className="rounded-full px-8">
+                <Link to="/dashboard/blog">Return to Dashboard</Link>
+              </Button>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-black text-slate-50 antialiased">
+      <nav className="sticky top-0 z-40 border-b border-slate-800 bg-black backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+          <Button
+            variant="ghost"
+            asChild
+            className="text-slate-400 hover:text-white"
+          >
+            <Link to="/dashboard/blog">
+              <ChevronLeft className="mr-2 size-4" />
+              Back to Blog
+            </Link>
+          </Button>
+          <div className="text-sm font-medium text-slate-500 truncate max-w-50 md:max-w-none">
+            {post.title}
+          </div>
+        </div>
+      </nav>
+
+      <main className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
+        <div className="flex flex-col lg:flex-row lg:gap-12">
+          <div className="flex-1 min-w-0">
+            <header className="mb-8">
+              <div className="aspect-video w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 mb-8">
+                <img
+                  src={
+                    post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'
+                  }
+                  alt={post.title ?? 'Blog Thumbnail'}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="flex flex-wrap items-center gap-4 mb-6 text-sm">
+                <div className="flex items-center gap-3 pr-4 border-r border-slate-800">
+                  <Avatar className="h-9 w-9 border border-slate-700">
+                    <AvatarImage
+                      src={post.author.image as string}
+                      alt={post.author.name}
+                    />
+                    <AvatarFallback className="bg-slate-800 text-xs">
+                      {post.author?.name
+                        ?.split(' ')
+                        .map((n) => n[0])
+                        .join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="font-medium text-slate-200">
+                      {post.author.name}
+                    </span>
+                    <span className="text-xs text-slate-500 uppercase tracking-wider">
+                      Author
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-slate-400">
+                  <p className="flex items-center">
+                    {intlFormat(new Date(post.createdAt), {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </p>
+                  <span className="hidden sm:inline text-slate-700">•</span>
+                  <span className="text-slate-500 italic">
+                    Updated{' '}
+                    {intlFormatDistance(new Date(post.updatedAt), new Date())}
+                  </span>
+                </div>
+              </div>
+              <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 text-white">
+                {post.title}
+              </h1>
+              <p className="text-xl text-slate-400 leading-relaxed italic border-l-4 border-primary pl-4">
+                {post.description}
+              </p>
+            </header>
+
+            <div
+              className="prose prose-invert prose-slate max-w-none 
+              prose-headings:scroll-mt-20 
+              prose-headings:font-bold 
+              prose-pre:bg-slate-900 
+              prose-pre:border prose-pre:border-slate-800"
+            >
+              <MarkdownRenderer
+                markdown={post.content || '*Nothing to preview...*'}
+              />
+            </div>
+          </div>
+
+          <aside className="hidden lg:block w-64 shrink-0">
+            <div className="sticky top-24 space-y-4 h-[calc(100vh-(--spacing(24)))] overflow-y-auto scrollbar-hide pr-4">
+              <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-slate-500">
+                <ListIcon className="size-4" />
+                On this page
+              </div>
+
+              <nav className="space-y-1 border-l border-slate-800 ">
+                {headings.map((heading) => (
+                  <a
+                    key={heading.id}
+                    href={`#${heading.id}`}
+                    className={`block py-1.5 pr-4 text-sm transition-all border-l-2 -ml-0.5 hover:text-white 
+                      ${activeId === heading.id ? 'text-white border-blue-500 bg-blue-500/5' : 'text-slate-400'}
+                      ${
+                        heading.level === 3 ? 'pl-8' : 'pl-4'
+                      } border-transparent hover:border-slate-500 text-slate-400`}
+                  >
+                    {heading.text}
+                  </a>
+                ))}
+              </nav>
+
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="mt-8 text-xs text-slate-500 hover:text-primary transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                Back to top ↑
+              </button>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+  )
+}

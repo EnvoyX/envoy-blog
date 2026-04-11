@@ -3,7 +3,7 @@ import { getDiary } from '@/data/diaries'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/dashboard/diaries/$slug')({
-  loader: ({params}) => getDiary({data: params.slug}) ,
+  loader: ({ params }) => getDiary({ data: params.slug }),
   component: RouteComponent,
 })
 
