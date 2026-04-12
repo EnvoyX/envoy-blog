@@ -1,4 +1,9 @@
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
 import {
   Plus,
   MoreVertical,
@@ -9,6 +14,7 @@ import {
   LucideClockFading,
   ListXIcon,
   Loader2,
+  Search,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
@@ -32,10 +38,16 @@ import {
   DialogClose,
 } from '@/components/ui/dialog'
 import { useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { useDebouncedCallback } from '@tanstack/react-pacer'
+import { zodValidator } from '@tanstack/zod-adapter'
+import { postSearchSchema } from '@/schemas/blog'
+import { Switch } from '@/components/ui/switch'
 
 export const Route = createFileRoute('/dashboard/blog/')({
   loader: () => getMyPostsFn(),
   component: BlogPageComponent,
+  validateSearch: zodValidator(postSearchSchema),
   head: () => ({
     meta: [
       { title: `My Blogs | Envoy Mindpalace` },
@@ -58,7 +70,9 @@ export const Route = createFileRoute('/dashboard/blog/')({
 })
 
 function BlogPageComponent() {
-  const posts = Route.useLoaderData()
+  const allPosts = Route.useLoaderData()
+  const { published, query } = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath })
   const router = useRouter()
   const [modalStore] = useState(() =>
     createStore({
@@ -70,13 +84,34 @@ function BlogPageComponent() {
   const isOpen = useStore(modalStore, (state) => state.isOpen)
   const isLoading = useStore(modalStore, (state) => state.isLoading)
 
+  const filteredPosts = allPosts.filter((post) => {
+    const matchedQuery =
+      post.title?.toLowerCase().includes(query.toLowerCase()) ||
+      post.description?.toLowerCase().includes(query.toLowerCase()) ||
+      query === ''
+    const matchedStatus = post.published === published
+
+    return matchedQuery && matchedStatus
+  })
+
+  const debouncedSearch = useDebouncedCallback(
+    (searchTerm: string) => {
+      navigate({
+        search: (prev) => ({ ...prev, query: searchTerm }),
+      })
+    },
+    {
+      wait: 500, // Wait 500ms after last keystroke
+    },
+  )
+
   //   const { unsubscribe } = modalStore.subscribe(() => {
   //     console.log('The state is now:', modalStore.state)
   //   })
 
   return (
     <div className="min-h-screen bg-black text-slate-50 p-6 md:p-10">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col max-sm:items-center">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
             <h1 className="text-4xl font-black tracking-tight bg-linear-to-r from-white to-slate-500 bg-clip-text text-transparent">
@@ -98,8 +133,37 @@ function BlogPageComponent() {
           </Button>
         </div>
 
+        <div className="flex items-center gap-4 mb-8">
+          <div className="relative w-full group">
+            <div className="absolute inset-y-0 z-10 left-3 flex items-center pointer-events-none">
+              <Search className="size-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+            </div>
+            <Input
+              type="search"
+              placeholder="Search blogs..."
+              className="pl-10 bg-emerald-900/40 border-emerald-800 focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
+              onChange={(e) => {
+                debouncedSearch(e.target.value)
+              }}
+            />
+          </div>
+          <div className="flex items-center gap-2 rounded-lg border border-emerald-800 hover:border-emerald-500/50 p-1.5">
+            <h3 className="text-muted-foreground">Visibility</h3>
+            <Switch
+              className="bg-emerald-900/40 border-emerald-800 focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
+              id="switch-visibility"
+              checked={published}
+              onCheckedChange={(value) =>
+                navigate({
+                  search: (prev) => ({ ...prev, published: value }),
+                })
+              }
+            />
+          </div>
+        </div>
+
         {/* Empty State */}
-        {posts.length === 0 && (
+        {filteredPosts.length === 0 && (
           <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
             <p className="text-slate-500">
               No posts found. Start your journey today!
@@ -107,8 +171,8 @@ function BlogPageComponent() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
+          {filteredPosts.map((post) => (
             <Card
               key={post.id}
               className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs"

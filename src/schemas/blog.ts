@@ -11,3 +11,8 @@ export const postSchema = z.object({
     error: 'Published status is required',
   }),
 })
+
+export const postSearchSchema = z.object({
+  published: z.boolean().default(false),
+  query: z.string().default(''),
+})

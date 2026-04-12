@@ -2,9 +2,12 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { allPosts } from '../../../../.content-collections/generated'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import { Calendar } from 'lucide-react'
+import { Calendar, Search } from 'lucide-react'
 import { intlFormat } from 'date-fns'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { useDebouncedCallback } from '@tanstack/react-pacer'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/_general/blog/')({
   component: BlogIndex,
@@ -30,22 +33,56 @@ export const Route = createFileRoute('/_general/blog/')({
 })
 
 function BlogIndex() {
+  const [posts, setPosts] = useState(allPosts)
+
+  function performSearch(searchTerm: string) {
+    const searchedPosts = allPosts.filter((post) => {
+      const matchedQuery =
+        searchTerm === '' ||
+        post.title?.toLowerCase().includes(searchTerm.toLowerCase())
+
+      return matchedQuery
+    })
+
+    setPosts(searchedPosts)
+  }
+
+  const debouncedSearch = useDebouncedCallback(
+    (searchTerm: string) => performSearch(searchTerm),
+    {
+      wait: 500, // Wait 500ms after last keystroke
+    },
+  )
+
   // Posts are sorted by published date
-  const sortedPosts = allPosts.sort(
+  const sortedPosts = posts.sort(
     (a, b) => new Date(b.published).getTime() - new Date(a.published).getTime(),
   )
 
   return (
     <div className="min-h-screen bg-black text-slate-50 p-6 md:p-10">
-      <div className="max-w-7xl">
-        <div className="flex justify-center sm:justify-start items-center gap-6 mb-12">
+      <div className="max-w-7xl mx-auto max-sm:flex-col max-sm:flex max-sm:items-center">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
             <h1 className="text-4xl font-black tracking-tight text-white max-sm:text-center">
               Blog
             </h1>
-            <p className="text-slate-400 mt-2">
+            <p className="text-slate-400 mt-2 max-sm:text-center">
               The latest news and blog posts.
             </p>
+          </div>
+          <div className="relative w-full md:w-80 group">
+            <div className="absolute inset-y-0 z-10 left-3 flex items-center pointer-events-none">
+              <Search className="size-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+            </div>
+            <Input
+              type="search"
+              placeholder="Search blogs..."
+              className="pl-10 bg-emerald-900/40 border-emerald-800 focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
+              onChange={(e) => {
+                debouncedSearch(e.target.value)
+              }}
+            />
           </div>
         </div>
 
