@@ -99,7 +99,7 @@ function RouteComponent() {
                 <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold italic tracking-tighter">
                   {data?.quranTrack?.currentSurah ?? 'No Surah tracked yet'}
                 </span>
-                <span className="text-amber-400 font-mono text-lg">
+                <span className="text-emerald-400 font-mono text-lg">
                   Ayat: {data?.quranTrack?.currentAyat ?? 'N/A'}
                 </span>
               </div>
@@ -124,7 +124,7 @@ function RouteComponent() {
         <div className="lg:col-span-1 space-y-6">
           <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-6">
             <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
-              <Activity className="text-blue-400 size-5" />
+              <Activity className="text-emerald-400 size-5" />
               Activity Overview
             </h3>
             {isLoadingTasksData ? (
@@ -235,7 +235,10 @@ function RouteComponent() {
                       <h4 className="font-bold text-zinc-200 group-hover:text-white">
                         {list.title}
                       </h4>
-                      <div className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                      </span>
                     </div>
                     <p className="text-sm text-zinc-500 line-clamp-1 mb-4">
                       {list.description}

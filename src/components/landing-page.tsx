@@ -14,13 +14,13 @@ const LandingPage = () => {
   return (
     <div>
       <section className="relative pt-20 pb-32 px-8 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-125 bg-cyan-500/10 blur-[120px] rounded-full -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-125 bg-emerald-500/10 blur-[120px] rounded-full -z-10" />
 
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900  text-xs font-medium text-cyan-400 mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900  text-xs font-medium text-emerald-400 mb-6">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             Now in RC: TanStack Start
           </div>
@@ -35,7 +35,7 @@ const LandingPage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to={data?.user ? '/dashboard' : '/login'}
-              className="flex items-center justify-center gap-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105"
+              className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105"
             >
               {data?.user ? 'Dashboard' : 'Login'} <ArrowRight size={18} />
             </Link>
@@ -53,17 +53,17 @@ const LandingPage = () => {
       <section className="max-w-7xl mx-auto px-8 py-24">
         <div className="grid md:grid-cols-3 gap-12">
           <FeatureCard
-            icon={<Zap className="text-cyan-400" />}
+            icon={<Zap className="text-emerald-400" />}
             title="Blazing Fast SSR"
             description="Built on Vite for lightning-fast HMR and optimized server-side rendering out of the box."
           />
           <FeatureCard
-            icon={<ShieldCheck className="text-blue-400" />}
+            icon={<ShieldCheck className="text-emerald-400" />}
             title="100% Type-Safe"
             description="End-to-end type safety from server functions to UI components without the boilerplate."
           />
           <FeatureCard
-            icon={<Globe className="text-indigo-400" />}
+            icon={<Globe className="text-emerald-400" />}
             title="Edge Ready"
             description="Deploy anywhere. Designed to run on the edge, serverless, or traditional Node.js environments."
           />
@@ -82,7 +82,7 @@ const FeatureCard = ({
   title: string
   description: string
 }) => (
-  <div className="group p-8 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-cyan-500/50 transition-all">
+  <div className="group p-8 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-emerald-500/50 transition-all">
     <div className="mb-4 p-3 bg-slate-950 w-fit rounded-lg border border-slate-800 group-hover:scale-110 transition-transform">
       {icon}
     </div>

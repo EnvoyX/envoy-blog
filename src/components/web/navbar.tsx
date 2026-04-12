@@ -160,7 +160,13 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 border-b bg-transparent backdrop-blur">
       <div className="mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2">
+        <Link
+          to="/"
+          activeProps={{
+            className: 'bg-primary/10 text-primary border-b-2 border-primary',
+          }}
+          className="flex items-center gap-3 text-sm font-medium rounded-lg transition-colors hover:bg-white/10"
+        >
           <img
             src="https://tanstack.com/images/logos/logo-color-banner-600.png"
             alt="TanStack Start logo"
@@ -175,11 +181,12 @@ export function Navbar() {
               <Link
                 to={item.to}
                 activeProps={{
-                  'data-active': true,
+                  className:
+                    'bg-primary/10 text-primary border-b-2 border-primary',
                 }}
                 activeOptions={item.activeOptions}
                 key={index}
-                className="hover:scale-105 hover:underline transition-transform"
+                className="flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors hover:bg-white/10"
               >
                 {item.title}
               </Link>
@@ -262,7 +269,7 @@ export function Navbar() {
         <Sheet>
           <SheetTrigger asChild className="sm:hidden">
             <Button variant="ghost" size="icon">
-              <Menu className="size-6" />
+              <Menu className="size-6 text-primary" />
             </Button>
           </SheetTrigger>
           <SheetContent

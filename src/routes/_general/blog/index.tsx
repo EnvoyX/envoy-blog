@@ -37,8 +37,8 @@ function BlogIndex() {
 
   return (
     <div className="min-h-screen bg-black text-slate-50 p-6 md:p-10">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+      <div className="max-w-7xl">
+        <div className="flex justify-center sm:justify-start items-center gap-6 mb-12">
           <div>
             <h1 className="text-4xl font-black tracking-tight bg-linear-to-r from-white to-slate-500 bg-clip-text text-transparent">
               Blog
@@ -58,7 +58,7 @@ function BlogIndex() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {sortedPosts.map((post) => (
             <Card
               key={post.slug}

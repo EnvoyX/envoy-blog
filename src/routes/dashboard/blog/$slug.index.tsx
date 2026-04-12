@@ -228,7 +228,7 @@ function PostComponent() {
                     key={heading.id}
                     href={`#${heading.id}`}
                     className={`block py-1.5 pr-4 text-sm transition-all border-l-2 -ml-0.5 hover:text-white 
-                      ${activeId === heading.id ? 'text-white border-blue-500 bg-blue-500/5' : 'text-slate-400'}
+                      ${activeId === heading.id ? ' bg-emerald-500/10 text-emerald-500 border-emerald-500 font-medium' : 'text-slate-400'}
                       ${heading.level === 1 && 'pl-2'}
                       ${heading.level === 2 && 'pl-4'} 
                       ${heading.level === 3 && 'pl-6'}
@@ -236,7 +236,7 @@ function PostComponent() {
                       ${heading.level === 5 && 'pl-10'}
                       ${heading.level === 6 && 'pl-12'}
                       
-                      border-transparent hover:border-slate-500 text-slate-400`}
+                       hover:bg-slate-500/5`}
                   >
                     {heading.text}
                   </a>
