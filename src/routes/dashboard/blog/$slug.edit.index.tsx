@@ -3,7 +3,7 @@ import { getPostFn } from '@/data/blog'
 import { Post } from '@/generated/prisma/client'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/dashboard/blog/$slug/edit')({
+export const Route = createFileRoute('/dashboard/blog/$slug/edit/')({
   component: RouteComponent,
   loader: ({ params }) => getPostFn({ data: params.slug }),
   head: ({ loaderData }) => ({

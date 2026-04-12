@@ -4,24 +4,26 @@ import { Button } from '@/components/ui/button'
 import { ChevronLeft, Copy, CopyCheck } from 'lucide-react'
 import { useState } from 'react'
 import Editor from '@uiw/react-md-editor'
+import { getPostFn } from '@/data/blog'
 
-export const Route = createFileRoute('/dashboard/blog/md-editor/')({
+export const Route = createFileRoute('/dashboard/blog/$slug/edit/md-editor')({
   component: RouteComponent,
-  head: () => ({
+  loader: ({ params }) => getPostFn({ data: params.slug }),
+  head: ({ loaderData }) => ({
     meta: [
-      { title: `Markdown Editor  | Envoy Mindpalace` },
+      { title: `Markdown Editor | ${loaderData?.slug} | Envoy Mindpalace` },
       {
         name: 'Envoy Mindpalace',
         content: 'Welcome to my TanStack Start playground!',
       },
-      { property: 'og:title', content: `Markdown Editor | Envoy Blog` },
+      { property: 'og:title', content: `${loaderData?.title} | Envoy Blog` },
       {
         property: 'og:description',
-        content: `Markdown Editor to edit blog post`,
+        content: `${loaderData?.description}`,
       },
       {
         property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        content: `${loaderData?.image}`,
       },
       { property: 'og:type', content: 'website' },
     ],
@@ -29,7 +31,8 @@ export const Route = createFileRoute('/dashboard/blog/md-editor/')({
 })
 
 function RouteComponent() {
-  const [markdown, setMarkdown] = useState('# Markdown editor')
+  const post = Route.useLoaderData()
+  const [markdown, setMarkdown] = useState(post?.content ?? '')
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -54,8 +57,11 @@ function RouteComponent() {
           </div>
           <div className="flex gap-3">
             <Button variant="default" className="gap-2" asChild>
-              <Link to="/dashboard/blog/create-blog">
-                <ChevronLeft className="size-4" /> Create Blog
+              <Link
+                to="/dashboard/blog/$slug/edit"
+                params={{ slug: post?.slug ?? '' }}
+              >
+                <ChevronLeft className="size-4" /> Edit Blog
               </Link>
             </Button>
             <Button onClick={handleCopy} className="cursor-pointer">

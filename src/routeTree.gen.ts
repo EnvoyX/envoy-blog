@@ -32,7 +32,8 @@ import { Route as GeneralBlogSlugRouteImport } from './routes/_general/blog/$slu
 import { Route as DashboardBlogMdEditorIndexRouteImport } from './routes/dashboard/blog/md-editor/index'
 import { Route as DashboardBlogCreateBlogIndexRouteImport } from './routes/dashboard/blog/create-blog/index'
 import { Route as DashboardBlogSlugIndexRouteImport } from './routes/dashboard/blog/$slug.index'
-import { Route as DashboardBlogSlugEditRouteImport } from './routes/dashboard/blog/$slug.edit'
+import { Route as DashboardBlogSlugEditIndexRouteImport } from './routes/dashboard/blog/$slug.edit.index'
+import { Route as DashboardBlogSlugEditMdEditorRouteImport } from './routes/dashboard/blog/$slug.edit.md-editor'
 
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
@@ -152,11 +153,18 @@ const DashboardBlogSlugIndexRoute = DashboardBlogSlugIndexRouteImport.update({
   path: '/blog/$slug/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const DashboardBlogSlugEditRoute = DashboardBlogSlugEditRouteImport.update({
-  id: '/blog/$slug/edit',
-  path: '/blog/$slug/edit',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
+const DashboardBlogSlugEditIndexRoute =
+  DashboardBlogSlugEditIndexRouteImport.update({
+    id: '/blog/$slug/edit/',
+    path: '/blog/$slug/edit/',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
+const DashboardBlogSlugEditMdEditorRoute =
+  DashboardBlogSlugEditMdEditorRouteImport.update({
+    id: '/blog/$slug/edit/md-editor',
+    path: '/blog/$slug/edit/md-editor',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -177,10 +185,11 @@ export interface FileRoutesByFullPath {
   '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
-  '/dashboard/blog/$slug/edit': typeof DashboardBlogSlugEditRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
+  '/dashboard/blog/$slug/edit/md-editor': typeof DashboardBlogSlugEditMdEditorRoute
+  '/dashboard/blog/$slug/edit/': typeof DashboardBlogSlugEditIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -200,10 +209,11 @@ export interface FileRoutesByTo {
   '/dashboard/items': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker': typeof DashboardTaskTrackerIndexRoute
-  '/dashboard/blog/$slug/edit': typeof DashboardBlogSlugEditRoute
   '/dashboard/blog/$slug': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor': typeof DashboardBlogMdEditorIndexRoute
+  '/dashboard/blog/$slug/edit/md-editor': typeof DashboardBlogSlugEditMdEditorRoute
+  '/dashboard/blog/$slug/edit': typeof DashboardBlogSlugEditIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -227,10 +237,11 @@ export interface FileRoutesById {
   '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
-  '/dashboard/blog/$slug/edit': typeof DashboardBlogSlugEditRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
+  '/dashboard/blog/$slug/edit/md-editor': typeof DashboardBlogSlugEditMdEditorRoute
+  '/dashboard/blog/$slug/edit/': typeof DashboardBlogSlugEditIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -253,10 +264,11 @@ export interface FileRouteTypes {
     | '/dashboard/items/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/task-tracker/'
-    | '/dashboard/blog/$slug/edit'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
     | '/dashboard/blog/md-editor/'
+    | '/dashboard/blog/$slug/edit/md-editor'
+    | '/dashboard/blog/$slug/edit/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -276,10 +288,11 @@ export interface FileRouteTypes {
     | '/dashboard/items'
     | '/dashboard/quran-tracker'
     | '/dashboard/task-tracker'
-    | '/dashboard/blog/$slug/edit'
     | '/dashboard/blog/$slug'
     | '/dashboard/blog/create-blog'
     | '/dashboard/blog/md-editor'
+    | '/dashboard/blog/$slug/edit/md-editor'
+    | '/dashboard/blog/$slug/edit'
   id:
     | '__root__'
     | '/'
@@ -302,10 +315,11 @@ export interface FileRouteTypes {
     | '/dashboard/items/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/task-tracker/'
-    | '/dashboard/blog/$slug/edit'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
     | '/dashboard/blog/md-editor/'
+    | '/dashboard/blog/$slug/edit/md-editor'
+    | '/dashboard/blog/$slug/edit/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -481,11 +495,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardBlogSlugIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/dashboard/blog/$slug/edit': {
-      id: '/dashboard/blog/$slug/edit'
+    '/dashboard/blog/$slug/edit/': {
+      id: '/dashboard/blog/$slug/edit/'
       path: '/blog/$slug/edit'
-      fullPath: '/dashboard/blog/$slug/edit'
-      preLoaderRoute: typeof DashboardBlogSlugEditRouteImport
+      fullPath: '/dashboard/blog/$slug/edit/'
+      preLoaderRoute: typeof DashboardBlogSlugEditIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/blog/$slug/edit/md-editor': {
+      id: '/dashboard/blog/$slug/edit/md-editor'
+      path: '/blog/$slug/edit/md-editor'
+      fullPath: '/dashboard/blog/$slug/edit/md-editor'
+      preLoaderRoute: typeof DashboardBlogSlugEditMdEditorRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
   }
@@ -528,10 +549,11 @@ interface DashboardRouteRouteChildren {
   DashboardItemsIndexRoute: typeof DashboardItemsIndexRoute
   DashboardQuranTrackerIndexRoute: typeof DashboardQuranTrackerIndexRoute
   DashboardTaskTrackerIndexRoute: typeof DashboardTaskTrackerIndexRoute
-  DashboardBlogSlugEditRoute: typeof DashboardBlogSlugEditRoute
   DashboardBlogSlugIndexRoute: typeof DashboardBlogSlugIndexRoute
   DashboardBlogCreateBlogIndexRoute: typeof DashboardBlogCreateBlogIndexRoute
   DashboardBlogMdEditorIndexRoute: typeof DashboardBlogMdEditorIndexRoute
+  DashboardBlogSlugEditMdEditorRoute: typeof DashboardBlogSlugEditMdEditorRoute
+  DashboardBlogSlugEditIndexRoute: typeof DashboardBlogSlugEditIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
@@ -545,10 +567,11 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardItemsIndexRoute: DashboardItemsIndexRoute,
   DashboardQuranTrackerIndexRoute: DashboardQuranTrackerIndexRoute,
   DashboardTaskTrackerIndexRoute: DashboardTaskTrackerIndexRoute,
-  DashboardBlogSlugEditRoute: DashboardBlogSlugEditRoute,
   DashboardBlogSlugIndexRoute: DashboardBlogSlugIndexRoute,
   DashboardBlogCreateBlogIndexRoute: DashboardBlogCreateBlogIndexRoute,
   DashboardBlogMdEditorIndexRoute: DashboardBlogMdEditorIndexRoute,
+  DashboardBlogSlugEditMdEditorRoute: DashboardBlogSlugEditMdEditorRoute,
+  DashboardBlogSlugEditIndexRoute: DashboardBlogSlugEditIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(

@@ -8,6 +8,8 @@ import {
   ChevronLeft,
   PencilIcon,
   PencilRulerIcon,
+  CopyCheck,
+  Copy,
 } from 'lucide-react'
 
 import {
@@ -40,6 +42,15 @@ import { cn } from '@/lib/utils'
 
 export function BlogEditor({ initialData }: { initialData?: Post }) {
   const [activeTab, setActiveTab] = useState('edit-blog')
+  const [markdown, setMarkdown] = useState(initialData?.content ?? '')
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async (markdown: string) => {
+    await navigator.clipboard.writeText(markdown)
+    setMarkdown(markdown)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1800)
+  }
 
   const form = useForm({
     defaultValues: {
@@ -188,18 +199,39 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                   Content (Markdown)
                 </Label>
                 <div className="flex items-center gap-2">
-                  <Button variant={'default'} asChild>
-                    <Link to="/dashboard/blog/md-editor">
+                  <Button size={'sm'} variant={'default'} asChild>
+                    <Link
+                      to={
+                        initialData
+                          ? '/dashboard/blog/$slug/edit/md-editor'
+                          : '/dashboard/blog/md-editor'
+                      }
+                      params={{
+                        slug: initialData?.slug,
+                      }}
+                    >
                       <PencilIcon className="size-4" />
                       Edit in MD Editor
                     </Link>
                   </Button>
-                  {/* <Button variant={'default'} asChild>
-                    <Link to="/dashboard/blog/mdx-editor">
-                      <PencilRulerIcon className="size-4" />
-                      Edit in MDX Editor
-                    </Link>
-                  </Button> */}
+                  <Button
+                    size={'sm'}
+                    variant={'default'}
+                    onClick={() => handleCopy(field.state.value)}
+                    className="cursor-pointer"
+                  >
+                    {copied ? (
+                      <span className="flex gap-1">
+                        <CopyCheck className="size-4" />
+                        Copied!
+                      </span>
+                    ) : (
+                      <span className="flex gap-1">
+                        <Copy className="size-4" />
+                        Copy Markdown
+                      </span>
+                    )}
+                  </Button>
                 </div>
                 <Textarea
                   id={`${field.name}-input`}
@@ -240,17 +272,37 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
         <div className="hidden md:block">
           <div className="flex gap-2 items-center">
             <Button variant={'outline'} asChild>
-              <Link to="/dashboard/blog/md-editor">
+              <Link
+                to={
+                  initialData
+                    ? '/dashboard/blog/$slug/edit/md-editor'
+                    : '/dashboard/blog/md-editor'
+                }
+                params={{
+                  slug: initialData?.slug,
+                }}
+              >
                 <PencilIcon className="size-4" />
                 Edit in MD Editor
               </Link>
             </Button>
-            {/* <Button variant={'outline'} asChild>
-              <Link to="/dashboard/blog/mdx-editor">
-                <PencilRulerIcon className="size-4" />
-                Edit in MDX Editor
-              </Link>
-            </Button> */}
+            <Button
+              onClick={() => handleCopy(markdown)}
+              className="cursor-pointer"
+              variant={'outline'}
+            >
+              {copied ? (
+                <span className="flex gap-1">
+                  <CopyCheck className="size-4" />
+                  Copied!
+                </span>
+              ) : (
+                <span className="flex gap-1">
+                  <Copy className="size-4" />
+                  Copy Markdown
+                </span>
+              )}
+            </Button>
             <form.Subscribe
               selector={(state) => [state.isSubmitting]}
               children={([isSubmitting]) => (
