@@ -194,12 +194,12 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                       Edit in MD Editor
                     </Link>
                   </Button>
-                  <Button variant={'default'} asChild>
+                  {/* <Button variant={'default'} asChild>
                     <Link to="/dashboard/blog/mdx-editor">
                       <PencilRulerIcon className="size-4" />
                       Edit in MDX Editor
                     </Link>
-                  </Button>
+                  </Button> */}
                 </div>
                 <Textarea
                   id={`${field.name}-input`}
@@ -245,12 +245,12 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                 Edit in MD Editor
               </Link>
             </Button>
-            <Button variant={'outline'} asChild>
+            {/* <Button variant={'outline'} asChild>
               <Link to="/dashboard/blog/mdx-editor">
                 <PencilRulerIcon className="size-4" />
                 Edit in MDX Editor
               </Link>
-            </Button>
+            </Button> */}
             <form.Subscribe
               selector={(state) => [state.isSubmitting]}
               children={([isSubmitting]) => (

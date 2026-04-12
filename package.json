@@ -27,7 +27,6 @@
     "@elysiajs/openapi": "^1.4.14",
     "@fontsource-variable/inter": "^5.2.8",
     "@jsdevtools/rehype-toc": "^3.0.2",
-    "@mdxeditor/editor": "^3.54.0",
     "@mendable/firecrawl-js": "^4.18.1",
     "@openrouter/ai-sdk-provider": "^2.2.3",
     "@prisma/adapter-pg": "^7.6.0",
