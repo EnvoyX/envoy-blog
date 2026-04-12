@@ -231,7 +231,7 @@ export function Navbar() {
                               'data-active': true,
                             }}
                             activeOptions={item.activeOptions}
-                            className="cursor-pointer"
+                            className="cursor-pointer hover:bg-primary/10! hover:text-primary! hover:border-r-2! hover:border-primary!"
                           >
                             <item.icon />
                             <span>{item.title}</span>

@@ -28,6 +28,7 @@ import { Switch } from '@/components/ui/switch'
 import { createPostFn, updatePostFn } from '@/data/blog'
 import { Post } from '@/generated/prisma/client'
 import { Link } from '@tanstack/react-router'
+import { cn } from '@/lib/utils'
 
 export function BlogEditor({ initialData }: { initialData?: Post }) {
   const [activeTab, setActiveTab] = useState('edit-blog')
@@ -221,7 +222,10 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
               <Button
                 onClick={() => form.handleSubmit()}
                 disabled={isSubmitting}
-                className="gap-2"
+                className={cn('gap-2', {
+                  'cursor-pointer': !isSubmitting,
+                  'cursor-not-allowed': isSubmitting,
+                })}
               >
                 {isSubmitting ? (
                   <Loader2 className="animate-spin size-4" />

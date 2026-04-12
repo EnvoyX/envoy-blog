@@ -67,6 +67,7 @@
     "hast-util-is-element": "^3.0.0",
     "hast-util-to-string": "^3.0.1",
     "html-react-parser": "^6.0.1",
+    "katex": "^0.16.45",
     "lucide-react": "^1.7.0",
     "next-themes": "^0.4.6",
     "nitro": "npm:nitro-nightly@latest",

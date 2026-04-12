@@ -89,7 +89,7 @@ function BlogPageComponent() {
           <Button
             asChild
             size="lg"
-            className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 shadow-lg shadow-emerald-500/20"
+            className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 shadow-lg shadow-emerald-500/20 cursor-pointer"
           >
             <Link to="/dashboard/blog/create-blog" className="gap-2">
               <Plus className="size-5" />
@@ -129,7 +129,7 @@ function BlogPageComponent() {
                       <Button
                         variant="secondary"
                         size="icon"
-                        className="size-8 rounded-full bg-slate-950/50 backdrop-blur-md border-slate-700 hover:bg-slate-800"
+                        className="size-8 rounded-full bg-slate-950/50 backdrop-blur-md border-slate-700 hover:bg-slate-800 cursor-pointer"
                       >
                         <MoreVertical className="size-4" />
                       </Button>
@@ -189,7 +189,7 @@ function BlogPageComponent() {
                   </div>
                   <div className="flex items-center gap-2 text-xs text-slate-500 mb-3 uppercase tracking-widest font-semibold">
                     <LucideClockFading className="size-3" />
-                    {intlFormatDistance(new Date(post.createdAt), new Date())}
+                    {intlFormatDistance(new Date(post.updatedAt), new Date())}
                   </div>
                 </div>
                 <h2 className="text-xl font-bold leading-tight group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
@@ -204,7 +204,7 @@ function BlogPageComponent() {
                 <Button
                   asChild
                   variant="link"
-                  className="p-0 h-auto text-emerald-400 hover:text-emerald-300 gap-2"
+                  className="p-0 h-auto text-emerald-400 hover:text-emerald-300 gap-2 cursor-pointer"
                 >
                   <Link to="/dashboard/blog/$slug" params={{ slug: post.slug }}>
                     Read Full Blog →
@@ -261,9 +261,15 @@ function BlogPageComponent() {
               </DialogHeader>
               <DialogFooter className="mt-6">
                 <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <Button variant="outline" className="cursor-pointer">
+                    Cancel
+                  </Button>
                 </DialogClose>
-                <Button type="submit" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="cursor-pointer"
+                >
                   {isLoading ? (
                     <>
                       <Loader2 className="size-4 animate-spin" />

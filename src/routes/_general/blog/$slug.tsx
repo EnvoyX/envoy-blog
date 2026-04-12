@@ -32,7 +32,7 @@ function extractHeadings(markdown: string) {
     // adjust the # match: i.e. {2,3} or {1,6} to match 1 to 6 '#' symbols
     const match = line.match(/^(#{1,6})\s+(.*)/)
     if (match) {
-      const level = match[1].length
+      const level = match[1].length // length of '#'
       const text = match[2]
       const id = text
         .toLowerCase()
@@ -47,18 +47,29 @@ function extractHeadings(markdown: string) {
 
 function BlogPost() {
   const post = Route.useLoaderData()
-  const [activeId, setActiveId] = useState('')
-
+  const [visibleIds, setVisibleIds] = useState<string[]>([])
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id)
-          }
+        setVisibleIds((prev) => {
+          let next = [...prev]
+
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              // add heading id if it's not already there (within viewport)
+              if (!next.includes(entry.target.id)) {
+                next.push(entry.target.id)
+              }
+            } else {
+              // remove id of the heading when it leaves the viewport
+              next = next.filter((id) => id !== entry.target.id)
+            }
+          })
+          return next
         })
       },
-      { rootMargin: '-20% 0% -35% 0%' }, // adjusts when the link triggers
+      // rootMargin: -top -right -bottom -left
+      { rootMargin: '-10% 0% -40% 0%', threshold: 0 }, // adjusts when the link triggers
     )
 
     document
@@ -77,7 +88,7 @@ function BlogPost() {
             <Button
               variant="ghost"
               asChild
-              className="text-slate-400 hover:text-white"
+              className=" text-emerald-500! hover:text-emerald-400! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
             >
               <Link to="/blog">
                 <ChevronLeft className="mr-2 size-4" />
@@ -117,7 +128,7 @@ function BlogPost() {
           <Button
             variant="ghost"
             asChild
-            className="text-slate-400 hover:text-white"
+            className=" text-emerald-500! hover:text-emerald-400! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
           >
             <Link to="/blog">
               <ChevronLeft className="mr-2 size-4" />
@@ -195,12 +206,14 @@ function BlogPost() {
               </div>
 
               <nav className="space-y-1 border-l border-slate-800 ">
-                {headings.map((heading) => (
-                  <a
-                    key={heading.id}
-                    href={`#${heading.id}`}
-                    className={`block py-1.5 pr-4 text-sm transition-all border-l-2 -ml-0.5 hover:text-white 
-                      ${activeId === heading.id ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500 font-medium' : 'text-slate-400'}
+                {headings.map((heading) => {
+                  const isActive = visibleIds.includes(heading.id)
+                  return (
+                    <a
+                      key={heading.id}
+                      href={`#${heading.id}`}
+                      className={`block py-1.5 pr-4 text-sm transition-all border-l-2 -ml-0.5 hover:text-white 
+                      ${isActive ? ' bg-emerald-500/10 text-emerald-500 border-emerald-500 font-medium' : 'text-slate-400'}
                       ${heading.level === 1 && 'pl-2'}
                       ${heading.level === 2 && 'pl-4'} 
                       ${heading.level === 3 && 'pl-6'}
@@ -209,10 +222,11 @@ function BlogPost() {
                       ${heading.level === 6 && 'pl-12'}
                       
                        hover:bg-slate-500/5`}
-                  >
-                    {heading.text}
-                  </a>
-                ))}
+                    >
+                      {heading.text}
+                    </a>
+                  )
+                })}
               </nav>
 
               <button
