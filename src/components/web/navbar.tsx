@@ -1,8 +1,29 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Button, buttonVariants } from '../ui/button'
-// import { ThemeToggle } from './theme-toggle'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { authClient } from '@/lib/auth-client'
-import { LayoutDashboard, Loader2, LogOut, User } from 'lucide-react'
+import {
+  BookMarkedIcon,
+  BookmarkIcon,
+  Check,
+  Compass,
+  Import,
+  LayoutDashboardIcon,
+  Loader2,
+  LogOut,
+  Menu,
+  Newspaper,
+  UserIcon,
+} from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,12 +31,12 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
-import { useEffect, useRef, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { UserAvatar } from './user-profile'
 import { useQuery } from '@tanstack/react-query'
 import { linkOptions } from '@tanstack/react-router'
-import { NavProps } from '@/lib/types'
+import { NavPrimaryProps, NavProps } from '@/lib/types'
 
 export function Navbar() {
   const session = useQuery({
@@ -25,12 +46,9 @@ export function Navbar() {
       return data.data
     },
   })
-  const [menuState, setMenuState] = useState(false)
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [isTransition, startTransition] = useTransition()
-  const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false)
-  const navRef = useRef<HTMLDivElement>(null)
   const handleLogout = () => {
     setIsLoading(true)
     startTransition(async () => {
@@ -72,29 +90,75 @@ export function Navbar() {
     },
   ])
 
-  const closeMenu = () => setMenuState(false)
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        menuState &&
-        navRef.current &&
-        !navRef.current.contains(event.target as Node)
-      ) {
-        closeMenu()
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [menuState])
+  const sidebarNavItems: NavPrimaryProps['items'] = linkOptions([
+    {
+      title: 'Dashboard',
+      icon: LayoutDashboardIcon,
+      to: '/dashboard',
+      activeOptions: {
+        exact: true,
+      },
+    },
+    {
+      title: 'Profile',
+      icon: UserIcon,
+      to: '/dashboard/profile',
+      activeOptions: {
+        exact: false,
+      },
+    },
+    {
+      title: 'Task Tracker',
+      icon: Check,
+      to: '/dashboard/task-tracker',
+      activeOptions: {
+        exact: false,
+      },
+    },
+    {
+      title: "Qur'an Tracker",
+      icon: BookMarkedIcon,
+      to: '/dashboard/quran-tracker',
+      activeOptions: {
+        exact: false,
+      },
+    },
+    {
+      title: 'Blogs',
+      icon: Newspaper,
+      to: '/dashboard/blog',
+      activeOptions: {
+        exact: false,
+      },
+    },
+    {
+      title: 'Items',
+      icon: BookmarkIcon,
+      to: '/dashboard/items',
+      activeOptions: {
+        exact: false,
+      },
+    },
+    {
+      title: 'Import',
+      icon: Import,
+      to: '/dashboard/import',
+      activeOptions: {
+        exact: false,
+      },
+    },
+    {
+      title: 'Discover',
+      icon: Compass,
+      to: '/dashboard/discover',
+      activeOptions: {
+        exact: false,
+      },
+    },
+  ])
 
   return (
-    <nav
-      className="sticky top-0 z-50 border-b bg-transparent backdrop-blur"
-      ref={navRef}
-      data-state={menuState && 'active'}
-    >
+    <nav className="sticky top-0 z-50 border-b bg-transparent backdrop-blur">
       <div className="mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
           <img
@@ -151,23 +215,24 @@ export function Navbar() {
                       </p>
                     </div>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link
-                        to="/dashboard"
-                        className="cursor-pointer hover:bg-white/15!"
-                      >
-                        <LayoutDashboard className="text-white mr-2 size-4" />{' '}
-                        Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        to="/dashboard/profile"
-                        className="cursor-pointer hover:bg-white/15!"
-                      >
-                        <User className="text-white mr-2 size-4" /> Profile
-                      </Link>
-                    </DropdownMenuItem>
+                    {sidebarNavItems.map((item) => {
+                      return (
+                        <DropdownMenuItem asChild>
+                          <Link
+                            to={item.to}
+                            activeProps={{
+                              'data-active': true,
+                            }}
+                            activeOptions={item.activeOptions}
+                            className="cursor-pointer"
+                          >
+                            <item.icon />
+                            <span>{item.title}</span>
+                          </Link>
+                        </DropdownMenuItem>
+                      )
+                    })}
+
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={handleLogout}
@@ -192,6 +257,120 @@ export function Navbar() {
             )}
           </div>
         </div>
+
+        {/* Mobile Navbar */}
+        <Sheet>
+          <SheetTrigger asChild className="sm:hidden">
+            <Button variant="ghost" size="icon">
+              <Menu className="size-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            className="w-75 bg-background/95 backdrop-blur-2xl border-l border-white/10 p-0 flex flex-col"
+          >
+            <SheetHeader className="p-6 text-left border-b border-white/5">
+              <SheetTitle className="flex items-center gap-2">
+                <img
+                  src="https://tanstack.com/images/logos/logo-color-banner-600.png"
+                  className="size-8"
+                  alt="Logo"
+                />
+                <span className="font-bold tracking-tight">
+                  Envoy Mindpalace
+                </span>
+              </SheetTitle>
+            </SheetHeader>
+
+            <div className="flex-1 overflow-y-auto py-6 px-4 space-y-4">
+              {session.data?.user && (
+                <div className="flex items-center gap-3 px-2 py-4 rounded-xl bg-white/5 border border-white/5">
+                  <UserAvatar
+                    src={session.data?.user.image as string}
+                    alt={session.data?.user.name as string}
+                    className="w-12 h-12"
+                  />
+                  <div className="flex flex-col overflow-hidden">
+                    <span className="text-sm font-semibold truncate">
+                      {session.data?.user.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground truncate">
+                      {session.data?.user.email}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-1">
+                <p className="px-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                  Main Menu
+                </p>
+                <div className="grid gap-1">
+                  {navItems.map((item, idx) => (
+                    <SheetClose key={idx} asChild>
+                      <Link
+                        to={item.to}
+                        activeProps={{
+                          className:
+                            'bg-primary/10 text-primary border-r-2 border-primary',
+                        }}
+                        className="flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors hover:bg-white/5"
+                      >
+                        {item.title}
+                      </Link>
+                    </SheetClose>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <p className="px-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                  Dashboard
+                </p>
+                <div className="grid gap-1">
+                  {sidebarNavItems.map((item, idx) => (
+                    <SheetClose key={idx} asChild>
+                      <Link
+                        to={item.to}
+                        activeProps={{
+                          className:
+                            'bg-primary/10 text-primary border-r-2 border-primary',
+                        }}
+                        className="flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors hover:bg-white/5"
+                      >
+                        <item.icon className="size-4" />
+                        {item.title}
+                      </Link>
+                    </SheetClose>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border-t border-white/5 bg-white/2">
+              {session.data?.user ? (
+                <Button
+                  variant="destructive"
+                  className="w-full justify-start gap-2"
+                  onClick={handleLogout}
+                  disabled={isLoading || isTransition}
+                >
+                  <LogOut className="size-4" />
+                  Logout
+                </Button>
+              ) : (
+                <SheetClose asChild>
+                  <Link
+                    to="/login"
+                    className={buttonVariants({ className: 'w-full' })}
+                  >
+                    Login
+                  </Link>
+                </SheetClose>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </nav>
   )
