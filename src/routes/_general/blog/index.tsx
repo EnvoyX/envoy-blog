@@ -99,7 +99,7 @@ function BlogIndex() {
           {sortedPosts.map((post) => (
             <Card
               key={post.slug}
-              className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs"
+              className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0"
             >
               <div className="aspect-video relative overflow-hidden">
                 <img
