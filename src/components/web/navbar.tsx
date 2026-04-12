@@ -222,9 +222,9 @@ export function Navbar() {
                       </p>
                     </div>
                     <DropdownMenuSeparator />
-                    {sidebarNavItems.map((item) => {
+                    {sidebarNavItems.map((item, idx) => {
                       return (
-                        <DropdownMenuItem asChild>
+                        <DropdownMenuItem asChild key={idx}>
                           <Link
                             to={item.to}
                             activeProps={{
@@ -330,28 +330,31 @@ export function Navbar() {
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <p className="px-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                  Dashboard
-                </p>
-                <div className="grid gap-1">
-                  {sidebarNavItems.map((item, idx) => (
-                    <SheetClose key={idx} asChild>
-                      <Link
-                        to={item.to}
-                        activeProps={{
-                          className:
-                            'bg-primary/10 text-primary border-r-2 border-primary',
-                        }}
-                        className="flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors hover:bg-white/5"
-                      >
-                        <item.icon className="size-4" />
-                        {item.title}
-                      </Link>
-                    </SheetClose>
-                  ))}
+              {session.data?.user && (
+                <div className="space-y-1">
+                  <p className="px-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                    Dashboard
+                  </p>
+                  <div className="grid gap-1">
+                    {session.data.user &&
+                      sidebarNavItems.map((item, idx) => (
+                        <SheetClose key={idx} asChild>
+                          <Link
+                            to={item.to}
+                            activeProps={{
+                              className:
+                                'bg-primary/10 text-primary border-r-2 border-primary',
+                            }}
+                            className="flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors hover:bg-white/5"
+                          >
+                            <item.icon className="size-4" />
+                            {item.title}
+                          </Link>
+                        </SheetClose>
+                      ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="p-4 border-t border-white/5 bg-white/2">

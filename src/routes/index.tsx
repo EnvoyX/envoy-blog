@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Navbar } from '@/components/web/navbar'
 import LandingPage from '@/components/landing-page'
+import { Footer } from '@/components/web/footer'
 
 export const Route = createFileRoute('/')({
   head: () => ({
@@ -30,6 +31,7 @@ function App() {
     <main className="min-h-screen bg-linear-to-b from-slate-950 to-emerald-500/40 linear text-slate-50 selection:bg-emerald-500/30">
       <Navbar />
       <LandingPage />
+      <Footer />
     </main>
   )
 }

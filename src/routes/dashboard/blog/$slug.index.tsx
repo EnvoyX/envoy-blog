@@ -82,7 +82,7 @@ function PostComponent() {
         })
       },
       // rootMargin: -top -right -bottom -left
-      { rootMargin: '-10% 0% -40% 0%', threshold: 0 }, // adjusts when the link triggers
+      { rootMargin: '-80px 0px 0px 0px', threshold: 0 }, // adjusts when the link triggers
     )
 
     document
@@ -219,7 +219,7 @@ function PostComponent() {
               prose-headings:scroll-mt-20 
               prose-headings:font-bold 
               prose-pre:bg-slate-900 
-              prose-pre:border prose-pre:border-slate-800"
+              prose-pre:border prose-pre:border-slate-800 mb-25"
             >
               <MarkdownRenderer
                 markdown={post.content || '*Nothing to preview...*'}

@@ -40,7 +40,7 @@ function BlogIndex() {
       <div className="max-w-7xl">
         <div className="flex justify-center sm:justify-start items-center gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black tracking-tight bg-linear-to-r from-white to-slate-500 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-black tracking-tight text-white max-sm:text-center">
               Blog
             </h1>
             <p className="text-slate-400 mt-2">
