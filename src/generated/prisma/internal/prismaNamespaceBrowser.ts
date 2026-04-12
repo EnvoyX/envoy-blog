@@ -53,7 +53,6 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   SavedItem: 'SavedItem',
   QuranTrack: 'QuranTrack',
-  Diary: 'Diary',
   Post: 'Post',
   Tag: 'Tag',
   TaskList: 'TaskList',
@@ -118,21 +117,6 @@ export const QuranTrackScalarFieldEnum = {
 } as const
 
 export type QuranTrackScalarFieldEnum = (typeof QuranTrackScalarFieldEnum)[keyof typeof QuranTrackScalarFieldEnum]
-
-
-export const DiaryScalarFieldEnum = {
-  id: 'id',
-  slug: 'slug',
-  userId: 'userId',
-  title: 'title',
-  description: 'description',
-  content: 'content',
-  image: 'image',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type DiaryScalarFieldEnum = (typeof DiaryScalarFieldEnum)[keyof typeof DiaryScalarFieldEnum]
 
 
 export const PostScalarFieldEnum = {

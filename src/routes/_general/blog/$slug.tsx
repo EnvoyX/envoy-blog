@@ -1,34 +1,22 @@
-import { MarkdownRenderer } from '@/components/web/Markdown'
-import { getPostFn } from '@/data/blog'
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { ChevronLeft, ListIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+// src/routes/blog.$slug.tsx
+import { createFileRoute, notFound } from '@tanstack/react-router'
+import { allPosts } from '../../../../.content-collections/generated'
 import { useEffect, useState } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { intlFormat, intlFormatDistance } from 'date-fns'
+import { Button } from '@/components/ui/button'
+import { Link } from '@tanstack/react-router'
+import { ChevronLeft, ListIcon } from 'lucide-react'
+import { intlFormat } from 'date-fns'
+import { MarkdownRenderer } from '@/components/web/Markdown'
 
-export const Route = createFileRoute('/dashboard/blog/$slug/')({
-  component: PostComponent,
-  loader: ({ params }) => getPostFn({ data: params.slug }),
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: `${loaderData?.title} | Blog | Envoy Mindpalace` },
-      {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
-      },
-      { property: 'og:title', content: `${loaderData?.title} | Envoy Blog` },
-      {
-        property: 'og:description',
-        content: `${loaderData?.description}`,
-      },
-      {
-        property: 'og:image',
-        content: `${loaderData?.image}`,
-      },
-      { property: 'og:type', content: 'website' },
-    ],
-  }),
+export const Route = createFileRoute('/_general/blog/$slug')({
+  loader: ({ params }) => {
+    const post = allPosts.find((p) => p.slug === params.slug)
+    if (!post) {
+      throw notFound()
+    }
+    return post
+  },
+  component: BlogPost,
 })
 
 function extractHeadings(markdown: string) {
@@ -57,7 +45,7 @@ function extractHeadings(markdown: string) {
   return headings
 }
 
-function PostComponent() {
+function BlogPost() {
   const post = Route.useLoaderData()
   const [activeId, setActiveId] = useState('')
 
@@ -91,7 +79,7 @@ function PostComponent() {
               asChild
               className="text-slate-400 hover:text-white"
             >
-              <Link to="/dashboard/blog">
+              <Link to="/blog">
                 <ChevronLeft className="mr-2 size-4" />
                 Back to Blog
               </Link>
@@ -131,7 +119,7 @@ function PostComponent() {
             asChild
             className="text-slate-400 hover:text-white"
           >
-            <Link to="/dashboard/blog">
+            <Link to="/blog">
               <ChevronLeft className="mr-2 size-4" />
               Back to Blog
             </Link>
@@ -149,7 +137,8 @@ function PostComponent() {
               <div className="aspect-video w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 mb-8">
                 <img
                   src={
-                    post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'
+                    post.headerImage ??
+                    'https://tanstack.com/assets/og-C0HGjoLl.png'
                   }
                   alt={post.title ?? 'Blog Thumbnail'}
                   className="h-full w-full object-cover"
@@ -157,41 +146,24 @@ function PostComponent() {
               </div>
               <div className="flex flex-wrap items-center gap-4 mb-6 text-sm">
                 <div className="flex items-center gap-3 pr-4 border-r border-slate-800">
-                  <Avatar className="h-9 w-9 border border-slate-700">
-                    <AvatarImage
-                      src={post.author.image as string}
-                      alt={post.author.name}
-                    />
-                    <AvatarFallback className="bg-slate-800 text-xs">
-                      {post.author?.name
-                        ?.split(' ')
-                        .map((n) => n[0])
-                        .join('')}
-                    </AvatarFallback>
-                  </Avatar>
                   <div className="flex flex-col">
                     <span className="font-medium text-slate-200">
-                      {post.author.name}
+                      {post.authors.join(', ')}
                     </span>
                     <span className="text-xs text-slate-500 uppercase tracking-wider">
-                      Author
+                      Author(s)
                     </span>
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-slate-400">
                   <p className="flex items-center">
-                    {intlFormat(new Date(post.createdAt), {
+                    {intlFormat(new Date(post.published), {
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric',
                     })}
                   </p>
-                  <span className="hidden sm:inline text-slate-700">•</span>
-                  <span className="text-slate-500 italic">
-                    Updated{' '}
-                    {intlFormatDistance(new Date(post.updatedAt), new Date())}
-                  </span>
                 </div>
               </div>
               <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 text-white">

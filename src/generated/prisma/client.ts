@@ -52,11 +52,6 @@ export type SavedItem = Prisma.SavedItemModel
  */
 export type QuranTrack = Prisma.QuranTrackModel
 /**
- * Model Diary
- * 
- */
-export type Diary = Prisma.DiaryModel
-/**
  * Model Post
  * 
  */

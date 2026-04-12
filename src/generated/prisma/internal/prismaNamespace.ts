@@ -386,7 +386,6 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   SavedItem: 'SavedItem',
   QuranTrack: 'QuranTrack',
-  Diary: 'Diary',
   Post: 'Post',
   Tag: 'Tag',
   TaskList: 'TaskList',
@@ -410,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "savedItem" | "quranTrack" | "diary" | "post" | "tag" | "taskList" | "task" | "user" | "session" | "account" | "verification"
+    modelProps: "savedItem" | "quranTrack" | "post" | "tag" | "taskList" | "task" | "user" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -559,80 +558,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.QuranTrackCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.QuranTrackCountAggregateOutputType> | number
-        }
-      }
-    }
-    Diary: {
-      payload: Prisma.$DiaryPayload<ExtArgs>
-      fields: Prisma.DiaryFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.DiaryFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiaryPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.DiaryFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiaryPayload>
-        }
-        findFirst: {
-          args: Prisma.DiaryFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiaryPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.DiaryFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiaryPayload>
-        }
-        findMany: {
-          args: Prisma.DiaryFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiaryPayload>[]
-        }
-        create: {
-          args: Prisma.DiaryCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiaryPayload>
-        }
-        createMany: {
-          args: Prisma.DiaryCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.DiaryCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiaryPayload>[]
-        }
-        delete: {
-          args: Prisma.DiaryDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiaryPayload>
-        }
-        update: {
-          args: Prisma.DiaryUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiaryPayload>
-        }
-        deleteMany: {
-          args: Prisma.DiaryDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.DiaryUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.DiaryUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiaryPayload>[]
-        }
-        upsert: {
-          args: Prisma.DiaryUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DiaryPayload>
-        }
-        aggregate: {
-          args: Prisma.DiaryAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateDiary>
-        }
-        groupBy: {
-          args: Prisma.DiaryGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.DiaryGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.DiaryCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.DiaryCountAggregateOutputType> | number
         }
       }
     }
@@ -1307,21 +1232,6 @@ export const QuranTrackScalarFieldEnum = {
 export type QuranTrackScalarFieldEnum = (typeof QuranTrackScalarFieldEnum)[keyof typeof QuranTrackScalarFieldEnum]
 
 
-export const DiaryScalarFieldEnum = {
-  id: 'id',
-  slug: 'slug',
-  userId: 'userId',
-  title: 'title',
-  description: 'description',
-  content: 'content',
-  image: 'image',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type DiaryScalarFieldEnum = (typeof DiaryScalarFieldEnum)[keyof typeof DiaryScalarFieldEnum]
-
-
 export const PostScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -1666,7 +1576,6 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   savedItem?: Prisma.SavedItemOmit
   quranTrack?: Prisma.QuranTrackOmit
-  diary?: Prisma.DiaryOmit
   post?: Prisma.PostOmit
   tag?: Prisma.TagOmit
   taskList?: Prisma.TaskListOmit

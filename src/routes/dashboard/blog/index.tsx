@@ -38,12 +38,12 @@ export const Route = createFileRoute('/dashboard/blog/')({
   component: BlogPageComponent,
   head: () => ({
     meta: [
-      { title: `Blog | Envoy Mindpalace` },
+      { title: `My Blogs | Envoy Mindpalace` },
       {
         name: 'Envoy Mindpalace',
         content: 'Welcome to my TanStack Start playground!',
       },
-      { property: 'og:title', content: 'Blog | Envoy Mindpalace' },
+      { property: 'og:title', content: 'My Blogs | Envoy Mindpalace' },
       {
         property: 'og:description',
         content: 'Create your own blog and write your thoughts!',

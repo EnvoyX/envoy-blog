@@ -21,18 +21,14 @@ import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as DashboardTaskTrackerIndexRouteImport } from './routes/dashboard/task-tracker/index'
 import { Route as DashboardQuranTrackerIndexRouteImport } from './routes/dashboard/quran-tracker/index'
 import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
-import { Route as DashboardDiariesIndexRouteImport } from './routes/dashboard/diaries/index'
 import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
-import { Route as GeneralJournalIndexRouteImport } from './routes/_general/journal/index'
 import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog/index'
-import { Route as GeneralAboutIndexRouteImport } from './routes/_general/about/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as DashboardTaskTrackerTaskListIdRouteImport } from './routes/dashboard/task-tracker/$taskListId'
 import { Route as DashboardItemsItemIdRouteImport } from './routes/dashboard/items/$itemId'
-import { Route as DashboardDiariesSlugRouteImport } from './routes/dashboard/diaries/$slug'
-import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiAiSummaryRouteImport } from './routes/api/ai/summary'
+import { Route as GeneralBlogSlugRouteImport } from './routes/_general/blog/$slug'
 import { Route as DashboardBlogCreateBlogIndexRouteImport } from './routes/dashboard/blog/create-blog/index'
 import { Route as DashboardBlogSlugIndexRouteImport } from './routes/dashboard/blog/$slug.index'
 import { Route as DashboardBlogSlugEditRouteImport } from './routes/dashboard/blog/$slug.edit'
@@ -97,29 +93,14 @@ const DashboardItemsIndexRoute = DashboardItemsIndexRouteImport.update({
   path: '/items/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const DashboardDiariesIndexRoute = DashboardDiariesIndexRouteImport.update({
-  id: '/diaries/',
-  path: '/diaries/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
 const DashboardBlogIndexRoute = DashboardBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const GeneralJournalIndexRoute = GeneralJournalIndexRouteImport.update({
-  id: '/journal/',
-  path: '/journal/',
-  getParentRoute: () => GeneralRouteRoute,
-} as any)
 const GeneralBlogIndexRoute = GeneralBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
-  getParentRoute: () => GeneralRouteRoute,
-} as any)
-const GeneralAboutIndexRoute = GeneralAboutIndexRouteImport.update({
-  id: '/about/',
-  path: '/about/',
   getParentRoute: () => GeneralRouteRoute,
 } as any)
 const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
@@ -138,16 +119,6 @@ const DashboardItemsItemIdRoute = DashboardItemsItemIdRouteImport.update({
   path: '/items/$itemId',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const DashboardDiariesSlugRoute = DashboardDiariesSlugRouteImport.update({
-  id: '/diaries/$slug',
-  path: '/diaries/$slug',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
-  id: '/api/trpc/$',
-  path: '/api/trpc/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -157,6 +128,11 @@ const ApiAiSummaryRoute = ApiAiSummaryRouteImport.update({
   id: '/api/ai/summary',
   path: '/api/ai/summary',
   getParentRoute: () => rootRouteImport,
+} as any)
+const GeneralBlogSlugRoute = GeneralBlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => GeneralRouteRoute,
 } as any)
 const DashboardBlogCreateBlogIndexRoute =
   DashboardBlogCreateBlogIndexRouteImport.update({
@@ -183,18 +159,14 @@ export interface FileRoutesByFullPath {
   '/dashboard/import': typeof DashboardImportRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/blog/$slug': typeof GeneralBlogSlugRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/trpc/$': typeof ApiTrpcSplatRoute
-  '/dashboard/diaries/$slug': typeof DashboardDiariesSlugRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/login/': typeof AuthLoginIndexRoute
-  '/about/': typeof GeneralAboutIndexRoute
   '/blog/': typeof GeneralBlogIndexRoute
-  '/journal/': typeof GeneralJournalIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
-  '/dashboard/diaries/': typeof DashboardDiariesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
@@ -209,18 +181,14 @@ export interface FileRoutesByTo {
   '/dashboard/import': typeof DashboardImportRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/blog/$slug': typeof GeneralBlogSlugRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/trpc/$': typeof ApiTrpcSplatRoute
-  '/dashboard/diaries/$slug': typeof DashboardDiariesSlugRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/login': typeof AuthLoginIndexRoute
-  '/about': typeof GeneralAboutIndexRoute
   '/blog': typeof GeneralBlogIndexRoute
-  '/journal': typeof GeneralJournalIndexRoute
   '/dashboard/blog': typeof DashboardBlogIndexRoute
-  '/dashboard/diaries': typeof DashboardDiariesIndexRoute
   '/dashboard/items': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker': typeof DashboardTaskTrackerIndexRoute
@@ -239,18 +207,14 @@ export interface FileRoutesById {
   '/dashboard/import': typeof DashboardImportRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/_general/blog/$slug': typeof GeneralBlogSlugRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/trpc/$': typeof ApiTrpcSplatRoute
-  '/dashboard/diaries/$slug': typeof DashboardDiariesSlugRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
-  '/_general/about/': typeof GeneralAboutIndexRoute
   '/_general/blog/': typeof GeneralBlogIndexRoute
-  '/_general/journal/': typeof GeneralJournalIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
-  '/dashboard/diaries/': typeof DashboardDiariesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
@@ -268,18 +232,14 @@ export interface FileRouteTypes {
     | '/dashboard/import'
     | '/dashboard/profile'
     | '/dashboard/'
+    | '/blog/$slug'
     | '/api/ai/summary'
     | '/api/auth/$'
-    | '/api/trpc/$'
-    | '/dashboard/diaries/$slug'
     | '/dashboard/items/$itemId'
     | '/dashboard/task-tracker/$taskListId'
     | '/login/'
-    | '/about/'
     | '/blog/'
-    | '/journal/'
     | '/dashboard/blog/'
-    | '/dashboard/diaries/'
     | '/dashboard/items/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/task-tracker/'
@@ -294,18 +254,14 @@ export interface FileRouteTypes {
     | '/dashboard/import'
     | '/dashboard/profile'
     | '/dashboard'
+    | '/blog/$slug'
     | '/api/ai/summary'
     | '/api/auth/$'
-    | '/api/trpc/$'
-    | '/dashboard/diaries/$slug'
     | '/dashboard/items/$itemId'
     | '/dashboard/task-tracker/$taskListId'
     | '/login'
-    | '/about'
     | '/blog'
-    | '/journal'
     | '/dashboard/blog'
-    | '/dashboard/diaries'
     | '/dashboard/items'
     | '/dashboard/quran-tracker'
     | '/dashboard/task-tracker'
@@ -323,18 +279,14 @@ export interface FileRouteTypes {
     | '/dashboard/import'
     | '/dashboard/profile'
     | '/dashboard/'
+    | '/_general/blog/$slug'
     | '/api/ai/summary'
     | '/api/auth/$'
-    | '/api/trpc/$'
-    | '/dashboard/diaries/$slug'
     | '/dashboard/items/$itemId'
     | '/dashboard/task-tracker/$taskListId'
     | '/_auth/login/'
-    | '/_general/about/'
     | '/_general/blog/'
-    | '/_general/journal/'
     | '/dashboard/blog/'
-    | '/dashboard/diaries/'
     | '/dashboard/items/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/task-tracker/'
@@ -351,7 +303,6 @@ export interface RootRouteChildren {
   ApiSplatRoute: typeof ApiSplatRoute
   ApiAiSummaryRoute: typeof ApiAiSummaryRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -440,13 +391,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardItemsIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/dashboard/diaries/': {
-      id: '/dashboard/diaries/'
-      path: '/diaries'
-      fullPath: '/dashboard/diaries/'
-      preLoaderRoute: typeof DashboardDiariesIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
     '/dashboard/blog/': {
       id: '/dashboard/blog/'
       path: '/blog'
@@ -454,25 +398,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardBlogIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/_general/journal/': {
-      id: '/_general/journal/'
-      path: '/journal'
-      fullPath: '/journal/'
-      preLoaderRoute: typeof GeneralJournalIndexRouteImport
-      parentRoute: typeof GeneralRouteRoute
-    }
     '/_general/blog/': {
       id: '/_general/blog/'
       path: '/blog'
       fullPath: '/blog/'
       preLoaderRoute: typeof GeneralBlogIndexRouteImport
-      parentRoute: typeof GeneralRouteRoute
-    }
-    '/_general/about/': {
-      id: '/_general/about/'
-      path: '/about'
-      fullPath: '/about/'
-      preLoaderRoute: typeof GeneralAboutIndexRouteImport
       parentRoute: typeof GeneralRouteRoute
     }
     '/_auth/login/': {
@@ -496,20 +426,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardItemsItemIdRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/dashboard/diaries/$slug': {
-      id: '/dashboard/diaries/$slug'
-      path: '/diaries/$slug'
-      fullPath: '/dashboard/diaries/$slug'
-      preLoaderRoute: typeof DashboardDiariesSlugRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/api/trpc/$': {
-      id: '/api/trpc/$'
-      path: '/api/trpc/$'
-      fullPath: '/api/trpc/$'
-      preLoaderRoute: typeof ApiTrpcSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -523,6 +439,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/ai/summary'
       preLoaderRoute: typeof ApiAiSummaryRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_general/blog/$slug': {
+      id: '/_general/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof GeneralBlogSlugRouteImport
+      parentRoute: typeof GeneralRouteRoute
     }
     '/dashboard/blog/create-blog/': {
       id: '/dashboard/blog/create-blog/'
@@ -561,15 +484,13 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 )
 
 interface GeneralRouteRouteChildren {
-  GeneralAboutIndexRoute: typeof GeneralAboutIndexRoute
+  GeneralBlogSlugRoute: typeof GeneralBlogSlugRoute
   GeneralBlogIndexRoute: typeof GeneralBlogIndexRoute
-  GeneralJournalIndexRoute: typeof GeneralJournalIndexRoute
 }
 
 const GeneralRouteRouteChildren: GeneralRouteRouteChildren = {
-  GeneralAboutIndexRoute: GeneralAboutIndexRoute,
+  GeneralBlogSlugRoute: GeneralBlogSlugRoute,
   GeneralBlogIndexRoute: GeneralBlogIndexRoute,
-  GeneralJournalIndexRoute: GeneralJournalIndexRoute,
 }
 
 const GeneralRouteRouteWithChildren = GeneralRouteRoute._addFileChildren(
@@ -581,11 +502,9 @@ interface DashboardRouteRouteChildren {
   DashboardImportRoute: typeof DashboardImportRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardDiariesSlugRoute: typeof DashboardDiariesSlugRoute
   DashboardItemsItemIdRoute: typeof DashboardItemsItemIdRoute
   DashboardTaskTrackerTaskListIdRoute: typeof DashboardTaskTrackerTaskListIdRoute
   DashboardBlogIndexRoute: typeof DashboardBlogIndexRoute
-  DashboardDiariesIndexRoute: typeof DashboardDiariesIndexRoute
   DashboardItemsIndexRoute: typeof DashboardItemsIndexRoute
   DashboardQuranTrackerIndexRoute: typeof DashboardQuranTrackerIndexRoute
   DashboardTaskTrackerIndexRoute: typeof DashboardTaskTrackerIndexRoute
@@ -599,11 +518,9 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardImportRoute: DashboardImportRoute,
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardIndexRoute: DashboardIndexRoute,
-  DashboardDiariesSlugRoute: DashboardDiariesSlugRoute,
   DashboardItemsItemIdRoute: DashboardItemsItemIdRoute,
   DashboardTaskTrackerTaskListIdRoute: DashboardTaskTrackerTaskListIdRoute,
   DashboardBlogIndexRoute: DashboardBlogIndexRoute,
-  DashboardDiariesIndexRoute: DashboardDiariesIndexRoute,
   DashboardItemsIndexRoute: DashboardItemsIndexRoute,
   DashboardQuranTrackerIndexRoute: DashboardQuranTrackerIndexRoute,
   DashboardTaskTrackerIndexRoute: DashboardTaskTrackerIndexRoute,
@@ -624,7 +541,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSplatRoute: ApiSplatRoute,
   ApiAiSummaryRoute: ApiAiSummaryRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  ApiTrpcSplatRoute: ApiTrpcSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

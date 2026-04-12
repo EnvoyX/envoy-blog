@@ -4,9 +4,9 @@ import Markdown from 'react-markdown'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 import remarkToc from 'remark-toc'
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeToc from '@jsdevtools/rehype-toc'
-import rehypeMdx from 'remark-mdx'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import remarkMdx from 'remark-mdx'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 // import 'katex/dist/katex.min.css'
@@ -17,10 +17,10 @@ export function MarkdownRenderer({ markdown }: { markdown: string }) {
       remarkPlugins={[
         remarkMath,
         remarkGfm,
+        remarkMdx,
         [remarkToc, { heading: 'contents', maxDepth: 3 }],
       ]}
       rehypePlugins={[
-        rehypeMdx,
         rehypeKatex,
         rehypeSlug,
         [rehypeAutolinkHeadings, { behavior: 'wrap' }],

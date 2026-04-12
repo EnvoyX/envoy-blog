@@ -13,9 +13,10 @@ const posts = defineCollection({
   include: '*.md',
   schema: z.object({
     title: z.string(),
-    published: z.string().date(),
-    description: z.string().optional(),
+    published: z.iso.date(),
+    description: z.string(),
     authors: z.string().array(),
+    content: z.string(),
   }),
   transform: ({ content, ...post }) => {
     const frontMatter = extractFrontMatter(content)
@@ -28,7 +29,6 @@ const posts = defineCollection({
       ...post,
       slug: post._meta.path,
       excerpt: frontMatter.excerpt,
-      description: frontMatter.data.description,
       headerImage,
       content: frontMatter.body,
     }
@@ -36,5 +36,5 @@ const posts = defineCollection({
 })
 
 export default defineConfig({
-  collections: [posts],
+  content: [posts],
 })

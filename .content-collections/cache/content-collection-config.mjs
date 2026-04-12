@@ -13,9 +13,10 @@ var posts = defineCollection({
   include: "*.md",
   schema: z.object({
     title: z.string(),
-    published: z.string().date(),
-    description: z.string().optional(),
-    authors: z.string().array()
+    published: z.iso.date(),
+    description: z.string(),
+    authors: z.string().array(),
+    content: z.string()
   }),
   transform: ({ content, ...post }) => {
     const frontMatter = extractFrontMatter(content);
@@ -25,14 +26,13 @@ var posts = defineCollection({
       ...post,
       slug: post._meta.path,
       excerpt: frontMatter.excerpt,
-      description: frontMatter.data.description,
       headerImage,
       content: frontMatter.body
     };
   }
 });
 var content_collections_default = defineConfig({
-  collections: [posts]
+  content: [posts]
 });
 export {
   content_collections_default as default

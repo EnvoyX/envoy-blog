@@ -61,14 +61,6 @@ const navItems: NavPrimaryProps['items'] = linkOptions([
     },
   },
   {
-    title: 'Diaries',
-    icon: BookIcon,
-    to: '/dashboard/diaries',
-    activeOptions: {
-      exact: false,
-    },
-  },
-  {
     title: 'Blogs',
     icon: Newspaper,
     to: '/dashboard/blog',

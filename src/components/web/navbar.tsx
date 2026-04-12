@@ -10,10 +10,12 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
-import { useState, useTransition } from 'react'
+import { useEffect, useRef, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { UserAvatar } from './user-profile'
 import { useQuery } from '@tanstack/react-query'
+import { linkOptions } from '@tanstack/react-router'
+import { NavProps } from '@/lib/types'
 
 export function Navbar() {
   const session = useQuery({
@@ -23,9 +25,12 @@ export function Navbar() {
       return data.data
     },
   })
+  const [menuState, setMenuState] = useState(false)
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [isTransition, startTransition] = useTransition()
+  const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false)
+  const navRef = useRef<HTMLDivElement>(null)
   const handleLogout = () => {
     setIsLoading(true)
     startTransition(async () => {
@@ -57,8 +62,39 @@ export function Navbar() {
     })
   }
 
+  const navItems: NavProps['items'] = linkOptions([
+    {
+      title: 'Blog',
+      to: '/blog',
+      activeOptions: {
+        exact: false,
+      },
+    },
+  ])
+
+  const closeMenu = () => setMenuState(false)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuState &&
+        navRef.current &&
+        !navRef.current.contains(event.target as Node)
+      ) {
+        closeMenu()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [menuState])
+
   return (
-    <nav className="sticky top-0 z-50 border-b bg-transparent backdrop-blur">
+    <nav
+      className="sticky top-0 z-50 border-b bg-transparent backdrop-blur"
+      ref={navRef}
+      data-state={menuState && 'active'}
+    >
       <div className="mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
           <img
@@ -66,20 +102,28 @@ export function Navbar() {
             alt="TanStack Start logo"
             className="size-12"
           />
-          {/*<h1 className="text-lg font-bold text-white">Envoy Mindpalace</h1>*/}
         </Link>
-        {/* <ul className="flex items-center gap-3 font-bold">
-                    <Link to="/blog" className="hover:scale-105 hover:underline transition-transform">
-                        Blog
-                    </Link>
-                    <Link to="/journal" className="hover:scale-105 hover:underline transition-transform">
-                        Journal
-                    </Link>
-                    <Link to="/about" className="hover:scale-105 hover:underline transition-transform">
-                        About
-                    </Link>
-                </ul> */}
-        <div className="flex items-center gap-3">
+        <ul className="hidden sm:flex items-center gap-3 font-bold ">
+          {navItems.map((item, index) => {
+            // If the menu items can be reordered, don't use index but unique value for
+            // for the key
+            return (
+              <Link
+                to={item.to}
+                activeProps={{
+                  'data-active': true,
+                }}
+                activeOptions={item.activeOptions}
+                key={index}
+                className="hover:scale-105 hover:underline transition-transform"
+              >
+                {item.title}
+              </Link>
+            )
+          })}
+        </ul>
+
+        <div className="hidden sm:flex items-center gap-3">
           {/*<ThemeToggle />*/}
           <div className="flex items-center justify-between gap-4">
             {session.isPending ? (
