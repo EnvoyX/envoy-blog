@@ -3,6 +3,7 @@
 @import 'shadcn/tailwind.css';
 @import '@fontsource-variable/inter';
 @import 'katex/dist/katex.min.css';
+@import '@mdxeditor/editor/style.css';
 @plugin "@iconify/tailwind4";
 @plugin "@tailwindcss/typography";
 @source "../node_modules/streamdown/dist/*.js";

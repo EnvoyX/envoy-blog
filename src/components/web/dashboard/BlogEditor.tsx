@@ -1,6 +1,14 @@
 import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
-import { Pencil, Eye, Save, Loader2, ChevronLeft } from 'lucide-react'
+import {
+  Pencil,
+  Eye,
+  Save,
+  Loader2,
+  ChevronLeft,
+  PencilIcon,
+  PencilRulerIcon,
+} from 'lucide-react'
 
 import {
   Card,
@@ -179,6 +187,20 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                 <Label htmlFor={`${field.name}-input`}>
                   Content (Markdown)
                 </Label>
+                <div className="flex items-center gap-2">
+                  <Button variant={'default'} asChild>
+                    <Link to="/dashboard/blog/md-editor">
+                      <PencilIcon className="size-4" />
+                      Edit in MD Editor
+                    </Link>
+                  </Button>
+                  <Button variant={'default'} asChild>
+                    <Link to="/dashboard/blog/mdx-editor">
+                      <PencilRulerIcon className="size-4" />
+                      Edit in MDX Editor
+                    </Link>
+                  </Button>
+                </div>
                 <Textarea
                   id={`${field.name}-input`}
                   placeholder="Write your story here..."
@@ -216,26 +238,40 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
         </div>
 
         <div className="hidden md:block">
-          <form.Subscribe
-            selector={(state) => [state.isSubmitting]}
-            children={([isSubmitting]) => (
-              <Button
-                onClick={() => form.handleSubmit()}
-                disabled={isSubmitting}
-                className={cn('gap-2', {
-                  'cursor-pointer': !isSubmitting,
-                  'cursor-not-allowed': isSubmitting,
-                })}
-              >
-                {isSubmitting ? (
-                  <Loader2 className="animate-spin size-4" />
-                ) : (
-                  <Save className="size-4" />
-                )}
-                {initialData ? 'Update Post' : 'Publish Post'}
-              </Button>
-            )}
-          />
+          <div className="flex gap-2 items-center">
+            <Button variant={'outline'} asChild>
+              <Link to="/dashboard/blog/md-editor">
+                <PencilIcon className="size-4" />
+                Edit in MD Editor
+              </Link>
+            </Button>
+            <Button variant={'outline'} asChild>
+              <Link to="/dashboard/blog/mdx-editor">
+                <PencilRulerIcon className="size-4" />
+                Edit in MDX Editor
+              </Link>
+            </Button>
+            <form.Subscribe
+              selector={(state) => [state.isSubmitting]}
+              children={([isSubmitting]) => (
+                <Button
+                  onClick={() => form.handleSubmit()}
+                  disabled={isSubmitting}
+                  className={cn('gap-2', {
+                    'cursor-pointer': !isSubmitting,
+                    'cursor-not-allowed': isSubmitting,
+                  })}
+                >
+                  {isSubmitting ? (
+                    <Loader2 className="animate-spin size-4" />
+                  ) : (
+                    <Save className="size-4" />
+                  )}
+                  {initialData ? 'Update Post' : 'Publish Post'}
+                </Button>
+              )}
+            />
+          </div>
         </div>
       </div>
 

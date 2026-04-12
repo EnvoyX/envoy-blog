@@ -29,6 +29,8 @@ import { Route as DashboardItemsItemIdRouteImport } from './routes/dashboard/ite
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiAiSummaryRouteImport } from './routes/api/ai/summary'
 import { Route as GeneralBlogSlugRouteImport } from './routes/_general/blog/$slug'
+import { Route as DashboardBlogMdxEditorIndexRouteImport } from './routes/dashboard/blog/mdx-editor/index'
+import { Route as DashboardBlogMdEditorIndexRouteImport } from './routes/dashboard/blog/md-editor/index'
 import { Route as DashboardBlogCreateBlogIndexRouteImport } from './routes/dashboard/blog/create-blog/index'
 import { Route as DashboardBlogSlugIndexRouteImport } from './routes/dashboard/blog/$slug.index'
 import { Route as DashboardBlogSlugEditRouteImport } from './routes/dashboard/blog/$slug.edit'
@@ -134,6 +136,18 @@ const GeneralBlogSlugRoute = GeneralBlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => GeneralRouteRoute,
 } as any)
+const DashboardBlogMdxEditorIndexRoute =
+  DashboardBlogMdxEditorIndexRouteImport.update({
+    id: '/blog/mdx-editor/',
+    path: '/blog/mdx-editor/',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
+const DashboardBlogMdEditorIndexRoute =
+  DashboardBlogMdEditorIndexRouteImport.update({
+    id: '/blog/md-editor/',
+    path: '/blog/md-editor/',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 const DashboardBlogCreateBlogIndexRoute =
   DashboardBlogCreateBlogIndexRouteImport.update({
     id: '/blog/create-blog/',
@@ -173,6 +187,8 @@ export interface FileRoutesByFullPath {
   '/dashboard/blog/$slug/edit': typeof DashboardBlogSlugEditRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
+  '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
+  '/dashboard/blog/mdx-editor/': typeof DashboardBlogMdxEditorIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -195,6 +211,8 @@ export interface FileRoutesByTo {
   '/dashboard/blog/$slug/edit': typeof DashboardBlogSlugEditRoute
   '/dashboard/blog/$slug': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog': typeof DashboardBlogCreateBlogIndexRoute
+  '/dashboard/blog/md-editor': typeof DashboardBlogMdEditorIndexRoute
+  '/dashboard/blog/mdx-editor': typeof DashboardBlogMdxEditorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -221,6 +239,8 @@ export interface FileRoutesById {
   '/dashboard/blog/$slug/edit': typeof DashboardBlogSlugEditRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
+  '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
+  '/dashboard/blog/mdx-editor/': typeof DashboardBlogMdxEditorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -246,6 +266,8 @@ export interface FileRouteTypes {
     | '/dashboard/blog/$slug/edit'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
+    | '/dashboard/blog/md-editor/'
+    | '/dashboard/blog/mdx-editor/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -268,6 +290,8 @@ export interface FileRouteTypes {
     | '/dashboard/blog/$slug/edit'
     | '/dashboard/blog/$slug'
     | '/dashboard/blog/create-blog'
+    | '/dashboard/blog/md-editor'
+    | '/dashboard/blog/mdx-editor'
   id:
     | '__root__'
     | '/'
@@ -293,6 +317,8 @@ export interface FileRouteTypes {
     | '/dashboard/blog/$slug/edit'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
+    | '/dashboard/blog/md-editor/'
+    | '/dashboard/blog/mdx-editor/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -447,6 +473,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GeneralBlogSlugRouteImport
       parentRoute: typeof GeneralRouteRoute
     }
+    '/dashboard/blog/mdx-editor/': {
+      id: '/dashboard/blog/mdx-editor/'
+      path: '/blog/mdx-editor'
+      fullPath: '/dashboard/blog/mdx-editor/'
+      preLoaderRoute: typeof DashboardBlogMdxEditorIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/blog/md-editor/': {
+      id: '/dashboard/blog/md-editor/'
+      path: '/blog/md-editor'
+      fullPath: '/dashboard/blog/md-editor/'
+      preLoaderRoute: typeof DashboardBlogMdEditorIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/blog/create-blog/': {
       id: '/dashboard/blog/create-blog/'
       path: '/blog/create-blog'
@@ -511,6 +551,8 @@ interface DashboardRouteRouteChildren {
   DashboardBlogSlugEditRoute: typeof DashboardBlogSlugEditRoute
   DashboardBlogSlugIndexRoute: typeof DashboardBlogSlugIndexRoute
   DashboardBlogCreateBlogIndexRoute: typeof DashboardBlogCreateBlogIndexRoute
+  DashboardBlogMdEditorIndexRoute: typeof DashboardBlogMdEditorIndexRoute
+  DashboardBlogMdxEditorIndexRoute: typeof DashboardBlogMdxEditorIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
@@ -527,6 +569,8 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardBlogSlugEditRoute: DashboardBlogSlugEditRoute,
   DashboardBlogSlugIndexRoute: DashboardBlogSlugIndexRoute,
   DashboardBlogCreateBlogIndexRoute: DashboardBlogCreateBlogIndexRoute,
+  DashboardBlogMdEditorIndexRoute: DashboardBlogMdEditorIndexRoute,
+  DashboardBlogMdxEditorIndexRoute: DashboardBlogMdxEditorIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
