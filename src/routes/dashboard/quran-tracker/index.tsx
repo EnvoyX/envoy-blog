@@ -183,7 +183,7 @@ function RouteComponent() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {[
                         {
                           label: 'Surah',
@@ -203,12 +203,12 @@ function RouteComponent() {
                       ].map((item) => (
                         <div
                           key={item.label}
-                          className="bg-zinc-900/50 border border-zinc-800 p-4 rounded-xl text-center hover:border-zinc-700 transition-colors"
+                          className="bg-zinc-900/50 border border-zinc-800 p-4 rounded-xl text-center hover:border-zinc-700 transition-colors overflow-hidden"
                         >
                           <p className="text-xs text-zinc-500 uppercase tracking-widest mb-1">
                             {item.label}
                           </p>
-                          <p className="text-lg font-bold text-zinc-200">
+                          <p className="text-sm md:text-base lg:text-lg font-bold text-zinc-200">
                             {item.value || '-'}
                           </p>
                         </div>
