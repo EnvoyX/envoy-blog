@@ -6,6 +6,7 @@ import {
   BookmarkIcon,
   Check,
   Compass,
+  Gamepad2,
   Import,
   LayoutDashboardIcon,
   Newspaper,
@@ -90,6 +91,14 @@ const navItems: NavPrimaryProps['items'] = linkOptions([
     to: '/dashboard/discover',
     activeOptions: {
       exact: false,
+    },
+  },
+  {
+    title: 'Tic Tac Toe',
+    icon: Gamepad2,
+    to: '/dashboard/tic-tac-toe',
+    activeOptions: {
+      exact: true,
     },
   },
 ])

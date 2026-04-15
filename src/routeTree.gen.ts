@@ -18,6 +18,7 @@ import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile
 import { Route as DashboardImportRouteImport } from './routes/dashboard/import'
 import { Route as DashboardDiscoverRouteImport } from './routes/dashboard/discover'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as DashboardTicTacToeIndexRouteImport } from './routes/dashboard/tic-tac-toe/index'
 import { Route as DashboardTaskTrackerIndexRouteImport } from './routes/dashboard/task-tracker/index'
 import { Route as DashboardQuranTrackerIndexRouteImport } from './routes/dashboard/quran-tracker/index'
 import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
@@ -77,6 +78,11 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardTicTacToeIndexRoute = DashboardTicTacToeIndexRouteImport.update({
+  id: '/tic-tac-toe/',
+  path: '/tic-tac-toe/',
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const DashboardTaskTrackerIndexRoute =
   DashboardTaskTrackerIndexRouteImport.update({
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
+  '/dashboard/tic-tac-toe/': typeof DashboardTicTacToeIndexRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
@@ -209,6 +216,7 @@ export interface FileRoutesByTo {
   '/dashboard/items': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker': typeof DashboardTaskTrackerIndexRoute
+  '/dashboard/tic-tac-toe': typeof DashboardTicTacToeIndexRoute
   '/dashboard/blog/$slug': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor': typeof DashboardBlogMdEditorIndexRoute
@@ -237,6 +245,7 @@ export interface FileRoutesById {
   '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
+  '/dashboard/tic-tac-toe/': typeof DashboardTicTacToeIndexRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
@@ -264,6 +273,7 @@ export interface FileRouteTypes {
     | '/dashboard/items/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/task-tracker/'
+    | '/dashboard/tic-tac-toe/'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
     | '/dashboard/blog/md-editor/'
@@ -288,6 +298,7 @@ export interface FileRouteTypes {
     | '/dashboard/items'
     | '/dashboard/quran-tracker'
     | '/dashboard/task-tracker'
+    | '/dashboard/tic-tac-toe'
     | '/dashboard/blog/$slug'
     | '/dashboard/blog/create-blog'
     | '/dashboard/blog/md-editor'
@@ -315,6 +326,7 @@ export interface FileRouteTypes {
     | '/dashboard/items/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/task-tracker/'
+    | '/dashboard/tic-tac-toe/'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
     | '/dashboard/blog/md-editor/'
@@ -396,6 +408,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/$'
       preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/tic-tac-toe/': {
+      id: '/dashboard/tic-tac-toe/'
+      path: '/tic-tac-toe'
+      fullPath: '/dashboard/tic-tac-toe/'
+      preLoaderRoute: typeof DashboardTicTacToeIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/task-tracker/': {
       id: '/dashboard/task-tracker/'
@@ -549,6 +568,7 @@ interface DashboardRouteRouteChildren {
   DashboardItemsIndexRoute: typeof DashboardItemsIndexRoute
   DashboardQuranTrackerIndexRoute: typeof DashboardQuranTrackerIndexRoute
   DashboardTaskTrackerIndexRoute: typeof DashboardTaskTrackerIndexRoute
+  DashboardTicTacToeIndexRoute: typeof DashboardTicTacToeIndexRoute
   DashboardBlogSlugIndexRoute: typeof DashboardBlogSlugIndexRoute
   DashboardBlogCreateBlogIndexRoute: typeof DashboardBlogCreateBlogIndexRoute
   DashboardBlogMdEditorIndexRoute: typeof DashboardBlogMdEditorIndexRoute
@@ -567,6 +587,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardItemsIndexRoute: DashboardItemsIndexRoute,
   DashboardQuranTrackerIndexRoute: DashboardQuranTrackerIndexRoute,
   DashboardTaskTrackerIndexRoute: DashboardTaskTrackerIndexRoute,
+  DashboardTicTacToeIndexRoute: DashboardTicTacToeIndexRoute,
   DashboardBlogSlugIndexRoute: DashboardBlogSlugIndexRoute,
   DashboardBlogCreateBlogIndexRoute: DashboardBlogCreateBlogIndexRoute,
   DashboardBlogMdEditorIndexRoute: DashboardBlogMdEditorIndexRoute,
