@@ -2,23 +2,12 @@ export function Square({
   value,
   onSquareClick,
 }: {
-  value: string | null
+  value: 'X' | 'O' | null
   onSquareClick: any
 }) {
   return (
     <button
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 0,
-        backgroundColor: '#fff',
-        border: '1px solid #999',
-        outline: 0,
-        borderRadius: 0,
-        fontSize: '1rem',
-        fontWeight: 'bold',
-      }}
+      className="flex items-center justify-center p-0 size-full bg-emerald-500 border border-black rounded-none text-2xl font-bold text-white"
       onClick={onSquareClick}
     >
       {value}
