@@ -48,6 +48,8 @@ function extractHeadings(markdown: string) {
 function BlogPost() {
   const post = Route.useLoaderData()
   const [visibleIds, setVisibleIds] = useState<string[]>([])
+  const headings = post?.content ? extractHeadings(post.content) : []
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -77,8 +79,6 @@ function BlogPost() {
       .forEach((h) => observer.observe(h))
     return () => observer.disconnect()
   }, [])
-
-  const headings = post?.content ? extractHeadings(post.content) : []
 
   if (!post) {
     return (
@@ -186,10 +186,10 @@ function BlogPost() {
             </header>
 
             <div
-              className="prose prose-invert prose-slate max-w-none 
-              prose-headings:scroll-mt-20 
-              prose-headings:font-bold 
-              prose-pre:bg-slate-900 
+              className="prose prose-invert prose-slate max-w-none
+              prose-headings:scroll-mt-20
+              prose-headings:font-bold
+              prose-pre:bg-slate-900
               prose-pre:border prose-pre:border-slate-800 mb-25"
             >
               <MarkdownRenderer
@@ -205,22 +205,22 @@ function BlogPost() {
                 On this page
               </div>
 
-              <nav className="space-y-1 border-l border-slate-800 ">
+              <nav className="space-y-1 border-l border-slate-800">
                 {headings.map((heading) => {
                   const isActive = visibleIds.includes(heading.id)
                   return (
                     <a
                       key={heading.id}
                       href={`#${heading.id}`}
-                      className={`block py-1.5 pr-4 text-sm transition-all border-l-2 -ml-0.5 hover:text-white 
+                      className={`block py-1.5 pr-4 text-sm transition-all border-l-3 -ml-0.5 hover:text-white
                       ${isActive ? ' bg-emerald-500/10 text-emerald-500 border-emerald-500 font-medium' : 'text-slate-400'}
                       ${heading.level === 1 && 'pl-2'}
-                      ${heading.level === 2 && 'pl-4'} 
+                      ${heading.level === 2 && 'pl-4'}
                       ${heading.level === 3 && 'pl-6'}
                       ${heading.level === 4 && 'pl-8'}
                       ${heading.level === 5 && 'pl-10'}
                       ${heading.level === 6 && 'pl-12'}
-                      
+
                        hover:bg-slate-500/5`}
                     >
                       {heading.text}

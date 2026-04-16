@@ -127,7 +127,7 @@ function RouteComponent() {
   })
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100 p-6 lg:p-10">
+    <div className="min-h-screen bg-[#09090b] text-zinc-100 max-sm:p-6">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight bg-linear-to-r from-white to-zinc-500 bg-clip-text text-transparent">

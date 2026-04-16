@@ -110,7 +110,7 @@ function BlogPageComponent() {
   //   })
 
   return (
-    <div className="min-h-screen bg-black text-slate-50 p-6 md:p-10">
+    <div className="min-h-screen bg-black text-slate-50">
       <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col max-sm:items-center">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
@@ -242,7 +242,7 @@ function BlogPageComponent() {
               </div>
 
               <CardContent className="p-6 flex-1">
-                <div className="flex flex-col justify-center items-start sm:flex-row sm:justify-between sm:items-center">
+                <div className="flex flex-col justify-start items-start sm:flex-row  sm:items-center">
                   <div className="flex items-center gap-2 text-xs text-slate-500 mb-3 uppercase tracking-widest font-semibold">
                     <Calendar className="size-3" />
                     {intlFormat(new Date(post.createdAt), {
@@ -250,10 +250,6 @@ function BlogPageComponent() {
                       day: 'numeric',
                       year: 'numeric',
                     })}
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-slate-500 mb-3 uppercase tracking-widest font-semibold">
-                    <LucideClockFading className="size-3" />
-                    {intlFormatDistance(new Date(post.updatedAt), new Date())}
                   </div>
                 </div>
                 <h2 className="text-xl font-bold leading-tight group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
@@ -264,7 +260,11 @@ function BlogPageComponent() {
                 </p>
               </CardContent>
 
-              <CardFooter className="p-6 pt-0">
+              <CardFooter className="p-6 pt-0 flex flex-col justify-start items-start gap-1">
+                <div className="flex items-center gap-2 text-xs text-slate-500 mt-3 uppercase tracking-widest font-semibold">
+                  <LucideClockFading className="size-3" />
+                  {intlFormatDistance(new Date(post.updatedAt), new Date())}
+                </div>
                 <Button
                   asChild
                   variant="link"
