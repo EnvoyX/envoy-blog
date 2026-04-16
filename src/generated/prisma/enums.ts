@@ -37,3 +37,13 @@ export const Priority = {
 } as const
 
 export type Priority = (typeof Priority)[keyof typeof Priority]
+
+
+export const MessageRole = {
+  USER: 'USER',
+  ASSISTANT: 'ASSISTANT',
+  SYSTEM: 'SYSTEM',
+  TOOL: 'TOOL'
+} as const
+
+export type MessageRole = (typeof MessageRole)[keyof typeof MessageRole]

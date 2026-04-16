@@ -1,5 +1,5 @@
 {
-  "name": "envoy-blog",
+  "name": "envoy-mindpalace",
   "private": true,
   "type": "module",
   "scripts": {
@@ -41,7 +41,11 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.2",
     "@tanstack/ai": "^0.10.1",
+    "@tanstack/ai-gemini": "^0.8.7",
+    "@tanstack/ai-groq": "^0.1.4",
+    "@tanstack/ai-ollama": "^0.6.5",
     "@tanstack/ai-openai": "^0.7.4",
+    "@tanstack/ai-openrouter": "^0.7.4",
     "@tanstack/ai-react": "^0.7.9",
     "@tanstack/react-db": "^0.1.82",
     "@tanstack/react-devtools": "^0.10.1 ",

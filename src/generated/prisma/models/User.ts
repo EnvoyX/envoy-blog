@@ -213,6 +213,7 @@ export type UserWhereInput = {
   tasks?: Prisma.TaskListRelationFilter
   taskLists?: Prisma.TaskListListRelationFilter
   quranTrack?: Prisma.XOR<Prisma.QuranTrackNullableScalarRelationFilter, Prisma.QuranTrackWhereInput> | null
+  chats?: Prisma.ChatListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -231,6 +232,7 @@ export type UserOrderByWithRelationInput = {
   tasks?: Prisma.TaskOrderByRelationAggregateInput
   taskLists?: Prisma.TaskListOrderByRelationAggregateInput
   quranTrack?: Prisma.QuranTrackOrderByWithRelationInput
+  chats?: Prisma.ChatOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -252,6 +254,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   tasks?: Prisma.TaskListRelationFilter
   taskLists?: Prisma.TaskListListRelationFilter
   quranTrack?: Prisma.XOR<Prisma.QuranTrackNullableScalarRelationFilter, Prisma.QuranTrackWhereInput> | null
+  chats?: Prisma.ChatListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -298,6 +301,7 @@ export type UserCreateInput = {
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -316,6 +320,7 @@ export type UserUncheckedCreateInput = {
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -334,6 +339,7 @@ export type UserUpdateInput = {
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -352,6 +358,7 @@ export type UserUncheckedUpdateInput = {
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -504,6 +511,20 @@ export type UserUpdateOneWithoutTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTasksInput, Prisma.UserUpdateWithoutTasksInput>, Prisma.UserUncheckedUpdateWithoutTasksInput>
 }
 
+export type UserCreateNestedOneWithoutChatsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutChatsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatsInput
+  upsert?: Prisma.UserUpsertWithoutChatsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutChatsInput, Prisma.UserUpdateWithoutChatsInput>, Prisma.UserUncheckedUpdateWithoutChatsInput>
+}
+
 export type UserCreateNestedOneWithoutSessionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSessionsInput
@@ -547,6 +568,7 @@ export type UserCreateWithoutSavedItemsInput = {
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedItemsInput = {
@@ -564,6 +586,7 @@ export type UserUncheckedCreateWithoutSavedItemsInput = {
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedItemsInput = {
@@ -597,6 +620,7 @@ export type UserUpdateWithoutSavedItemsInput = {
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedItemsInput = {
@@ -614,6 +638,7 @@ export type UserUncheckedUpdateWithoutSavedItemsInput = {
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutQuranTrackInput = {
@@ -631,6 +656,7 @@ export type UserCreateWithoutQuranTrackInput = {
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutQuranTrackInput = {
@@ -648,6 +674,7 @@ export type UserUncheckedCreateWithoutQuranTrackInput = {
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutQuranTrackInput = {
@@ -681,6 +708,7 @@ export type UserUpdateWithoutQuranTrackInput = {
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQuranTrackInput = {
@@ -698,6 +726,7 @@ export type UserUncheckedUpdateWithoutQuranTrackInput = {
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {
@@ -715,6 +744,7 @@ export type UserCreateWithoutPostsInput = {
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
@@ -732,6 +762,7 @@ export type UserUncheckedCreateWithoutPostsInput = {
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -765,6 +796,7 @@ export type UserUpdateWithoutPostsInput = {
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
@@ -782,6 +814,7 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTaskListsInput = {
@@ -799,6 +832,7 @@ export type UserCreateWithoutTaskListsInput = {
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTaskListsInput = {
@@ -816,6 +850,7 @@ export type UserUncheckedCreateWithoutTaskListsInput = {
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTaskListsInput = {
@@ -849,6 +884,7 @@ export type UserUpdateWithoutTaskListsInput = {
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskListsInput = {
@@ -866,6 +902,7 @@ export type UserUncheckedUpdateWithoutTaskListsInput = {
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTasksInput = {
@@ -883,6 +920,7 @@ export type UserCreateWithoutTasksInput = {
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTasksInput = {
@@ -900,6 +938,7 @@ export type UserUncheckedCreateWithoutTasksInput = {
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTasksInput = {
@@ -933,6 +972,7 @@ export type UserUpdateWithoutTasksInput = {
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTasksInput = {
@@ -948,6 +988,95 @@ export type UserUncheckedUpdateWithoutTasksInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
+  quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutChatsInput = {
+  id: string
+  name: string
+  email: string
+  password?: string | null
+  emailVerified: boolean
+  image?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
+  quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutChatsInput = {
+  id: string
+  name: string
+  email: string
+  password?: string | null
+  emailVerified: boolean
+  image?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
+  quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutChatsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
+}
+
+export type UserUpsertWithoutChatsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutChatsInput, Prisma.UserUncheckedUpdateWithoutChatsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutChatsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutChatsInput, Prisma.UserUncheckedUpdateWithoutChatsInput>
+}
+
+export type UserUpdateWithoutChatsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
+  quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutChatsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
 }
@@ -967,6 +1096,7 @@ export type UserCreateWithoutSessionsInput = {
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -984,6 +1114,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1017,6 +1148,7 @@ export type UserUpdateWithoutSessionsInput = {
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1034,6 +1166,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -1051,6 +1184,7 @@ export type UserCreateWithoutAccountsInput = {
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1068,6 +1202,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1101,6 +1236,7 @@ export type UserUpdateWithoutAccountsInput = {
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1118,6 +1254,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1132,6 +1269,7 @@ export type UserCountOutputType = {
   posts: number
   tasks: number
   taskLists: number
+  chats: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1141,6 +1279,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   posts?: boolean | UserCountOutputTypeCountPostsArgs
   tasks?: boolean | UserCountOutputTypeCountTasksArgs
   taskLists?: boolean | UserCountOutputTypeCountTaskListsArgs
+  chats?: boolean | UserCountOutputTypeCountChatsArgs
 }
 
 /**
@@ -1195,6 +1334,13 @@ export type UserCountOutputTypeCountTaskListsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.TaskListWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountChatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ChatWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1212,6 +1358,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>
   taskLists?: boolean | Prisma.User$taskListsArgs<ExtArgs>
   quranTrack?: boolean | Prisma.User$quranTrackArgs<ExtArgs>
+  chats?: boolean | Prisma.User$chatsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1257,6 +1404,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>
   taskLists?: boolean | Prisma.User$taskListsArgs<ExtArgs>
   quranTrack?: boolean | Prisma.User$quranTrackArgs<ExtArgs>
+  chats?: boolean | Prisma.User$chatsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1272,6 +1420,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     tasks: Prisma.$TaskPayload<ExtArgs>[]
     taskLists: Prisma.$TaskListPayload<ExtArgs>[]
     quranTrack: Prisma.$QuranTrackPayload<ExtArgs> | null
+    chats: Prisma.$ChatPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1683,6 +1832,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   tasks<T extends Prisma.User$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskLists<T extends Prisma.User$taskListsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskListsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskListPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   quranTrack<T extends Prisma.User$quranTrackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$quranTrackArgs<ExtArgs>>): Prisma.Prisma__QuranTrackClient<runtime.Types.Result.GetResult<Prisma.$QuranTrackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  chats<T extends Prisma.User$chatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2273,6 +2423,30 @@ export type User$quranTrackArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.QuranTrackInclude<ExtArgs> | null
   where?: Prisma.QuranTrackWhereInput
+}
+
+/**
+ * User.chats
+ */
+export type User$chatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Chat
+   */
+  select?: Prisma.ChatSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Chat
+   */
+  omit?: Prisma.ChatOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChatInclude<ExtArgs> | null
+  where?: Prisma.ChatWhereInput
+  orderBy?: Prisma.ChatOrderByWithRelationInput | Prisma.ChatOrderByWithRelationInput[]
+  cursor?: Prisma.ChatWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ChatScalarFieldEnum | Prisma.ChatScalarFieldEnum[]
 }
 
 /**

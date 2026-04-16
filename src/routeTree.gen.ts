@@ -18,6 +18,8 @@ import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile
 import { Route as DashboardImportRouteImport } from './routes/dashboard/import'
 import { Route as DashboardDiscoverRouteImport } from './routes/dashboard/discover'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as ApiChatRouteRouteImport } from './routes/api/chat/route'
+import { Route as GeneralAiRouteRouteImport } from './routes/_general/ai/route'
 import { Route as DashboardTicTacToeIndexRouteImport } from './routes/dashboard/tic-tac-toe/index'
 import { Route as DashboardTaskTrackerIndexRouteImport } from './routes/dashboard/task-tracker/index'
 import { Route as DashboardQuranTrackerIndexRouteImport } from './routes/dashboard/quran-tracker/index'
@@ -78,6 +80,16 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatRouteRoute = ApiChatRouteRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GeneralAiRouteRoute = GeneralAiRouteRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => GeneralRouteRoute,
 } as any)
 const DashboardTicTacToeIndexRoute = DashboardTicTacToeIndexRouteImport.update({
   id: '/tic-tac-toe/',
@@ -175,6 +187,8 @@ const DashboardBlogSlugEditMdEditorRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/ai': typeof GeneralAiRouteRoute
+  '/api/chat': typeof ApiChatRouteRoute
   '/api/$': typeof ApiSplatRoute
   '/dashboard/discover': typeof DashboardDiscoverRoute
   '/dashboard/import': typeof DashboardImportRoute
@@ -200,6 +214,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai': typeof GeneralAiRouteRoute
+  '/api/chat': typeof ApiChatRouteRoute
   '/api/$': typeof ApiSplatRoute
   '/dashboard/discover': typeof DashboardDiscoverRoute
   '/dashboard/import': typeof DashboardImportRoute
@@ -229,6 +245,8 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteRouteWithChildren
   '/_general': typeof GeneralRouteRouteWithChildren
   '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/_general/ai': typeof GeneralAiRouteRoute
+  '/api/chat': typeof ApiChatRouteRoute
   '/api/$': typeof ApiSplatRoute
   '/dashboard/discover': typeof DashboardDiscoverRoute
   '/dashboard/import': typeof DashboardImportRoute
@@ -257,6 +275,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/ai'
+    | '/api/chat'
     | '/api/$'
     | '/dashboard/discover'
     | '/dashboard/import'
@@ -282,6 +302,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ai'
+    | '/api/chat'
     | '/api/$'
     | '/dashboard/discover'
     | '/dashboard/import'
@@ -310,6 +332,8 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/_general'
     | '/dashboard'
+    | '/_general/ai'
+    | '/api/chat'
     | '/api/$'
     | '/dashboard/discover'
     | '/dashboard/import'
@@ -339,6 +363,7 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   GeneralRouteRoute: typeof GeneralRouteRouteWithChildren
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
+  ApiChatRouteRoute: typeof ApiChatRouteRoute
   ApiSplatRoute: typeof ApiSplatRoute
   ApiAiSummaryRoute: typeof ApiAiSummaryRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -408,6 +433,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/$'
       preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_general/ai': {
+      id: '/_general/ai'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof GeneralAiRouteRouteImport
+      parentRoute: typeof GeneralRouteRoute
     }
     '/dashboard/tic-tac-toe/': {
       id: '/dashboard/tic-tac-toe/'
@@ -544,11 +583,13 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 )
 
 interface GeneralRouteRouteChildren {
+  GeneralAiRouteRoute: typeof GeneralAiRouteRoute
   GeneralBlogSlugRoute: typeof GeneralBlogSlugRoute
   GeneralBlogIndexRoute: typeof GeneralBlogIndexRoute
 }
 
 const GeneralRouteRouteChildren: GeneralRouteRouteChildren = {
+  GeneralAiRouteRoute: GeneralAiRouteRoute,
   GeneralBlogSlugRoute: GeneralBlogSlugRoute,
   GeneralBlogIndexRoute: GeneralBlogIndexRoute,
 }
@@ -604,6 +645,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   GeneralRouteRoute: GeneralRouteRouteWithChildren,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
+  ApiChatRouteRoute: ApiChatRouteRoute,
   ApiSplatRoute: ApiSplatRoute,
   ApiAiSummaryRoute: ApiAiSummaryRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

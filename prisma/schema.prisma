@@ -28,6 +28,13 @@ enum Priority {
   URGENT
 }
 
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+  TOOL
+}
+
 model SavedItem {
   id          String   @id @default(uuid())
   userId      String
@@ -75,7 +82,7 @@ model Post {
   image       String?
   slug        String   @unique
   excerpt     String?
-  content     String   @db.Text    
+  content     String   @db.Text
   published   Boolean  @default(false)    // Public or private
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -121,6 +128,41 @@ model Task {
   taskList    TaskList? @relation(fields: [listId], references: [id], onDelete: Cascade)
 }
 
+model Chat {
+  id          String    @id @default(cuid())
+  title       String
+  userId      String    @map("user_id")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  messages    Message[]
+
+  isPublic    Boolean   @default(false) @map("is_public")
+  shareId     String?   @unique @map("share_id")
+
+  @@index([userId, updatedAt])
+  @@map("chats")
+}
+
+model Message {
+  id        String      @id @default(cuid())
+  chatId    String      @map("chat_id")
+  chat      Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  role      MessageRole
+  content   String      @db.Text
+
+  tokens    Int?
+  model     String?
+
+  toolCalls Json?       @map("tool_calls")
+  toolName  String?     @map("tool_name")
+
+  createdAt DateTime    @default(now())
+
+  @@index([chatId, createdAt])
+  @@map("messages")
+}
+
 model User {
   id            String      @id
   name          String
@@ -137,6 +179,7 @@ model User {
   tasks         Task[]
   taskLists     TaskList[]
   quranTrack    QuranTrack?
+  chats         Chat[]
 
   @@unique([email])
   @@map("user")

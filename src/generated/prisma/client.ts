@@ -72,6 +72,16 @@ export type TaskList = Prisma.TaskListModel
  */
 export type Task = Prisma.TaskModel
 /**
+ * Model Chat
+ * 
+ */
+export type Chat = Prisma.ChatModel
+/**
+ * Model Message
+ * 
+ */
+export type Message = Prisma.MessageModel
+/**
  * Model User
  * 
  */

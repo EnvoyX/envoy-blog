@@ -13,7 +13,9 @@ export const env = createEnv({
         GITHUB_CLIENT_ID: z.string().min(1),
         GITHUB_CLIENT_SECRET: z.string().min(1),
         FIRECRAWL_API_KEY: z.string().min(1),
-        AI_OPENROUTER_KEY: z.string().min(1),
+        OPENROUTER_API_KEY: z.string().min(1),
+        OPENAI_API_KEY: z.string().min(1),
+        GEMINI_API_KEY: z.string().min(1),
     },
 
     /**
@@ -42,8 +44,9 @@ export const env = createEnv({
         GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
         VITE_BASE_URL: import.meta.env.VITE_BASE_URL,
         FIRECRAWL_API_KEY: process.env.FIRECRAWL_API_KEY,
-        AI_OPENROUTER_KEY: process.env.AI_OPENROUTER_KEY,
-
+        OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+        GEMINI_API_KEY: process.env.GEMINI_API_KEY,
     },
 
     /**
