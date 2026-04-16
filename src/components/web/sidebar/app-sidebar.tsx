@@ -105,7 +105,7 @@ const navItems: NavPrimaryProps['items'] = linkOptions([
 
 export function AppSidebar({ user }: UserSession) {
   return (
-    <Sidebar collapsible="icon" className="bg-black!">
+    <Sidebar collapsible="icon" variant="sidebar" className="bg-black!">
       <SidebarHeader className="bg-black!">
         <SidebarMenu className="bg-black!">
           <SidebarMenuButton size="lg" asChild>

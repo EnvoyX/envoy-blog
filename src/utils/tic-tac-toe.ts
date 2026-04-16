@@ -1,4 +1,4 @@
-type Player = 'X' | 'O'
+export type Player = 'X' | 'O'
 
 export function calculateWinner(squares: Player[]) {
   const lines = [
@@ -21,7 +21,7 @@ export function calculateWinner(squares: Player[]) {
   return null
 }
 
-export function calculateTurns(squares: string[]) {
+export function calculateTurns(squares: Player[]) {
   return squares.filter((square) => !square).length
 }
 

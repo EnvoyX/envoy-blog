@@ -1,3 +1,6 @@
+import { useSidebar } from '@/components/ui/sidebar'
+import { cn } from '@/lib/utils'
+
 export function Square({
   value,
   onSquareClick,
@@ -5,12 +8,20 @@ export function Square({
   value: 'X' | 'O' | null
   onSquareClick: any
 }) {
+  const { state } = useSidebar()
   return (
     <button
-      className="flex items-center justify-center p-0 size-full bg-emerald-500 border border-black rounded-none text-2xl font-bold text-white"
+      className={cn(
+        'flex items-center justify-center p-0 size-24 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 transition-all border border-slate-700 text-3xl font-bold rounded-lg shadow-sm',
+        {
+          'md:size-16': state === 'expanded',
+        },
+      )}
       onClick={onSquareClick}
     >
-      {value}
+      <span className={value === 'X' ? 'text-indigo-400' : 'text-rose-400'}>
+        {value}
+      </span>
     </button>
   )
 }

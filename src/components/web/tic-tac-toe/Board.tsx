@@ -1,64 +1,45 @@
-import { create } from 'zustand'
-import { combine } from 'zustand/middleware'
-import { Square } from './Square'
 import {
   calculateStatus,
   calculateTurns,
   calculateWinner,
+  Player,
 } from '@/utils/tic-tac-toe'
+import { Square } from './Square'
 
-const useGameStore = create(
-  combine(
-    {
-      squares: Array(9).fill(null),
-      xIsNext: true,
-    },
-    (set) => {
-      return {
-        setSquares: (nextSquares: any) => {
-          set((state) => ({
-            squares:
-              typeof nextSquares === 'function'
-                ? nextSquares(state.squares)
-                : nextSquares,
-          }))
-        },
-        setXisNext: (nextXisNext: any) => {
-          set((state) => ({
-            xIsNext:
-              typeof nextXisNext === 'function'
-                ? nextXisNext(state.xIsNext)
-                : nextXisNext,
-          }))
-        },
-      }
-    },
-  ),
-)
-
-export default function Board() {
-  const xIsNext = useGameStore((state) => state.xIsNext)
-  const setXisNext = useGameStore((state) => state.setXisNext)
-  const squares = useGameStore((state) => state.squares)
-  const setSquares = useGameStore((state) => state.setSquares)
-
-  const player = xIsNext ? 'X' : 'O'
+export default function Board({
+  xIsNext,
+  squares,
+  onPlay,
+}: {
+  xIsNext: boolean
+  squares: Player[]
+  onPlay: (nextSquares: Player[]) => void
+}) {
   const winner = calculateWinner(squares)
   const turns = calculateTurns(squares)
+  const player = xIsNext ? 'X' : 'O'
   const status = calculateStatus(winner, turns, player)
 
   function handleClick(i: number) {
-    if (squares[i]) return
+    if (squares[i] || winner) return
     const nextSquares = squares.slice()
     nextSquares[i] = player
-    setSquares(nextSquares)
-    setXisNext(!xIsNext)
+    onPlay(nextSquares)
   }
 
   return (
-    <section className="flex flex-col gap-2">
-      <div className="mb-2">{status}</div>
-      <div className="grid grid-cols-3 border border-emerald-700 h-64 w-64">
+    <section className="flex flex-col items-center gap-6">
+      <div
+        className={`px-4 py-2 rounded-full text-sm font-semibold tracking-wide uppercase shadow-lg border ${
+          winner
+            ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300'
+            : 'bg-slate-800 border-slate-700 text-slate-300'
+        }`}
+      >
+        {status}
+      </div>
+
+      <div className="grid grid-cols-3 gap-2 p-2 bg-slate-900 rounded-xl shadow-2xl border border-slate-800">
         {squares.map((square, squareIndex) => (
           <Square
             key={squareIndex}

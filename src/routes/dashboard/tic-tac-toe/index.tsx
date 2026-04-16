@@ -1,4 +1,4 @@
-import Board from '@/components/web/tic-tac-toe/Board'
+import Game from '@/components/web/tic-tac-toe/Game'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/dashboard/tic-tac-toe/')({
@@ -19,7 +19,7 @@ function RouteComponent() {
         </div>
       </header>
       <div className="flex justify-center items-center">
-        <Board />
+        <Game />
       </div>
     </div>
   )
