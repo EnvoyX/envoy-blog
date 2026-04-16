@@ -1,12 +1,21 @@
-// src/routes/blog.$slug.tsx
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { allPosts } from '../../../../.content-collections/generated'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Link } from '@tanstack/react-router'
-import { ChevronLeft, ListIcon } from 'lucide-react'
+import { ChevronDown, ChevronLeft, ListIcon } from 'lucide-react'
 import { intlFormat } from 'date-fns'
 import { MarkdownRenderer } from '@/components/web/Markdown'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/_general/blog/$slug')({
   loader: ({ params }) => {
@@ -49,6 +58,7 @@ function BlogPost() {
   const post = Route.useLoaderData()
   const [visibleIds, setVisibleIds] = useState<string[]>([])
   const headings = post?.content ? extractHeadings(post.content) : []
+  const [dropdownOpen, setDropdownOpen] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -130,14 +140,67 @@ function BlogPost() {
             asChild
             className=" text-emerald-500! hover:text-emerald-400! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
           >
-            <Link to="/blog">
+            <Link to="/dashboard/blog">
               <ChevronLeft className="mr-2 size-4" />
               Back to Blog
             </Link>
           </Button>
-          <div className="text-sm font-medium text-slate-500 truncate max-w-50 md:max-w-none">
-            {post.title}
-          </div>
+          <DropdownMenu
+            open={dropdownOpen}
+            onOpenChange={(open) => {
+              setDropdownOpen(open)
+            }}
+          >
+            <DropdownMenuTrigger asChild>
+              <div className="text-sm font-medium text-slate-500 truncate md:max-w-none flex gap-1 items-center group">
+                <ChevronDown
+                  className={cn(
+                    'size-4 group-hover:text-emerald-500 shrink-0',
+                    {
+                      'rotate-180 transition-all text-emerald-500':
+                        dropdownOpen,
+                    },
+                  )}
+                />
+                <span
+                  className={cn('group-hover:text-emerald-500', {
+                    'text-emerald-500': dropdownOpen,
+                  })}
+                >
+                  {post.title}
+                </span>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="max-sm:w-48 w-64">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>On This Page </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {headings.map((heading) => {
+                  const isActive = visibleIds.includes(heading.id)
+                  return (
+                    <DropdownMenuItem>
+                      <a
+                        key={heading.id}
+                        href={`#${heading.id}`}
+                        className={`block text-xs transition-all hover:text-white
+                          ${isActive ? 'text-emerald-500 border-emerald-500 font-medium border-l-2' : 'text-slate-400 '}
+                          ${heading.level === 1 && 'pl-2'}
+                          ${heading.level === 2 && 'pl-4'}
+                          ${heading.level === 3 && 'pl-6'}
+                          ${heading.level === 4 && 'pl-8'}
+                          ${heading.level === 5 && 'pl-10'}
+                          ${heading.level === 6 && 'pl-12'}
+
+                           hover:bg-slate-500/5`}
+                      >
+                        {heading.text}
+                      </a>
+                    </DropdownMenuItem>
+                  )
+                })}
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </nav>
 
