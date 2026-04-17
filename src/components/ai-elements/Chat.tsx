@@ -17,7 +17,6 @@ export function Chat({
   model: string
   chatId: string
 }) {
-  console.log('Current chatId from client: ', `chat-${chatId}`)
   const [input, setInput] = useState('')
   const queryClient = useQueryClient()
   const scrollRef = useRef<HTMLDivElement>(null)

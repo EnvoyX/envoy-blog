@@ -1,7 +1,12 @@
 import { db } from '@/lib/db'
 import { authRouteMiddleware } from '@/middlewares/auth'
-import { chat, ChatMiddleware, toServerSentEventsResponse } from '@tanstack/ai'
-import { openRouterText } from '@tanstack/ai-openrouter'
+import {
+  chat,
+  ChatMiddleware,
+  toServerSentEventsResponse,
+  summarize,
+} from '@tanstack/ai'
+import { openRouterText, openRouterSummarize } from '@tanstack/ai-openrouter'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/api/chat-openrouter')({
@@ -69,12 +74,20 @@ export const Route = createFileRoute('/api/chat-openrouter')({
 
           console.log('Existing chat available')
 
+          const result = await summarize({
+            adapter: openRouterSummarize('google/gemma-4-31b-it:free'),
+            text: lastUserMessage.parts[0]?.content,
+            maxLength: 100,
+            style: 'concise', // "concise" | "bullet-points" | "paragraph"
+          })
+
+          console.log('Topic/Title summary: ', result.summary)
+
           if (!existingConversation) {
             const saveConversation = await db.chat.create({
               data: {
                 id: chatId as string,
-                title:
-                  lastUserMessage.parts[0]?.content?.slice(0, 40) || 'New Chat',
+                title: result.summary || 'New Chat',
                 userId: context.user.id as string,
                 model: 'openrouter',
               },
