@@ -71,8 +71,8 @@ model QuranTrack {
   currentJuz    String
   currentStreak Int
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Post {
@@ -83,7 +83,7 @@ model Post {
   slug        String   @unique
   excerpt     String?
   content     String   @db.Text
-  published   Boolean  @default(false)    // Public or private
+  published   Boolean  @default(false) // Public or private
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -104,12 +104,11 @@ model TaskList {
   description String?
   active      Boolean @default(true)
 
+  user  User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks Task[]
 
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tasks  Task[]
-
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Task {
@@ -124,40 +123,38 @@ model Task {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  taskList    TaskList? @relation(fields: [listId], references: [id], onDelete: Cascade)
+  user     User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskList TaskList? @relation(fields: [listId], references: [id], onDelete: Cascade)
 }
 
 model Chat {
-  id          String    @id @default(cuid())
-  title       String
-  userId      String    @map("user_id")
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  messages    Message[]
+  id        String    @id @default(cuid())
+  title     String?
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[]
+  model     String?
 
-  isPublic    Boolean   @default(false) @map("is_public")
-  shareId     String?   @unique @map("share_id")
+  isPublic Boolean @default(false) @map("is_public")
+  shareId  String? @unique @map("share_id")
 
   @@index([userId, updatedAt])
   @@map("chats")
 }
 
 model Message {
-  id        String      @id @default(cuid())
-  chatId    String      @map("chat_id")
-  chat      Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  role      MessageRole
-  content   String      @db.Text
+  id      String      @id @default(cuid())
+  messageId String    
+  chatId  String      @map("chat_id")
+  chat    Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  role    MessageRole
+  content String      @db.Text
+  model   String?
+  parts     Json?
 
-  tokens    Int?
-  model     String?
-
-  toolCalls Json?       @map("tool_calls")
-  toolName  String?     @map("tool_name")
-
-  createdAt DateTime    @default(now())
+  createdAt DateTime @default(now())
 
   @@index([chatId, createdAt])
   @@map("messages")

@@ -16,6 +16,8 @@ export const env = createEnv({
         OPENROUTER_API_KEY: z.string().min(1),
         OPENAI_API_KEY: z.string().min(1),
         GEMINI_API_KEY: z.string().min(1),
+        GROQ_API_KEY: z.string().min(1),
+        OLLAMA_API_KEY: z.string().min(1),
     },
 
     /**
@@ -47,6 +49,8 @@ export const env = createEnv({
         OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
         OPENAI_API_KEY: process.env.OPENAI_API_KEY,
         GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+        GROQ_API_KEY: process.env.GROQ_API_KEY,
+        OLLAMA_API_KEY: process.env.OLLAMA_API_KEY,
     },
 
     /**

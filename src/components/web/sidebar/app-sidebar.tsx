@@ -1,17 +1,6 @@
 'use client'
 
-import {
-  BookIcon,
-  BookMarkedIcon,
-  BookmarkIcon,
-  Check,
-  Compass,
-  Gamepad2,
-  Import,
-  LayoutDashboardIcon,
-  Newspaper,
-  UserIcon,
-} from 'lucide-react'
+
 
 import {
   Sidebar,
@@ -22,86 +11,13 @@ import {
   SidebarMenuButton,
   SidebarRail,
 } from '@/components/ui/sidebar'
-import { Link, linkOptions } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { NavPrimary } from './nav-primary'
 import { NavUser } from './nav-user'
-import { NavPrimaryProps } from '@/lib/types'
 import { UserSession } from '@/data/session'
+import { navItemsDashboard } from '../NavItems'
 
-const navItems: NavPrimaryProps['items'] = linkOptions([
-  {
-    title: 'Dashboard',
-    icon: LayoutDashboardIcon,
-    to: '/dashboard',
-    activeOptions: {
-      exact: true,
-    },
-  },
-  {
-    title: 'Profile',
-    icon: UserIcon,
-    to: '/dashboard/profile',
-    activeOptions: {
-      exact: false,
-    },
-  },
-  {
-    title: 'Task Tracker',
-    icon: Check,
-    to: '/dashboard/task-tracker',
-    activeOptions: {
-      exact: false,
-    },
-  },
-  {
-    title: "Qur'an Tracker",
-    icon: BookMarkedIcon,
-    to: '/dashboard/quran-tracker',
-    activeOptions: {
-      exact: false,
-    },
-  },
-  {
-    title: 'Blogs',
-    icon: Newspaper,
-    to: '/dashboard/blog',
-    activeOptions: {
-      exact: false,
-    },
-  },
-  {
-    title: 'Items',
-    icon: BookmarkIcon,
-    to: '/dashboard/items',
-    activeOptions: {
-      exact: false,
-    },
-  },
-  {
-    title: 'Import',
-    icon: Import,
-    to: '/dashboard/import',
-    activeOptions: {
-      exact: false,
-    },
-  },
-  {
-    title: 'Discover',
-    icon: Compass,
-    to: '/dashboard/discover',
-    activeOptions: {
-      exact: false,
-    },
-  },
-  {
-    title: 'Tic Tac Toe',
-    icon: Gamepad2,
-    to: '/dashboard/tic-tac-toe',
-    activeOptions: {
-      exact: true,
-    },
-  },
-])
+
 
 export function AppSidebar({ user }: UserSession) {
   return (
@@ -125,7 +41,7 @@ export function AppSidebar({ user }: UserSession) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent className="bg-black!">
-        <NavPrimary items={navItems} />
+        <NavPrimary items={navItemsDashboard} />
       </SidebarContent>
       <SidebarFooter className="bg-black!">
         <NavUser user={user} />

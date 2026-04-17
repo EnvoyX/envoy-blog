@@ -54,7 +54,10 @@ export function MarkdownRenderer({ markdown }: { markdown: string }) {
               {String(children).replace(/\n$/, '')}
             </SyntaxHighlighter>
           ) : (
-            <code className={className} {...props}>
+            <code
+              className={`bg-zinc-800 px-1.5 py-0.5 rounded text-blue-300 ${className}`}
+              {...props}
+            >
               {children}
             </code>
           )

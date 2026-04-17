@@ -11,19 +11,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { authClient } from '@/lib/auth-client'
-import {
-  BookMarkedIcon,
-  BookmarkIcon,
-  Check,
-  Compass,
-  Import,
-  LayoutDashboardIcon,
-  Loader2,
-  LogOut,
-  Menu,
-  Newspaper,
-  UserIcon,
-} from 'lucide-react'
+import { Loader2, LogOut, Menu } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,8 +23,7 @@ import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { UserAvatar } from './user-profile'
 import { useQuery } from '@tanstack/react-query'
-import { linkOptions } from '@tanstack/react-router'
-import { NavPrimaryProps, NavProps } from '@/lib/types'
+import { navItemsMain, sidebarNavItems } from './NavItems'
 
 export function Navbar() {
   const session = useQuery({
@@ -80,83 +67,6 @@ export function Navbar() {
     })
   }
 
-  const navItems: NavProps['items'] = linkOptions([
-    {
-      title: 'Blog',
-      to: '/blog',
-      activeOptions: {
-        exact: false,
-      },
-    },
-  ])
-
-  const sidebarNavItems: NavPrimaryProps['items'] = linkOptions([
-    {
-      title: 'Dashboard',
-      icon: LayoutDashboardIcon,
-      to: '/dashboard',
-      activeOptions: {
-        exact: true,
-      },
-    },
-    {
-      title: 'Profile',
-      icon: UserIcon,
-      to: '/dashboard/profile',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: 'Task Tracker',
-      icon: Check,
-      to: '/dashboard/task-tracker',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: "Qur'an Tracker",
-      icon: BookMarkedIcon,
-      to: '/dashboard/quran-tracker',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: 'Blogs',
-      icon: Newspaper,
-      to: '/dashboard/blog',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: 'Items',
-      icon: BookmarkIcon,
-      to: '/dashboard/items',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: 'Import',
-      icon: Import,
-      to: '/dashboard/import',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: 'Discover',
-      icon: Compass,
-      to: '/dashboard/discover',
-      activeOptions: {
-        exact: false,
-      },
-    },
-  ])
-
   return (
     <nav className="sticky top-0 z-50 border-b bg-transparent backdrop-blur">
       <div className="mx-auto flex h-16 items-center justify-between px-4">
@@ -174,7 +84,7 @@ export function Navbar() {
           />
         </Link>
         <ul className="hidden sm:flex items-center gap-3 font-bold ">
-          {navItems.map((item, index) => {
+          {navItemsMain.map((item, index) => {
             // If the menu items can be reordered, don't use index but unique value for
             // for the key
             return (
@@ -313,7 +223,7 @@ export function Navbar() {
                   Main Menu
                 </p>
                 <div className="grid gap-1">
-                  {navItems.map((item, idx) => (
+                  {navItemsMain.map((item, idx) => (
                     <SheetClose key={idx} asChild>
                       <Link
                         to={item.to}
