@@ -96,7 +96,6 @@ export function ChatAppSidebar({
       </SidebarContent>
 
       {/* <SidebarFooter className="p-4 border-t border-zinc-800/50"> */}
-      {/* Your Profile / Logout logic here */}
       {/* </SidebarFooter> */}
     </Sidebar>
   )

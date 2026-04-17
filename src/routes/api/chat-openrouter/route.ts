@@ -74,16 +74,15 @@ export const Route = createFileRoute('/api/chat-openrouter')({
 
           console.log('Existing chat available')
 
-          const result = await summarize({
-            adapter: openRouterSummarize('google/gemma-4-31b-it:free'),
-            text: lastUserMessage.parts[0]?.content,
-            maxLength: 100,
-            style: 'concise', // "concise" | "bullet-points" | "paragraph"
-          })
-
-          console.log('Topic/Title summary: ', result.summary)
-
           if (!existingConversation) {
+            const result = await summarize({
+              adapter: openRouterSummarize('google/gemma-4-31b-it:free'),
+              text: lastUserMessage.parts[0]?.content,
+              maxLength: 100,
+              style: 'concise', // "concise" | "bullet-points" | "paragraph"
+            })
+
+            console.log('Topic/Title summary: ', result.summary)
             const saveConversation = await db.chat.create({
               data: {
                 id: chatId as string,
@@ -97,7 +96,7 @@ export const Route = createFileRoute('/api/chat-openrouter')({
 
           const savedUserMessage = await db.message.create({
             data: {
-              messageId: lastUserMessage.id, // Ensure this is unique in your DB
+              messageId: lastUserMessage.id,
               chatId: chatId,
               role: 'USER',
               content: lastUserMessage.parts[0].content,

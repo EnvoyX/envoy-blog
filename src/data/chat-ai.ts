@@ -24,7 +24,6 @@ export const getChatHistoryFn = createServerFn({ method: 'GET' })
 
     if (!chat) return null
 
-    // transform prisma messages into TanStack AI library Message format
     const formattedMessages = chat.messages.map((msg) => ({
       id: msg.messageId,
       role: msg.role.toLowerCase() as MessageRole,

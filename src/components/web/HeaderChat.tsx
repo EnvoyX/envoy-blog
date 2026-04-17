@@ -2,14 +2,7 @@ import { getUser } from '@/data/session'
 import { authClient } from '@/lib/auth-client'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import {
-  Loader2,
-  LogOut,
-  Menu,
-  PanelLeftClose,
-  PanelLeftOpen,
-  Sparkles,
-} from 'lucide-react'
+import { Loader2, LogOut, Menu, Sparkles } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { sidebarNavItems } from './NavItems'
