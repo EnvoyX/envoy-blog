@@ -1,29 +1,47 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, Copy, CopyCheck } from 'lucide-react'
 import { useState } from 'react'
 import Editor from '@uiw/react-md-editor'
 import { getPostFn } from '@/data/blog'
+import { getUser } from '@/data/session'
 
 export const Route = createFileRoute('/dashboard/blog/$slug/edit/md-editor')({
   component: RouteComponent,
-  loader: ({ params }) => getPostFn({ data: params.slug }),
+  loader: async ({ params }) => {
+    const post = await getPostFn({ data: params.slug })
+    const session = await getUser()
+    if (session.user.id !== post?.authorId) {
+      throw redirect({
+        to: '/dashboard/blog',
+      })
+    }
+    return {
+      post,
+      session,
+    }
+  },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `Markdown Editor | ${loaderData?.slug} | Envoy Mindpalace` },
+      {
+        title: `Markdown Editor | ${loaderData?.post?.slug} | Envoy Mindpalace`,
+      },
       {
         name: 'Envoy Mindpalace',
         content: 'Welcome to my TanStack Start playground!',
       },
-      { property: 'og:title', content: `${loaderData?.title} | Envoy Blog` },
+      {
+        property: 'og:title',
+        content: `${loaderData?.post?.title} | Envoy Blog`,
+      },
       {
         property: 'og:description',
-        content: `${loaderData?.description}`,
+        content: `${loaderData?.post?.description}`,
       },
       {
         property: 'og:image',
-        content: `${loaderData?.image}`,
+        content: `${loaderData?.post?.image}`,
       },
       { property: 'og:type', content: 'website' },
     ],
@@ -31,7 +49,7 @@ export const Route = createFileRoute('/dashboard/blog/$slug/edit/md-editor')({
 })
 
 function RouteComponent() {
-  const post = Route.useLoaderData()
+  const { post } = Route.useLoaderData()
   const [markdown, setMarkdown] = useState(post?.content ?? '')
   const [copied, setCopied] = useState(false)
 

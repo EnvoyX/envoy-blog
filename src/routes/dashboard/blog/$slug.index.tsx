@@ -1,6 +1,11 @@
 import { MarkdownRenderer } from '@/components/web/markdown/Markdown'
 import { getPostFn } from '@/data/blog'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from '@tanstack/react-router'
 import { ChevronDown, ChevronLeft, ListIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
@@ -16,25 +21,41 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import { getUser } from '@/data/session'
 
 export const Route = createFileRoute('/dashboard/blog/$slug/')({
   component: PostComponent,
-  loader: ({ params }) => getPostFn({ data: params.slug }),
+  loader: async ({ params }) => {
+    const post = await getPostFn({ data: params.slug })
+    const session = await getUser()
+    if (!post?.published && session.user.id !== post?.authorId) {
+      throw redirect({
+        to: '/dashboard/blog',
+      })
+    }
+    return {
+      post,
+      session,
+    }
+  },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title} | Blog | Envoy Mindpalace` },
+      { title: `${loaderData?.post?.title} | Blog | Envoy Mindpalace` },
       {
         name: 'Envoy Mindpalace',
         content: 'Welcome to my TanStack Start playground!',
       },
-      { property: 'og:title', content: `${loaderData?.title} | Envoy Blog` },
+      {
+        property: 'og:title',
+        content: `${loaderData?.post?.title} | Envoy Blog`,
+      },
       {
         property: 'og:description',
-        content: `${loaderData?.description}`,
+        content: `${loaderData?.post?.description}`,
       },
       {
         property: 'og:image',
-        content: `${loaderData?.image}`,
+        content: `${loaderData?.post?.image}`,
       },
       { property: 'og:type', content: 'website' },
     ],
@@ -68,10 +89,12 @@ function extractHeadings(markdown: string) {
 }
 
 function PostComponent() {
-  const post = Route.useLoaderData()
+  const { post, session } = Route.useLoaderData()
+  const { slug } = Route.useParams()
   const [visibleIds, setVisibleIds] = useState<string[]>([])
-  const headings = post?.content ? extractHeadings(post.content) : []
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const headings = post?.content ? extractHeadings(post.content) : []
+  const navigate = useNavigate()
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -327,6 +350,21 @@ function PostComponent() {
               >
                 Back to top ↑
               </button>
+              {session.user.id === post.authorId && (
+                <button
+                  onClick={() =>
+                    navigate({
+                      to: '/dashboard/blog/$slug/edit',
+                      params: {
+                        slug,
+                      },
+                    })
+                  }
+                  className="text-xs text-slate-500 hover:text-primary transition-colors flex items-center gap-1 cursor-pointer"
+                >
+                  Edit this blog
+                </button>
+              )}
             </div>
           </aside>
         </div>

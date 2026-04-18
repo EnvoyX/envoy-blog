@@ -50,6 +50,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { BlogStatus } from '@/lib/constants'
+import { Badge } from '@/components/ui/badge'
 
 export const Route = createFileRoute('/dashboard/blog/')({
   loader: () => getMyPostsFn(),
@@ -280,16 +281,27 @@ function BlogPageComponent() {
                 <h2 className="text-xl font-bold leading-tight group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
                   {post.title}
                 </h2>
+
                 <p className="text-slate-400 text-sm line-clamp-3 leading-relaxed">
                   {post.description}
                 </p>
               </CardContent>
 
               <CardFooter className="p-6 pt-0 flex flex-col justify-start items-start gap-1">
+                <span className="absolute bottom-6 right-3">
+                  {post.published ? (
+                    <Badge variant={'default'}>Public</Badge>
+                  ) : (
+                    <Badge className="bg-white/20!" variant={'outline'}>
+                      Private
+                    </Badge>
+                  )}
+                </span>
                 <div className="flex items-center gap-2 text-xs text-slate-500 mt-3 uppercase tracking-widest font-semibold">
                   <LucideClockFading className="size-3" />
                   {intlFormatDistance(new Date(post.updatedAt), new Date())}
                 </div>
+
                 <Button
                   asChild
                   variant="link"

@@ -2,6 +2,7 @@ import {
   createFileRoute,
   Link,
   Outlet,
+  redirect,
   useNavigate,
 } from '@tanstack/react-router'
 import { Plus, Search, LogOut } from 'lucide-react'
@@ -34,7 +35,10 @@ export const Route = createFileRoute('/_chat')({
   loader: async () => {
     // const chats = await getChatListFn()
     const session = await getSession()
-
+    if (!session)
+      throw redirect({
+        to: '/login',
+      })
     return {
       // chats,
       session,

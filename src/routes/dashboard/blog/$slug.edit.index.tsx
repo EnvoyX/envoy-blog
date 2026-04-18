@@ -1,26 +1,43 @@
 import { BlogEditor } from '@/components/web/dashboard/BlogEditor'
 import { getPostFn } from '@/data/blog'
+import { getUser } from '@/data/session'
 import { Post } from '@/generated/prisma/client'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/dashboard/blog/$slug/edit/')({
   component: RouteComponent,
-  loader: ({ params }) => getPostFn({ data: params.slug }),
+  loader: async ({ params }) => {
+    const post = await getPostFn({ data: params.slug })
+    const session = await getUser()
+
+    if (session.user.id !== post?.authorId) {
+      throw redirect({
+        to: '/dashboard/blog',
+      })
+    }
+    return {
+      post,
+      session,
+    }
+  },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `Edit Blog | ${loaderData?.slug} | Envoy Mindpalace` },
+      { title: `Edit Blog | ${loaderData?.post?.slug} | Envoy Mindpalace` },
       {
         name: 'Envoy Mindpalace',
         content: 'Welcome to my TanStack Start playground!',
       },
-      { property: 'og:title', content: `${loaderData?.title} | Envoy Blog` },
+      {
+        property: 'og:title',
+        content: `${loaderData?.post?.title} | Envoy Blog`,
+      },
       {
         property: 'og:description',
-        content: `${loaderData?.description}`,
+        content: `${loaderData?.post?.description}`,
       },
       {
         property: 'og:image',
-        content: `${loaderData?.image}`,
+        content: `${loaderData?.post?.image}`,
       },
       { property: 'og:type', content: 'website' },
     ],
@@ -28,6 +45,6 @@ export const Route = createFileRoute('/dashboard/blog/$slug/edit/')({
 })
 
 function RouteComponent() {
-  const post = Route.useLoaderData()
+  const { post, session } = Route.useLoaderData()
   return <BlogEditor initialData={post as Post} />
 }
