@@ -1,4 +1,3 @@
-// components/app-sidebar.tsx
 import {
   Sidebar,
   SidebarContent,
@@ -11,21 +10,17 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { Loader2, Plus, Search } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import { ChatItem } from '@/components/ai-elements/ChatItem'
 import { Chat } from '@/generated/prisma/client'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useDebouncedCallback } from '@tanstack/react-pacer'
-import { useVirtualizer } from '@tanstack/react-virtual'
 
 export function ChatAppSidebar({
   chats,
-  isLoadingChats,
   ...props
-}: { chats: Chat[]; isLoadingChats: boolean } & React.ComponentProps<
-  typeof Sidebar
->) {
+}: { chats: Chat[] } & React.ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate()
   const [query, setQuery] = useState<string>('')
   const debouncedSearch = useDebouncedCallback(
@@ -41,17 +36,6 @@ export function ChatAppSidebar({
     const matchedQuery = chat.title?.toLowerCase().includes(query.toLowerCase())
 
     return matchedQuery
-  })
-
-  //  const multiplyChats = [...filteredChats, ...filteredChats, ...filteredChats]
-  const parentRef = useRef<HTMLDivElement>(null)
-
-  const rowVirtualizer = useVirtualizer({
-    count: filteredChats.length,
-    // count: multiplyChats.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 40, // Height of each SidebarMenuItem
-    overscan: 5,
   })
 
   return (
@@ -92,47 +76,14 @@ export function ChatAppSidebar({
             Recent Chats
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <div
-              ref={parentRef}
-              className="flex-1 overflow-y-auto px-2 custom-scrollbar "
-            >
-              {isLoadingChats ? (
-                <div className="p-4 flex justify-center">
-                  <Loader2 className="size-4 animate-spin text-zinc-500" />
-                </div>
-              ) : (
-                <div
-                  style={{
-                    height: `${rowVirtualizer.getTotalSize()}px`,
-                    width: '100%',
-                    position: 'relative',
-                  }}
-                >
-                  {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                    const chat = filteredChats[virtualRow.index]
-                    // const chat = multiplyChats[virtualRow.index]
-                    return (
-                      <div
-                        key={virtualRow.key}
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '100%',
-                          height: `${virtualRow.size}px`,
-                          transform: `translateY(${virtualRow.start}px)`,
-                        }}
-                      >
-                        <SidebarMenu>
-                          <SidebarMenuItem>
-                            <ChatItem chat={chat} />
-                          </SidebarMenuItem>
-                        </SidebarMenu>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
+            <div className="flex-1 overflow-y-auto px-2 custom-scrollbar ">
+              <SidebarMenu className="space-y-1">
+                {chats?.map((chat) => (
+                  <SidebarMenuItem key={chat.id}>
+                    <ChatItem chat={chat} />
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
             </div>
           </SidebarGroupContent>
         </SidebarGroup>

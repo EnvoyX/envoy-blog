@@ -58,6 +58,16 @@ export type Chat = Prisma.ChatModel
  */
 export type Message = Prisma.MessageModel
 /**
+ * Model Like
+ * 
+ */
+export type Like = Prisma.LikeModel
+/**
+ * Model Comment
+ * 
+ */
+export type Comment = Prisma.CommentModel
+/**
  * Model User
  * 
  */

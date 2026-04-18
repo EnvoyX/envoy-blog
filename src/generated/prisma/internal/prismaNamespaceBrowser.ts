@@ -59,6 +59,8 @@ export const ModelName = {
   Task: 'Task',
   Chat: 'Chat',
   Message: 'Message',
+  Like: 'Like',
+  Comment: 'Comment',
   User: 'User',
   Session: 'Session',
   Account: 'Account',
@@ -201,6 +203,29 @@ export const MessageScalarFieldEnum = {
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const LikeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  postId: 'postId'
+} as const
+
+export type LikeScalarFieldEnum = (typeof LikeScalarFieldEnum)[keyof typeof LikeScalarFieldEnum]
+
+
+export const CommentScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  postId: 'postId',
+  parentId: 'parentId'
+} as const
+
+export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {

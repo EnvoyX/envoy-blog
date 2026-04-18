@@ -4,13 +4,7 @@ import {
   Outlet,
   useNavigate,
 } from '@tanstack/react-router'
-import { Plus, Search, LogOut, Loader2 } from 'lucide-react'
-import {
-  useQuery,
-  useSuspenseQuery,
-  // useMutation,
-  // useQueryClient,
-} from '@tanstack/react-query'
+import { Plus, Search, LogOut } from 'lucide-react'
 import { getChatListFn } from '@/data/chat-ai'
 import { useSidebarMobileStore } from '@/store/sidebar'
 import {
@@ -26,35 +20,34 @@ import {
 import { Button, buttonVariants } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
 import { UserAvatar } from '@/components/web/user-profile'
-import { useRef, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { ChatItem } from '@/components/ai-elements/ChatItem'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { ChatAppSidebar } from '@/components/web/sidebar/chat-app-sidebar'
 import { useDebouncedCallback } from '@tanstack/react-pacer'
-import { useVirtualizer } from '@tanstack/react-virtual'
+import { getSession } from '@/data/session'
 
 export const Route = createFileRoute('/_chat')({
   component: RouteComponent,
+  loader: async () => {
+    const chats = await getChatListFn()
+    const session = await getSession()
+
+    return {
+      chats,
+      session,
+    }
+  },
 })
 
 function RouteComponent() {
+  const { chats, session } = Route.useLoaderData()
   const { isSidebarMobileOpen, toggleSheet } = useSidebarMobileStore()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [isTransition, startTransition] = useTransition()
   const [query, setQuery] = useState<string>('')
-  const session = useQuery({
-    queryKey: ['session'],
-    queryFn: async () => {
-      const data = await authClient.getSession()
-      return data.data
-    },
-  })
-  const { data: chats, isLoading: isLoadingChats } = useSuspenseQuery({
-    queryKey: ['chats'],
-    queryFn: () => getChatListFn(),
-  })
 
   const debouncedSearch = useDebouncedCallback(
     (searchTerm: string) => {
@@ -64,25 +57,6 @@ function RouteComponent() {
       wait: 500, // Wait 500ms after last keystroke
     },
   )
-
-  const filteredChats = chats.filter((chat) => {
-    const matchedQuery = chat.title?.toLowerCase().includes(query.toLowerCase())
-
-    return matchedQuery
-  })
-
-  const parentRef = useRef<HTMLDivElement>(null)
-
-  //  const multiplyChats = [...filteredChats, ...filteredChats, ...filteredChats]
-
-  const rowVirtualizer = useVirtualizer({
-    count: filteredChats.length,
-    // count: multiplyChats.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 40, // Height of each SidebarMenuItem
-    overscan: 5,
-  })
-
   const handleLogout = () => {
     setIsLoading(true)
     startTransition(async () => {
@@ -113,11 +87,16 @@ function RouteComponent() {
       })
     })
   }
+  const filteredChats = chats?.filter((chat) => {
+    const matchedQuery = chat.title?.toLowerCase().includes(query.toLowerCase())
+
+    return matchedQuery
+  })
 
   return (
     <SidebarProvider>
       {/* sidebar */}
-      <ChatAppSidebar chats={chats} isLoadingChats={isLoadingChats} />
+      <ChatAppSidebar chats={chats} />
 
       {/* main content */}
       <SidebarInset>
@@ -168,64 +147,31 @@ function RouteComponent() {
               <p className="px-3 pb-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
                 Recent Chats
               </p>
-              <div
-                className="flex-1 overflow-y-auto px-2 pb-4 space-y-1 custom-scrollbar"
-                ref={parentRef}
-              >
-                {isLoadingChats ? (
-                  <div className="p-4 flex justify-center">
-                    <Loader2 className="size-4 animate-spin text-zinc-500" />
-                  </div>
-                ) : (
-                  <div
-                    style={{
-                      height: `${rowVirtualizer.getTotalSize()}px`,
-                      width: '100%',
-                      position: 'relative',
-                    }}
-                  >
-                    {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                      const chat = filteredChats[virtualRow.index]
-                      // const chat = multiplyChats[virtualRow.index]
-                      return (
-                        <div
-                          key={virtualRow.key}
-                          style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: `${virtualRow.size}px`,
-                            transform: `translateY(${virtualRow.start}px)`,
-                          }}
-                        >
-                          <ChatItem chat={chat} />
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
+              <div className="flex-1 overflow-y-auto px-2 custom-scrollbar ">
+                {filteredChats.map((chat) => {
+                  return <ChatItem key={chat.id} chat={chat} />
+                })}
               </div>
 
               <div className="p-4 border-t border-zinc-800/50 flex flex-col gap-2">
-                {session.data?.user && (
+                {session.user && (
                   <div className="flex items-center gap-3 px-2 py-4 rounded-xl bg-white/5 border border-white/5">
                     <UserAvatar
-                      src={session.data?.user.image as string}
-                      alt={session.data?.user.name as string}
+                      src={session.user.image as string}
+                      alt={session.user.name as string}
                       className="w-12 h-12"
                     />
                     <div className="flex flex-col overflow-hidden">
                       <span className="text-sm font-semibold truncate">
-                        {session.data?.user.name}
+                        {session.user.name}
                       </span>
                       <span className="text-xs text-muted-foreground truncate">
-                        {session.data?.user.email}
+                        {session.user.email}
                       </span>
                     </div>
                   </div>
                 )}
-                {session.data?.user ? (
+                {session.user ? (
                   <Button
                     variant="destructive"
                     className="w-full justify-start gap-2"
