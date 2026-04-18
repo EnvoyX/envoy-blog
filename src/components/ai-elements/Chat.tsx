@@ -46,7 +46,9 @@ export function Chat({
   chatId: string
 }) {
   const [input, setInput] = useState('')
-  const [targetMessageIds, setTargetMessageIds] = useState<string[]>([])
+  const [targetMessageIds, setTargetMessageIds] = useState<Set<string>>(
+    new Set(),
+  )
   const queryClient = useQueryClient()
   const scrollRef = useRef<HTMLDivElement>(null)
   const { data } = useQuery({
@@ -187,7 +189,7 @@ export function Chat({
 
                       if (
                         part.type === 'text' &&
-                        !targetMessageIds.includes(message.id)
+                        !targetMessageIds.has(message.id)
                       ) {
                         return (
                           <MarkdownRenderer
@@ -199,7 +201,7 @@ export function Chat({
 
                       if (
                         part.type === 'text' &&
-                        targetMessageIds.includes(message.id)
+                        targetMessageIds.has(message.id)
                       ) {
                         return (
                           <pre
@@ -234,18 +236,18 @@ export function Chat({
                       variant="ghost"
                       size="sm"
                       onClick={() => {
-                        setTargetMessageIds((prevIds) => {
-                          if (prevIds.includes(message.id)) {
-                            return prevIds.filter((id) => id !== message.id)
-                          }
-                          return [...prevIds, message.id]
+                        setTargetMessageIds((prev) => {
+                          const next = new Set(prev)
+                          if (next.has(message.id)) next.delete(message.id)
+                          else next.add(message.id)
+                          return next
                         })
                       }}
                       className="h-8 px-2 text-zinc-400"
                     >
                       <RepeatIcon size={14} />
                       <span className="ml-2 text-xs">
-                        {targetMessageIds.includes(message.id)
+                        {targetMessageIds.has(message.id)
                           ? `View Original`
                           : `View Raw`}
                       </span>
