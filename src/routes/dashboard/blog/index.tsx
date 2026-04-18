@@ -42,7 +42,14 @@ import { Input } from '@/components/ui/input'
 import { useDebouncedCallback } from '@tanstack/react-pacer'
 import { zodValidator } from '@tanstack/zod-adapter'
 import { postSearchSchema } from '@/schemas/blog'
-import { Switch } from '@/components/ui/switch'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { BlogStatus } from '@/lib/constants'
 
 export const Route = createFileRoute('/dashboard/blog/')({
   loader: () => getMyPostsFn(),
@@ -71,7 +78,7 @@ export const Route = createFileRoute('/dashboard/blog/')({
 
 function BlogPageComponent() {
   const allPosts = Route.useLoaderData()
-  const { published, query } = Route.useSearch()
+  const { visibility, query } = Route.useSearch()
   const navigate = useNavigate({ from: Route.fullPath })
   const router = useRouter()
   const [modalStore] = useState(() =>
@@ -89,7 +96,13 @@ function BlogPageComponent() {
       post.title?.toLowerCase().includes(query.toLowerCase()) ||
       post.description?.toLowerCase().includes(query.toLowerCase()) ||
       query === ''
-    const matchedStatus = post.published === published
+    const matchedStatus =
+      visibility === 'PUBLIC'
+        ? post.published
+        : visibility === 'PRIVATE'
+          ? !post.published
+          : null
+    if (matchedStatus === null) return matchedQuery
 
     return matchedQuery && matchedStatus
   })
@@ -111,7 +124,7 @@ function BlogPageComponent() {
 
   return (
     <div className="min-h-screen bg-black text-slate-50">
-      <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col max-sm:items-center">
+      <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col ">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
             <h1 className="text-4xl font-black tracking-tight bg-linear-to-r from-white to-slate-500 bg-clip-text text-transparent">
@@ -133,32 +146,44 @@ function BlogPageComponent() {
           </Button>
         </div>
 
-        <div className="flex items-center gap-4 mb-8">
-          <div className="relative w-full group">
-            <div className="absolute inset-y-0 z-10 left-3 flex items-center pointer-events-none">
+        <div className="flex max-sm:flex-col items-center max-sm:justify-center gap-4 mb-8">
+          <div className="relative w-full  group">
+            <div className="absolute inset-y-0 z-10 left-3 flex items-center  pointer-events-none">
               <Search className="size-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
             </div>
             <Input
               type="search"
               placeholder="Search blogs..."
-              className="pl-10 bg-emerald-900/40 border-emerald-800 focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
+              className="pl-10 bg-emerald-900/40  focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
               onChange={(e) => {
                 debouncedSearch(e.target.value)
               }}
             />
           </div>
-          <div className="flex items-center gap-2 rounded-lg border border-emerald-800 hover:border-emerald-500/50 p-1.5">
+          <div className="flex items-center gap-2 rounded-lg">
             <h3 className="text-muted-foreground">Visibility</h3>
-            <Switch
-              className="bg-emerald-900/40 border-emerald-800 focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
-              id="switch-visibility"
-              checked={published}
-              onCheckedChange={(value) =>
+            <Select
+              value={visibility}
+              onValueChange={(value) =>
                 navigate({
-                  search: (prev) => ({ ...prev, published: value }),
+                  search: (prev) => ({
+                    ...prev,
+                    visibility: value as BlogStatus,
+                  }),
                 })
               }
-            />
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Filter by category" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.values(BlogStatus).map((status) => (
+                  <SelectItem key={status} value={status}>
+                    {status.charAt(0) + status.slice(1).toLowerCase()}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -171,7 +196,7 @@ function BlogPageComponent() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
           {filteredPosts.map((post) => (
             <Card
               key={post.id}

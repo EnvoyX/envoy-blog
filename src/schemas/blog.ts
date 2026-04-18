@@ -13,6 +13,6 @@ export const postSchema = z.object({
 })
 
 export const postSearchSchema = z.object({
-  published: z.boolean().default(false),
+  visibility: z.enum(['ALL', 'PUBLIC', 'PRIVATE']).default('PUBLIC'),
   query: z.string().default(''),
 })
