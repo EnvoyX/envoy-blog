@@ -7,32 +7,34 @@ import { fileURLToPath, URL } from 'url'
 import contentCollections from '@content-collections/vite'
 import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
+import netlify from '@netlify/vite-plugin-tanstack-start'
 
 const config = defineConfig({
-    resolve: {
-        alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url)),
-        },
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
-    plugins: [
-        devtools(),
-        nitro(),
-        // this is the plugin that enables path aliases
-        viteTsConfigPaths({
-            projects: ['./tsconfig.json'],
-        }),
-        tailwindcss(),
-        tanstackStart(),
-        viteReact(),
-        contentCollections(),
-    ],
-    // ssr: {
-    //    noExternal: ["problematic-package"],
-    //  },
-    // optimizeDeps: {
-    //   include: ["problematic-package"],
-    // },
-    //
+  },
+  plugins: [
+    devtools(),
+    nitro(),
+    // this is the plugin that enables path aliases
+    viteTsConfigPaths({
+      projects: ['./tsconfig.json'],
+    }),
+    tailwindcss(),
+    tanstackStart(),
+    netlify(),
+    viteReact(),
+    contentCollections(),
+  ],
+  // ssr: {
+  //    noExternal: ["problematic-package"],
+  //  },
+  // optimizeDeps: {
+  //   include: ["problematic-package"],
+  // },
+  //
 })
 
 export default config
