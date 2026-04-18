@@ -1,8 +1,11 @@
+import { Button } from '@/components/ui/button'
 import HeaderChat from '@/components/web/HeaderChat'
 import { MarkdownRenderer } from '@/components/web/markdown/Markdown'
 import { UserAvatar } from '@/components/web/user-profile'
 import { getChatHistoryFn, saveAssistantMessageFn } from '@/data/chat-ai'
 import { getUser } from '@/data/session'
+import { cn } from '@/lib/utils'
+import { UIMessage } from '@tanstack/ai'
 import { fetchServerSentEvents, useChat } from '@tanstack/ai-react'
 import {
   useMutation,
@@ -11,16 +14,52 @@ import {
   // useSuspenseQuery,
 } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import { Bot, Loader, Loader2, Send, User } from 'lucide-react'
+import {
+  Bot,
+  Check,
+  Copy,
+  Loader,
+  Loader2,
+  RepeatIcon,
+  Send,
+  User,
+} from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 export const Route = createFileRoute('/_chat/chat/_chatbox/$adapter/$chatId/')({
   component: RouteComponent,
 })
 
+function CopyButton({ content }: { content: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(content)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={handleCopy}
+      className="h-8 px-2 text-zinc-400"
+    >
+      {copied ? (
+        <Check size={14} className="text-emerald-500" />
+      ) : (
+        <Copy size={14} />
+      )}
+      <span className="ml-2 text-xs">{copied ? 'Copied' : 'Copy'}</span>
+    </Button>
+  )
+}
+
 function RouteComponent() {
   const { adapter, chatId } = Route.useParams()
   const [input, setInput] = useState('')
+  const [targetMessageIds, setTargetMessageIds] = useState<string[]>([])
   const queryClient = useQueryClient()
   const scrollRef = useRef<HTMLDivElement>(null)
   const { data } = useQuery({
@@ -56,7 +95,6 @@ function RouteComponent() {
         conversationId: chatId,
       },
     }),
-    // initialMessages: chatData?.messages ?? [],
     onFinish: (message) => {
       console.log('Message from Client: ', message)
       saveMutation.mutate({
@@ -80,7 +118,7 @@ function RouteComponent() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (input.trim() && !isLoading) {
-      if (chatData) setMessages(chatData?.messages)
+      if (chatData) setMessages(chatData?.messages as unknown as UIMessage[])
       sendMessage(input)
       setInput('')
     }
@@ -96,6 +134,12 @@ function RouteComponent() {
     setMessages([])
     queryClient.invalidateQueries({ queryKey: ['chat', chatId] })
   }, [chatId])
+
+  useEffect(() => {
+    if (chatData?.messages) {
+      setMessages(chatData.messages as unknown as UIMessage[])
+    }
+  }, [chatData?.messages, setMessages])
 
   if (isLoadingMessages) {
     return (
@@ -183,7 +227,8 @@ function RouteComponent() {
             </div>
           )}
 
-          {!messages.length &&
+          {/* fail-safe if the queried chat history isn't loaded */}
+          {/* {!messages.length &&
             !isLoadingMessages &&
             chatData?.messages.map((message) => (
               <div
@@ -197,7 +242,7 @@ function RouteComponent() {
                 <div
                   className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${
                     message.role === 'assistant'
-                      ? 'bg-blue-600/10 border-blue-500/20 text-blue-400'
+                      ? 'bg-emerald-600/10 border-emerald-500/20 text-emerald-400'
                       : 'bg-zinc-800 border-zinc-700 text-zinc-300'
                   }`}
                 >
@@ -221,11 +266,11 @@ function RouteComponent() {
                   <div
                     className={`relative px-4 py-3 rounded-2xl border ${
                       message.role === 'assistant'
-                        ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200'
-                        : 'bg-blue-600 text-white border-blue-500 shadow-lg shadow-blue-600/10'
+                        ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full'
+                        : 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/10'
                     }`}
                   >
-                    <div className="prose prose-invert prose-sm max-w-none">
+                    <div className="prose prose-invert prose-sm sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
                       {message.parts.map((part, idx) => {
                         if (part.type === 'thinking') {
                           return (
@@ -238,7 +283,7 @@ function RouteComponent() {
                             </div>
                           )
                         }
-                        if (part.type === 'text') {
+                        if (part.type === 'text' && !isViewRaw) {
                           return (
                             <MarkdownRenderer
                               markdown={
@@ -248,13 +293,48 @@ function RouteComponent() {
                             />
                           )
                         }
+
+                        if (part.type === 'text' && isViewRaw) {
+                          return (
+                            <pre
+                              className={cn(
+                                'whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800',
+                                {
+                                  'bg-emerald-600 border-none':
+                                    message.role === 'user',
+                                },
+                              )}
+                            >
+                              {part.content}
+                            </pre>
+                          )
+                        }
                         return null
                       })}
                     </div>
                   </div>
+                  {message.role === 'assistant' && !isLoading && (
+                    <div className="flex items-center gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <CopyButton
+                        content={message.parts.map((p) => p.content).join('')}
+                      />
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsViewRaw((prev) => !prev)}
+                        className="h-8 px-2 text-zinc-400"
+                      >
+                        <RepeatIcon size={14} />
+                        <span className="ml-2 text-xs">
+                          {isViewRaw ? `View Markdown` : `View Raw`}
+                        </span>
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
-            ))}
+            ))} */}
           {messages.map((message) => (
             <div
               key={message.id}
@@ -267,7 +347,7 @@ function RouteComponent() {
               <div
                 className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${
                   message.role === 'assistant'
-                    ? 'bg-blue-600/10 border-blue-500/20 text-blue-400'
+                    ? 'bg-emerald-600/10 border-emerald-500/20 text-emerald-400'
                     : 'bg-zinc-800 border-zinc-700 text-zinc-300'
                 }`}
               >
@@ -291,11 +371,11 @@ function RouteComponent() {
                 <div
                   className={`relative px-4 py-3 rounded-2xl border ${
                     message.role === 'assistant'
-                      ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200'
-                      : 'bg-blue-600 text-white border-blue-500 shadow-lg shadow-blue-600/10'
+                      ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full'
+                      : 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/10'
                   }`}
                 >
-                  <div className="prose prose-invert prose-sm max-w-none">
+                  <div className="prose prose-invert prose-sm sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
                     {message.parts.map((part, idx) => {
                       if (part.type === 'thinking') {
                         return (
@@ -308,7 +388,11 @@ function RouteComponent() {
                           </div>
                         )
                       }
-                      if (part.type === 'text') {
+
+                      if (
+                        part.type === 'text' &&
+                        !targetMessageIds.includes(message.id)
+                      ) {
                         return (
                           <MarkdownRenderer
                             markdown={part.content || '*Nothing to preview...*'}
@@ -316,10 +400,62 @@ function RouteComponent() {
                           />
                         )
                       }
+
+                      if (
+                        part.type === 'text' &&
+                        targetMessageIds.includes(message.id)
+                      ) {
+                        return (
+                          <pre
+                            className={cn(
+                              'whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800',
+                              {
+                                'bg-emerald-600 border-none':
+                                  message.role === 'user',
+                              },
+                            )}
+                          >
+                            {part.content}
+                          </pre>
+                        )
+                      }
                       return null
                     })}
                   </div>
                 </div>
+                {message.role === 'assistant' && !isLoading && (
+                  // note: add opacity-0 && group-hover:opacity-100 for better ui
+                  <div className="flex items-center gap-2 mt-2 transition-opacity">
+                    <CopyButton
+                      content={message.parts
+                        .map((part) => {
+                          if (part.type === 'text') return part.content
+                        })
+                        .join('')}
+                    />
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setTargetMessageIds((prevIds) => {
+                          if (prevIds.includes(message.id)) {
+                            return prevIds.filter((id) => id !== message.id)
+                          }
+                          return [...prevIds, message.id]
+                        })
+                      }}
+                      className="h-8 px-2 text-zinc-400"
+                    >
+                      <RepeatIcon size={14} />
+                      <span className="ml-2 text-xs">
+                        {targetMessageIds.includes(message.id)
+                          ? `View Original`
+                          : `View Raw`}
+                      </span>
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           ))}

@@ -1,12 +1,40 @@
 import { useEffect, useRef, useState } from 'react'
 import { useChat, fetchServerSentEvents } from '@tanstack/ai-react'
-import { Bot, Loader, Send, User } from 'lucide-react'
+import { Bot, Check, Copy, Loader, RepeatIcon, Send, User } from 'lucide-react'
 import { MarkdownRenderer } from '../web/markdown/Markdown'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getUser } from '@/data/session'
 import { UserAvatar } from '../web/user-profile'
 import { saveAssistantMessageFn } from '@/data/chat-ai'
 import HeaderChat from '../web/HeaderChat'
+import { Button } from '../ui/button'
+import { cn } from '@/lib/utils'
+
+function CopyButton({ content }: { content: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(content)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={handleCopy}
+      className="h-8 px-2 text-zinc-400"
+    >
+      {copied ? (
+        <Check size={14} className="text-emerald-500" />
+      ) : (
+        <Copy size={14} />
+      )}
+      <span className="ml-2 text-xs">{copied ? 'Copied' : 'Copy'}</span>
+    </Button>
+  )
+}
 
 export function Chat({
   apiRoute,
@@ -18,6 +46,7 @@ export function Chat({
   chatId: string
 }) {
   const [input, setInput] = useState('')
+  const [targetMessageIds, setTargetMessageIds] = useState<string[]>([])
   const queryClient = useQueryClient()
   const scrollRef = useRef<HTMLDivElement>(null)
   const { data } = useQuery({
@@ -114,7 +143,7 @@ export function Chat({
               <div
                 className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${
                   message.role === 'assistant'
-                    ? 'bg-blue-600/10 border-blue-500/20 text-blue-400'
+                    ? 'bg-emerald-600/10 border-emerald-500/20 text-emerald-400'
                     : 'bg-zinc-800 border-zinc-700 text-zinc-300'
                 }`}
               >
@@ -138,11 +167,11 @@ export function Chat({
                 <div
                   className={`relative px-4 py-3 rounded-2xl border ${
                     message.role === 'assistant'
-                      ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200'
-                      : 'bg-blue-600 text-white border-blue-500 shadow-lg shadow-blue-600/10'
+                      ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full'
+                      : 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/10'
                   }`}
                 >
-                  <div className="prose prose-invert prose-sm max-w-sm">
+                  <div className="prose prose-invert prose-sm sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
                     {message.parts.map((part, idx) => {
                       if (part.type === 'thinking') {
                         return (
@@ -155,7 +184,11 @@ export function Chat({
                           </div>
                         )
                       }
-                      if (part.type === 'text') {
+
+                      if (
+                        part.type === 'text' &&
+                        !targetMessageIds.includes(message.id)
+                      ) {
                         return (
                           <MarkdownRenderer
                             markdown={part.content || '*Nothing to preview...*'}
@@ -163,10 +196,62 @@ export function Chat({
                           />
                         )
                       }
+
+                      if (
+                        part.type === 'text' &&
+                        targetMessageIds.includes(message.id)
+                      ) {
+                        return (
+                          <pre
+                            className={cn(
+                              'whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800',
+                              {
+                                'bg-emerald-600 border-none':
+                                  message.role === 'user',
+                              },
+                            )}
+                          >
+                            {part.content}
+                          </pre>
+                        )
+                      }
                       return null
                     })}
                   </div>
                 </div>
+                {message.role === 'assistant' && !isLoading && (
+                  // note: add opacity-0 && group-hover:opacity-100 for better ui
+                  <div className="flex items-center gap-2 mt-2 transition-opacity">
+                    <CopyButton
+                      content={message.parts
+                        .map((part) => {
+                          if (part.type === 'text') return part.content
+                        })
+                        .join('')}
+                    />
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setTargetMessageIds((prevIds) => {
+                          if (prevIds.includes(message.id)) {
+                            return prevIds.filter((id) => id !== message.id)
+                          }
+                          return [...prevIds, message.id]
+                        })
+                      }}
+                      className="h-8 px-2 text-zinc-400"
+                    >
+                      <RepeatIcon size={14} />
+                      <span className="ml-2 text-xs">
+                        {targetMessageIds.includes(message.id)
+                          ? `View Original`
+                          : `View Raw`}
+                      </span>
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           ))}

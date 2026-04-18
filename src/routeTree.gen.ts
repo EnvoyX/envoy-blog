@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as GeneralRouteRouteImport } from './routes/_general/route'
-import { Route as ChatRouteRouteImport } from './routes/_chat/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
@@ -35,6 +34,7 @@ import { Route as DashboardItemsItemIdRouteImport } from './routes/dashboard/ite
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiAiSummaryRouteImport } from './routes/api/ai/summary'
 import { Route as GeneralBlogSlugRouteImport } from './routes/_general/blog/$slug'
+import { Route as ChatChatChatboxRouteRouteImport } from './routes/_chat/chat/_chatbox/route'
 import { Route as DashboardBlogMdEditorIndexRouteImport } from './routes/dashboard/blog/md-editor/index'
 import { Route as DashboardBlogCreateBlogIndexRouteImport } from './routes/dashboard/blog/create-blog/index'
 import { Route as DashboardBlogSlugIndexRouteImport } from './routes/dashboard/blog/$slug.index'
@@ -50,10 +50,6 @@ const DashboardRouteRoute = DashboardRouteRouteImport.update({
 } as any)
 const GeneralRouteRoute = GeneralRouteRouteImport.update({
   id: '/_general',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChatRouteRoute = ChatRouteRouteImport.update({
-  id: '/_chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -138,9 +134,9 @@ const GeneralBlogIndexRoute = GeneralBlogIndexRouteImport.update({
   getParentRoute: () => GeneralRouteRoute,
 } as any)
 const ChatChatIndexRoute = ChatChatIndexRouteImport.update({
-  id: '/chat/',
+  id: '/_chat/chat/',
   path: '/chat/',
-  getParentRoute: () => ChatRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   id: '/login/',
@@ -173,6 +169,11 @@ const GeneralBlogSlugRoute = GeneralBlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => GeneralRouteRoute,
 } as any)
+const ChatChatChatboxRouteRoute = ChatChatChatboxRouteRouteImport.update({
+  id: '/_chat/chat/_chatbox',
+  path: '/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardBlogMdEditorIndexRoute =
   DashboardBlogMdEditorIndexRouteImport.update({
     id: '/blog/md-editor/',
@@ -198,9 +199,9 @@ const DashboardBlogSlugEditIndexRoute =
   } as any)
 const ChatChatChatboxAdapterIndexRoute =
   ChatChatChatboxAdapterIndexRouteImport.update({
-    id: '/chat/_chatbox/$adapter/',
-    path: '/chat/$adapter/',
-    getParentRoute: () => ChatRouteRoute,
+    id: '/$adapter/',
+    path: '/$adapter/',
+    getParentRoute: () => ChatChatChatboxRouteRoute,
   } as any)
 const DashboardBlogSlugEditMdEditorRoute =
   DashboardBlogSlugEditMdEditorRouteImport.update({
@@ -210,9 +211,9 @@ const DashboardBlogSlugEditMdEditorRoute =
   } as any)
 const ChatChatChatboxAdapterChatIdIndexRoute =
   ChatChatChatboxAdapterChatIdIndexRouteImport.update({
-    id: '/chat/_chatbox/$adapter/$chatId/',
-    path: '/chat/$adapter/$chatId/',
-    getParentRoute: () => ChatRouteRoute,
+    id: '/$adapter/$chatId/',
+    path: '/$adapter/$chatId/',
+    getParentRoute: () => ChatChatChatboxRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -226,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/import': typeof DashboardImportRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/chat': typeof ChatChatChatboxRouteRouteWithChildren
   '/blog/$slug': typeof GeneralBlogSlugRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -257,13 +259,13 @@ export interface FileRoutesByTo {
   '/dashboard/import': typeof DashboardImportRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/chat': typeof ChatChatIndexRoute
   '/blog/$slug': typeof GeneralBlogSlugRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/login': typeof AuthLoginIndexRoute
-  '/chat': typeof ChatChatIndexRoute
   '/blog': typeof GeneralBlogIndexRoute
   '/dashboard/blog': typeof DashboardBlogIndexRoute
   '/dashboard/items': typeof DashboardItemsIndexRoute
@@ -282,7 +284,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
-  '/_chat': typeof ChatRouteRouteWithChildren
   '/_general': typeof GeneralRouteRouteWithChildren
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/api/chat-gemini': typeof ApiChatGeminiRouteRoute
@@ -293,6 +294,7 @@ export interface FileRoutesById {
   '/dashboard/import': typeof DashboardImportRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/_chat/chat/_chatbox': typeof ChatChatChatboxRouteRouteWithChildren
   '/_general/blog/$slug': typeof GeneralBlogSlugRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -327,6 +329,7 @@ export interface FileRouteTypes {
     | '/dashboard/import'
     | '/dashboard/profile'
     | '/dashboard/'
+    | '/chat'
     | '/blog/$slug'
     | '/api/ai/summary'
     | '/api/auth/$'
@@ -358,13 +361,13 @@ export interface FileRouteTypes {
     | '/dashboard/import'
     | '/dashboard/profile'
     | '/dashboard'
+    | '/chat'
     | '/blog/$slug'
     | '/api/ai/summary'
     | '/api/auth/$'
     | '/dashboard/items/$itemId'
     | '/dashboard/task-tracker/$taskListId'
     | '/login'
-    | '/chat'
     | '/blog'
     | '/dashboard/blog'
     | '/dashboard/items'
@@ -382,7 +385,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
-    | '/_chat'
     | '/_general'
     | '/dashboard'
     | '/api/chat-gemini'
@@ -393,6 +395,7 @@ export interface FileRouteTypes {
     | '/dashboard/import'
     | '/dashboard/profile'
     | '/dashboard/'
+    | '/_chat/chat/_chatbox'
     | '/_general/blog/$slug'
     | '/api/ai/summary'
     | '/api/auth/$'
@@ -418,15 +421,16 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  ChatRouteRoute: typeof ChatRouteRouteWithChildren
   GeneralRouteRoute: typeof GeneralRouteRouteWithChildren
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   ApiChatGeminiRouteRoute: typeof ApiChatGeminiRouteRoute
   ApiChatGroqRouteRoute: typeof ApiChatGroqRouteRoute
   ApiChatOpenrouterRouteRoute: typeof ApiChatOpenrouterRouteRoute
   ApiSplatRoute: typeof ApiSplatRoute
+  ChatChatChatboxRouteRoute: typeof ChatChatChatboxRouteRouteWithChildren
   ApiAiSummaryRoute: typeof ApiAiSummaryRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ChatChatIndexRoute: typeof ChatChatIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -443,13 +447,6 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof GeneralRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_chat': {
-      id: '/_chat'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof ChatRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -569,7 +566,7 @@ declare module '@tanstack/react-router' {
       path: '/chat'
       fullPath: '/chat/'
       preLoaderRoute: typeof ChatChatIndexRouteImport
-      parentRoute: typeof ChatRouteRoute
+      parentRoute: typeof rootRouteImport
     }
     '/_auth/login/': {
       id: '/_auth/login/'
@@ -613,6 +610,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GeneralBlogSlugRouteImport
       parentRoute: typeof GeneralRouteRoute
     }
+    '/_chat/chat/_chatbox': {
+      id: '/_chat/chat/_chatbox'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatChatChatboxRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/blog/md-editor/': {
       id: '/dashboard/blog/md-editor/'
       path: '/blog/md-editor'
@@ -643,10 +647,10 @@ declare module '@tanstack/react-router' {
     }
     '/_chat/chat/_chatbox/$adapter/': {
       id: '/_chat/chat/_chatbox/$adapter/'
-      path: '/chat/$adapter'
+      path: '/$adapter'
       fullPath: '/chat/$adapter/'
       preLoaderRoute: typeof ChatChatChatboxAdapterIndexRouteImport
-      parentRoute: typeof ChatRouteRoute
+      parentRoute: typeof ChatChatChatboxRouteRoute
     }
     '/dashboard/blog/$slug/edit/md-editor': {
       id: '/dashboard/blog/$slug/edit/md-editor'
@@ -657,10 +661,10 @@ declare module '@tanstack/react-router' {
     }
     '/_chat/chat/_chatbox/$adapter/$chatId/': {
       id: '/_chat/chat/_chatbox/$adapter/$chatId/'
-      path: '/chat/$adapter/$chatId'
+      path: '/$adapter/$chatId'
       fullPath: '/chat/$adapter/$chatId/'
       preLoaderRoute: typeof ChatChatChatboxAdapterChatIdIndexRouteImport
-      parentRoute: typeof ChatRouteRoute
+      parentRoute: typeof ChatChatChatboxRouteRoute
     }
   }
 }
@@ -675,23 +679,6 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
-)
-
-interface ChatRouteRouteChildren {
-  ChatChatIndexRoute: typeof ChatChatIndexRoute
-  ChatChatChatboxAdapterIndexRoute: typeof ChatChatChatboxAdapterIndexRoute
-  ChatChatChatboxAdapterChatIdIndexRoute: typeof ChatChatChatboxAdapterChatIdIndexRoute
-}
-
-const ChatRouteRouteChildren: ChatRouteRouteChildren = {
-  ChatChatIndexRoute: ChatChatIndexRoute,
-  ChatChatChatboxAdapterIndexRoute: ChatChatChatboxAdapterIndexRoute,
-  ChatChatChatboxAdapterChatIdIndexRoute:
-    ChatChatChatboxAdapterChatIdIndexRoute,
-}
-
-const ChatRouteRouteWithChildren = ChatRouteRoute._addFileChildren(
-  ChatRouteRouteChildren,
 )
 
 interface GeneralRouteRouteChildren {
@@ -750,18 +737,33 @@ const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
   DashboardRouteRouteChildren,
 )
 
+interface ChatChatChatboxRouteRouteChildren {
+  ChatChatChatboxAdapterIndexRoute: typeof ChatChatChatboxAdapterIndexRoute
+  ChatChatChatboxAdapterChatIdIndexRoute: typeof ChatChatChatboxAdapterChatIdIndexRoute
+}
+
+const ChatChatChatboxRouteRouteChildren: ChatChatChatboxRouteRouteChildren = {
+  ChatChatChatboxAdapterIndexRoute: ChatChatChatboxAdapterIndexRoute,
+  ChatChatChatboxAdapterChatIdIndexRoute:
+    ChatChatChatboxAdapterChatIdIndexRoute,
+}
+
+const ChatChatChatboxRouteRouteWithChildren =
+  ChatChatChatboxRouteRoute._addFileChildren(ChatChatChatboxRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  ChatRouteRoute: ChatRouteRouteWithChildren,
   GeneralRouteRoute: GeneralRouteRouteWithChildren,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   ApiChatGeminiRouteRoute: ApiChatGeminiRouteRoute,
   ApiChatGroqRouteRoute: ApiChatGroqRouteRoute,
   ApiChatOpenrouterRouteRoute: ApiChatOpenrouterRouteRoute,
   ApiSplatRoute: ApiSplatRoute,
+  ChatChatChatboxRouteRoute: ChatChatChatboxRouteRouteWithChildren,
   ApiAiSummaryRoute: ApiAiSummaryRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ChatChatIndexRoute: ChatChatIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

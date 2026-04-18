@@ -58,7 +58,7 @@ export function MarkdownRenderer({ markdown }: { markdown: string }) {
                 </span>
                 <button
                   onClick={onCopy}
-                  className="p-1.5 rounded-md hover:bg-zinc-800 transition-all text-zinc-400 hover:text-emerald-400 opacity-0 group-hover:opacity-100"
+                  className="p-1.5 rounded-md hover:bg-zinc-800 transition-all text-zinc-400 hover:text-emerald-400"
                 >
                   {copied ? (
                     <Check className="size-3.5" />

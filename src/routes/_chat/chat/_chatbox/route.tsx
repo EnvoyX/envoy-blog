@@ -30,7 +30,7 @@ import { useDebouncedCallback } from '@tanstack/react-pacer'
 import { getSession } from '@/data/session'
 import { useQuery } from '@tanstack/react-query'
 
-export const Route = createFileRoute('/_chat')({
+export const Route = createFileRoute('/_chat/chat/_chatbox')({
   component: RouteComponent,
   loader: async () => {
     // const chats = await getChatListFn()
