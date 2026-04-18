@@ -6,7 +6,7 @@ import { fileURLToPath, URL } from 'url'
 import contentCollections from '@content-collections/vite'
 import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
-import netlify from '@netlify/vite-plugin-tanstack-start'
+// import netlify from '@netlify/vite-plugin-tanstack-start'
 
 const config = defineConfig({
   resolve: {
@@ -17,9 +17,11 @@ const config = defineConfig({
   },
   plugins: [
     devtools(),
-    netlify(),
+    // Outputs build to dist/client
+    // netlify(),
     // Disabled nitro if using netlify to deploy
-    // nitro(),
+    // Outputs build to .output (using it on Vercel runs fine)
+    nitro(),
     tailwindcss(),
     tanstackStart(),
     viteReact(),
