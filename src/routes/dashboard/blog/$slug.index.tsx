@@ -1,4 +1,4 @@
-import { MarkdownRenderer } from '@/components/web/Markdown'
+import { MarkdownRenderer } from '@/components/web/markdown/Markdown'
 import { getPostFn } from '@/data/blog'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ChevronDown, ChevronLeft, ListIcon } from 'lucide-react'

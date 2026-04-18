@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Link } from '@tanstack/react-router'
 import { ChevronDown, ChevronLeft, ListIcon } from 'lucide-react'
 import { intlFormat } from 'date-fns'
-import { MarkdownRenderer } from '@/components/web/Markdown'
+import { MarkdownRenderer } from '@/components/web/markdown/Markdown'
 import {
   DropdownMenu,
   DropdownMenuContent,

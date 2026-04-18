@@ -26,12 +26,13 @@ import {
 import { Button, buttonVariants } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
 import { UserAvatar } from '@/components/web/user-profile'
-import { useState, useTransition } from 'react'
+import { useRef, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { ChatItem } from '@/components/ai-elements/ChatItem'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { ChatAppSidebar } from '@/components/web/sidebar/chat-app-sidebar'
 import { useDebouncedCallback } from '@tanstack/react-pacer'
+import { useVirtualizer } from '@tanstack/react-virtual'
 
 export const Route = createFileRoute('/_chat')({
   component: RouteComponent,
@@ -68,6 +69,18 @@ function RouteComponent() {
     const matchedQuery = chat.title?.toLowerCase().includes(query.toLowerCase())
 
     return matchedQuery
+  })
+
+  const parentRef = useRef<HTMLDivElement>(null)
+
+  //  const multiplyChats = [...filteredChats, ...filteredChats, ...filteredChats]
+
+  const rowVirtualizer = useVirtualizer({
+    count: filteredChats.length,
+    // count: multiplyChats.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 40, // Height of each SidebarMenuItem
+    overscan: 5,
   })
 
   const handleLogout = () => {
@@ -152,14 +165,45 @@ function RouteComponent() {
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-2 pb-4 space-y-1 custom-scrollbar">
-                <p className="px-3 pb-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                  Recent Chats
-                </p>
+              <p className="px-3 pb-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                Recent Chats
+              </p>
+              <div
+                className="flex-1 overflow-y-auto px-2 pb-4 space-y-1 custom-scrollbar"
+                ref={parentRef}
+              >
                 {isLoadingChats ? (
-                  <Loader2 className="size-4 animate-spin" />
+                  <div className="p-4 flex justify-center">
+                    <Loader2 className="size-4 animate-spin text-zinc-500" />
+                  </div>
                 ) : (
-                  filteredChats?.map((chat) => <ChatItem chat={chat} />)
+                  <div
+                    style={{
+                      height: `${rowVirtualizer.getTotalSize()}px`,
+                      width: '100%',
+                      position: 'relative',
+                    }}
+                  >
+                    {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                      const chat = filteredChats[virtualRow.index]
+                      // const chat = multiplyChats[virtualRow.index]
+                      return (
+                        <div
+                          key={virtualRow.key}
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: `${virtualRow.size}px`,
+                            transform: `translateY(${virtualRow.start}px)`,
+                          }}
+                        >
+                          <ChatItem chat={chat} />
+                        </div>
+                      )
+                    })}
+                  </div>
                 )}
               </div>
 

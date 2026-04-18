@@ -1,5 +1,5 @@
 import HeaderChat from '@/components/web/HeaderChat'
-import { MarkdownRenderer } from '@/components/web/Markdown'
+import { MarkdownRenderer } from '@/components/web/markdown/Markdown'
 import { UserAvatar } from '@/components/web/user-profile'
 import { getChatHistoryFn, saveAssistantMessageFn } from '@/data/chat-ai'
 import { getUser } from '@/data/session'

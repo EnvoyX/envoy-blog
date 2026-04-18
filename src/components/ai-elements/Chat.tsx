@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useChat, fetchServerSentEvents } from '@tanstack/ai-react'
 import { Bot, Loader, Send, User } from 'lucide-react'
-import { MarkdownRenderer } from '../web/Markdown'
+import { MarkdownRenderer } from '../web/markdown/Markdown'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getUser } from '@/data/session'
 import { UserAvatar } from '../web/user-profile'

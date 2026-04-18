@@ -25,7 +25,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import { MarkdownRenderer } from '@/components/web/Markdown'
+import { MarkdownRenderer } from '@/components/web/markdown/Markdown'
 import { postSchema } from '@/schemas/blog'
 import {
   Field,
@@ -187,7 +187,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 h-150 overflow-auto">
         <form.Field
           name="content"
           children={(field) => {
@@ -251,7 +251,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
   )
 
   return (
-    <div className="px-4 py-8 min-h-screen flex flex-col w-full mx-auto">
+    <div className="px-2 min-h-screen flex flex-col w-full mx-auto">
       <div className="flex items-center mb-4">
         <Button variant="default" asChild className="">
           <Link to="/dashboard/blog">
@@ -392,8 +392,8 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
       </div>
 
       {/* DESKSTOP */}
-      <div className="hidden md:grid grid-cols-2 gap-6 h-full flex-1">
-        <Card className="flex flex-col h-fit">
+      <div className="hidden md:grid grid-cols-2 gap-6 max-h-250 flex-1">
+        <Card className="flex flex-col h-full">
           <CardHeader>
             <CardTitle className="text-sm font-medium uppercase text-muted-foreground">
               Editor
@@ -402,7 +402,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
           <CardContent>{EditorFields}</CardContent>
         </Card>
 
-        <Card className="flex flex-col bg-slate-50/50 dark:bg-slate-900/50 border-dashed">
+        <Card className="flex flex-col bg-slate-50/50 dark:bg-slate-900/50 border-dashed overflow-auto">
           <CardHeader>
             <CardTitle className="text-sm font-medium uppercase text-muted-foreground">
               Live Preview
@@ -412,7 +412,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
             <form.Subscribe
               selector={(state) => [state.values]}
               children={([values]) => (
-                <>
+                <main>
                   <h1 className="mt-0">{values.title || 'Untitled Post'}</h1>
                   <h3>
                     {values.description ||
@@ -426,7 +426,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                         'https://tanstack.com/assets/og-C0HGjoLl.png'
                       }
                       alt={values.title ?? 'Blog Thumbnail'}
-                      className="h-full w-full object-cover group-hover:scale-105 transition-transform "
+                      className="h-full w-full object-cover group-hover:scale-105 transition-transform"
                     />
                   </div>
                   <MarkdownRenderer
@@ -434,7 +434,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                       values.content || 'Start typing to see the preview...'
                     }
                   />
-                </>
+                </main>
               )}
             />
           </CardContent>
