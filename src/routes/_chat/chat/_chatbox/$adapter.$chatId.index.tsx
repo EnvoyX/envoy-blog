@@ -87,9 +87,14 @@ function RouteComponent() {
   }
 
   useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    }
+  }, [messages])
+
+  useEffect(() => {
     setMessages([])
     queryClient.invalidateQueries({ queryKey: ['chat', chatId] })
-    queryClient.invalidateQueries({ queryKey: ['chats'] })
   }, [chatId])
 
   if (isLoadingMessages) {

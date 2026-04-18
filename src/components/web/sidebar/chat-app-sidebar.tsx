@@ -78,7 +78,7 @@ export function ChatAppSidebar({
           <SidebarGroupContent>
             <div className="flex-1 overflow-y-auto px-2 custom-scrollbar ">
               <SidebarMenu className="space-y-1">
-                {chats?.map((chat) => (
+                {filteredChats?.map((chat) => (
                   <SidebarMenuItem key={chat.id}>
                     <ChatItem chat={chat} />
                   </SidebarMenuItem>

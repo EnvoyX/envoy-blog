@@ -27,27 +27,37 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { ChatAppSidebar } from '@/components/web/sidebar/chat-app-sidebar'
 import { useDebouncedCallback } from '@tanstack/react-pacer'
 import { getSession } from '@/data/session'
+import { useQuery } from '@tanstack/react-query'
 
 export const Route = createFileRoute('/_chat')({
   component: RouteComponent,
   loader: async () => {
-    const chats = await getChatListFn()
+    // const chats = await getChatListFn()
     const session = await getSession()
 
     return {
-      chats,
+      // chats,
       session,
     }
   },
 })
 
 function RouteComponent() {
-  const { chats, session } = Route.useLoaderData()
+  const { session } = Route.useLoaderData()
   const { isSidebarMobileOpen, toggleSheet } = useSidebarMobileStore()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [isTransition, startTransition] = useTransition()
   const [query, setQuery] = useState<string>('')
+
+  const { data: chats, isLoading: isLoadingChats } = useQuery({
+    queryKey: ['chats'],
+    queryFn: async () => {
+      const chats = await getChatListFn()
+
+      return chats
+    },
+  })
 
   const debouncedSearch = useDebouncedCallback(
     (searchTerm: string) => {
@@ -96,7 +106,7 @@ function RouteComponent() {
   return (
     <SidebarProvider>
       {/* sidebar */}
-      <ChatAppSidebar chats={chats} />
+      {chats && <ChatAppSidebar chats={chats} />}
 
       {/* main content */}
       <SidebarInset>
@@ -148,7 +158,7 @@ function RouteComponent() {
                 Recent Chats
               </p>
               <div className="flex-1 overflow-y-auto px-2 custom-scrollbar ">
-                {filteredChats.map((chat) => {
+                {filteredChats?.map((chat) => {
                   return <ChatItem key={chat.id} chat={chat} />
                 })}
               </div>
