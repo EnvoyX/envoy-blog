@@ -1593,6 +1593,7 @@ export const ChatScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   model: 'model',
+  recentModel: 'recentModel',
   isPublic: 'isPublic',
   shareId: 'shareId'
 } as const

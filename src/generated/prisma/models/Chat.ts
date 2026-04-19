@@ -31,6 +31,7 @@ export type ChatMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   model: string | null
+  recentModel: string | null
   isPublic: boolean | null
   shareId: string | null
 }
@@ -42,6 +43,7 @@ export type ChatMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   model: string | null
+  recentModel: string | null
   isPublic: boolean | null
   shareId: string | null
 }
@@ -53,6 +55,7 @@ export type ChatCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   model: number
+  recentModel: number
   isPublic: number
   shareId: number
   _all: number
@@ -66,6 +69,7 @@ export type ChatMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   model?: true
+  recentModel?: true
   isPublic?: true
   shareId?: true
 }
@@ -77,6 +81,7 @@ export type ChatMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   model?: true
+  recentModel?: true
   isPublic?: true
   shareId?: true
 }
@@ -88,6 +93,7 @@ export type ChatCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   model?: true
+  recentModel?: true
   isPublic?: true
   shareId?: true
   _all?: true
@@ -172,6 +178,7 @@ export type ChatGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   model: string | null
+  recentModel: string | null
   isPublic: boolean
   shareId: string | null
   _count: ChatCountAggregateOutputType | null
@@ -204,6 +211,7 @@ export type ChatWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Chat"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Chat"> | Date | string
   model?: Prisma.StringNullableFilter<"Chat"> | string | null
+  recentModel?: Prisma.StringNullableFilter<"Chat"> | string | null
   isPublic?: Prisma.BoolFilter<"Chat"> | boolean
   shareId?: Prisma.StringNullableFilter<"Chat"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -217,6 +225,7 @@ export type ChatOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   model?: Prisma.SortOrderInput | Prisma.SortOrder
+  recentModel?: Prisma.SortOrderInput | Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   shareId?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -234,6 +243,7 @@ export type ChatWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Chat"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Chat"> | Date | string
   model?: Prisma.StringNullableFilter<"Chat"> | string | null
+  recentModel?: Prisma.StringNullableFilter<"Chat"> | string | null
   isPublic?: Prisma.BoolFilter<"Chat"> | boolean
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   messages?: Prisma.MessageListRelationFilter
@@ -246,6 +256,7 @@ export type ChatOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   model?: Prisma.SortOrderInput | Prisma.SortOrder
+  recentModel?: Prisma.SortOrderInput | Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   shareId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ChatCountOrderByAggregateInput
@@ -263,6 +274,7 @@ export type ChatScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Chat"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Chat"> | Date | string
   model?: Prisma.StringNullableWithAggregatesFilter<"Chat"> | string | null
+  recentModel?: Prisma.StringNullableWithAggregatesFilter<"Chat"> | string | null
   isPublic?: Prisma.BoolWithAggregatesFilter<"Chat"> | boolean
   shareId?: Prisma.StringNullableWithAggregatesFilter<"Chat"> | string | null
 }
@@ -273,6 +285,7 @@ export type ChatCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: string | null
+  recentModel?: string | null
   isPublic?: boolean
   shareId?: string | null
   user: Prisma.UserCreateNestedOneWithoutChatsInput
@@ -286,6 +299,7 @@ export type ChatUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: string | null
+  recentModel?: string | null
   isPublic?: boolean
   shareId?: string | null
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutChatInput
@@ -297,6 +311,7 @@ export type ChatUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recentModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   shareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutChatsNestedInput
@@ -310,6 +325,7 @@ export type ChatUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recentModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   shareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   messages?: Prisma.MessageUncheckedUpdateManyWithoutChatNestedInput
@@ -322,6 +338,7 @@ export type ChatCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: string | null
+  recentModel?: string | null
   isPublic?: boolean
   shareId?: string | null
 }
@@ -332,6 +349,7 @@ export type ChatUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recentModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   shareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -343,6 +361,7 @@ export type ChatUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recentModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   shareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -354,6 +373,7 @@ export type ChatCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   model?: Prisma.SortOrder
+  recentModel?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   shareId?: Prisma.SortOrder
 }
@@ -365,6 +385,7 @@ export type ChatMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   model?: Prisma.SortOrder
+  recentModel?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   shareId?: Prisma.SortOrder
 }
@@ -376,6 +397,7 @@ export type ChatMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   model?: Prisma.SortOrder
+  recentModel?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   shareId?: Prisma.SortOrder
 }
@@ -457,6 +479,7 @@ export type ChatCreateWithoutMessagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: string | null
+  recentModel?: string | null
   isPublic?: boolean
   shareId?: string | null
   user: Prisma.UserCreateNestedOneWithoutChatsInput
@@ -469,6 +492,7 @@ export type ChatUncheckedCreateWithoutMessagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: string | null
+  recentModel?: string | null
   isPublic?: boolean
   shareId?: string | null
 }
@@ -495,6 +519,7 @@ export type ChatUpdateWithoutMessagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recentModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   shareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutChatsNestedInput
@@ -507,6 +532,7 @@ export type ChatUncheckedUpdateWithoutMessagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recentModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   shareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -517,6 +543,7 @@ export type ChatCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: string | null
+  recentModel?: string | null
   isPublic?: boolean
   shareId?: string | null
   messages?: Prisma.MessageCreateNestedManyWithoutChatInput
@@ -528,6 +555,7 @@ export type ChatUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: string | null
+  recentModel?: string | null
   isPublic?: boolean
   shareId?: string | null
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutChatInput
@@ -569,6 +597,7 @@ export type ChatScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Chat"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Chat"> | Date | string
   model?: Prisma.StringNullableFilter<"Chat"> | string | null
+  recentModel?: Prisma.StringNullableFilter<"Chat"> | string | null
   isPublic?: Prisma.BoolFilter<"Chat"> | boolean
   shareId?: Prisma.StringNullableFilter<"Chat"> | string | null
 }
@@ -579,6 +608,7 @@ export type ChatCreateManyUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: string | null
+  recentModel?: string | null
   isPublic?: boolean
   shareId?: string | null
 }
@@ -589,6 +619,7 @@ export type ChatUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recentModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   shareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   messages?: Prisma.MessageUpdateManyWithoutChatNestedInput
@@ -600,6 +631,7 @@ export type ChatUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recentModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   shareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   messages?: Prisma.MessageUncheckedUpdateManyWithoutChatNestedInput
@@ -611,6 +643,7 @@ export type ChatUncheckedUpdateManyWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recentModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   shareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -653,6 +686,7 @@ export type ChatSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   model?: boolean
+  recentModel?: boolean
   isPublic?: boolean
   shareId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -667,6 +701,7 @@ export type ChatSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   model?: boolean
+  recentModel?: boolean
   isPublic?: boolean
   shareId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -679,6 +714,7 @@ export type ChatSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   model?: boolean
+  recentModel?: boolean
   isPublic?: boolean
   shareId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -691,11 +727,12 @@ export type ChatSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   model?: boolean
+  recentModel?: boolean
   isPublic?: boolean
   shareId?: boolean
 }
 
-export type ChatOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "userId" | "createdAt" | "updatedAt" | "model" | "isPublic" | "shareId", ExtArgs["result"]["chat"]>
+export type ChatOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "userId" | "createdAt" | "updatedAt" | "model" | "recentModel" | "isPublic" | "shareId", ExtArgs["result"]["chat"]>
 export type ChatInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   messages?: boolean | Prisma.Chat$messagesArgs<ExtArgs>
@@ -721,6 +758,7 @@ export type $ChatPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdAt: Date
     updatedAt: Date
     model: string | null
+    recentModel: string | null
     isPublic: boolean
     shareId: string | null
   }, ExtArgs["result"]["chat"]>
@@ -1154,6 +1192,7 @@ export interface ChatFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Chat", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Chat", 'DateTime'>
   readonly model: Prisma.FieldRef<"Chat", 'String'>
+  readonly recentModel: Prisma.FieldRef<"Chat", 'String'>
   readonly isPublic: Prisma.FieldRef<"Chat", 'Boolean'>
   readonly shareId: Prisma.FieldRef<"Chat", 'String'>
 }

@@ -40,6 +40,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { Chat } from '@/generated/prisma/client'
+import { modelMessageSchema } from 'ai'
 
 export function ChatItem({ chat }: { chat: Chat }) {
   const queryClient = useQueryClient()
@@ -77,6 +78,9 @@ export function ChatItem({ chat }: { chat: Chat }) {
       <Link
         to="/chat/$adapter/$chatId"
         params={{ chatId: chat.id, adapter: chat.model as string }}
+        search={{
+          model: chat.recentModel ?? '',
+        }}
         activeProps={{ className: 'bg-zinc-800/50 border-zinc-700 text-white' }}
         className="flex items-center justify-between gap-2 px-3 py-0 rounded-lg text-sm text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 transition-all border border-transparent"
       >

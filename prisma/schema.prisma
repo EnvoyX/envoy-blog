@@ -138,6 +138,7 @@ model Chat {
   updatedAt DateTime  @updatedAt
   messages  Message[]
   model     String?
+  recentModel String?
 
   isPublic Boolean @default(false) @map("is_public")
   shareId  String? @unique @map("share_id")

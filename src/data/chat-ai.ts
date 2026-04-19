@@ -75,6 +75,7 @@ export const saveAssistantMessageFn = createServerFn({ method: 'POST' })
       role: z.enum(['ASSISTANT', 'USER', 'TOOL', 'SYSTEM']),
       parts: z.array(z.any()), // Use JSON-safe validation here
       model: z.string().optional(),
+      recentModel: z.string().optional(),
     }),
   )
   .handler(async ({ data }) => {
@@ -94,6 +95,14 @@ export const saveAssistantMessageFn = createServerFn({ method: 'POST' })
     //     model: data.model,
     //   },
     // })
+    await db.chat.update({
+      where: {
+        id: data.chatId,
+      },
+      data: {
+        recentModel: data.recentModel,
+      },
+    })
     const assistantMessage = await db.message.create({
       data: {
         messageId: data.messageId,

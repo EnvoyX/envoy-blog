@@ -149,6 +149,7 @@ function RouteComponent() {
                 ? 'SYSTEM'
                 : 'USER',
           model: adapter,
+          recentModel: currentModel,
         },
       })
     },

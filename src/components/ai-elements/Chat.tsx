@@ -142,6 +142,7 @@ export function Chat({
                 ? 'SYSTEM'
                 : 'USER',
           model: model,
+          recentModel: currentModel,
         },
       })
     },
