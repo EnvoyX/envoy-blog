@@ -79,14 +79,17 @@ function RouteComponent() {
         },
       }),
   })
-  const { isPending, submittedAt, variables, mutate, isError } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: saveAssistantMessageFn,
     mutationKey: ['saveAssistantMessage', chatId],
+    onError: (err) => {
+      console.error('Failed to sync parts:', err.message)
+    },
     onSettled: () => {
       console.log('Assistant message synced with parts!')
       queryClient.invalidateQueries({ queryKey: ['chat', chatId] })
+      queryClient.invalidateQueries({ queryKey: ['chats'] })
     },
-    onError: (err) => console.error('Failed to sync parts:', err),
   })
 
   const { messages, sendMessage, isLoading, setMessages } = useChat({
@@ -112,7 +115,6 @@ function RouteComponent() {
           model: adapter,
         },
       })
-      queryClient.invalidateQueries({ queryKey: ['chat', chatId] })
     },
   })
 
@@ -335,9 +337,7 @@ function RouteComponent() {
                     message.role === 'assistant'
                       ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full'
                       : 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/10'
-                  }
-                  ${isPending && 'bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full'}
-                  `}
+                  }`}
                 >
                   <div className="prose prose-invert prose-sm sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
                     {message.parts.map((part, idx) => {
@@ -385,14 +385,6 @@ function RouteComponent() {
                       }
                       return null
                     })}
-                    {isPending && (
-                      <MarkdownRenderer
-                        markdown={
-                          (variables.data.parts[0].content as string) ||
-                          '*Nothing to preview...*'
-                        }
-                      />
-                    )}
                   </div>
                 </div>
                 {message.role === 'assistant' && !isLoading && (
