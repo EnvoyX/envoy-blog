@@ -366,12 +366,12 @@ function PostComponent() {
               />
 
               <div className="mt-16 pt-8 border-t border-slate-800 space-y-12">
-                <section className="flex items-center justify-between bg-slate-900/40 p-6 rounded-2xl border border-slate-800">
+                <section className="flex items-center justify-between max-sm:flex-col max-sm:justify-center bg-slate-900/40 p-6 rounded-2xl border border-slate-800">
                   <div className="space-y-1">
-                    <h3 className="text-lg font-semibold text-white">
+                    <h3 className="text-lg font-semibold text-white max-sm:text-center">
                       Enjoyed this post?
                     </h3>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-slate-400 max-sm:text-center">
                       Let the author know by giving a like.
                     </p>
                   </div>

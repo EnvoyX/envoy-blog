@@ -5,7 +5,14 @@ import {
   redirect,
   useNavigate,
 } from '@tanstack/react-router'
-import { Plus, Search, LogOut } from 'lucide-react'
+import {
+  Plus,
+  Search,
+  LogOut,
+  Sparkles,
+  ChevronDown,
+  ChevronLeft,
+} from 'lucide-react'
 import { getChatListFn } from '@/data/chat-ai'
 import { useSidebarMobileStore } from '@/store/sidebar'
 import {
@@ -18,6 +25,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
 import { UserAvatar } from '@/components/web/user-profile'
@@ -29,18 +44,17 @@ import { ChatAppSidebar } from '@/components/web/sidebar/chat-app-sidebar'
 import { useDebouncedCallback } from '@tanstack/react-pacer'
 import { getSession } from '@/data/session'
 import { useQuery } from '@tanstack/react-query'
+import { MODEL_CONFIG } from '@/lib/constants'
 
 export const Route = createFileRoute('/_chat/chat/_chatbox')({
   component: RouteComponent,
   loader: async () => {
-    // const chats = await getChatListFn()
     const session = await getSession()
     if (!session)
       throw redirect({
         to: '/login',
       })
     return {
-      // chats,
       session,
     }
   },
@@ -127,7 +141,7 @@ function RouteComponent() {
               side="left"
               className="w-75 bg-background/95 backdrop-blur-2xl border-l border-white/10 p-0 flex flex-col"
             >
-              <SheetHeader className="p-6 text-left border-b border-white/5">
+              <SheetHeader className="p-6 text-left border-b border-white/5 flex flex-col gap-4">
                 <SheetTitle className="flex items-center gap-2">
                   <img
                     src="https://tanstack.com/images/logos/logo-color-banner-600.png"
@@ -138,21 +152,80 @@ function RouteComponent() {
                     Envoy Mindpalace
                   </span>
                 </SheetTitle>
-              </SheetHeader>
-              <div className="p-4 space-y-4">
-                <button
-                  onClick={() => navigate({ to: '/chat' })}
-                  className="w-full flex items-center gap-2 justify-center py-2.5 px-4 rounded-xl bg-zinc-100 text-zinc-950 hover:bg-zinc-200 transition-colors font-medium text-sm"
+                <Button
+                  variant={'outline'}
+                  onClick={() =>
+                    navigate({
+                      to: '/',
+                    })
+                  }
+                  className="w-full flex items-center cursor-pointer"
                 >
-                  <Plus size={16} />
-                  New Chat
-                </button>
+                  <ChevronLeft className=" size-4" />
+                  Back to Home
+                </Button>
+              </SheetHeader>
+              <div className="p-4 space-y-4 -mt-6">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="w-full flex items-center gap-2 justify-center py-3 px-4 rounded-xl bg-zinc-100 text-zinc-950 active:bg-zinc-300 transition-colors font-semibold text-sm shadow-lg shadow-white/5">
+                      <Plus size={18} />
+                      New Chat
+                      <ChevronDown size={14} className="ml-1 opacity-50" />
+                    </button>
+                  </DropdownMenuTrigger>
 
+                  <DropdownMenuContent
+                    side="bottom"
+                    align="center"
+                    className="w-[calc(100vw-2rem)] max-w-xs bg-zinc-950 border-zinc-800 text-zinc-200 p-2"
+                  >
+                    <DropdownMenuLabel className="flex items-center gap-2 text-xs text-zinc-500 py-3">
+                      <Sparkles size={14} className="text-emerald-500" />
+                      Choose a model to start
+                    </DropdownMenuLabel>
+
+                    <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
+                      {Object.entries(MODEL_CONFIG).map(
+                        ([provider, models]) => (
+                          <div key={provider} className="mb-2">
+                            <div className="px-2 py-2 text-[10px] font-black uppercase text-zinc-600 tracking-widest border-b border-white/5 mb-1">
+                              {provider}
+                            </div>
+                            {models.map((m) => (
+                              <DropdownMenuItem
+                                key={m.value}
+                                className="cursor-pointer py-3 px-3 focus:bg-zinc-900 focus:text-white rounded-lg transition-colors"
+                                onClick={() => {
+                                  navigate({
+                                    to: '/chat/$adapter',
+                                    params: {
+                                      adapter: provider,
+                                    },
+                                    search: {
+                                      model: m.value,
+                                    },
+                                  })
+                                  if (typeof toggleSheet === 'function')
+                                    toggleSheet(false)
+                                }}
+                              >
+                                <span className="truncate text-sm font-medium">
+                                  {m.label}
+                                </span>
+                              </DropdownMenuItem>
+                            ))}
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <div className="relative group">
-                  <Search className="absolute left-3 top-2.5 size-4 text-zinc-500 group-focus-within:text-zinc-300 transition-colors" />
+                  <Search className="absolute left-3 top-3 size-4 text-zinc-500 transition-colors" />
                   <input
                     placeholder="Search chats..."
-                    className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg py-2 pl-9 pr-4 text-xs focus:outline-none focus:border-zinc-700"
+                    className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-zinc-600 focus:ring-1 ring-white/10 transition-all placeholder:text-zinc-600"
                     onChange={(e) => debouncedSearch(e.target.value)}
                   />
                 </div>

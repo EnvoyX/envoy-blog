@@ -10,12 +10,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { Plus, Search } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { ChevronLeft, ChevronRight, Plus, Search, Sparkles } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import { ChatItem } from '@/components/ai-elements/ChatItem'
 import { Chat } from '@/generated/prisma/client'
 import { useState } from 'react'
 import { useDebouncedCallback } from '@tanstack/react-pacer'
+import { MODEL_CONFIG } from '@/lib/constants'
+import { Button } from '@/components/ui/button'
 
 export function ChatAppSidebar({
   chats,
@@ -48,18 +58,71 @@ export function ChatAppSidebar({
       <SidebarHeader className="p-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              size="lg"
-              variant={'default'}
-              className="bg-zinc-100 text-zinc-950 hover:bg-zinc-400 transition-colors cursor-pointer"
-              onClick={() => navigate({ to: '/chat' })}
-            >
-              <Plus className="size-4" />
-              <span className="font-semibold">New Chat</span>
-            </SidebarMenuButton>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton
+                  size="lg"
+                  className="bg-zinc-100 text-zinc-950 hover:bg-zinc-200 transition-colors cursor-pointer "
+                >
+                  <Plus className="size-4 " />
+                  <span className="font-semibold ">New Chat</span>
+                  <ChevronRight className="ml-auto size-4 opacity-50" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent
+                side="right"
+                align="start"
+                className="w-64 bg-zinc-900 border-zinc-800 text-zinc-200"
+              >
+                <DropdownMenuLabel className="flex items-center gap-2 text-xs text-zinc-500">
+                  <Sparkles size={12} className="text-blue-500" />
+                  Select a starting model
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-zinc-800" />
+                {Object.entries(MODEL_CONFIG).map(([provider, models]) => (
+                  <div key={provider}>
+                    <div className="px-2 py-1.5 text-[10px] font-bold uppercase text-zinc-600 tracking-widest">
+                      {provider}
+                    </div>
+                    {models.map((m) => (
+                      <DropdownMenuItem
+                        key={m.value}
+                        className="cursor-pointer focus:bg-zinc-900 focus:text-white hover:bg-white/20!"
+                        onClick={() => {
+                          navigate({
+                            to: '/chat/$adapter',
+                            params: {
+                              adapter: provider,
+                            },
+                            search: {
+                              model: m.value,
+                            },
+                          })
+                        }}
+                      >
+                        <span className="truncate text-xs">{m.label}</span>
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator className="bg-zinc-800" />
+                  </div>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
-
+        <Button
+          variant={'outline'}
+          onClick={() =>
+            navigate({
+              to: '/',
+            })
+          }
+          className="w-full mt-1 flex items-center cursor-pointer"
+        >
+          <ChevronLeft className=" size-4" />
+          Back to Home
+        </Button>
         <div className="relative mt-4">
           <Search className="absolute left-2 top-2.5 size-4 text-zinc-500" />
           <input
