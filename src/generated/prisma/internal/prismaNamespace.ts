@@ -1619,7 +1619,8 @@ export const LikeScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   userId: 'userId',
-  postId: 'postId'
+  postId: 'postId',
+  post_slug: 'post_slug'
 } as const
 
 export type LikeScalarFieldEnum = (typeof LikeScalarFieldEnum)[keyof typeof LikeScalarFieldEnum]
@@ -1632,6 +1633,7 @@ export const CommentScalarFieldEnum = {
   updatedAt: 'updatedAt',
   userId: 'userId',
   postId: 'postId',
+  post_slug: 'post_slug',
   parentId: 'parentId'
 } as const
 

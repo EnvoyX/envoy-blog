@@ -6,10 +6,15 @@ import {
   redirect,
   useNavigate,
 } from '@tanstack/react-router'
-import { ChevronDown, ChevronLeft, ListIcon } from 'lucide-react'
+import {
+  ChevronDown,
+  ChevronLeft,
+  Heart,
+  ListIcon,
+  MessagesSquareIcon,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { intlFormat, intlFormatDistance } from 'date-fns'
 import {
   DropdownMenu,
@@ -22,6 +27,14 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { getUser } from '@/data/session'
+import { useLiveQuery, eq } from '@tanstack/react-db'
+import { UserAvatar } from '@/components/web/user-profile'
+import { createId } from '@paralleldrive/cuid2'
+import { User } from '@/generated/prisma/browser'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { commentCollection, likeCollection } from '@/collections/blog'
+import { CommentItem } from '@/components/web/CommentItem'
+import CommentInput from '@/components/web/CommentInput'
 
 export const Route = createFileRoute('/dashboard/blog/$slug/')({
   component: PostComponent,
@@ -95,6 +108,54 @@ function PostComponent() {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const headings = post?.content ? extractHeadings(post.content) : []
   const navigate = useNavigate()
+  const { data: likes } = useLiveQuery((q) =>
+    q
+      .from({ like: likeCollection })
+      .where(({ like }) => eq(like.postId, post?.id)),
+  )
+  const { data: comments } = useLiveQuery((q) =>
+    q
+      .from({ comment: commentCollection })
+      .where(({ comment }) => eq(comment.postId, post?.id))
+      .orderBy(({ comment }) => comment.createdAt, 'desc'),
+  )
+
+  const hasLiked = likes.find((like) => like.userId === session.user.id)
+
+  function handleToggleLike() {
+    const existingLike = likes.find((like) => like.userId === session.user.id)
+
+    if (!existingLike) {
+      // optimistic Insert like
+      likeCollection.insert({
+        id: createId(),
+        post_slug: post?.slug as string,
+        postId: post?.id as string,
+        userId: session.user.id as string,
+        createdAt: new Date(),
+      })
+    } else {
+      // optimistic delete like
+      likeCollection.delete(existingLike.id)
+    }
+  }
+
+  function handleAddComment(commentText: string) {
+    if (!commentText.trim()) return
+
+    // optimistic Insert comment
+    commentCollection.insert({
+      id: createId(),
+      content: commentText,
+      postId: post?.id as string,
+      post_slug: post?.slug as string,
+      userId: session.user.id as string,
+      createdAt: new Date(),
+      user: session.user as User,
+      parentId: createId(),
+      updatedAt: new Date(),
+    })
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -255,18 +316,11 @@ function PostComponent() {
               </div>
               <div className="flex flex-wrap items-center gap-4 mb-6 text-sm">
                 <div className="flex items-center gap-3 pr-4 border-r border-slate-800">
-                  <Avatar className="h-9 w-9 border border-slate-700">
-                    <AvatarImage
-                      src={post.author.image as string}
-                      alt={post.author.name}
-                    />
-                    <AvatarFallback className="bg-slate-800 text-xs">
-                      {post.author?.name
-                        ?.split(' ')
-                        .map((n) => n[0])
-                        .join('')}
-                    </AvatarFallback>
-                  </Avatar>
+                  <UserAvatar
+                    src={session.user.image as string}
+                    alt={session.user.name as string}
+                    className="h-9 w-9"
+                  />
                   <div className="flex flex-col">
                     <span className="font-medium text-slate-200">
                       {post.author.name}
@@ -310,6 +364,74 @@ function PostComponent() {
               <MarkdownRenderer
                 markdown={post.content || '*Nothing to preview...*'}
               />
+
+              <div className="mt-16 pt-8 border-t border-slate-800 space-y-12">
+                <section className="flex items-center justify-between bg-slate-900/40 p-6 rounded-2xl border border-slate-800">
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-semibold text-white">
+                      Enjoyed this post?
+                    </h3>
+                    <p className="text-sm text-slate-400">
+                      Let the author know by giving a like.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-slate-300">
+                      {likes.length} likes
+                    </span>
+                    <button
+                      onClick={() => handleToggleLike()}
+                      className={`p-3 rounded-full transition-all border cursor-pointer ${
+                        hasLiked
+                          ? 'bg-emerald-500/10 border-emerald-500 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                          : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
+                      }`}
+                    >
+                      <Heart
+                        className={`size-6 ${hasLiked && 'fill-current'}`}
+                      />
+                    </button>
+                  </div>
+                </section>
+
+                <section className="space-y-8">
+                  <div className="flex gap-4">
+                    <span className="flex items-center justify-center">
+                      <MessagesSquareIcon className="size-8 text-emerald-500" />
+                    </span>
+                    <h3 className="text-xl font-bold text-white flex items-center justify-center">
+                      <span>Comments ({comments.length})</span>
+                    </h3>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <Avatar className="h-10 w-10 shrink-0 border border-slate-700 items-center justify-center">
+                      <AvatarImage src={session.user.image as string} />
+                      <AvatarFallback>
+                        {' '}
+                        {(session.user.name as string)
+                          ? (session.user.name as string)
+                              .split(' ')
+                              .map((n) => n[0])
+                              .join('')
+                          : ''}
+                      </AvatarFallback>
+                    </Avatar>
+                    <CommentInput handleAddComment={handleAddComment} />
+                  </div>
+
+                  <div className="space-y-6 pt-4">
+                    {comments.map((comment) => (
+                      <CommentItem
+                        key={comment.id}
+                        comment={comment}
+                        session={session}
+                        commentCollection={commentCollection}
+                      />
+                    ))}
+                  </div>
+                </section>
+              </div>
             </div>
           </div>
 

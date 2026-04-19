@@ -27,7 +27,7 @@ import {
 import { getMyPostsFn, deletePostFn } from '@/data/blog'
 import { toast } from 'sonner'
 import { intlFormat, intlFormatDistance } from 'date-fns'
-import { createStore, useStore } from '@tanstack/react-store'
+import { createStore, useSelector } from '@tanstack/react-store'
 import {
   Dialog,
   DialogContent,
@@ -89,8 +89,8 @@ function BlogPageComponent() {
       isLoading: false,
     }),
   )
-  const isOpen = useStore(modalStore, (state) => state.isOpen)
-  const isLoading = useStore(modalStore, (state) => state.isLoading)
+  const isOpen = useSelector(modalStore, (state) => state.isOpen)
+  const isLoading = useSelector(modalStore, (state) => state.isLoading)
 
   const filteredPosts = allPosts.filter((post) => {
     const matchedQuery =

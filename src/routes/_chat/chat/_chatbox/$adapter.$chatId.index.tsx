@@ -99,7 +99,7 @@ function RouteComponent() {
       console.error('Failed to sync parts:', err.message)
     },
     onSettled: () => {
-      console.log('Assistant message synced with parts!')
+      // console.log('Assistant message synced with parts!')
       queryClient.invalidateQueries({ queryKey: ['chat', chatId] })
       queryClient.invalidateQueries({ queryKey: ['chats'] })
     },
@@ -118,7 +118,7 @@ function RouteComponent() {
     connection: fetchServerSentEvents(
       () => `/api/chat-${adapter}`,
       async () => {
-        console.log(`[AI Engine]: Initiating ${currentModel}`)
+        // console.log(`[AI Engine]: Initiating ${currentModel}`)
         return {
           body: {
             conversationId: chatId,
@@ -136,7 +136,7 @@ function RouteComponent() {
       console.error(error.message)
     },
     onFinish: (message) => {
-      console.log('Message from Client: ', message)
+      // console.log('Message from Client: ', message)
       mutate({
         data: {
           chatId: chatId,

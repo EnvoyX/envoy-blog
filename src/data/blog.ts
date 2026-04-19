@@ -6,15 +6,155 @@ import { authMiddleware } from '@/middlewares/auth'
 import { postSchema } from '@/schemas/blog'
 
 export const getPostFn = createServerFn({ method: 'GET' })
+  .middleware([authMiddleware])
   .inputValidator((slug: string) => slug)
-  .handler(async ({ data: slug }) => {
+  .handler(async ({ data: slug, context }) => {
     return await db.post.findUnique({
       where: { slug },
       include: {
         author: true,
-        tags: true,
+        comments: {
+          include: { user: true },
+          orderBy: { createdAt: 'desc' },
+        },
+        _count: {
+          select: { likes: true, comments: true },
+        },
+        likes: {
+          where: { userId: context.session.user.id },
+        },
       },
     })
+  })
+
+
+  export const getAllLikes = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    return await db.like.findMany()
+  })
+
+export const getAllComments = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    return await db.comment.findMany({
+      include: {
+        user: true,
+      }
+    })
+  })
+
+export const getPostLikesFn = createServerFn({ method: 'GET' })
+  .middleware([authMiddleware])
+  .inputValidator(
+    z.object({
+      postId: z.string(),
+      slug: z.string(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    return await db.like.findMany({
+      where: {
+        postId: data.postId,
+        post_slug: data.slug,
+      },
+    })
+  })
+
+export const getPostCommentsFn = createServerFn({ method: 'GET' })
+  .middleware([authMiddleware])
+  .inputValidator(
+    z.object({
+      postId: z.string(),
+      slug: z.string(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    return await db.comment.findMany({
+      where: {
+        postId: data.postId,
+        post_slug: data.slug,
+      },
+      include: {
+        user: true,
+      },
+    })
+  })
+
+  export const toggleLikeFn = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .inputValidator(z.object({id:z.string(), postId: z.string(), slug: z.string() }))
+  .handler(async ({ data, context }) => {
+    const userId = context.user.id 
+
+    const existingLike = await db.like.findUnique({
+      where: {
+        userId_postId: {
+          userId: userId as string,
+          postId: data.postId,
+        },
+      },
+    })
+
+    if (existingLike) {
+      await db.like.delete({
+        where: { id: existingLike.id },
+      })
+      return { liked: false }
+    }
+
+    await db.like.create({
+      data: {
+        id:data.id,
+        userId: userId as string,
+        postId: data.postId,
+        post_slug: data.slug, 
+      },
+    })
+
+    return { liked: true }
+  })
+
+export const createCommentFn = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .inputValidator(
+    z.object({
+      id: z.string(),
+      postId: z.string(),
+      slug: z.string(),
+      content: z.string().min(1),
+      parentId: z.string().optional(), 
+    })
+  )
+  .handler(async ({ data, context }) => {
+    return await db.comment.create({
+      data: {
+        id:  data.id,
+        content: data.content,
+        postId: data.postId,
+        post_slug: data.slug,
+        userId: context.user.id as string,
+        parentId: data.parentId,
+      },
+    })
+  })
+
+  export const updateCommentFn = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .inputValidator(z.object({ commentId: z.string(), content: z.string().min(1) }))
+  .handler(async ({ data, context }) => {
+    return await db.comment.update({
+      where: { id: data.commentId, userId: context.user.id },
+      data: { content: data.content },
+    })
+  })
+
+export const deleteCommentFn = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .inputValidator(z.object({ commentId: z.string() }))
+  .handler(async ({ data, context }) => {
+    await db.comment.delete({
+      where: { id: data.commentId, userId: context.user.id },
+    })
+    return { success: true }
   })
 
 export const createPostFn = createServerFn({ method: 'POST' })

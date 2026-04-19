@@ -257,6 +257,7 @@ export type PostOrderByWithRelationInput = {
 export type PostWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   slug?: string
+  id_slug?: Prisma.PostIdSlugCompoundUniqueInput
   AND?: Prisma.PostWhereInput | Prisma.PostWhereInput[]
   OR?: Prisma.PostWhereInput[]
   NOT?: Prisma.PostWhereInput | Prisma.PostWhereInput[]
@@ -273,7 +274,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   tags?: Prisma.TagListRelationFilter
   likes?: Prisma.LikeListRelationFilter
   comments?: Prisma.CommentListRelationFilter
-}, "id" | "slug">
+}, "id" | "slug" | "id_slug">
 
 export type PostOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -416,6 +417,11 @@ export type PostUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type PostIdSlugCompoundUniqueInput = {
+  id: string
+  slug: string
 }
 
 export type PostCountOrderByAggregateInput = {

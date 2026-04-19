@@ -51,7 +51,7 @@
     "@tanstack/db": "^0.6.5",
     "@tanstack/query-core": "^5.99.0",
     "@tanstack/query-db-collection": "^1.0.36",
-    "@tanstack/react-db": "^0.1.82",
+    "@tanstack/react-db": "^0.1.83",
     "@tanstack/react-devtools": "^0.10.1 ",
     "@tanstack/react-form": "^1.29.0",
     "@tanstack/react-form-devtools": "^0.2.21",

@@ -91,6 +91,8 @@ model Post {
   tags        Tag[]
   likes       Like[]
   comments    Comment[]
+
+  @@unique([id, slug])
 }
 
 model Tag {
@@ -169,8 +171,9 @@ model Like {
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post      Post    @relation(fields: [postId, post_slug], references: [id, slug], onDelete: Cascade)
   postId    String
+  post_slug String
 
   @@unique([userId, postId])
 }
@@ -183,13 +186,15 @@ model Comment {
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId, post_slug], references: [id, slug], onDelete: Cascade)
   postId    String
+  post_slug String
 
   // for threading
   parentId  String?
   parent    Comment?  @relation("ReplyTo", fields: [parentId], references: [id], onDelete: Cascade)
   replies   Comment[] @relation("ReplyTo")
+
 }
 
 model User {

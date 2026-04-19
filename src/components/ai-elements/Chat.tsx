@@ -72,7 +72,7 @@ export function Chat({
       console.error('Failed to sync parts:', err.message)
     },
     onSettled: () => {
-      console.log('Assistant message synced with parts!')
+      // console.log('Assistant message synced with parts!')
       queryClient.invalidateQueries({ queryKey: ['chat', chatId] })
       queryClient.invalidateQueries({ queryKey: ['chats'] })
       navigate({
@@ -101,7 +101,7 @@ export function Chat({
     connection: fetchServerSentEvents(
       () => apiRoute,
       async () => {
-        console.log(`[AI Engine]: Initiating ${currentModel}`)
+        // console.log(`[AI Engine]: Initiating ${currentModel}`)
         return {
           body: {
             conversationId: `chat-${chatId}`,
@@ -129,7 +129,7 @@ export function Chat({
       })
     },
     onFinish: (message) => {
-      console.log('Message from Client: ', message)
+      // console.log('Message from Client: ', message)
       mutate({
         data: {
           chatId: `chat-${chatId}`,
