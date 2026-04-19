@@ -5,6 +5,7 @@ import { MarkdownRenderer } from '@/components/web/markdown/Markdown'
 import { UserAvatar } from '@/components/web/user-profile'
 import { getChatHistoryFn, saveAssistantMessageFn } from '@/data/chat-ai'
 import { getUser } from '@/data/session'
+import { MODEL_CONFIG } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { UIMessage } from '@tanstack/ai'
 import { fetchServerSentEvents, useChat } from '@tanstack/ai-react'
@@ -14,7 +15,9 @@ import {
   useQueryClient,
   // useSuspenseQuery,
 } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { createFileRoute } from '@tanstack/react-router'
+import { zodValidator } from '@tanstack/zod-adapter'
 import {
   Bot,
   Check,
@@ -25,9 +28,16 @@ import {
   User,
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { toast } from 'sonner'
+import z from 'zod'
 
 export const Route = createFileRoute('/_chat/chat/_chatbox/$adapter/$chatId/')({
   component: RouteComponent,
+  validateSearch: zodValidator(
+    z.object({
+      model: z.string().optional(),
+    }),
+  ),
 })
 
 function CopyButton({ content }: { content: string }) {
@@ -58,6 +68,9 @@ function CopyButton({ content }: { content: string }) {
 
 function RouteComponent() {
   const { adapter, chatId } = Route.useParams()
+  const { model } = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath })
+  const currentModel = model
   const [targetMessageIds, setTargetMessageIds] = useState<Set<string>>(
     new Set(),
   )
@@ -92,13 +105,36 @@ function RouteComponent() {
     },
   })
 
+  function onModelChange(model: string) {
+    navigate({
+      search: (prev) => ({ ...prev, model: model }),
+      replace: true,
+      reloadDocument: true,
+    })
+  }
+
   const { messages, sendMessage, isLoading, setMessages } = useChat({
     id: chatId,
-    connection: fetchServerSentEvents(`/api/chat-${adapter}`, {
-      body: {
-        conversationId: chatId,
+    connection: fetchServerSentEvents(
+      () => `/api/chat-${adapter}`,
+      async () => {
+        console.log(`[AI Engine]: Initiating ${currentModel}`)
+        return {
+          body: {
+            conversationId: chatId,
+            requestModel: currentModel,
+          },
+        }
       },
-    }),
+    ),
+    onError(error) {
+      toast.error('Error has been occured', {
+        description:
+          'Please try again or try use different model. The model you used may not available right now.',
+        duration: 5000,
+      })
+      console.error(error.message)
+    },
     onFinish: (message) => {
       console.log('Message from Client: ', message)
       mutate({
@@ -119,9 +155,12 @@ function RouteComponent() {
   })
 
   function onSend(input: string) {
+    if (!model) {
+      toast.error('Select the model first!')
+      return
+    }
     sendMessage(input)
   }
-
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
@@ -145,7 +184,12 @@ function RouteComponent() {
         className="flex flex-col h-screen bg-[#09090b] text-zinc-100 selection:bg-blue-500/30"
         key={`${adapter}-${chatId}`}
       >
-        <HeaderChat model={adapter} />
+        <HeaderChat
+          model={adapter}
+          currentModel={currentModel as string}
+          provider={adapter as keyof typeof MODEL_CONFIG}
+          onModelChange={onModelChange}
+        />
 
         <div
           ref={scrollRef}
@@ -167,7 +211,12 @@ function RouteComponent() {
       className="flex flex-col h-screen bg-[#09090b] text-zinc-100 selection:bg-blue-500/30"
       key={`${adapter}-${chatId}`}
     >
-      <HeaderChat model={adapter} />
+      <HeaderChat
+        model={adapter}
+        currentModel={currentModel as string}
+        provider={adapter as keyof typeof MODEL_CONFIG}
+        onModelChange={onModelChange}
+      />
 
       <div
         ref={scrollRef}
@@ -341,7 +390,10 @@ function RouteComponent() {
                 >
                   <div className="prose prose-invert prose-sm sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
                     {message.parts.map((part, idx) => {
-                      if (part.type === 'thinking') {
+                      if (
+                        part.type === 'thinking' &&
+                        !targetMessageIds.has(message.id)
+                      ) {
                         return (
                           <div
                             key={idx}
@@ -349,6 +401,26 @@ function RouteComponent() {
                           >
                             <Loader className="animate-spin size-4" />
                             {part.content}
+                          </div>
+                        )
+                      }
+
+                      if (
+                        part.type === 'thinking' &&
+                        targetMessageIds.has(message.id)
+                      ) {
+                        return (
+                          <div
+                            key={idx}
+                            className="flex items-center gap-2 text-zinc-500 italic mb-3 pb-3 border-b border-zinc-800/50"
+                          >
+                            <pre
+                              className={cn(
+                                'whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800',
+                              )}
+                            >
+                              {part.content}
+                            </pre>
                           </div>
                         )
                       }

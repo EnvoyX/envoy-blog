@@ -10,7 +10,8 @@ import HeaderChat from '../web/HeaderChat'
 import { Button } from '../ui/button'
 import { cn } from '@/lib/utils'
 import { ChatInput } from './ChatInput'
-import { useNavigate } from '@tanstack/react-router'
+import { toast } from 'sonner'
+import { UseNavigateResult } from '@tanstack/react-router'
 
 function CopyButton({ content }: { content: string }) {
   const [copied, setCopied] = useState(false)
@@ -42,17 +43,21 @@ export function Chat({
   apiRoute,
   model,
   chatId,
+  selectedModel,
+  navigate,
 }: {
   apiRoute: string
-  model: string
+  model: 'openrouter' | 'gemini' | 'groq'
   chatId: string
+  selectedModel: string | undefined
+  navigate: UseNavigateResult<'/chat/$adapter/'>
 }) {
   const [targetMessageIds, setTargetMessageIds] = useState<Set<string>>(
     new Set(),
   )
+  const currentModel = selectedModel
   const queryClient = useQueryClient()
   const scrollRef = useRef<HTMLDivElement>(null)
-  const navigate = useNavigate()
   const { data } = useQuery({
     queryKey: ['get-session'],
     queryFn: async () => {
@@ -76,17 +81,53 @@ export function Chat({
           adapter: model,
           chatId: `chat-${chatId}`,
         },
+        search: {
+          model: currentModel as string,
+        },
       })
     },
   })
 
+  function onModelChange(model: string) {
+    navigate({
+      search: (prev) => ({ ...prev, model: model }),
+      replace: true,
+      reloadDocument: true,
+    })
+  }
+
   const { messages, sendMessage, isLoading } = useChat({
     id: chatId,
-    connection: fetchServerSentEvents(apiRoute, {
-      body: {
-        conversationId: `chat-${chatId}`,
+    connection: fetchServerSentEvents(
+      () => apiRoute,
+      async () => {
+        console.log(`[AI Engine]: Initiating ${currentModel}`)
+        return {
+          body: {
+            conversationId: `chat-${chatId}`,
+            requestModel: currentModel,
+          },
+        }
       },
-    }),
+    ),
+    onError(error) {
+      toast.error('Error has been occured', {
+        description:
+          'Please try again or try use different model. The model you used may not available right now.',
+        duration: 5000,
+      })
+      console.error(error.message)
+      navigate({
+        to: '/chat/$adapter/$chatId',
+        params: {
+          adapter: model,
+          chatId: `chat-${chatId}`,
+        },
+        search: {
+          model: '',
+        },
+      })
+    },
     onFinish: (message) => {
       console.log('Message from Client: ', message)
       mutate({
@@ -105,8 +146,13 @@ export function Chat({
       })
     },
   })
-
   function onSend(input: string) {
+    if (!currentModel) {
+      toast.error('Select the model first!')
+      return
+    }
+    sendMessage(input)
+
     sendMessage(input)
   }
 
@@ -118,7 +164,12 @@ export function Chat({
 
   return (
     <div className="flex flex-col h-screen bg-[#09090b] text-zinc-100 selection:bg-blue-500/30">
-      <HeaderChat model={model} />
+      <HeaderChat
+        currentModel={currentModel as string}
+        model={model}
+        provider={model}
+        onModelChange={onModelChange}
+      />
       <div
         ref={scrollRef}
         className="flex-1 overflow-y-auto scrollbar-hide space-y-8 py-8 px-4"

@@ -43,7 +43,8 @@ export const Route = createFileRoute('/api/chat-gemini')({
           },
         }
 
-        const { messages, conversationId } = await request.json()
+        const { messages, conversationId, requestModel } = await request.json()
+        console.log('Requested Model: ', requestModel)
         console.log('ChatId/ConversationId from body request', conversationId)
         console.log('Messages: ', messages)
         console.log(
@@ -139,7 +140,8 @@ export const Route = createFileRoute('/api/chat-gemini')({
           }
 
           const stream = chat({
-            adapter: geminiText('gemini-2.5-flash'),
+            adapter: geminiText(requestModel),
+            // adapter: geminiText('gemini-2.5-flash'),
             messages,
             middleware: [logger, usageTracker, terminal],
             conversationId: chatId,

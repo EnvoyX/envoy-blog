@@ -42,7 +42,8 @@ export const Route = createFileRoute('/api/chat-openrouter')({
           },
         }
 
-        const { messages, conversationId } = await request.json()
+        const { messages, conversationId, requestModel } = await request.json()
+        console.log('Requested Model: ', requestModel)
         console.log('ChatId/ConversationId from body request', conversationId)
         console.log('Messages: ', messages)
         console.log(
@@ -138,7 +139,8 @@ export const Route = createFileRoute('/api/chat-openrouter')({
           }
 
           const stream = chat({
-            adapter: openRouterText('google/gemma-4-31b-it:free'),
+            adapter: openRouterText(requestModel),
+            // adapter: openRouterText('google/gemma-4-31b-it:free'),
             messages,
             middleware: [logger, usageTracker, terminal],
             conversationId: chatId,

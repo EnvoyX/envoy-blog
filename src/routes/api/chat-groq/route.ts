@@ -43,7 +43,8 @@ export const Route = createFileRoute('/api/chat-groq')({
           },
         }
 
-        const { messages, conversationId } = await request.json()
+        const { messages, conversationId, requestModel } = await request.json()
+        console.log('Requested Model: ', requestModel)
         console.log('ChatId/ConversationId from body request', conversationId)
         console.log('Messages: ', messages)
         console.log(
@@ -139,7 +140,8 @@ export const Route = createFileRoute('/api/chat-groq')({
           }
 
           const stream = chat({
-            adapter: groqText('llama-3.3-70b-versatile'),
+            adapter: groqText(requestModel),
+            // adapter: groqText('llama-3.3-70b-versatile'),
             messages,
             middleware: [logger, usageTracker, terminal],
             conversationId: chatId,

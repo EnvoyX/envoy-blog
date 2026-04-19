@@ -24,17 +24,30 @@ export const getChatHistoryFn = createServerFn({ method: 'GET' })
 
     if (!chat) return null
 
-    const formattedMessages = chat.messages.map((msg) => ({
-      id: msg.messageId,
-      role: msg.role.toLowerCase() as MessageRole,
-      createdAt: msg.createdAt.toISOString(),
-      parts: [
-        {
-          type: 'text',
-          content: msg.content,
-        },
-      ],
-    }))
+    const formattedMessages = chat.messages.map((msg) => {
+      const msgParts =
+        typeof msg.parts === 'string'
+          ? JSON.parse(msg.parts)
+          : (msg.parts as any[])
+
+      return {
+        id: msg.messageId,
+        role: msg.role.toLowerCase() as MessageRole,
+        createdAt: msg.createdAt.toISOString(),
+        parts: msgParts.map((part: any) => {
+          if (part.type === 'thinking') {
+            return {
+              type: 'thinking',
+              content: part.content,
+            }
+          }
+          return {
+            type: 'text',
+            content: part.content,
+          }
+        }),
+      }
+    })
 
     return {
       chatId: chat.id,

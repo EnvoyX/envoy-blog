@@ -14,6 +14,7 @@ function RouteComponent() {
         'Google’s multimodal powerhouse. Features 1M+ context window and native video/audio processing.',
       icon: <Bot className="w-6 h-6 text-blue-400" />,
       color: 'border-blue-500/20 hover:border-blue-500/50',
+      defaultModel: 'gemini-2.5-flash',
     },
     {
       id: 'groq',
@@ -22,6 +23,7 @@ function RouteComponent() {
         'Insane inference speeds powered by LPU hardware. Ideal for real-time, ultra-fast chat responses.',
       icon: <Zap className="w-6 h-6 text-orange-400" />,
       color: 'border-orange-500/20 hover:border-orange-500/50',
+      defaultModel: 'llama-3.3-70b-versatile',
     },
     {
       id: 'openrouter',
@@ -30,6 +32,7 @@ function RouteComponent() {
         'A unified gateway to every model imaginable. Compare prices and switch models on the fly.',
       icon: <Globe className="w-6 h-6 text-cyan-400" />,
       color: 'border-cyan-500/20 hover:border-cyan-500/50',
+      defaultModel: 'google/gemma-4-31b-it:free',
     },
   ]
 
@@ -51,7 +54,7 @@ function RouteComponent() {
         {models.map((model) => (
           <a
             key={model.id}
-            href={`chat/${model.id}`}
+            href={`chat/${model.id}?model=${model.defaultModel}`}
             className={`group relative flex flex-col p-8 max-sm:p-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 ${model.color} hover:-translate-y-1`}
           >
             <div className="mb-4 p-3 rounded-lg bg-white/5 w-fit group-hover:scale-110 transition-transform max-sm:mx-auto">

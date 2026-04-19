@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateChatTitleFn, deleteChatFn } from '@/data/chat-ai'
-import { formatDistanceToNow } from 'date-fns'
+// import { formatDistanceToNow } from 'date-fns'
 import {
   Dialog,
   DialogContent,
@@ -43,11 +43,11 @@ import { Chat } from '@/generated/prisma/client'
 
 export function ChatItem({ chat }: { chat: Chat }) {
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
   const [newTitle, setNewTitle] = useState(chat.title || '')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const navigate = useNavigate()
 
   const updateMutation = useMutation({
     mutationFn: updateChatTitleFn,
@@ -62,8 +62,13 @@ export function ChatItem({ chat }: { chat: Chat }) {
     mutationFn: deleteChatFn,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['chats'] })
+      navigate({
+        to: '/chat/$adapter',
+        params: {
+          adapter: 'openrouter',
+        },
+      })
       toast.success('Delete chat successfully!')
-      navigate({ to: '/chat' })
     },
   })
 

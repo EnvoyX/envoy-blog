@@ -2,7 +2,7 @@ import { getUser } from '@/data/session'
 import { authClient } from '@/lib/auth-client'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { Loader2, LogOut, Menu, Sparkles } from 'lucide-react'
+import { Cpu, Loader2, LogOut, Menu, Sparkles } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { sidebarNavItems } from './NavItems'
@@ -18,8 +18,28 @@ import { Button, buttonVariants } from '../ui/button'
 import { UserAvatar } from './user-profile'
 import { useSidebarMobileStore } from '@/store/sidebar'
 import { SidebarTrigger } from '../ui/sidebar'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { MODEL_CONFIG } from '@/lib/constants'
 
-export default function HeaderChat({ model }: { model: string }) {
+interface ModelChange {
+  model: string
+  currentModel: string
+  onModelChange: (model: string) => void
+  provider?: keyof typeof MODEL_CONFIG
+}
+
+export default function HeaderChat({
+  model,
+  currentModel,
+  onModelChange,
+  provider = 'openrouter',
+}: ModelChange) {
   const session = useQuery({
     queryKey: ['get-session'],
     queryFn: async () => {
@@ -31,6 +51,7 @@ export default function HeaderChat({ model }: { model: string }) {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [isTransition, startTransition] = useTransition()
+  const availableModels = MODEL_CONFIG[provider]
   const handleLogout = () => {
     setIsLoading(true)
     startTransition(async () => {
@@ -73,14 +94,56 @@ export default function HeaderChat({ model }: { model: string }) {
               <Menu className="size-6 text-primary" />
             </Button>
           </div>
-          <div className="bg-emerald-600 p-1.5 rounded-lg shadow-lg shadow-blue-600/20">
-            <Sparkles size={18} className="text-white" />
+          <div className="flex items-center sm:hidden">
+            <Select value={currentModel} onValueChange={onModelChange}>
+              <SelectTrigger className="w-18 h-7 bg-zinc-900/50 border-zinc-800 text-[10px] uppercase tracking-wider font-bold text-zinc-400 hover:text-zinc-200 transition-colors rounded-full px-3 gap-2 outline-none ring-0 focus:ring-0">
+                <Cpu size={12} className="text-blue-500" />
+                <SelectValue placeholder="Select Model" />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-950 border-zinc-800 text-zinc-200">
+                {availableModels.map((m) => (
+                  <SelectItem
+                    key={m.value}
+                    value={m.value}
+                    className="text-xs focus:bg-zinc-900 focus:text-white cursor-pointer"
+                  >
+                    {m.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <h1 className="font-bold tracking-tight text-lg">Envoy Chat</h1>
+          <div className="flex items-center gap-2 max-sm:hidden">
+            <div className="bg-emerald-600 p-1.5 rounded-lg shadow-lg shadow-blue-600/20">
+              <Sparkles size={18} className="text-white" />
+            </div>
+            <h1 className="font-bold tracking-tight text-lg">Envoy Chat</h1>
+          </div>
         </div>
-        <div className="flex items-center gap-2 text-xs font-medium text-zinc-500 uppercase">
-          <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-          {model}
+        <div className="flex max-sm:flex-col max-sm:gap-1 items-center gap-4">
+          <div className="flex items-center gap-2 text-xs font-medium text-zinc-500 uppercase">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            {model}
+          </div>
+          <div className="flex items-center max-sm:hidden">
+            <Select value={currentModel} onValueChange={onModelChange}>
+              <SelectTrigger className="w-fit h-7 bg-zinc-900/50 border-zinc-800 text-[10px] uppercase tracking-wider font-bold text-zinc-400 hover:text-zinc-200 transition-colors rounded-full px-3 gap-2 outline-none ring-0 focus:ring-0">
+                <Cpu size={12} className="text-blue-500" />
+                <SelectValue placeholder="Select Model" />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-950 border-zinc-800 text-zinc-200">
+                {availableModels.map((m) => (
+                  <SelectItem
+                    key={m.value}
+                    value={m.value}
+                    className="text-xs focus:bg-zinc-900 focus:text-white cursor-pointer"
+                  >
+                    {m.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <div className="flex items-center justify-between gap-4 max-sm:hidden">
           {session.isPending ? (
