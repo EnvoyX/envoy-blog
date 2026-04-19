@@ -7,14 +7,14 @@ import Editor from '@uiw/react-md-editor'
 import { getPostFn } from '@/data/blog'
 import { getUser } from '@/data/session'
 
-export const Route = createFileRoute('/dashboard/blog/$slug/edit/md-editor')({
+export const Route = createFileRoute('/_general/blog/$slug/edit/md-editor')({
   component: RouteComponent,
   loader: async ({ params }) => {
     const post = await getPostFn({ data: params.slug })
     const session = await getUser()
     if (session.user.id !== post?.authorId) {
       throw redirect({
-        to: '/dashboard/blog',
+        to: '/blog',
       })
     }
     return {
@@ -64,7 +64,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="p-6 md:p-10 bg-black min-h-screen text-slate-50">
+    <div className="p-6 md:p-10  min-h-screen text-slate-50">
       <div className="max-w-5xl mx-auto space-y-6">
         <div className="flex justify-center max-sm:gap-4 max-sm:flex-col sm:justify-between items-center">
           <div>
@@ -75,10 +75,7 @@ function RouteComponent() {
           </div>
           <div className="flex gap-3">
             <Button variant="default" className="gap-2" asChild>
-              <Link
-                to="/dashboard/blog/$slug/edit"
-                params={{ slug: post?.slug ?? '' }}
-              >
+              <Link to="/blog/$slug/edit" params={{ slug: post?.slug ?? '' }}>
                 <ChevronLeft className="size-4" /> Edit Blog
               </Link>
             </Button>

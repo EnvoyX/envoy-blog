@@ -87,6 +87,7 @@ function RouteComponent() {
             onChange={(value) => {
               setMarkdown(value as string)
             }}
+            height={600}
           />
         </Card>
       </div>

@@ -208,8 +208,8 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                     <Link
                       to={
                         initialData
-                          ? '/dashboard/blog/$slug/edit/md-editor'
-                          : '/dashboard/blog/md-editor'
+                          ? '/blog/$slug/edit/md-editor'
+                          : '/blog/md-editor'
                       }
                       params={{
                         slug: initialData?.slug,
@@ -262,10 +262,10 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
   )
 
   return (
-    <div className="px-2 min-h-screen flex flex-col w-full mx-auto">
+    <div className="p-12 min-h-screen flex flex-col w-full mx-auto">
       <header className="flex items-center mb-4">
         <Button variant="default" asChild className="">
-          <Link to="/dashboard/blog">
+          <Link to="/blog">
             <ChevronLeft className="mr-2 size-4" />
             Back to Blog
           </Link>
@@ -285,9 +285,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
             <Button variant={'outline'} asChild>
               <Link
                 to={
-                  initialData
-                    ? '/dashboard/blog/$slug/edit/md-editor'
-                    : '/dashboard/blog/md-editor'
+                  initialData ? '/blog/$slug/edit/md-editor' : '/blog/md-editor'
                 }
                 params={{
                   slug: initialData?.slug,
@@ -403,8 +401,8 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
       </main>
 
       {/* DESKSTOP */}
-      <main className="hidden md:grid grid-cols-2 gap-6 max-h-250 flex-1">
-        <Card className="flex flex-col h-full">
+      <main className="hidden md:grid grid-cols-2 gap-6 min-h-screen flex-1">
+        <Card className="flex flex-col h-250">
           <CardHeader>
             <CardTitle className="text-sm font-medium uppercase text-muted-foreground">
               Editor
@@ -413,7 +411,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
           <CardContent>{EditorFields}</CardContent>
         </Card>
 
-        <Card className="flex flex-col bg-slate-50/50 dark:bg-slate-900/50 border-dashed overflow-auto">
+        <Card className="flex flex-col bg-slate-50/50 dark:bg-slate-900/50 border-dashed overflow-auto h-250">
           <CardHeader>
             <CardTitle className="text-sm font-medium uppercase text-muted-foreground">
               Live Preview

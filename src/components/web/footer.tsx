@@ -1,9 +1,8 @@
 import { authClient } from '@/lib/auth-client'
-import { NavProps } from '@/lib/types'
 import { useQuery } from '@tanstack/react-query'
-import { linkOptions } from '@tanstack/react-router'
 import { Link } from '@tanstack/react-router'
 import { ArrowUpRight, Command, ShieldCheck, Zap } from 'lucide-react'
+import { navItemsMain, sidebarNavItems } from './NavItems'
 
 export function Footer() {
   const { data: session } = useQuery({
@@ -14,75 +13,6 @@ export function Footer() {
     },
   })
   const currentYear = new Date().getFullYear()
-
-  const navItems: NavProps['items'] = linkOptions([
-    {
-      title: 'Blog',
-      to: '/blog',
-      activeOptions: {
-        exact: false,
-      },
-    },
-  ])
-
-  const sidebarNavItems: NavProps['items'] = linkOptions([
-    {
-      title: 'Dashboard',
-      to: '/dashboard',
-      activeOptions: {
-        exact: true,
-      },
-    },
-    {
-      title: 'Profile',
-      to: '/dashboard/profile',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: 'Task Tracker',
-      to: '/dashboard/task-tracker',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: "Qur'an Tracker",
-      to: '/dashboard/quran-tracker',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: 'My Blogs',
-      to: '/dashboard/blog',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: 'Items',
-      to: '/dashboard/items',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: 'Import',
-      to: '/dashboard/import',
-      activeOptions: {
-        exact: false,
-      },
-    },
-    {
-      title: 'Discover',
-      to: '/dashboard/discover',
-      activeOptions: {
-        exact: false,
-      },
-    },
-  ])
 
   return (
     <footer className="relative border-t border-white/10 bg-background/60 backdrop-blur-md">
@@ -170,7 +100,7 @@ export function Footer() {
               Navigation
             </h4>
             <ul className="space-y-3 text-sm grid grid-cols-2">
-              {navItems.map((item, idx) => {
+              {navItemsMain.map((item, idx) => {
                 return (
                   <li key={idx}>
                     <Link

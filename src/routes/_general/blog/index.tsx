@@ -1,24 +1,62 @@
-// src/routes/blog.index.tsx
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { allPosts } from '../../../../.content-collections/generated'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import { Calendar, Search } from 'lucide-react'
-import { intlFormat } from 'date-fns'
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
+import {
+  Plus,
+  MoreVertical,
+  Pencil,
+  Trash2,
+  ExternalLink,
+  Calendar,
+  LucideClockFading,
+  ListXIcon,
+  Loader2,
+  Search,
+  Heart,
+  MessageSquare,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { deletePostFn, getPostsFn } from '@/data/blog'
+import { toast } from 'sonner'
+import { intlFormat, intlFormatDistance } from 'date-fns'
+import { createStore, useSelector } from '@tanstack/react-store'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from '@/components/ui/dialog'
+import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { useDebouncedCallback } from '@tanstack/react-pacer'
-import { useState } from 'react'
+import { zodValidator } from '@tanstack/zod-adapter'
+import { postPublishedSearchSchema } from '@/schemas/blog'
 
 export const Route = createFileRoute('/_general/blog/')({
-  component: BlogIndex,
+  loader: () => getPostsFn(),
+  component: BlogPageComponent,
+  validateSearch: zodValidator(postPublishedSearchSchema),
   head: () => ({
     meta: [
-      { title: `Blog | Envoy Mindpalace` },
+      { title: `My Blogs | Envoy Mindpalace` },
       {
         name: 'Envoy Mindpalace',
         content: 'Welcome to my TanStack Start playground!',
       },
-      { property: 'og:title', content: 'Blog | Envoy Mindpalace' },
+      { property: 'og:title', content: 'My Blogs | Envoy Mindpalace' },
       {
         property: 'og:description',
         content: 'Create your own blog and write your thoughts!',
@@ -32,53 +70,76 @@ export const Route = createFileRoute('/_general/blog/')({
   }),
 })
 
-function BlogIndex() {
-  const [posts, setPosts] = useState(allPosts)
+function BlogPageComponent() {
+  const allPosts = Route.useLoaderData()
+  const { query } = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath })
+  const router = useRouter()
+  const [modalStore] = useState(() =>
+    createStore({
+      dialogId: '',
+      isOpen: false,
+      isLoading: false,
+    }),
+  )
+  const isOpen = useSelector(modalStore, (state) => state.isOpen)
+  const isLoading = useSelector(modalStore, (state) => state.isLoading)
 
-  function performSearch(searchTerm: string) {
-    const searchedPosts = allPosts.filter((post) => {
-      const matchedQuery =
-        searchTerm === '' ||
-        post.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPosts = allPosts.filter((post) => {
+    const matchedQuery =
+      post.title?.toLowerCase().includes(query.toLowerCase()) ||
+      post.description?.toLowerCase().includes(query.toLowerCase()) ||
+      query === ''
 
-      return matchedQuery
-    })
-
-    setPosts(searchedPosts)
-  }
+    return matchedQuery
+  })
 
   const debouncedSearch = useDebouncedCallback(
-    (searchTerm: string) => performSearch(searchTerm),
+    (searchTerm: string) => {
+      navigate({
+        search: (prev) => ({ ...prev, query: searchTerm }),
+      })
+    },
     {
       wait: 500, // Wait 500ms after last keystroke
     },
   )
 
-  // Posts are sorted by published date
-  const sortedPosts = posts.sort(
-    (a, b) => new Date(b.published).getTime() - new Date(a.published).getTime(),
-  )
+  //   const { unsubscribe } = modalStore.subscribe(() => {
+  //     console.log('The state is now:', modalStore.state)
+  //   })
 
   return (
-    <div className="min-h-screen bg-black text-slate-50 p-6 md:p-10">
-      <div className="max-w-7xl mx-auto max-sm:flex-col max-sm:flex max-sm:items-center">
+    <div className="min-h-screen text-slate-50 my-16">
+      <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col ">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black tracking-tight text-white max-sm:text-center">
-              Blog
+            <h1 className="text-4xl font-black tracking-tight text-white">
+              Blog Posts
             </h1>
-            <p className="text-slate-400 mt-2 max-sm:text-center">
-              The latest news and blog posts.
-            </p>
+            <p className="text-slate-400 mt-2">View latest blog posts.</p>
           </div>
-          <div className="relative w-full md:w-80 group">
-            <div className="absolute inset-y-0 z-10 left-3 flex items-center pointer-events-none">
+          <Button
+            asChild
+            size="lg"
+            className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 shadow-lg shadow-emerald-500/20 cursor-pointer"
+          >
+            <Link to="/blog/create-blog" className="gap-2">
+              <Plus className="size-5" />
+              Create New Post
+            </Link>
+          </Button>
+        </div>
+
+        <div className="flex max-sm:flex-col items-center max-sm:justify-center gap-4 mb-8">
+          <div className="relative w-full  group">
+            <div className="absolute inset-y-0 z-10 left-3 flex items-center  pointer-events-none">
               <Search className="size-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
             </div>
             <Input
               type="search"
               placeholder="Search blogs..."
-              className="pl-10 bg-emerald-900/40 border-emerald-800 focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
+              className="pl-10 bg-emerald-900/40  focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
               onChange={(e) => {
                 debouncedSearch(e.target.value)
               }}
@@ -86,38 +147,86 @@ function BlogIndex() {
           </div>
         </div>
 
-        {/* Empty State */}
-        {sortedPosts.length === 0 && (
+        {filteredPosts.length === 0 && (
           <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
             <p className="text-slate-500">
-              No posts found. Start your journey today!
+              No posts found. Create your first blog post!
             </p>
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {sortedPosts.map((post) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
+          {filteredPosts.map((post) => (
             <Card
-              key={post.slug}
+              key={post.id}
               className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0"
             >
               <div className="aspect-video relative overflow-hidden">
                 <img
                   src={
-                    post.headerImage ??
-                    'https://tanstack.com/assets/og-C0HGjoLl.png'
+                    post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'
                   }
                   alt={post.title}
                   className="object-cover w-full h-full transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
+
+                <div className="absolute top-3 right-3">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="secondary"
+                        size="icon"
+                        className="size-8 rounded-full bg-slate-950/50 backdrop-blur-md border-slate-700 hover:bg-slate-800 cursor-pointer"
+                      >
+                        <MoreVertical className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      className="w-40 bg-slate-900 border-slate-800 text-slate-200"
+                    >
+                      <DropdownMenuItem
+                        asChild
+                        className="cursor-pointer gap-2"
+                      >
+                        <Link to="/blog/$slug" params={{ slug: post.slug }}>
+                          <ExternalLink className="size-4" /> View Post
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer gap-2">
+                        <Link
+                          to="/blog/$slug/edit"
+                          params={{ slug: post.slug }}
+                          className="flex gap-1"
+                        >
+                          <Pencil className="size-4" /> Edit Post
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          modalStore.setState((prev) => {
+                            return {
+                              ...prev,
+                              isOpen: !prev.isOpen,
+                              dialogId: post.id,
+                            }
+                          })
+                        }}
+                        className="cursor-pointer gap-2 text-red-400 focus:text-red-400 focus:bg-red-400/10"
+                      >
+                        <Trash2 className="size-4" /> Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
 
               <CardContent className="p-6 flex-1">
-                <div className="flex flex-col justify-center items-start sm:flex-row sm:justify-between sm:items-center">
+                <div className="flex flex-col justify-start items-start sm:flex-row  sm:items-center">
                   <div className="flex items-center gap-2 text-xs text-slate-500 mb-3 uppercase tracking-widest font-semibold">
                     <Calendar className="size-3" />
-                    {intlFormat(new Date(post.published), {
+                    {intlFormat(new Date(post.createdAt), {
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric',
@@ -127,16 +236,39 @@ function BlogIndex() {
                 <h2 className="text-xl font-bold leading-tight group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
                   {post.title}
                 </h2>
+
                 <p className="text-slate-400 text-sm line-clamp-3 leading-relaxed">
                   {post.description}
                 </p>
               </CardContent>
 
-              <CardFooter className="p-6 pt-0">
+              <CardFooter className="p-6 pt-0 flex flex-col justify-start items-start gap-1">
+                <span className="absolute flex items-center gap-3 bottom-6 right-3 group">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-emerald-500/30 transition-colors">
+                    <Heart
+                      className={`size-3.5 ${post._count.likes > 0 ? 'fill-emerald-500 text-emerald-500' : ''}`}
+                    />
+                    <span className="text-[11px] font-bold tabular-nums">
+                      {post._count.likes}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-blue-500/30 transition-colors">
+                    <MessageSquare className="size-3.5" />
+                    <span className="text-[11px] font-bold tabular-nums">
+                      {post._count.comments}
+                    </span>
+                  </div>
+                </span>
+                <div className="flex items-center gap-2 text-xs text-slate-500 mt-3 uppercase tracking-widest font-semibold">
+                  <LucideClockFading className="size-3" />
+                  {intlFormatDistance(new Date(post.updatedAt), new Date())}
+                </div>
+
                 <Button
                   asChild
                   variant="link"
-                  className="p-0 h-auto text-emerald-400 hover:text-emerald-300 gap-2"
+                  className="p-0 h-auto text-emerald-400 hover:text-emerald-300 gap-2 cursor-pointer"
                 >
                   <Link to="/blog/$slug" params={{ slug: post.slug }}>
                     Read Full Blog →
@@ -146,6 +278,78 @@ function BlogIndex() {
             </Card>
           ))}
         </div>
+        <Dialog
+          open={isOpen}
+          onOpenChange={(open) => {
+            modalStore.setState((prev) => {
+              return {
+                ...prev,
+                isOpen: open,
+              }
+            })
+          }}
+        >
+          <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
+            <form
+              onSubmit={async (e) => {
+                modalStore.setState((prev) => {
+                  return {
+                    ...prev,
+                    isLoading: true,
+                  }
+                })
+                e.preventDefault()
+                await deletePostFn({
+                  data: {
+                    postId: modalStore.state.dialogId,
+                  },
+                })
+                toast.success('Post deleted')
+                router.invalidate()
+                modalStore.setState((prev) => {
+                  return {
+                    ...prev,
+                    isLoading: false,
+                    dialogId: '',
+                  }
+                })
+                // unsubscribe()
+              }}
+            >
+              <DialogHeader className="mb-6">
+                <DialogTitle>Delete Task List</DialogTitle>
+                <DialogDescription>
+                  Are you sure to delete this task list? This action cannot be
+                  undone.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="mt-6">
+                <DialogClose asChild>
+                  <Button variant="outline" className="cursor-pointer">
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="cursor-pointer"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <ListXIcon className="size-4" />
+                      Delete
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )

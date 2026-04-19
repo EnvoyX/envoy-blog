@@ -27,20 +27,26 @@ import { Route as DashboardQuranTrackerIndexRouteImport } from './routes/dashboa
 import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
 import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
 import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog/index'
+import { Route as GeneralArticleIndexRouteImport } from './routes/_general/article/index'
 import { Route as ChatChatIndexRouteImport } from './routes/_chat/chat/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as DashboardTaskTrackerTaskListIdRouteImport } from './routes/dashboard/task-tracker/$taskListId'
 import { Route as DashboardItemsItemIdRouteImport } from './routes/dashboard/items/$itemId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiAiSummaryRouteImport } from './routes/api/ai/summary'
-import { Route as GeneralBlogSlugRouteImport } from './routes/_general/blog/$slug'
+import { Route as GeneralArticleSlugRouteImport } from './routes/_general/article/$slug'
 import { Route as ChatChatChatboxRouteRouteImport } from './routes/_chat/chat/_chatbox/route'
 import { Route as DashboardBlogMdEditorIndexRouteImport } from './routes/dashboard/blog/md-editor/index'
 import { Route as DashboardBlogCreateBlogIndexRouteImport } from './routes/dashboard/blog/create-blog/index'
 import { Route as DashboardBlogSlugIndexRouteImport } from './routes/dashboard/blog/$slug.index'
+import { Route as GeneralBlogMdEditorIndexRouteImport } from './routes/_general/blog/md-editor/index'
+import { Route as GeneralBlogCreateBlogIndexRouteImport } from './routes/_general/blog/create-blog/index'
+import { Route as GeneralBlogSlugIndexRouteImport } from './routes/_general/blog/$slug.index'
 import { Route as DashboardBlogSlugEditIndexRouteImport } from './routes/dashboard/blog/$slug.edit.index'
+import { Route as GeneralBlogSlugEditIndexRouteImport } from './routes/_general/blog/$slug.edit.index'
 import { Route as ChatChatChatboxAdapterIndexRouteImport } from './routes/_chat/chat/_chatbox/$adapter.index'
 import { Route as DashboardBlogSlugEditMdEditorRouteImport } from './routes/dashboard/blog/$slug.edit.md-editor'
+import { Route as GeneralBlogSlugEditMdEditorRouteImport } from './routes/_general/blog/$slug.edit.md-editor'
 import { Route as ChatChatChatboxAdapterChatIdIndexRouteImport } from './routes/_chat/chat/_chatbox/$adapter.$chatId.index'
 
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
@@ -133,6 +139,11 @@ const GeneralBlogIndexRoute = GeneralBlogIndexRouteImport.update({
   path: '/blog/',
   getParentRoute: () => GeneralRouteRoute,
 } as any)
+const GeneralArticleIndexRoute = GeneralArticleIndexRouteImport.update({
+  id: '/article/',
+  path: '/article/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
 const ChatChatIndexRoute = ChatChatIndexRouteImport.update({
   id: '/_chat/chat/',
   path: '/chat/',
@@ -164,9 +175,9 @@ const ApiAiSummaryRoute = ApiAiSummaryRouteImport.update({
   path: '/api/ai/summary',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GeneralBlogSlugRoute = GeneralBlogSlugRouteImport.update({
-  id: '/blog/$slug',
-  path: '/blog/$slug',
+const GeneralArticleSlugRoute = GeneralArticleSlugRouteImport.update({
+  id: '/article/$slug',
+  path: '/article/$slug',
   getParentRoute: () => GeneralRouteRoute,
 } as any)
 const ChatChatChatboxRouteRoute = ChatChatChatboxRouteRouteImport.update({
@@ -191,11 +202,34 @@ const DashboardBlogSlugIndexRoute = DashboardBlogSlugIndexRouteImport.update({
   path: '/blog/$slug/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const GeneralBlogMdEditorIndexRoute =
+  GeneralBlogMdEditorIndexRouteImport.update({
+    id: '/blog/md-editor/',
+    path: '/blog/md-editor/',
+    getParentRoute: () => GeneralRouteRoute,
+  } as any)
+const GeneralBlogCreateBlogIndexRoute =
+  GeneralBlogCreateBlogIndexRouteImport.update({
+    id: '/blog/create-blog/',
+    path: '/blog/create-blog/',
+    getParentRoute: () => GeneralRouteRoute,
+  } as any)
+const GeneralBlogSlugIndexRoute = GeneralBlogSlugIndexRouteImport.update({
+  id: '/blog/$slug/',
+  path: '/blog/$slug/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
 const DashboardBlogSlugEditIndexRoute =
   DashboardBlogSlugEditIndexRouteImport.update({
     id: '/blog/$slug/edit/',
     path: '/blog/$slug/edit/',
     getParentRoute: () => DashboardRouteRoute,
+  } as any)
+const GeneralBlogSlugEditIndexRoute =
+  GeneralBlogSlugEditIndexRouteImport.update({
+    id: '/blog/$slug/edit/',
+    path: '/blog/$slug/edit/',
+    getParentRoute: () => GeneralRouteRoute,
   } as any)
 const ChatChatChatboxAdapterIndexRoute =
   ChatChatChatboxAdapterIndexRouteImport.update({
@@ -208,6 +242,12 @@ const DashboardBlogSlugEditMdEditorRoute =
     id: '/blog/$slug/edit/md-editor',
     path: '/blog/$slug/edit/md-editor',
     getParentRoute: () => DashboardRouteRoute,
+  } as any)
+const GeneralBlogSlugEditMdEditorRoute =
+  GeneralBlogSlugEditMdEditorRouteImport.update({
+    id: '/blog/$slug/edit/md-editor',
+    path: '/blog/$slug/edit/md-editor',
+    getParentRoute: () => GeneralRouteRoute,
   } as any)
 const ChatChatChatboxAdapterChatIdIndexRoute =
   ChatChatChatboxAdapterChatIdIndexRouteImport.update({
@@ -228,24 +268,30 @@ export interface FileRoutesByFullPath {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/chat': typeof ChatChatChatboxRouteRouteWithChildren
-  '/blog/$slug': typeof GeneralBlogSlugRoute
+  '/article/$slug': typeof GeneralArticleSlugRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/login/': typeof AuthLoginIndexRoute
   '/chat/': typeof ChatChatIndexRoute
+  '/article/': typeof GeneralArticleIndexRoute
   '/blog/': typeof GeneralBlogIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
   '/dashboard/tic-tac-toe/': typeof DashboardTicTacToeIndexRoute
+  '/blog/$slug/': typeof GeneralBlogSlugIndexRoute
+  '/blog/create-blog/': typeof GeneralBlogCreateBlogIndexRoute
+  '/blog/md-editor/': typeof GeneralBlogMdEditorIndexRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
+  '/blog/$slug/edit/md-editor': typeof GeneralBlogSlugEditMdEditorRoute
   '/dashboard/blog/$slug/edit/md-editor': typeof DashboardBlogSlugEditMdEditorRoute
   '/chat/$adapter/': typeof ChatChatChatboxAdapterIndexRoute
+  '/blog/$slug/edit/': typeof GeneralBlogSlugEditIndexRoute
   '/dashboard/blog/$slug/edit/': typeof DashboardBlogSlugEditIndexRoute
   '/chat/$adapter/$chatId/': typeof ChatChatChatboxAdapterChatIdIndexRoute
 }
@@ -260,23 +306,29 @@ export interface FileRoutesByTo {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard': typeof DashboardIndexRoute
   '/chat': typeof ChatChatIndexRoute
-  '/blog/$slug': typeof GeneralBlogSlugRoute
+  '/article/$slug': typeof GeneralArticleSlugRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/login': typeof AuthLoginIndexRoute
+  '/article': typeof GeneralArticleIndexRoute
   '/blog': typeof GeneralBlogIndexRoute
   '/dashboard/blog': typeof DashboardBlogIndexRoute
   '/dashboard/items': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker': typeof DashboardTaskTrackerIndexRoute
   '/dashboard/tic-tac-toe': typeof DashboardTicTacToeIndexRoute
+  '/blog/$slug': typeof GeneralBlogSlugIndexRoute
+  '/blog/create-blog': typeof GeneralBlogCreateBlogIndexRoute
+  '/blog/md-editor': typeof GeneralBlogMdEditorIndexRoute
   '/dashboard/blog/$slug': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor': typeof DashboardBlogMdEditorIndexRoute
+  '/blog/$slug/edit/md-editor': typeof GeneralBlogSlugEditMdEditorRoute
   '/dashboard/blog/$slug/edit/md-editor': typeof DashboardBlogSlugEditMdEditorRoute
   '/chat/$adapter': typeof ChatChatChatboxAdapterIndexRoute
+  '/blog/$slug/edit': typeof GeneralBlogSlugEditIndexRoute
   '/dashboard/blog/$slug/edit': typeof DashboardBlogSlugEditIndexRoute
   '/chat/$adapter/$chatId': typeof ChatChatChatboxAdapterChatIdIndexRoute
 }
@@ -295,24 +347,30 @@ export interface FileRoutesById {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/_chat/chat/_chatbox': typeof ChatChatChatboxRouteRouteWithChildren
-  '/_general/blog/$slug': typeof GeneralBlogSlugRoute
+  '/_general/article/$slug': typeof GeneralArticleSlugRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_chat/chat/': typeof ChatChatIndexRoute
+  '/_general/article/': typeof GeneralArticleIndexRoute
   '/_general/blog/': typeof GeneralBlogIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
   '/dashboard/tic-tac-toe/': typeof DashboardTicTacToeIndexRoute
+  '/_general/blog/$slug/': typeof GeneralBlogSlugIndexRoute
+  '/_general/blog/create-blog/': typeof GeneralBlogCreateBlogIndexRoute
+  '/_general/blog/md-editor/': typeof GeneralBlogMdEditorIndexRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
+  '/_general/blog/$slug/edit/md-editor': typeof GeneralBlogSlugEditMdEditorRoute
   '/dashboard/blog/$slug/edit/md-editor': typeof DashboardBlogSlugEditMdEditorRoute
   '/_chat/chat/_chatbox/$adapter/': typeof ChatChatChatboxAdapterIndexRoute
+  '/_general/blog/$slug/edit/': typeof GeneralBlogSlugEditIndexRoute
   '/dashboard/blog/$slug/edit/': typeof DashboardBlogSlugEditIndexRoute
   '/_chat/chat/_chatbox/$adapter/$chatId/': typeof ChatChatChatboxAdapterChatIdIndexRoute
 }
@@ -330,24 +388,30 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/'
     | '/chat'
-    | '/blog/$slug'
+    | '/article/$slug'
     | '/api/ai/summary'
     | '/api/auth/$'
     | '/dashboard/items/$itemId'
     | '/dashboard/task-tracker/$taskListId'
     | '/login/'
     | '/chat/'
+    | '/article/'
     | '/blog/'
     | '/dashboard/blog/'
     | '/dashboard/items/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/task-tracker/'
     | '/dashboard/tic-tac-toe/'
+    | '/blog/$slug/'
+    | '/blog/create-blog/'
+    | '/blog/md-editor/'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
     | '/dashboard/blog/md-editor/'
+    | '/blog/$slug/edit/md-editor'
     | '/dashboard/blog/$slug/edit/md-editor'
     | '/chat/$adapter/'
+    | '/blog/$slug/edit/'
     | '/dashboard/blog/$slug/edit/'
     | '/chat/$adapter/$chatId/'
   fileRoutesByTo: FileRoutesByTo
@@ -362,23 +426,29 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard'
     | '/chat'
-    | '/blog/$slug'
+    | '/article/$slug'
     | '/api/ai/summary'
     | '/api/auth/$'
     | '/dashboard/items/$itemId'
     | '/dashboard/task-tracker/$taskListId'
     | '/login'
+    | '/article'
     | '/blog'
     | '/dashboard/blog'
     | '/dashboard/items'
     | '/dashboard/quran-tracker'
     | '/dashboard/task-tracker'
     | '/dashboard/tic-tac-toe'
+    | '/blog/$slug'
+    | '/blog/create-blog'
+    | '/blog/md-editor'
     | '/dashboard/blog/$slug'
     | '/dashboard/blog/create-blog'
     | '/dashboard/blog/md-editor'
+    | '/blog/$slug/edit/md-editor'
     | '/dashboard/blog/$slug/edit/md-editor'
     | '/chat/$adapter'
+    | '/blog/$slug/edit'
     | '/dashboard/blog/$slug/edit'
     | '/chat/$adapter/$chatId'
   id:
@@ -396,24 +466,30 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/'
     | '/_chat/chat/_chatbox'
-    | '/_general/blog/$slug'
+    | '/_general/article/$slug'
     | '/api/ai/summary'
     | '/api/auth/$'
     | '/dashboard/items/$itemId'
     | '/dashboard/task-tracker/$taskListId'
     | '/_auth/login/'
     | '/_chat/chat/'
+    | '/_general/article/'
     | '/_general/blog/'
     | '/dashboard/blog/'
     | '/dashboard/items/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/task-tracker/'
     | '/dashboard/tic-tac-toe/'
+    | '/_general/blog/$slug/'
+    | '/_general/blog/create-blog/'
+    | '/_general/blog/md-editor/'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
     | '/dashboard/blog/md-editor/'
+    | '/_general/blog/$slug/edit/md-editor'
     | '/dashboard/blog/$slug/edit/md-editor'
     | '/_chat/chat/_chatbox/$adapter/'
+    | '/_general/blog/$slug/edit/'
     | '/dashboard/blog/$slug/edit/'
     | '/_chat/chat/_chatbox/$adapter/$chatId/'
   fileRoutesById: FileRoutesById
@@ -561,6 +637,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GeneralBlogIndexRouteImport
       parentRoute: typeof GeneralRouteRoute
     }
+    '/_general/article/': {
+      id: '/_general/article/'
+      path: '/article'
+      fullPath: '/article/'
+      preLoaderRoute: typeof GeneralArticleIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
+    }
     '/_chat/chat/': {
       id: '/_chat/chat/'
       path: '/chat'
@@ -603,11 +686,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAiSummaryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_general/blog/$slug': {
-      id: '/_general/blog/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof GeneralBlogSlugRouteImport
+    '/_general/article/$slug': {
+      id: '/_general/article/$slug'
+      path: '/article/$slug'
+      fullPath: '/article/$slug'
+      preLoaderRoute: typeof GeneralArticleSlugRouteImport
       parentRoute: typeof GeneralRouteRoute
     }
     '/_chat/chat/_chatbox': {
@@ -638,12 +721,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardBlogSlugIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/_general/blog/md-editor/': {
+      id: '/_general/blog/md-editor/'
+      path: '/blog/md-editor'
+      fullPath: '/blog/md-editor/'
+      preLoaderRoute: typeof GeneralBlogMdEditorIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
+    }
+    '/_general/blog/create-blog/': {
+      id: '/_general/blog/create-blog/'
+      path: '/blog/create-blog'
+      fullPath: '/blog/create-blog/'
+      preLoaderRoute: typeof GeneralBlogCreateBlogIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
+    }
+    '/_general/blog/$slug/': {
+      id: '/_general/blog/$slug/'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug/'
+      preLoaderRoute: typeof GeneralBlogSlugIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
+    }
     '/dashboard/blog/$slug/edit/': {
       id: '/dashboard/blog/$slug/edit/'
       path: '/blog/$slug/edit'
       fullPath: '/dashboard/blog/$slug/edit/'
       preLoaderRoute: typeof DashboardBlogSlugEditIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/_general/blog/$slug/edit/': {
+      id: '/_general/blog/$slug/edit/'
+      path: '/blog/$slug/edit'
+      fullPath: '/blog/$slug/edit/'
+      preLoaderRoute: typeof GeneralBlogSlugEditIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
     }
     '/_chat/chat/_chatbox/$adapter/': {
       id: '/_chat/chat/_chatbox/$adapter/'
@@ -658,6 +769,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/blog/$slug/edit/md-editor'
       preLoaderRoute: typeof DashboardBlogSlugEditMdEditorRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/_general/blog/$slug/edit/md-editor': {
+      id: '/_general/blog/$slug/edit/md-editor'
+      path: '/blog/$slug/edit/md-editor'
+      fullPath: '/blog/$slug/edit/md-editor'
+      preLoaderRoute: typeof GeneralBlogSlugEditMdEditorRouteImport
+      parentRoute: typeof GeneralRouteRoute
     }
     '/_chat/chat/_chatbox/$adapter/$chatId/': {
       id: '/_chat/chat/_chatbox/$adapter/$chatId/'
@@ -682,13 +800,25 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 )
 
 interface GeneralRouteRouteChildren {
-  GeneralBlogSlugRoute: typeof GeneralBlogSlugRoute
+  GeneralArticleSlugRoute: typeof GeneralArticleSlugRoute
+  GeneralArticleIndexRoute: typeof GeneralArticleIndexRoute
   GeneralBlogIndexRoute: typeof GeneralBlogIndexRoute
+  GeneralBlogSlugIndexRoute: typeof GeneralBlogSlugIndexRoute
+  GeneralBlogCreateBlogIndexRoute: typeof GeneralBlogCreateBlogIndexRoute
+  GeneralBlogMdEditorIndexRoute: typeof GeneralBlogMdEditorIndexRoute
+  GeneralBlogSlugEditMdEditorRoute: typeof GeneralBlogSlugEditMdEditorRoute
+  GeneralBlogSlugEditIndexRoute: typeof GeneralBlogSlugEditIndexRoute
 }
 
 const GeneralRouteRouteChildren: GeneralRouteRouteChildren = {
-  GeneralBlogSlugRoute: GeneralBlogSlugRoute,
+  GeneralArticleSlugRoute: GeneralArticleSlugRoute,
+  GeneralArticleIndexRoute: GeneralArticleIndexRoute,
   GeneralBlogIndexRoute: GeneralBlogIndexRoute,
+  GeneralBlogSlugIndexRoute: GeneralBlogSlugIndexRoute,
+  GeneralBlogCreateBlogIndexRoute: GeneralBlogCreateBlogIndexRoute,
+  GeneralBlogMdEditorIndexRoute: GeneralBlogMdEditorIndexRoute,
+  GeneralBlogSlugEditMdEditorRoute: GeneralBlogSlugEditMdEditorRoute,
+  GeneralBlogSlugEditIndexRoute: GeneralBlogSlugEditIndexRoute,
 }
 
 const GeneralRouteRouteWithChildren = GeneralRouteRoute._addFileChildren(

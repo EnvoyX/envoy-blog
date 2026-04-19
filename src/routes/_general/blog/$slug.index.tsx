@@ -1,11 +1,21 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
-import { allPosts } from '../../../../.content-collections/generated'
-import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Link } from '@tanstack/react-router'
-import { ChevronDown, ChevronLeft, ListIcon } from 'lucide-react'
-import { intlFormat } from 'date-fns'
 import { MarkdownRenderer } from '@/components/web/markdown/Markdown'
+import { getPostFn } from '@/data/blog'
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from '@tanstack/react-router'
+import {
+  ChevronDown,
+  ChevronLeft,
+  Heart,
+  ListIcon,
+  MessagesSquareIcon,
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
+import { intlFormat, intlFormatDistance } from 'date-fns'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,16 +26,53 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import { getUser } from '@/data/session'
+import { useLiveQuery, eq } from '@tanstack/react-db'
+import { UserAvatar } from '@/components/web/user-profile'
+import { createId } from '@paralleldrive/cuid2'
+import { User } from '@/generated/prisma/browser'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { commentCollection, likeCollection } from '@/collections/blog'
+import { CommentItem } from '@/components/web/CommentItem'
+import CommentInput from '@/components/web/CommentInput'
 
-export const Route = createFileRoute('/_general/blog/$slug')({
-  loader: ({ params }) => {
-    const post = allPosts.find((p) => p.slug === params.slug)
-    if (!post) {
-      throw notFound()
+export const Route = createFileRoute('/_general/blog/$slug/')({
+  component: PostComponent,
+  loader: async ({ params }) => {
+    const post = await getPostFn({ data: params.slug })
+    const session = await getUser()
+    if (!post?.published && session.user.id !== post?.authorId) {
+      throw redirect({
+        to: '/blog',
+      })
     }
-    return post
+    return {
+      post,
+      session,
+    }
   },
-  component: BlogPost,
+  head: ({ loaderData }) => ({
+    meta: [
+      { title: `${loaderData?.post?.title} | Blog | Envoy Mindpalace` },
+      {
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
+      },
+      {
+        property: 'og:title',
+        content: `${loaderData?.post?.title} | Envoy Blog`,
+      },
+      {
+        property: 'og:description',
+        content: `${loaderData?.post?.description}`,
+      },
+      {
+        property: 'og:image',
+        content: `${loaderData?.post?.image}`,
+      },
+      { property: 'og:type', content: 'website' },
+    ],
+  }),
 })
 
 function extractHeadings(markdown: string) {
@@ -41,7 +88,7 @@ function extractHeadings(markdown: string) {
     // adjust the # match: i.e. {2,3} or {1,6} to match 1 to 6 '#' symbols
     const match = line.match(/^(#{1,6})\s+(.*)/)
     if (match) {
-      const level = match[1].length // length of '#'
+      const level = match[1].length
       const text = match[2]
       const id = text
         .toLowerCase()
@@ -54,11 +101,61 @@ function extractHeadings(markdown: string) {
   return headings
 }
 
-function BlogPost() {
-  const post = Route.useLoaderData()
+function PostComponent() {
+  const { post, session } = Route.useLoaderData()
+  const { slug } = Route.useParams()
   const [visibleIds, setVisibleIds] = useState<string[]>([])
-  const headings = post?.content ? extractHeadings(post.content) : []
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const headings = post?.content ? extractHeadings(post.content) : []
+  const navigate = useNavigate()
+  const { data: likes } = useLiveQuery((q) =>
+    q
+      .from({ like: likeCollection })
+      .where(({ like }) => eq(like.postId, post?.id)),
+  )
+  const { data: comments } = useLiveQuery((q) =>
+    q
+      .from({ comment: commentCollection })
+      .where(({ comment }) => eq(comment.postId, post?.id))
+      .orderBy(({ comment }) => comment.createdAt, 'desc'),
+  )
+
+  const hasLiked = likes.find((like) => like.userId === session.user.id)
+
+  function handleToggleLike() {
+    const existingLike = likes.find((like) => like.userId === session.user.id)
+
+    if (!existingLike) {
+      // optimistic Insert like
+      likeCollection.insert({
+        id: createId(),
+        post_slug: post?.slug as string,
+        postId: post?.id as string,
+        userId: session.user.id as string,
+        createdAt: new Date(),
+      })
+    } else {
+      // optimistic delete like
+      likeCollection.delete(existingLike.id)
+    }
+  }
+
+  function handleAddComment(commentText: string) {
+    if (!commentText.trim()) return
+
+    // optimistic Insert comment
+    commentCollection.insert({
+      id: createId(),
+      content: commentText,
+      postId: post?.id as string,
+      post_slug: post?.slug as string,
+      userId: session.user.id as string,
+      createdAt: new Date(),
+      user: session.user as User,
+      parentId: createId(),
+      updatedAt: new Date(),
+    })
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -92,8 +189,8 @@ function BlogPost() {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-black text-slate-50 antialiased flex flex-col">
-        <nav className="sticky top-0 z-40 border-b border-slate-800 bg-black backdrop-blur-md">
+      <div className="min-h-screen  text-slate-50 antialiased flex flex-col">
+        <nav className="sticky top-0 z-40 border-b border-slate-800  backdrop-blur-md">
           <div className="mx-auto flex max-w-7xl items-center px-4 py-3">
             <Button
               variant="ghost"
@@ -122,7 +219,7 @@ function BlogPost() {
             </p>
             <div className="pt-4">
               <Button asChild size="lg" className="rounded-full px-8">
-                <Link to="/dashboard/blog">Return to Dashboard</Link>
+                <Link to="/blog">Return to Blogs</Link>
               </Button>
             </div>
           </div>
@@ -132,15 +229,15 @@ function BlogPost() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-slate-50 antialiased">
-      <nav className="sticky top-0 z-40 border-b border-slate-800 bg-black backdrop-blur-md">
+    <div className="min-h-screen text-slate-50 antialiased">
+      <nav className="sticky top-0 z-40 border-b border-slate-800 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <Button
             variant="ghost"
             asChild
             className=" text-emerald-500! hover:text-emerald-400! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
           >
-            <Link to="/dashboard/blog">
+            <Link to="/blog">
               <ChevronLeft className="mr-2 size-4" />
               Back to Blog
             </Link>
@@ -211,8 +308,7 @@ function BlogPost() {
               <div className="aspect-video w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 mb-8">
                 <img
                   src={
-                    post.headerImage ??
-                    'https://tanstack.com/assets/og-C0HGjoLl.png'
+                    post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'
                   }
                   alt={post.title ?? 'Blog Thumbnail'}
                   className="h-full w-full object-cover"
@@ -220,24 +316,34 @@ function BlogPost() {
               </div>
               <div className="flex flex-wrap items-center gap-4 mb-6 text-sm">
                 <div className="flex items-center gap-3 pr-4 border-r border-slate-800">
+                  <UserAvatar
+                    src={session.user.image as string}
+                    alt={session.user.name as string}
+                    className="h-9 w-9"
+                  />
                   <div className="flex flex-col">
                     <span className="font-medium text-slate-200">
-                      {post.authors.join(', ')}
+                      {post.author.name}
                     </span>
                     <span className="text-xs text-slate-500 uppercase tracking-wider">
-                      Author(s)
+                      Author
                     </span>
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-slate-400">
                   <p className="flex items-center">
-                    {intlFormat(new Date(post.published), {
+                    {intlFormat(new Date(post.createdAt), {
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric',
                     })}
                   </p>
+                  <span className="hidden sm:inline text-slate-700">•</span>
+                  <span className="text-slate-500 italic">
+                    Updated{' '}
+                    {intlFormatDistance(new Date(post.updatedAt), new Date())}
+                  </span>
                 </div>
               </div>
               <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 text-white">
@@ -258,6 +364,74 @@ function BlogPost() {
               <MarkdownRenderer
                 markdown={post.content || '*Nothing to preview...*'}
               />
+
+              <div className="mt-16 pt-8 border-t border-slate-800 space-y-12">
+                <section className="flex items-center justify-between bg-slate-900/40 p-6 rounded-2xl border border-slate-800">
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-semibold text-white">
+                      Enjoyed this post?
+                    </h3>
+                    <p className="text-sm text-slate-400">
+                      Let the author know by giving a like.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-slate-300">
+                      {likes.length} likes
+                    </span>
+                    <button
+                      onClick={() => handleToggleLike()}
+                      className={`p-3 rounded-full transition-all border cursor-pointer ${
+                        hasLiked
+                          ? 'bg-emerald-500/10 border-emerald-500 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                          : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
+                      }`}
+                    >
+                      <Heart
+                        className={`size-6 ${hasLiked && 'fill-current'}`}
+                      />
+                    </button>
+                  </div>
+                </section>
+
+                <section className="space-y-8">
+                  <div className="flex gap-4">
+                    <span className="flex items-center justify-center">
+                      <MessagesSquareIcon className="size-8 text-emerald-500" />
+                    </span>
+                    <h3 className="text-xl font-bold text-white flex items-center justify-center">
+                      <span>Comments ({comments.length})</span>
+                    </h3>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <Avatar className="h-10 w-10 shrink-0 border border-slate-700 items-center justify-center">
+                      <AvatarImage src={session.user.image as string} />
+                      <AvatarFallback>
+                        {' '}
+                        {(session.user.name as string)
+                          ? (session.user.name as string)
+                              .split(' ')
+                              .map((n) => n[0])
+                              .join('')
+                          : ''}
+                      </AvatarFallback>
+                    </Avatar>
+                    <CommentInput handleAddComment={handleAddComment} />
+                  </div>
+
+                  <div className="space-y-6 pt-4">
+                    {comments.map((comment) => (
+                      <CommentItem
+                        key={comment.id}
+                        comment={comment}
+                        session={session}
+                        commentCollection={commentCollection}
+                      />
+                    ))}
+                  </div>
+                </section>
+              </div>
             </div>
           </div>
 
@@ -298,6 +472,21 @@ function BlogPost() {
               >
                 Back to top ↑
               </button>
+              {session.user.id === post.authorId && (
+                <button
+                  onClick={() =>
+                    navigate({
+                      to: '/blog/$slug/edit',
+                      params: {
+                        slug,
+                      },
+                    })
+                  }
+                  className="text-xs text-slate-500 hover:text-primary transition-colors flex items-center gap-1 cursor-pointer"
+                >
+                  Edit this blog
+                </button>
+              )}
             </div>
           </aside>
         </div>

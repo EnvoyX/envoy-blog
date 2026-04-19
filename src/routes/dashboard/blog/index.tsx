@@ -15,6 +15,8 @@ import {
   ListXIcon,
   Loader2,
   Search,
+  Heart,
+  MessageSquare,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
@@ -188,11 +190,10 @@ function BlogPageComponent() {
           </div>
         </div>
 
-        {/* Empty State */}
         {filteredPosts.length === 0 && (
           <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
             <p className="text-slate-500">
-              No posts found. Start your journey today!
+              No posts found. Create your first blog post!
             </p>
           </div>
         )}
@@ -288,7 +289,7 @@ function BlogPageComponent() {
               </CardContent>
 
               <CardFooter className="p-6 pt-0 flex flex-col justify-start items-start gap-1">
-                <span className="absolute bottom-6 right-3">
+                <span className="absolute flex flex-col items-end gap-3 bottom-6 right-3">
                   {post.published ? (
                     <Badge variant={'default'}>Public</Badge>
                   ) : (
@@ -296,8 +297,25 @@ function BlogPageComponent() {
                       Private
                     </Badge>
                   )}
+                  <div className="flex items-center gap-3  group">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-emerald-500/30 transition-colors">
+                      <Heart
+                        className={`size-3.5 ${post._count.likes > 0 ? 'fill-emerald-500 text-emerald-500' : ''}`}
+                      />
+                      <span className="text-[11px] font-bold tabular-nums">
+                        {post._count.likes}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-blue-500/30 transition-colors">
+                      <MessageSquare className="size-3.5" />
+                      <span className="text-[11px] font-bold tabular-nums">
+                        {post._count.comments}
+                      </span>
+                    </div>
+                  </div>
                 </span>
-                <div className="flex items-center gap-2 text-xs text-slate-500 mt-3 uppercase tracking-widest font-semibold">
+                <div className="flex items-center gap-2 text-xs text-slate-500 uppercase tracking-widest font-semibold">
                   <LucideClockFading className="size-3" />
                   {intlFormatDistance(new Date(post.updatedAt), new Date())}
                 </div>
@@ -305,7 +323,7 @@ function BlogPageComponent() {
                 <Button
                   asChild
                   variant="link"
-                  className="p-0 h-auto text-emerald-400 hover:text-emerald-300 gap-2 cursor-pointer"
+                  className="p-0 h-auto text-emerald-400 hover:text-emerald-300 gap-2 cursor-pointer mt-3.5"
                 >
                   <Link to="/dashboard/blog/$slug" params={{ slug: post.slug }}>
                     Read Full Blog →

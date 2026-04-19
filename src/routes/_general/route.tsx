@@ -8,7 +8,7 @@ export const Route = createFileRoute('/_general')({
 
 function RouteComponent() {
   return (
-    <main className="min-h-screen bg-linear-to-b from-slate-950 to-cyan-500/30 linear text-slate-50 selection:bg-cyan-500/30">
+    <main className="min-h-screen bg-linear-to-b from-slate-950 to-emerald-500/30 linear text-slate-50 selection:bg-emerald-500/30">
       <Navbar />
       <Outlet />
       <Footer />

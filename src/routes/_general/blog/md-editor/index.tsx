@@ -1,47 +1,27 @@
-import { createFileRoute, Link, redirect } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, Copy, CopyCheck } from 'lucide-react'
 import { useState } from 'react'
 import Editor from '@uiw/react-md-editor'
-import { getPostFn } from '@/data/blog'
-import { getUser } from '@/data/session'
 
-export const Route = createFileRoute('/dashboard/blog/$slug/edit/md-editor')({
+export const Route = createFileRoute('/_general/blog/md-editor/')({
   component: RouteComponent,
-  loader: async ({ params }) => {
-    const post = await getPostFn({ data: params.slug })
-    const session = await getUser()
-    if (session.user.id !== post?.authorId) {
-      throw redirect({
-        to: '/dashboard/blog',
-      })
-    }
-    return {
-      post,
-      session,
-    }
-  },
-  head: ({ loaderData }) => ({
+  head: () => ({
     meta: [
-      {
-        title: `Markdown Editor | ${loaderData?.post?.slug} | Envoy Mindpalace`,
-      },
+      { title: `Markdown Editor  | Envoy Mindpalace` },
       {
         name: 'Envoy Mindpalace',
         content: 'Welcome to my TanStack Start playground!',
       },
-      {
-        property: 'og:title',
-        content: `${loaderData?.post?.title} | Envoy Blog`,
-      },
+      { property: 'og:title', content: `Markdown Editor | Envoy Blog` },
       {
         property: 'og:description',
-        content: `${loaderData?.post?.description}`,
+        content: `Markdown Editor to edit blog post`,
       },
       {
         property: 'og:image',
-        content: `${loaderData?.post?.image}`,
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
       { property: 'og:type', content: 'website' },
     ],
@@ -49,8 +29,7 @@ export const Route = createFileRoute('/dashboard/blog/$slug/edit/md-editor')({
 })
 
 function RouteComponent() {
-  const { post } = Route.useLoaderData()
-  const [markdown, setMarkdown] = useState(post?.content ?? '')
+  const [markdown, setMarkdown] = useState('# Markdown editor')
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -64,22 +43,19 @@ function RouteComponent() {
   }
 
   return (
-    <div className="p-6 md:p-10 bg-black min-h-screen text-slate-50">
+    <div className="p-6 md:p-10 min-h-screen text-slate-50">
       <div className="max-w-5xl mx-auto space-y-6">
-        <div className="flex justify-center max-sm:gap-4 max-sm:flex-col sm:justify-between items-center">
+        <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold max-sm:text-center">MD Editor</h1>
+            <h1 className="text-3xl font-bold">MD Editor</h1>
             <p className="text-slate-400">
               Advanced rich-text live editing experience.
             </p>
           </div>
           <div className="flex gap-3">
             <Button variant="default" className="gap-2" asChild>
-              <Link
-                to="/dashboard/blog/$slug/edit"
-                params={{ slug: post?.slug ?? '' }}
-              >
-                <ChevronLeft className="size-4" /> Edit Blog
+              <Link to="/blog/create-blog">
+                <ChevronLeft className="size-4" /> Create Blog
               </Link>
             </Button>
             <Button onClick={handleCopy} className="cursor-pointer">

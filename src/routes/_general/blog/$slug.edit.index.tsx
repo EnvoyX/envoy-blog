@@ -1,10 +1,10 @@
-import { BlogDashboardEditor } from '@/components/web/dashboard/BlogDashboardEditor'
+import { BlogEditor } from '@/components/web/BlogEditor'
 import { getPostFn } from '@/data/blog'
 import { getUser } from '@/data/session'
 import { Post } from '@/generated/prisma/client'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/dashboard/blog/$slug/edit/')({
+export const Route = createFileRoute('/_general/blog/$slug/edit/')({
   component: RouteComponent,
   loader: async ({ params }) => {
     const post = await getPostFn({ data: params.slug })
@@ -12,7 +12,7 @@ export const Route = createFileRoute('/dashboard/blog/$slug/edit/')({
 
     if (session.user.id !== post?.authorId) {
       throw redirect({
-        to: '/dashboard/blog',
+        to: '/blog',
       })
     }
     return {
@@ -46,5 +46,5 @@ export const Route = createFileRoute('/dashboard/blog/$slug/edit/')({
 
 function RouteComponent() {
   const { post } = Route.useLoaderData()
-  return <BlogDashboardEditor initialData={post as Post} />
+  return <BlogEditor initialData={post as Post} />
 }
