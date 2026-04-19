@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useChat, fetchServerSentEvents } from '@tanstack/ai-react'
-import { Bot, Check, Copy, Loader, RepeatIcon, Send, User } from 'lucide-react'
+import { Bot, Check, Copy, Loader, RepeatIcon, User } from 'lucide-react'
 import { MarkdownRenderer } from '../web/markdown/Markdown'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getUser } from '@/data/session'
@@ -9,6 +9,7 @@ import { saveAssistantMessageFn } from '@/data/chat-ai'
 import HeaderChat from '../web/HeaderChat'
 import { Button } from '../ui/button'
 import { cn } from '@/lib/utils'
+import { ChatInput } from './ChatInput'
 
 function CopyButton({ content }: { content: string }) {
   const [copied, setCopied] = useState(false)
@@ -45,7 +46,6 @@ export function Chat({
   model: string
   chatId: string
 }) {
-  const [input, setInput] = useState('')
   const [targetMessageIds, setTargetMessageIds] = useState<Set<string>>(
     new Set(),
   )
@@ -95,19 +95,15 @@ export function Chat({
     },
   })
 
+  function onSend(input: string) {
+    sendMessage(input)
+  }
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
   }, [messages])
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (input.trim() && !isLoading) {
-      sendMessage(input)
-      setInput('')
-    }
-  }
 
   return (
     <div className="flex flex-col h-screen bg-[#09090b] text-zinc-100 selection:bg-blue-500/30">
@@ -261,41 +257,7 @@ export function Chat({
       </div>
 
       <footer className="p-4 bg-linear-to-t from-[#09090b] via-[#09090b] to-transparent">
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-3xl mx-auto relative group"
-        >
-          <div className="relative flex items-center transition-all duration-200 focus-within:ring-2 ring-blue-500/20 rounded-2xl">
-            <textarea
-              rows={1}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault()
-                  handleSubmit(e)
-                }
-              }}
-              placeholder="Message something..."
-              className="w-full bg-zinc-900/80 border border-zinc-800 rounded-2xl px-4 py-4 pr-14 focus:outline-none focus:border-zinc-700 resize-none placeholder:text-zinc-600"
-              disabled={isLoading}
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || isLoading}
-              className="absolute right-3 p-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-all disabled:opacity-50 disabled:bg-zinc-800 group-hover:scale-105"
-            >
-              {isLoading ? (
-                <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <Send size={18} />
-              )}
-            </button>
-          </div>
-          <p className="text-[10px] text-center text-zinc-600 mt-3 uppercase tracking-widest font-medium">
-            TanStack AI + Start + Query
-          </p>
-        </form>
+        <ChatInput onSend={onSend} isLoading={isLoading} />
       </footer>
     </div>
   )

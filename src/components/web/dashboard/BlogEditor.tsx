@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useDeferredValue, useState } from 'react'
 import { useForm } from '@tanstack/react-form'
 import {
   Pencil,
@@ -44,6 +44,11 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
   const [activeTab, setActiveTab] = useState('edit-blog')
   const [markdown, setMarkdown] = useState(initialData?.content ?? '')
   const [copied, setCopied] = useState(false)
+
+  const deferredMarkdown = useDeferredValue(
+    markdown,
+    initialData?.content ?? '',
+  )
 
   const handleCopy = async (markdown: string) => {
     await navigator.clipboard.writeText(markdown)
@@ -187,7 +192,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
         />
       </div>
 
-      <div className="space-y-2 h-150 overflow-auto">
+      <div className="space-y-2">
         <form.Field
           name="content"
           children={(field) => {
@@ -233,14 +238,20 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                     )}
                   </Button>
                 </div>
-                <Textarea
-                  id={`${field.name}-input`}
-                  placeholder="Write your story here..."
-                  className="min-h-125 md:min-h-150 font-mono resize-none"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
+
+                <div className="h-125 overflow-auto">
+                  <Textarea
+                    id={`${field.name}-input`}
+                    placeholder="Write your story here..."
+                    className="font-mono"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => {
+                      field.handleChange(e.target.value)
+                      setMarkdown(e.target.value)
+                    }}
+                  />
+                </div>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </>
             )
@@ -252,16 +263,16 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
 
   return (
     <div className="px-2 min-h-screen flex flex-col w-full mx-auto">
-      <div className="flex items-center mb-4">
+      <header className="flex items-center mb-4">
         <Button variant="default" asChild className="">
           <Link to="/dashboard/blog">
             <ChevronLeft className="mr-2 size-4" />
             Back to Blog
           </Link>
         </Button>
-      </div>
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      </header>
+
+      <header className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Blog Editor</h1>
           <p className="text-muted-foreground">
@@ -325,10 +336,10 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
             />
           </div>
         </div>
-      </div>
+      </header>
 
       {/* MOBILE */}
-      <div className="md:hidden">
+      <main className="md:hidden">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger value="edit-blog" className="gap-2">
@@ -380,7 +391,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                         />
                       </div>
                       <MarkdownRenderer
-                        markdown={values.content || '*Nothing to preview...*'}
+                        markdown={deferredMarkdown || '*Nothing to preview...*'}
                       />
                     </>
                   )}
@@ -389,10 +400,10 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
             </Card>
           </TabsContent>
         </Tabs>
-      </div>
+      </main>
 
       {/* DESKSTOP */}
-      <div className="hidden md:grid grid-cols-2 gap-6 max-h-250 flex-1">
+      <main className="hidden md:grid grid-cols-2 gap-6 max-h-250 flex-1">
         <Card className="flex flex-col h-full">
           <CardHeader>
             <CardTitle className="text-sm font-medium uppercase text-muted-foreground">
@@ -431,7 +442,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                   </div>
                   <MarkdownRenderer
                     markdown={
-                      values.content || 'Start typing to see the preview...'
+                      deferredMarkdown || 'Start typing to see the preview...'
                     }
                   />
                 </main>
@@ -439,7 +450,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
             />
           </CardContent>
         </Card>
-      </div>
+      </main>
     </div>
   )
 }

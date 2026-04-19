@@ -45,6 +45,6 @@ export const Route = createFileRoute('/dashboard/blog/$slug/edit/')({
 })
 
 function RouteComponent() {
-  const { post, session } = Route.useLoaderData()
+  const { post } = Route.useLoaderData()
   return <BlogEditor initialData={post as Post} />
 }
