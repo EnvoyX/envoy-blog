@@ -79,10 +79,10 @@ function RouteComponent() {
         },
       }),
   })
-  const saveMutation = useMutation({
+  const { isPending, submittedAt, variables, mutate, isError } = useMutation({
     mutationFn: saveAssistantMessageFn,
     mutationKey: ['saveAssistantMessage', chatId],
-    onSuccess: () => {
+    onSettled: () => {
       console.log('Assistant message synced with parts!')
       queryClient.invalidateQueries({ queryKey: ['chat', chatId] })
     },
@@ -98,7 +98,7 @@ function RouteComponent() {
     }),
     onFinish: (message) => {
       console.log('Message from Client: ', message)
-      saveMutation.mutate({
+      mutate({
         data: {
           chatId: chatId,
           messageId: message.id,
@@ -335,7 +335,9 @@ function RouteComponent() {
                     message.role === 'assistant'
                       ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full'
                       : 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/10'
-                  }`}
+                  }
+                  ${isPending && 'bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full'}
+                  `}
                 >
                   <div className="prose prose-invert prose-sm sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
                     {message.parts.map((part, idx) => {
@@ -383,6 +385,14 @@ function RouteComponent() {
                       }
                       return null
                     })}
+                    {isPending && (
+                      <MarkdownRenderer
+                        markdown={
+                          (variables.data.parts[0].content as string) ||
+                          '*Nothing to preview...*'
+                        }
+                      />
+                    )}
                   </div>
                 </div>
                 {message.role === 'assistant' && !isLoading && (
