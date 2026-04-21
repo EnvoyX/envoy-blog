@@ -46,7 +46,7 @@ function PublicProfileComponent() {
         <div className="size-40 rounded-3xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1 shadow-2xl shadow-emerald-500/10">
           <div className="w-full h-full rounded-3xl bg-slate-950 flex items-center justify-center overflow-hidden">
             {user?.image || user?.defaultImage ? (
-              <Avatar className="size-40 shrink-0 border border-slate-700">
+              <Avatar className="size-40 shrink-0">
                 <AvatarImage
                   src={
                     (user?.image as string) ?? (user?.defaultImage as string)
@@ -102,7 +102,7 @@ function PublicProfileComponent() {
       </header>
 
       <Tabs defaultValue="blogs" className="w-full">
-        <TabsList className="bg-transparent border border-slate-800 p-1 mb-8 mx-auto">
+        <TabsList className="bg-transparent border border-slate-800 p-1 mb-8 mx-auto flex items-center justify-center">
           <TabsTrigger
             value="blogs"
             className="data-[state=active]:bg-slate-800 px-8"

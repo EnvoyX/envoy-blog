@@ -308,7 +308,7 @@ export function UsersDataTable() {
             {imageUrl ? (
               <a href={imageUrl} target="_blank">
                 <div className="w-10 h-10 relative">
-                  <UserAvatar src={imageUrl} alt={row.getValue('userName')} />
+                  <UserAvatar src={imageUrl} alt={row.getValue('name')} />
                 </div>
               </a>
             ) : (
@@ -501,16 +501,6 @@ export function UsersDataTable() {
                 <DropdownMenuItem
                   className="cursor-pointer hover:bg-white/20!"
                   onClick={() => {
-                    setFilterColumn('verifiedStatus')
-                    table.getColumn('verifiedStatus')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  Verified Status
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
                     setFilterColumn('id')
                     table.getColumn('id')?.setFilterValue('')
                     table.resetColumnFilters()
@@ -541,82 +531,12 @@ export function UsersDataTable() {
                 <DropdownMenuItem
                   className="cursor-pointer hover:bg-white/20!"
                   onClick={() => {
-                    setFilterColumn('phoneNumber')
-                    table.getColumn('phoneNumber')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  Phone Number
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    setFilterColumn('institution')
-                    table.getColumn('institution')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  Institution
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    setFilterColumn('major')
-                    table.getColumn('major')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  Major
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    setFilterColumn('domicile')
-                    table.getColumn('domicile')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  Domicile
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    setFilterColumn('education')
-                    table.getColumn('education')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  Education
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
                     setFilterColumn('role')
                     table.getColumn('role')?.setFilterValue('')
                     table.resetColumnFilters()
                   }}
                 >
                   Role
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    setFilterColumn('comp_registration')
-                    table.getColumn('comp_registration')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  Competition
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    setFilterColumn('userRegisteredTeam')
-                    table.getColumn('userRegisteredTeam')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  User Registered Team
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -114,7 +114,7 @@ function RouteComponent() {
           <div className="size-40 rounded-2xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1">
             <div className="w-full h-full rounded-2xl bg-background flex items-center justify-center overflow-hidden">
               {user.image || user.defaultImage ? (
-                <Avatar className="size-40 shrink-0 border border-slate-700">
+                <Avatar className="size-40 shrink-0">
                   <AvatarImage
                     src={
                       (user.image as string) ?? (user?.defaultImage as string)
