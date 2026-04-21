@@ -4,11 +4,12 @@ import { UsersDataTable } from '@/components/web/admin/UsersDataTable'
 import AccountsDataTable from '@/components/web/admin/AccountsDataTable'
 import SessionsDataTable from '@/components/web/admin/SessionsDataTable'
 import { getUser } from '@/data/session'
+import { allowedRoles } from '@/lib/constants'
 export const Route = createFileRoute('/dashboard/admin/')({
   component: RouteComponent,
   loader: async () => {
     const session = await getUser()
-    if (session.user.role !== 'ADMIN') {
+    if (!allowedRoles.includes(session.user.role as string)) {
       throw redirect({
         to: '/dashboard',
       })

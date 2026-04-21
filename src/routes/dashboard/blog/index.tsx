@@ -26,7 +26,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { getMyPostsFn, deletePostFn } from '@/data/blog'
+import { getMyPostsFn, deletePostFn, getPostsFn } from '@/data/blog'
 import { toast } from 'sonner'
 import { intlFormat, intlFormatDistance } from 'date-fns'
 import { createStore, useSelector } from '@tanstack/react-store'
@@ -53,9 +53,17 @@ import {
 } from '@/components/ui/select'
 import { BlogStatus } from '@/lib/constants'
 import { Badge } from '@/components/ui/badge'
+import { getUser } from '@/data/session'
 
 export const Route = createFileRoute('/dashboard/blog/')({
-  loader: () => getMyPostsFn(),
+  loader: async () => {
+    const allPosts = await getPostsFn()
+    const session = await getUser()
+    return {
+      allPosts,
+      session,
+    }
+  },
   component: BlogPageComponent,
   validateSearch: zodValidator(postSearchSchema),
   head: () => ({
@@ -80,7 +88,7 @@ export const Route = createFileRoute('/dashboard/blog/')({
 })
 
 function BlogPageComponent() {
-  const allPosts = Route.useLoaderData()
+  const { allPosts, session } = Route.useLoaderData()
   const { visibility, query } = Route.useSearch()
   const navigate = useNavigate({ from: Route.fullPath })
   const router = useRouter()
@@ -214,58 +222,60 @@ function BlogPageComponent() {
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
 
-                <div className="absolute top-3 right-3">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="secondary"
-                        size="icon"
-                        className="size-8 rounded-full bg-slate-950/50 backdrop-blur-md border-slate-700 hover:bg-slate-800 cursor-pointer"
-                      >
-                        <MoreVertical className="size-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      className="w-40 bg-slate-900 border-slate-800 text-slate-200"
-                    >
-                      <DropdownMenuItem
-                        asChild
-                        className="cursor-pointer gap-2"
-                      >
-                        <Link
-                          to="/dashboard/blog/$slug"
-                          params={{ slug: post.slug }}
+                {post.authorId === session.user.id && (
+                  <div className="absolute top-3 right-3">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          className="size-8 rounded-full bg-slate-950/50 backdrop-blur-md border-slate-700 hover:bg-slate-800 cursor-pointer"
                         >
-                          <ExternalLink className="size-4" /> View Post
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="cursor-pointer gap-2">
-                        <Link
-                          to="/dashboard/blog/$slug/edit"
-                          params={{ slug: post.slug }}
-                          className="flex gap-1"
-                        >
-                          <Pencil className="size-4" /> Edit Post
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          modalStore.setState((prev) => {
-                            return {
-                              ...prev,
-                              isOpen: !prev.isOpen,
-                              dialogId: post.id,
-                            }
-                          })
-                        }}
-                        className="cursor-pointer gap-2 text-red-400 focus:text-red-400 focus:bg-red-400/10"
+                          <MoreVertical className="size-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="end"
+                        className="w-40 bg-slate-900 border-slate-800 text-slate-200"
                       >
-                        <Trash2 className="size-4" /> Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
+                        <DropdownMenuItem
+                          asChild
+                          className="cursor-pointer gap-2"
+                        >
+                          <Link
+                            to="/dashboard/blog/$slug"
+                            params={{ slug: post.slug }}
+                          >
+                            <ExternalLink className="size-4" /> View Post
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer gap-2">
+                          <Link
+                            to="/dashboard/blog/$slug/edit"
+                            params={{ slug: post.slug }}
+                            className="flex gap-1"
+                          >
+                            <Pencil className="size-4" /> Edit Post
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            modalStore.setState((prev) => {
+                              return {
+                                ...prev,
+                                isOpen: !prev.isOpen,
+                                dialogId: post.id,
+                              }
+                            })
+                          }}
+                          className="cursor-pointer gap-2 text-red-400 focus:text-red-400 focus:bg-red-400/10"
+                        >
+                          <Trash2 className="size-4" /> Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                )}
               </div>
 
               <CardContent className="p-6 flex-1">

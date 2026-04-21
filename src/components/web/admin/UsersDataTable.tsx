@@ -62,6 +62,7 @@ import {
 } from '@/data/admin'
 import { UserAvatar } from '../user-profile'
 import { UserRole } from '@/generated/prisma/enums'
+import { Link } from '@tanstack/react-router'
 
 const userRoles = ['ADMIN', 'SUPERADMIN', 'USER']
 
@@ -212,15 +213,18 @@ export function UsersDataTable() {
                   : 'Delete User'}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              {/*<DropdownMenuItem className="cursor-pointer hover:bg-white/20!">
+              <DropdownMenuItem className="cursor-pointer hover:bg-white/20!">
                 <Link
-                  href={`/admin/users/${item.id}`}
+                  to="/user/$userId"
+                  params={{
+                    userId: item.id,
+                  }}
                   target="_blank"
                   className="w-full"
                 >
                   View User
                 </Link>
-              </DropdownMenuItem>*/}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -489,7 +493,7 @@ export function UsersDataTable() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="bg-transparent! backdrop-glass-xl"
+                className="bg-transparent! backdrop-glass-lg"
                 align="end"
               >
                 <DropdownMenuLabel>Columns</DropdownMenuLabel>
@@ -643,7 +647,7 @@ export function UsersDataTable() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="bg-transparent backdrop-glass-xl"
+              className="bg-transparent backdrop-glass-lg"
               align="end"
             >
               <DropdownMenuItem
@@ -703,7 +707,7 @@ export function UsersDataTable() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="bg-transparent backdrop-glass-xl"
+                className="bg-transparent backdrop-glass-lg"
                 align="end"
               >
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>

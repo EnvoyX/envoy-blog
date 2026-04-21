@@ -1,11 +1,12 @@
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import {
   Calendar,
   Camera,
   Loader2,
   Mail,
+  PencilIcon,
   ShieldCheck,
   UserIcon,
 } from 'lucide-react'
@@ -13,6 +14,9 @@ import { getTreaty } from '../api/$'
 import { useTransition } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { toast } from 'sonner'
+import { IconLogout2 } from '@tabler/icons-react'
+import { EditProfileDialog } from '@/components/web/EditProfileDialog'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export const Route = createFileRoute('/dashboard/profile')({
   head: () => ({
@@ -104,25 +108,43 @@ function RouteComponent() {
   }
 
   return (
-    <main className="max-w-4xl mx-auto py-12 px-6">
+    <main className="w-full max-w-4xl mx-auto py-12 px-6">
       <header className="mb-10 flex flex-col md:flex-row items-center gap-6">
         <div className="relative group">
-          <div className="size-32 rounded-2xl overflow-hidden bg-linear-to-br from-emerald-400 to-teal-600 p-1">
-            <div className="w-full h-full rounded-[14px] bg-background flex items-center justify-center overflow-hidden">
-              {user.image ? (
-                <img
-                  src={user.image}
-                  alt={user.name ?? 'User'}
-                  className="w-full h-full object-cover"
-                />
+          <div className="size-40 rounded-2xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1">
+            <div className="w-full h-full rounded-2xl bg-background flex items-center justify-center overflow-hidden">
+              {user.image || user.defaultImage ? (
+                <Avatar className="size-40 shrink-0 border border-slate-700">
+                  <AvatarImage
+                    src={
+                      (user.image as string) ?? (user?.defaultImage as string)
+                    }
+                    alt={user.name}
+                    onError={(e) => {
+                      e.currentTarget.src = ''
+                      e.currentTarget.className = 'hidden'
+                    }}
+                    className="w-full h-full object-cover object-center rounded-lg"
+                  />
+
+                  <AvatarFallback className="w-full h-full object-cover object-center rounded-lg">
+                    {' '}
+                    {(user.name as string)
+                      ? (user.name as string)
+                          .split(' ')
+                          .map((n) => n[0])
+                          .join('')
+                      : ''}
+                  </AvatarFallback>
+                </Avatar>
               ) : (
                 <UserIcon className="size-12 text-muted-foreground" />
               )}
             </div>
           </div>
-          <button className="absolute -bottom-2 -right-2 p-2 bg-surface border border-border rounded-full shadow-lg hover:text-emerald-500 transition-colors">
+          {/*<button className="absolute -bottom-2 -right-2 p-2 bg-surface border border-border rounded-full shadow-lg hover:text-emerald-500 transition-colors">
             <Camera className="size-4" />
-          </button>
+          </button>*/}
         </div>
 
         <div className="text-center md:text-left space-y-1">
@@ -132,6 +154,7 @@ function RouteComponent() {
           <p className="text-muted-foreground flex items-center justify-center md:justify-start gap-2">
             <Mail className="size-4" /> {user.email}
           </p>
+          <p className="text-slate-400 italic">{user.biodata}</p>
         </div>
       </header>
 
@@ -187,18 +210,25 @@ function RouteComponent() {
         </div>
       </div>
 
-      <footer className="mt-12 pt-6 border-t border-border flex gap-4">
-        <Button
-          variant="default"
-          className="px-5 py-2.5 bg-foreground text-background font-medium rounded-lg hover:opacity-90 transition-opacity"
-        >
-          Edit Profile
-        </Button>
+      <footer className="mt-12 pt-6 border-t border-border flex max-sm:flex-col gap-4">
+        <EditProfileDialog user={user} />
+        <div className="flex">
+          <Link
+            to="/user/$userId"
+            className={buttonVariants({ variant: 'default' })}
+            params={{
+              userId: user.id,
+            }}
+          >
+            View on Public
+          </Link>
+        </div>
         <Button
           variant={'outline'}
           onClick={handleLogout}
           className="px-5 py-2.5 bg-background border border-border font-medium rounded-lg hover:bg-muted transition-colors text-destructive cursor-pointer"
         >
+          <IconLogout2 />
           Logout
         </Button>
       </footer>

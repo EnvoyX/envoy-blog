@@ -35,6 +35,7 @@ import { Route as DashboardTaskTrackerTaskListIdRouteImport } from './routes/das
 import { Route as DashboardItemsItemIdRouteImport } from './routes/dashboard/items/$itemId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiAiSummaryRouteImport } from './routes/api/ai/summary'
+import { Route as GeneralUserUserIdRouteImport } from './routes/_general/user/$userId'
 import { Route as GeneralArticleSlugRouteImport } from './routes/_general/article/$slug'
 import { Route as ChatChatChatboxRouteRouteImport } from './routes/_chat/chat/_chatbox/route'
 import { Route as DashboardBlogMdEditorIndexRouteImport } from './routes/dashboard/blog/md-editor/index'
@@ -181,6 +182,11 @@ const ApiAiSummaryRoute = ApiAiSummaryRouteImport.update({
   path: '/api/ai/summary',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GeneralUserUserIdRoute = GeneralUserUserIdRouteImport.update({
+  id: '/user/$userId',
+  path: '/user/$userId',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
 const GeneralArticleSlugRoute = GeneralArticleSlugRouteImport.update({
   id: '/article/$slug',
   path: '/article/$slug',
@@ -275,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/chat': typeof ChatChatChatboxRouteRouteWithChildren
   '/article/$slug': typeof GeneralArticleSlugRoute
+  '/user/$userId': typeof GeneralUserUserIdRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
@@ -314,6 +321,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/chat': typeof ChatChatIndexRoute
   '/article/$slug': typeof GeneralArticleSlugRoute
+  '/user/$userId': typeof GeneralUserUserIdRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
@@ -356,6 +364,7 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/_chat/chat/_chatbox': typeof ChatChatChatboxRouteRouteWithChildren
   '/_general/article/$slug': typeof GeneralArticleSlugRoute
+  '/_general/user/$userId': typeof GeneralUserUserIdRoute
   '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
@@ -398,6 +407,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/chat'
     | '/article/$slug'
+    | '/user/$userId'
     | '/api/ai/summary'
     | '/api/auth/$'
     | '/dashboard/items/$itemId'
@@ -437,6 +447,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/chat'
     | '/article/$slug'
+    | '/user/$userId'
     | '/api/ai/summary'
     | '/api/auth/$'
     | '/dashboard/items/$itemId'
@@ -478,6 +489,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/_chat/chat/_chatbox'
     | '/_general/article/$slug'
+    | '/_general/user/$userId'
     | '/api/ai/summary'
     | '/api/auth/$'
     | '/dashboard/items/$itemId'
@@ -705,6 +717,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAiSummaryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_general/user/$userId': {
+      id: '/_general/user/$userId'
+      path: '/user/$userId'
+      fullPath: '/user/$userId'
+      preLoaderRoute: typeof GeneralUserUserIdRouteImport
+      parentRoute: typeof GeneralRouteRoute
+    }
     '/_general/article/$slug': {
       id: '/_general/article/$slug'
       path: '/article/$slug'
@@ -820,6 +839,7 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 
 interface GeneralRouteRouteChildren {
   GeneralArticleSlugRoute: typeof GeneralArticleSlugRoute
+  GeneralUserUserIdRoute: typeof GeneralUserUserIdRoute
   GeneralArticleIndexRoute: typeof GeneralArticleIndexRoute
   GeneralBlogIndexRoute: typeof GeneralBlogIndexRoute
   GeneralBlogSlugIndexRoute: typeof GeneralBlogSlugIndexRoute
@@ -831,6 +851,7 @@ interface GeneralRouteRouteChildren {
 
 const GeneralRouteRouteChildren: GeneralRouteRouteChildren = {
   GeneralArticleSlugRoute: GeneralArticleSlugRoute,
+  GeneralUserUserIdRoute: GeneralUserUserIdRoute,
   GeneralArticleIndexRoute: GeneralArticleIndexRoute,
   GeneralBlogIndexRoute: GeneralBlogIndexRoute,
   GeneralBlogSlugIndexRoute: GeneralBlogSlugIndexRoute,

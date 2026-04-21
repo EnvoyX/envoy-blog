@@ -148,6 +148,41 @@ code {
   }
 }
 
+@layer utilities {
+  .backdrop-glass-none {
+    -webkit-backdrop-filter: blur(0px);
+    backdrop-filter: blur(0px);
+  }
+  .backdrop-glass-sm {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .backdrop-glass-md {
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+
+  .backdrop-glass-lg {
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+  }
+
+  .backdrop-glass-xl {
+    -webkit-backdrop-filter: blur(32px);
+    backdrop-filter: blur(32px);
+  }
+
+  .backdrop-glass-2xl {
+    -webkit-backdrop-filter: blur(48px);
+    backdrop-filter: blur(48px);
+  }
+  .backdrop-glass-3xl {
+    -webkit-backdrop-filter: blur(64px);
+    backdrop-filter: blur(64px);
+  }
+}
+
 @utility scrollbar-hide {
   &::-webkit-scrollbar {
     display: none;

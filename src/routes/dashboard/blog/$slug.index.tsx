@@ -316,11 +316,19 @@ function PostComponent() {
               </div>
               <div className="flex flex-wrap items-center gap-4 mb-6 text-sm">
                 <div className="flex items-center gap-3 pr-4 border-r border-slate-800">
-                  <UserAvatar
-                    src={session.user.image as string}
-                    alt={session.user.name as string}
-                    className="h-9 w-9"
-                  />
+                  <Link
+                    to="/user/$userId"
+                    params={{
+                      userId: post.authorId,
+                    }}
+                    target="_blank"
+                  >
+                    <UserAvatar
+                      src={post.author.image as string}
+                      alt={post.author.name as string}
+                      className="h-9 w-9"
+                    />
+                  </Link>
                   <div className="flex flex-col">
                     <span className="font-medium text-slate-200">
                       {post.author.name}
@@ -405,18 +413,26 @@ function PostComponent() {
                   </div>
 
                   <div className="flex gap-4">
-                    <Avatar className="h-10 w-10 shrink-0 border border-slate-700 items-center justify-center">
-                      <AvatarImage src={session.user.image as string} />
-                      <AvatarFallback>
-                        {' '}
-                        {(session.user.name as string)
-                          ? (session.user.name as string)
-                              .split(' ')
-                              .map((n) => n[0])
-                              .join('')
-                          : ''}
-                      </AvatarFallback>
-                    </Avatar>
+                    <Link
+                      to="/user/$userId"
+                      params={{
+                        userId: session.user.id,
+                      }}
+                      target="_blank"
+                    >
+                      <Avatar className="h-10 w-10 shrink-0 border border-slate-700 items-center justify-center">
+                        <AvatarImage src={session.user.image as string} />
+                        <AvatarFallback>
+                          {' '}
+                          {(session.user.name as string)
+                            ? (session.user.name as string)
+                                .split(' ')
+                                .map((n) => n[0])
+                                .join('')
+                            : ''}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Link>
                     <CommentInput handleAddComment={handleAddComment} />
                   </div>
 

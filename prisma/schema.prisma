@@ -29,7 +29,7 @@ enum Priority {
 }
 
 enum UserRole {
-SUPERADMIN
+  SUPERADMIN
   ADMIN
   USER
 }
@@ -211,6 +211,7 @@ model User {
   emailVerified Boolean
   image         String?
   defaultImage  String?
+  biodata       String?
   role          UserRole @default(USER)
   createdAt     DateTime
   updatedAt     DateTime

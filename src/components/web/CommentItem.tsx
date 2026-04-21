@@ -14,6 +14,7 @@ import { Button } from '../ui/button'
 import { intlFormatDistance } from 'date-fns'
 import { VirtualOrigin } from '@tanstack/react-db'
 import { CommentCollection } from '@/collections/blog'
+import { Link } from '@tanstack/react-router'
 
 interface ChatItemProps {
   comment: {
@@ -85,10 +86,18 @@ export function CommentItem({
 
   return (
     <div className="group flex gap-4 p-4 rounded-2xl transition-all hover:bg-slate-900/40 border border-transparent hover:border-slate-800">
-      <Avatar className="h-10 w-10 shrink-0 border border-slate-800 items-center justify-center">
-        <AvatarImage src={comment.user.image as string} />
-        <AvatarFallback>{comment.user.name}</AvatarFallback>
-      </Avatar>
+      <Link
+        to="/user/$userId"
+        params={{
+          userId: comment.user.id,
+        }}
+        target="_blank"
+      >
+        <Avatar className="h-10 w-10 shrink-0 border border-slate-800 items-center justify-center">
+          <AvatarImage src={comment.user.image as string} />
+          <AvatarFallback>{comment.user.name}</AvatarFallback>
+        </Avatar>
+      </Link>
 
       <div className="flex-1 space-y-2">
         <div className="flex items-center justify-between">

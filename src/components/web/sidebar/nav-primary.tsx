@@ -8,6 +8,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { UserRole } from '@/generated/prisma/enums'
+import { allowedRoles } from '@/lib/constants'
 import { Link } from '@tanstack/react-router'
 import { Key, LucideIcon } from 'lucide-react'
 
@@ -41,7 +42,7 @@ export function NavPrimary({ items, user }: NavPrimaryProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild size="sm">
-              {user.role === 'ADMIN' && (
+              {allowedRoles.includes(user.role as string) && (
                 <Link
                   to={'/dashboard/admin'}
                   activeProps={{

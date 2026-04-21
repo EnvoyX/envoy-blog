@@ -4,6 +4,8 @@ export const BlogStatus = {
   PRIVATE: 'PRIVATE',
 } as const
 
+export const allowedRoles = ['SUPERADMIN', 'ADMIN']
+
 export type BlogStatus = (typeof BlogStatus)[keyof typeof BlogStatus]
 
 export const MODEL_CONFIG = {
