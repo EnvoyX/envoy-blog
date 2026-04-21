@@ -73,7 +73,7 @@ function ItemsGridSkeleton() {
     <div className="grid gap-6 md:grid-cols-4">
       {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
         return (
-          <Card key={i} className="overflow-hidden pt-0">
+          <Card key={i} className="overflow-hidden pt-0 bg-transparent">
             <Skeleton className="aspect-video w-full" />
             <CardHeader className="space-y-3">
               <div className="flex items-center justify-between">
@@ -149,7 +149,7 @@ function ItemLists({
       {filteredDatas.map((data) => (
         <Card
           key={data.id}
-          className="group overflow-hidden transition-all hover:shadow-lg hover:scale-105 pt-0"
+          className="group overflow-hidden transition-all hover:shadow-lg hover:scale-105 pt-0 bg-transparent!"
         >
           <Link
             to="/dashboard/items/$itemId"

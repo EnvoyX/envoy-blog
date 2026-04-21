@@ -43,7 +43,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="p-6 md:p-10 bg-black min-h-screen text-slate-50">
+    <div className="p-6 md:p-10  min-h-screen text-slate-50">
       <div className="max-w-5xl mx-auto space-y-6">
         <div className="flex justify-between items-center">
           <div>

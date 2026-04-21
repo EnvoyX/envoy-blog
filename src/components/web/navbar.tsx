@@ -184,7 +184,7 @@ export function Navbar() {
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="w-75 bg-background/95 backdrop-blur-2xl border-l border-white/10 p-0 flex flex-col"
+            className="w-75 bg-transparent! backdrop-blur-2xl border-l border-white/10 p-0 flex flex-col"
           >
             <SheetHeader className="p-6 text-left border-b border-white/5">
               <SheetTitle className="flex items-center gap-2">

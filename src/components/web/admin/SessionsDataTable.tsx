@@ -44,7 +44,12 @@ import {
   exportCurrentPageToXlsx,
   exportFilteredRowsToXlsx,
 } from '@/utils/xlsx'
-import { getSessionsFn } from '@/data/admin'
+import {
+  deleteSessionFn,
+  deleteSessionsByManyFn,
+  getSessionsFn,
+} from '@/data/admin'
+import { UserAvatar } from '../user-profile'
 
 export default function SessionsDataTable() {
   const queryClient = useQueryClient()
@@ -120,12 +125,18 @@ export default function SessionsDataTable() {
               <DropdownMenuItem
                 variant="destructive"
                 className="cursor-pointer"
-                onClick={() => deleteSession.mutate({ sessionId: item.id })}
+                onClick={() =>
+                  deleteSession.mutate({
+                    data: {
+                      sessionId: item.id,
+                    },
+                  })
+                }
               >
                 Delete Session
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer hover:bg-white/20!">
+              {/*<DropdownMenuItem className="cursor-pointer hover:bg-white/20!">
                 <Link
                   href={`/admin/users/${item.userId}`}
                   target="_blank"
@@ -133,17 +144,7 @@ export default function SessionsDataTable() {
                 >
                   View User
                 </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer hover:bg-white/20!">
-                {' '}
-                <Link
-                  href={`/admin/users/${item.userId}#documents`}
-                  target="_blank"
-                  className="w-full"
-                >
-                  View Documents Detail
-                </Link>
-              </DropdownMenuItem>
+              </DropdownMenuItem>*/}
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -237,16 +238,11 @@ export default function SessionsDataTable() {
         return (
           <>
             {imageUrl ? (
-              <Link href={imageUrl} target="_blank">
+              <a href={imageUrl} target="_blank">
                 <div className="w-10 h-10 relative">
-                  <Image
-                    src={imageUrl}
-                    alt="User's Image"
-                    fill
-                    className=" object-cover rounded-full "
-                  />
+                  <UserAvatar src={imageUrl} alt={row.getValue('userName')} />
                 </div>
-              </Link>
+              </a>
             ) : (
               <div className="w-10 h-10 rounded-full bg-gray-300" />
             )}
@@ -320,7 +316,8 @@ export default function SessionsDataTable() {
   })
 
   const deleteSession = useMutation({
-    ...trpc.admin.deleteSession.mutationOptions(),
+    mutationKey: ['delete-session'],
+    mutationFn: deleteSessionFn,
     onMutate: () => {
       toast.loading('Deleting session...', {
         id: 'delete-session',
@@ -340,13 +337,14 @@ export default function SessionsDataTable() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: trpc.admin.getSessions.queryKey(),
+        queryKey: ['sessions'],
       })
     },
   })
 
   const deleteSessionsByMany = useMutation({
-    ...trpc.admin.deleteSessionsByMany.mutationOptions(),
+    mutationKey: ['delete-sessions'],
+    mutationFn: deleteSessionsByManyFn,
     onMutate: () => {
       toast.loading('Deleting sessions...', {
         id: 'delete-sessions',
@@ -362,12 +360,12 @@ export default function SessionsDataTable() {
     onSuccess(data, variables) {
       toast.dismiss('delete-sessions')
       toast.success(
-        `Deleted ${variables.sessionIds.length} sessions successfully`,
+        `Deleted ${variables.data.sessionIds.length} sessions successfully`,
       )
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: trpc.admin.getSessions.queryKey(),
+        queryKey: ['sessions'],
       })
       table.resetRowSelection()
     },
@@ -563,7 +561,9 @@ export default function SessionsDataTable() {
                       .getFilteredSelectedRowModel()
                       .rows.map((row) => row.original.id)
                     deleteSessionsByMany.mutate({
-                      sessionIds,
+                      data: {
+                        sessionIds,
+                      },
                     })
                   }}
                 >

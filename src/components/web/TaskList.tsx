@@ -1018,7 +1018,7 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
         .task-mono { font-family: 'DM Mono', monospace; }
       `}</style>
 
-      <div className="min-h-screen bg-zinc-950 text-zinc-100">
+      <div className="min-h-screen text-zinc-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
           <div className="flex items-center w-full my-6">
             <Link

@@ -46,7 +46,6 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { DataTablePagination } from '@/components/ui/data-table-pagination'
 import { DataTableViewOptions } from '@/components/ui/data-table-view-options'
 import { toast } from 'sonner'
-import { Badge } from '@/components/ui/badge'
 import { IconFileExport, IconTableExport } from '@tabler/icons-react'
 import {
   exportAllToXlsx,
@@ -54,7 +53,17 @@ import {
   exportFilteredRowsToXlsx,
 } from '@/utils/xlsx'
 import { authClient } from '@/lib/auth-client'
-import { getUsersFn } from '@/data/admin'
+import {
+  deleteUserFn,
+  deleteUsersByManyFn,
+  getUsersFn,
+  updateUserRoleByManyFn,
+  updateUserRoleFn,
+} from '@/data/admin'
+import { UserAvatar } from '../user-profile'
+import { UserRole } from '@/generated/prisma/enums'
+
+const userRoles = ['ADMIN', 'SUPERADMIN', 'USER']
 
 export function UsersDataTable() {
   const {
@@ -173,8 +182,10 @@ export function UsersDataTable() {
                           className="cursor-pointer text-yellow-500 hover:text-yellow-500! hover:bg-yellow-900/60!"
                           onClick={() =>
                             updateUserRole.mutate({
-                              userId: item.id,
-                              role: role as Role,
+                              data: {
+                                userId: item.id,
+                                role: role as UserRole,
+                              },
                             })
                           }
                         >
@@ -187,8 +198,10 @@ export function UsersDataTable() {
                 className="cursor-pointer text-red-500"
                 onClick={() =>
                   deleteUser.mutate({
-                    userId: item.id,
-                    role: item.role as Role,
+                    data: {
+                      userId: item.id,
+                      role: item.role as UserRole,
+                    },
                   })
                 }
                 variant="destructive"
@@ -199,7 +212,7 @@ export function UsersDataTable() {
                   : 'Delete User'}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer hover:bg-white/20!">
+              {/*<DropdownMenuItem className="cursor-pointer hover:bg-white/20!">
                 <Link
                   href={`/admin/users/${item.id}`}
                   target="_blank"
@@ -207,7 +220,7 @@ export function UsersDataTable() {
                 >
                   View User
                 </Link>
-              </DropdownMenuItem>
+              </DropdownMenuItem>*/}
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -289,16 +302,11 @@ export function UsersDataTable() {
         return (
           <>
             {imageUrl ? (
-              <Link href={imageUrl} target="_blank">
+              <a href={imageUrl} target="_blank">
                 <div className="w-10 h-10 relative">
-                  <Image
-                    src={imageUrl}
-                    alt="User's Image"
-                    fill
-                    className=" object-cover rounded-full "
-                  />
+                  <UserAvatar src={imageUrl} alt={row.getValue('userName')} />
                 </div>
-              </Link>
+              </a>
             ) : (
               <div className="w-10 h-10 rounded-full bg-gray-300" />
             )}
@@ -347,7 +355,8 @@ export function UsersDataTable() {
   })
 
   const updateUserRole = useMutation({
-    ...trpc.admin.updateUserRole.mutationOptions(),
+    mutationKey: ['update-user-role'],
+    mutationFn: updateUserRoleFn,
     onMutate: () => {
       toast.loading('Updating user role...', {
         id: 'update-user-role',
@@ -367,12 +376,13 @@ export function UsersDataTable() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: trpc.admin.getUsers.queryKey(),
+        queryKey: ['users'],
       })
     },
   })
   const updateUserRoleByMany = useMutation({
-    ...trpc.admin.updateUserRoleByMany.mutationOptions(),
+    mutationKey: ['update-user-role-by-many'],
+    mutationFn: updateUserRoleByManyFn,
     onMutate: () => {
       toast.loading('Updating users role...', {
         id: 'update-user-role',
@@ -388,19 +398,20 @@ export function UsersDataTable() {
     onSuccess(data, variables) {
       toast.dismiss('update-user-role')
       toast.success(
-        `User role updated successfully for ${variables.userIds.length} users`,
+        `User role updated successfully for ${variables.data.userIds.length} users`,
       )
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: trpc.admin.getUsers.queryKey(),
+        queryKey: ['users'],
       })
       table.resetRowSelection()
     },
   })
 
   const deleteUser = useMutation({
-    ...trpc.admin.deleteUser.mutationOptions(),
+    mutationKey: ['delete-user'],
+    mutationFn: deleteUserFn,
     onMutate: () => {
       toast.loading('Deleting user...', {
         id: 'delete-user',
@@ -420,13 +431,14 @@ export function UsersDataTable() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: trpc.admin.getUsers.queryKey(),
+        queryKey: ['users'],
       })
     },
   })
 
   const deleteUserByMany = useMutation({
-    ...trpc.admin.deleteUsersByMany.mutationOptions(),
+    mutationKey: ['delete-users'],
+    mutationFn: deleteUsersByManyFn,
     onMutate: () => {
       toast.loading('Deleting users...', {
         id: 'delete-user',
@@ -441,11 +453,13 @@ export function UsersDataTable() {
     },
     onSuccess(data, variables) {
       toast.dismiss('delete-user')
-      toast.success(`Deleted ${variables.userIds.length} users successfully`)
+      toast.success(
+        `Deleted ${variables.data.userIds.length} users successfully`,
+      )
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: trpc.admin.getUsers.queryKey(),
+        queryKey: ['users'],
       })
       table.resetRowSelection()
     },
@@ -711,8 +725,10 @@ export function UsersDataTable() {
                           .getFilteredSelectedRowModel()
                           .rows.map((row) => row.original.id)
                         updateUserRoleByMany.mutate({
-                          userIds,
-                          role: 'USER',
+                          data: {
+                            userIds,
+                            role: 'USER',
+                          },
                         })
                       }}
                       className="cursor-pointer text-yellow-500 hover:text-yellow-500! hover:bg-yellow-900/60!"
@@ -726,8 +742,10 @@ export function UsersDataTable() {
                           .getFilteredSelectedRowModel()
                           .rows.map((row) => row.original.id)
                         updateUserRoleByMany.mutate({
-                          userIds,
-                          role: 'ADMIN',
+                          data: {
+                            userIds,
+                            role: 'ADMIN',
+                          },
                         })
                       }}
                       className="cursor-pointer text-yellow-500 hover:text-yellow-500! hover:bg-yellow-900/60!"
@@ -747,8 +765,10 @@ export function UsersDataTable() {
                       .getFilteredSelectedRowModel()
                       .rows.map((row) => row.original.role)
                     deleteUserByMany.mutate({
-                      userIds,
-                      roles,
+                      data: {
+                        userIds,
+                        roles,
+                      },
                     })
                   }}
                   className="cursor-pointer"

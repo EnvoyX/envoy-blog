@@ -189,8 +189,8 @@ function PostComponent() {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-black text-slate-50 antialiased flex flex-col">
-        <nav className="sticky top-0 z-40 border-b border-slate-800 bg-black backdrop-blur-md">
+      <div className="min-h-screen  text-slate-50 antialiased flex flex-col">
+        <nav className="sticky top-0 z-40 border-b border-slate-800 backdrop-blur-md">
           <div className="mx-auto flex max-w-7xl items-center px-4 py-3">
             <Button
               variant="ghost"
@@ -229,8 +229,8 @@ function PostComponent() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-slate-50 antialiased">
-      <nav className="sticky top-0 z-40 border-b border-slate-800 bg-black backdrop-blur-md">
+    <div className="min-h-screen text-slate-50 antialiased">
+      <nav className="sticky top-0 z-40 border-b border-slate-800  backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <Button
             variant="ghost"

@@ -45,7 +45,12 @@ import {
   exportCurrentPageToXlsx,
   exportFilteredRowsToXlsx,
 } from '@/utils/xlsx'
-import { getAccountsFn } from '@/data/admin'
+import {
+  deleteAccountFn,
+  deleteAccountsByManyFn,
+  getAccountsFn,
+} from '@/data/admin'
+import { UserAvatar } from '../user-profile'
 
 export default function AccountsDataTable() {
   const queryClient = useQueryClient()
@@ -121,12 +126,18 @@ export default function AccountsDataTable() {
               <DropdownMenuItem
                 variant="destructive"
                 className="cursor-pointer"
-                onClick={() => deleteAccount.mutate({ accountId: item.id })}
+                onClick={() =>
+                  deleteAccount.mutate({
+                    data: {
+                      accountId: item.id,
+                    },
+                  })
+                }
               >
                 Delete Account
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer hover:bg-white/20!">
+              {/*<DropdownMenuItem className="cursor-pointer hover:bg-white/20!">
                 <Link
                   href={`/admin/users/${item.userId}`}
                   target="_blank"
@@ -134,7 +145,7 @@ export default function AccountsDataTable() {
                 >
                   View User
                 </Link>
-              </DropdownMenuItem>
+              </DropdownMenuItem>*/}
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -224,16 +235,11 @@ export default function AccountsDataTable() {
         return (
           <>
             {imageUrl ? (
-              <Link href={imageUrl} target="_blank">
+              <a href={imageUrl} target="_blank">
                 <div className="w-10 h-10 relative">
-                  <Image
-                    src={imageUrl}
-                    alt="User's Image"
-                    fill
-                    className=" object-cover rounded-full "
-                  />
+                  <UserAvatar src={imageUrl} alt={row.getValue('userName')} />
                 </div>
-              </Link>
+              </a>
             ) : (
               <div className="w-10 h-10 rounded-full bg-gray-300" />
             )}
@@ -359,7 +365,8 @@ export default function AccountsDataTable() {
   })
 
   const deleteAccount = useMutation({
-    ...trpc.admin.deleteAccount.mutationOptions(),
+    mutationKey: ['delete-account'],
+    mutationFn: deleteAccountFn,
     onMutate: () => {
       toast.loading('Deleting account...', {
         id: 'delete-account',
@@ -379,13 +386,14 @@ export default function AccountsDataTable() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: trpc.admin.getAccounts.queryKey(),
+        queryKey: ['accounts'],
       })
     },
   })
 
   const deleteAccountsByMany = useMutation({
-    ...trpc.admin.deleteAccountsByMany.mutationOptions(),
+    mutationKey: ['delete-accounts'],
+    mutationFn: deleteAccountsByManyFn,
     onMutate: () => {
       toast.loading('Deleting accounts...', {
         id: 'delete-accounts',
@@ -401,12 +409,12 @@ export default function AccountsDataTable() {
     onSuccess(data, variables) {
       toast.dismiss('delete-accounts')
       toast.success(
-        `Deleted ${variables.accountIds.length} accounts successfully`,
+        `Deleted ${variables.data.accountIds.length} accounts successfully`,
       )
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: trpc.admin.getAccounts.queryKey(),
+        queryKey: ['accounts'],
       })
       table.resetRowSelection()
     },
@@ -612,7 +620,9 @@ export default function AccountsDataTable() {
                       .getFilteredSelectedRowModel()
                       .rows.map((row) => row.original.id)
                     deleteAccountsByMany.mutate({
-                      accountIds,
+                      data: {
+                        accountIds: accountIds,
+                      },
                     })
                   }}
                 >

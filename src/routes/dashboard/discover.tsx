@@ -137,7 +137,7 @@ function RouteComponent() {
   })
   return (
     <div className="flex flex-1 items-center justify-center py-8">
-      <div className="w-full max-w-2xl space-y-6 px-4">
+      <div className="w-full max-w-2xl space-y-6 px-4 ">
         <div className="text-center">
           <h1 className="text-3xl font-bold">Discover</h1>
           <p className="pt-2 text-muted-foreground">
@@ -151,7 +151,7 @@ function RouteComponent() {
             </a>
           </p>
         </div>
-        <Card>
+        <Card className="bg-transparent!">
           <CardHeader>
             <CardTitle className="inline-flex items-center gap-2">
               <Sparkles className="size-5 text-primary" />

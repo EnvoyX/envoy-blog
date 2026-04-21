@@ -15,9 +15,13 @@ import { navItemsDashboard } from '../NavItems'
 
 export function AppSidebar({ user }: UserSession) {
   return (
-    <Sidebar collapsible="icon" variant="sidebar" className="bg-black!">
-      <SidebarHeader className="bg-black!">
-        <SidebarMenu className="bg-black!">
+    <Sidebar
+      collapsible="icon"
+      variant="sidebar"
+      className="bg-emerald-950/50!"
+    >
+      <SidebarHeader className="bg-emerald-950/50!">
+        <SidebarMenu className="bg-emerald-950/50!">
           <SidebarMenuButton size="lg" asChild>
             <Link to="/" className="flex items-center hover:bg-emerald-500/30!">
               <div className="flex items-center justify-center aspect-square size-8">
@@ -34,10 +38,10 @@ export function AppSidebar({ user }: UserSession) {
           </SidebarMenuButton>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent className="bg-black!">
+      <SidebarContent className="bg-emerald-950/50!">
         <NavPrimary items={navItemsDashboard} user={user} />
       </SidebarContent>
-      <SidebarFooter className="bg-black!">
+      <SidebarFooter className="bg-emerald-950/50!">
         <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />

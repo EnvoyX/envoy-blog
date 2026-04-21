@@ -179,7 +179,7 @@ function RouteComponent() {
         </div>
 
         <Tabs defaultValue="single">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2 bg-transparent!">
             <TabsTrigger value="single" className="gap-2">
               <LinkIcon className="size-4" />
               Single URL
@@ -190,7 +190,7 @@ function RouteComponent() {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="single">
-            <Card>
+            <Card className="bg-transparent!">
               <CardHeader>
                 <CardTitle>Import Single URL</CardTitle>
                 <CardDescription>
@@ -291,7 +291,7 @@ function RouteComponent() {
             </Card>
           </TabsContent>
           <TabsContent value="bulk">
-            <Card>
+            <Card className="bg-transparent!">
               <CardHeader>
                 <CardTitle>Bulk Import</CardTitle>
                 <CardDescription>

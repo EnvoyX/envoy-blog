@@ -203,7 +203,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                 <Label htmlFor={`${field.name}-input`}>
                   Content (Markdown)
                 </Label>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 max-sm:flex-col max-sm:mt-4 max-sm:mb-4">
                   <Button size={'sm'} variant={'default'} asChild>
                     <Link
                       to={
@@ -336,7 +336,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
         </div>
       </header>
 
-      {/* MOBILE */}
+      {/* mobile */}
       <main className="md:hidden">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2 mb-4">
@@ -349,8 +349,8 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
           </TabsList>
 
           <TabsContent value="edit-blog">
-            <Card>
-              <CardContent className="pt-6">
+            <Card className="bg-transparent!">
+              <CardContent className="pt-6 ">
                 {EditorFields}
                 <Button
                   onClick={() => form.handleSubmit()}
@@ -400,9 +400,9 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
         </Tabs>
       </main>
 
-      {/* DESKSTOP */}
+      {/* desktop */}
       <main className="hidden md:grid grid-cols-2 gap-6 min-h-screen flex-1">
-        <Card className="flex flex-col h-250">
+        <Card className="flex flex-col h-250 bg-transparent!">
           <CardHeader>
             <CardTitle className="text-sm font-medium uppercase text-muted-foreground">
               Editor

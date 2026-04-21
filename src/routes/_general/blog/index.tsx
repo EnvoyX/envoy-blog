@@ -110,7 +110,7 @@ function BlogPageComponent() {
   //   })
 
   return (
-    <div className="min-h-screen text-slate-50 my-16">
+    <div className="min-h-screen text-slate-50 my-16 p-4">
       <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col ">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
@@ -243,7 +243,7 @@ function BlogPageComponent() {
               </CardContent>
 
               <CardFooter className="p-6 pt-0 flex flex-col justify-start items-start gap-1">
-                <span className="absolute flex items-center gap-3 bottom-6 right-3 group">
+                <span className="absolute flex flex-col items-center gap-1 bottom-6 right-3 group">
                   <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-emerald-500/30 transition-colors">
                     <Heart
                       className={`size-3.5 ${post._count.likes > 0 ? 'fill-emerald-500 text-emerald-500' : ''}`}

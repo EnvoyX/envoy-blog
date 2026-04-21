@@ -23,7 +23,7 @@ function RouteComponent() {
         <h1 className="text-3xl font-bold text-foreground">Admin Panel</h1>
       </div>
       <Tabs defaultValue="account" className="mt-8 overflow-x-auto">
-        <TabsList className="bg-white/5 border overflow-x-auto flex flex-col h-64 mx-auto sm:h-10 sm:flex-row">
+        <TabsList className="bg-white/5 border overflow-auto flex h-fit sm:flex-row">
           <TabsTrigger value="account" className="cursor-pointer">
             Account
           </TabsTrigger>

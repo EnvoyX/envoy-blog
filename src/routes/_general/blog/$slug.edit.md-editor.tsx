@@ -69,11 +69,11 @@ function RouteComponent() {
         <div className="flex justify-center max-sm:gap-4 max-sm:flex-col sm:justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold max-sm:text-center">MD Editor</h1>
-            <p className="text-slate-400">
+            <p className="text-slate-400 max-sm:text-center">
               Advanced rich-text live editing experience.
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 max-sm:flex-col">
             <Button variant="default" className="gap-2" asChild>
               <Link to="/blog/$slug/edit" params={{ slug: post?.slug ?? '' }}>
                 <ChevronLeft className="size-4" /> Edit Blog

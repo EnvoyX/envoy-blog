@@ -101,14 +101,6 @@ export const navItemsDashboard: NavPrimaryProps['items'] = linkOptions([
       exact: false,
     },
   },
-  {
-    title: 'Tic Tac Toe',
-    icon: Gamepad2,
-    to: '/dashboard/tic-tac-toe',
-    activeOptions: {
-      exact: true,
-    },
-  },
 ])
 export const sidebarNavItems: NavPrimaryProps['items'] = linkOptions([
   {

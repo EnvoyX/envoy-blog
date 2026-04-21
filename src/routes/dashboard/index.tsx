@@ -53,7 +53,7 @@ function RouteComponent() {
   })
 
   return (
-    <div className="p-6 space-y-8 bg-[#09090b] min-h-screen text-zinc-100">
+    <div className="p-6 space-y-8  min-h-screen text-zinc-100">
       {isLoadingDashboardData ? (
         <QuranSkeleton />
       ) : !data?.quranTrack ? (
