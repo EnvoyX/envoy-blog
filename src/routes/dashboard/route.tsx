@@ -1,5 +1,5 @@
 import { getSession } from '@/data/session'
-import { Separator } from '@/components/ui/separator'
+// import { Separator } from '@/components/ui/separator'
 import {
   SidebarInset,
   SidebarProvider,

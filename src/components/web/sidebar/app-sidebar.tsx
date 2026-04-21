@@ -1,7 +1,3 @@
-'use client'
-
-
-
 import {
   Sidebar,
   SidebarContent,
@@ -16,8 +12,6 @@ import { NavPrimary } from './nav-primary'
 import { NavUser } from './nav-user'
 import { UserSession } from '@/data/session'
 import { navItemsDashboard } from '../NavItems'
-
-
 
 export function AppSidebar({ user }: UserSession) {
   return (
@@ -41,7 +35,7 @@ export function AppSidebar({ user }: UserSession) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent className="bg-black!">
-        <NavPrimary items={navItemsDashboard} />
+        <NavPrimary items={navItemsDashboard} user={user} />
       </SidebarContent>
       <SidebarFooter className="bg-black!">
         <NavUser user={user} />

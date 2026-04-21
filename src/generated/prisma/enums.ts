@@ -39,6 +39,15 @@ export const Priority = {
 export type Priority = (typeof Priority)[keyof typeof Priority]
 
 
+export const UserRole = {
+  SUPERADMIN: 'SUPERADMIN',
+  ADMIN: 'ADMIN',
+  USER: 'USER'
+} as const
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
 export const MessageRole = {
   USER: 'USER',
   ASSISTANT: 'ASSISTANT',

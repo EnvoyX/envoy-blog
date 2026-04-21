@@ -28,6 +28,12 @@ enum Priority {
   URGENT
 }
 
+enum UserRole {
+SUPERADMIN
+  ADMIN
+  USER
+}
+
 enum MessageRole {
   USER
   ASSISTANT
@@ -151,7 +157,7 @@ model Chat {
 
 model Message {
   id      String      @id @default(cuid())
-  messageId String    
+  messageId String
   chatId  String      @map("chat_id")
   chat    Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
   role    MessageRole
@@ -204,6 +210,8 @@ model User {
   password      String?
   emailVerified Boolean
   image         String?
+  defaultImage  String?
+  role          UserRole @default(USER)
   createdAt     DateTime
   updatedAt     DateTime
   sessions      Session[]

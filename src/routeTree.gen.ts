@@ -26,6 +26,7 @@ import { Route as DashboardTaskTrackerIndexRouteImport } from './routes/dashboar
 import { Route as DashboardQuranTrackerIndexRouteImport } from './routes/dashboard/quran-tracker/index'
 import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
 import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
+import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
 import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog/index'
 import { Route as GeneralArticleIndexRouteImport } from './routes/_general/article/index'
 import { Route as ChatChatIndexRouteImport } from './routes/_chat/chat/index'
@@ -132,6 +133,11 @@ const DashboardItemsIndexRoute = DashboardItemsIndexRouteImport.update({
 const DashboardBlogIndexRoute = DashboardBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
 const GeneralBlogIndexRoute = GeneralBlogIndexRouteImport.update({
@@ -277,6 +283,7 @@ export interface FileRoutesByFullPath {
   '/chat/': typeof ChatChatIndexRoute
   '/article/': typeof GeneralArticleIndexRoute
   '/blog/': typeof GeneralBlogIndexRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
@@ -314,6 +321,7 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginIndexRoute
   '/article': typeof GeneralArticleIndexRoute
   '/blog': typeof GeneralBlogIndexRoute
+  '/dashboard/admin': typeof DashboardAdminIndexRoute
   '/dashboard/blog': typeof DashboardBlogIndexRoute
   '/dashboard/items': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker': typeof DashboardQuranTrackerIndexRoute
@@ -356,6 +364,7 @@ export interface FileRoutesById {
   '/_chat/chat/': typeof ChatChatIndexRoute
   '/_general/article/': typeof GeneralArticleIndexRoute
   '/_general/blog/': typeof GeneralBlogIndexRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
@@ -397,6 +406,7 @@ export interface FileRouteTypes {
     | '/chat/'
     | '/article/'
     | '/blog/'
+    | '/dashboard/admin/'
     | '/dashboard/blog/'
     | '/dashboard/items/'
     | '/dashboard/quran-tracker/'
@@ -434,6 +444,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/article'
     | '/blog'
+    | '/dashboard/admin'
     | '/dashboard/blog'
     | '/dashboard/items'
     | '/dashboard/quran-tracker'
@@ -475,6 +486,7 @@ export interface FileRouteTypes {
     | '/_chat/chat/'
     | '/_general/article/'
     | '/_general/blog/'
+    | '/dashboard/admin/'
     | '/dashboard/blog/'
     | '/dashboard/items/'
     | '/dashboard/quran-tracker/'
@@ -628,6 +640,13 @@ declare module '@tanstack/react-router' {
       path: '/blog'
       fullPath: '/dashboard/blog/'
       preLoaderRoute: typeof DashboardBlogIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/admin/': {
+      id: '/dashboard/admin/'
+      path: '/admin'
+      fullPath: '/dashboard/admin/'
+      preLoaderRoute: typeof DashboardAdminIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/_general/blog/': {
@@ -832,6 +851,7 @@ interface DashboardRouteRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardItemsItemIdRoute: typeof DashboardItemsItemIdRoute
   DashboardTaskTrackerTaskListIdRoute: typeof DashboardTaskTrackerTaskListIdRoute
+  DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
   DashboardBlogIndexRoute: typeof DashboardBlogIndexRoute
   DashboardItemsIndexRoute: typeof DashboardItemsIndexRoute
   DashboardQuranTrackerIndexRoute: typeof DashboardQuranTrackerIndexRoute
@@ -851,6 +871,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardItemsItemIdRoute: DashboardItemsItemIdRoute,
   DashboardTaskTrackerTaskListIdRoute: DashboardTaskTrackerTaskListIdRoute,
+  DashboardAdminIndexRoute: DashboardAdminIndexRoute,
   DashboardBlogIndexRoute: DashboardBlogIndexRoute,
   DashboardItemsIndexRoute: DashboardItemsIndexRoute,
   DashboardQuranTrackerIndexRoute: DashboardQuranTrackerIndexRoute,
