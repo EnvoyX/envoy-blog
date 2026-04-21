@@ -93,7 +93,7 @@ export function CommentItem({
         }}
         target="_blank"
       >
-        <Avatar className="h-10 w-10 shrink-0 border border-slate-800 items-center justify-center">
+        <Avatar className="h-10 w-10 shrink-0 items-center justify-center">
           <AvatarImage src={comment.user.image as string} />
           <AvatarFallback>{comment.user.name}</AvatarFallback>
         </Avatar>

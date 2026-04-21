@@ -164,132 +164,139 @@ function BlogPageComponent() {
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
-          {filteredPosts.map((post) => (
-            <Card
-              key={post.id}
-              className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0"
-            >
-              <div className="aspect-video relative overflow-hidden">
-                <img
-                  src={
-                    post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'
-                  }
-                  alt={post.title}
-                  className="object-cover w-full h-full transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
+          {filteredPosts.map((post) => {
+            const hasLiked = post.likes.find(
+              (like) =>
+                like.userId === session.user.id && like.postId === post.id,
+            )
+            return (
+              <Card
+                key={post.id}
+                className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0"
+              >
+                <div className="aspect-video relative overflow-hidden">
+                  <img
+                    src={
+                      post.image ??
+                      'https://tanstack.com/assets/og-C0HGjoLl.png'
+                    }
+                    alt={post.title}
+                    className="object-cover w-full h-full transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
 
-                {post.authorId === session.user.id && (
-                  <div className="absolute top-3 right-3">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="secondary"
-                          size="icon"
-                          className="size-8 rounded-full bg-slate-950/50 backdrop-blur-md border-slate-700 hover:bg-slate-800 cursor-pointer"
-                        >
-                          <MoreVertical className="size-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="w-40 bg-slate-900 border-slate-800 text-slate-200"
-                      >
-                        <DropdownMenuItem
-                          asChild
-                          className="cursor-pointer gap-2"
-                        >
-                          <Link
-                            to="/dashboard/blog/$slug"
-                            params={{ slug: post.slug }}
+                  {post.authorId === session.user.id && (
+                    <div className="absolute top-3 right-3">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="secondary"
+                            size="icon"
+                            className="size-8 rounded-full bg-slate-950/50 backdrop-blur-md border-slate-700 hover:bg-slate-800 cursor-pointer"
                           >
-                            <ExternalLink className="size-4" /> View Post
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer gap-2">
-                          <Link
-                            to="/dashboard/blog/$slug/edit"
-                            params={{ slug: post.slug }}
-                            className="flex gap-1"
-                          >
-                            <Pencil className="size-4" /> Edit Post
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            modalStore.setState((prev) => {
-                              return {
-                                ...prev,
-                                isOpen: !prev.isOpen,
-                                dialogId: post.id,
-                              }
-                            })
-                          }}
-                          className="cursor-pointer gap-2 text-red-400 focus:text-red-400 focus:bg-red-400/10"
+                            <MoreVertical className="size-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="w-40 bg-slate-900 border-slate-800 text-slate-200"
                         >
-                          <Trash2 className="size-4" /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                )}
-              </div>
-
-              <CardContent className="p-6 flex-1">
-                <div className="flex flex-col justify-start items-start sm:flex-row  sm:items-center">
-                  <div className="flex items-center gap-2 text-xs text-slate-500 mb-3 uppercase tracking-widest font-semibold">
-                    <Calendar className="size-3" />
-                    {intlFormat(new Date(post.createdAt), {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                    })}
-                  </div>
-                </div>
-                <h2 className="text-xl font-bold leading-tight group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
-                  {post.title}
-                </h2>
-
-                <p className="text-slate-400 text-sm line-clamp-3 leading-relaxed">
-                  {post.description}
-                </p>
-              </CardContent>
-
-              <CardFooter className="p-6 pt-0 flex flex-col justify-start items-start gap-1">
-                <span className="absolute flex flex-col items-center gap-1 bottom-6 right-3 group">
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-emerald-500/30 transition-colors">
-                    <Heart
-                      className={`size-3.5 ${post._count.likes > 0 ? 'fill-emerald-500 text-emerald-500' : ''}`}
-                    />
-                    <span className="text-[11px] font-bold tabular-nums">
-                      {post._count.likes}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-blue-500/30 transition-colors">
-                    <MessageSquare className="size-3.5" />
-                    <span className="text-[11px] font-bold tabular-nums">
-                      {post._count.comments}
-                    </span>
-                  </div>
-                </span>
-                <div className="flex items-center gap-2 text-xs text-slate-500 mt-3 uppercase tracking-widest font-semibold">
-                  <LucideClockFading className="size-3" />
-                  {intlFormatDistance(new Date(post.updatedAt), new Date())}
+                          <DropdownMenuItem
+                            asChild
+                            className="cursor-pointer gap-2"
+                          >
+                            <Link
+                              to="/dashboard/blog/$slug"
+                              params={{ slug: post.slug }}
+                            >
+                              <ExternalLink className="size-4" /> View Post
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="cursor-pointer gap-2">
+                            <Link
+                              to="/dashboard/blog/$slug/edit"
+                              params={{ slug: post.slug }}
+                              className="flex gap-1"
+                            >
+                              <Pencil className="size-4" /> Edit Post
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              modalStore.setState((prev) => {
+                                return {
+                                  ...prev,
+                                  isOpen: !prev.isOpen,
+                                  dialogId: post.id,
+                                }
+                              })
+                            }}
+                            className="cursor-pointer gap-2 text-red-400 focus:text-red-400 focus:bg-red-400/10"
+                          >
+                            <Trash2 className="size-4" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  )}
                 </div>
 
-                <Button
-                  asChild
-                  variant="link"
-                  className="p-0 h-auto text-emerald-400 hover:text-emerald-300 gap-2 cursor-pointer"
-                >
-                  <Link to="/blog/$slug" params={{ slug: post.slug }}>
-                    Read Full Blog →
-                  </Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+                <CardContent className="p-6 flex-1">
+                  <div className="flex flex-col justify-start items-start sm:flex-row  sm:items-center">
+                    <div className="flex items-center gap-2 text-xs text-slate-500 mb-3 uppercase tracking-widest font-semibold">
+                      <Calendar className="size-3" />
+                      {intlFormat(new Date(post.createdAt), {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </div>
+                  </div>
+                  <h2 className="text-xl font-bold leading-tight group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
+                    {post.title}
+                  </h2>
+
+                  <p className="text-slate-400 text-sm line-clamp-3 leading-relaxed">
+                    {post.description}
+                  </p>
+                </CardContent>
+
+                <CardFooter className="p-6 pt-0 flex flex-col justify-start items-start gap-1">
+                  <span className="absolute flex flex-col items-center gap-1 bottom-6 right-3 group">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-emerald-500/30 transition-colors">
+                      <Heart
+                        className={`size-3.5 ${hasLiked ? 'fill-emerald-500 text-emerald-500' : ''}`}
+                      />
+                      <span className="text-[11px] font-bold tabular-nums">
+                        {post._count.likes}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-blue-500/30 transition-colors">
+                      <MessageSquare className="size-3.5" />
+                      <span className="text-[11px] font-bold tabular-nums">
+                        {post._count.comments}
+                      </span>
+                    </div>
+                  </span>
+                  <div className="flex items-center gap-2 text-xs text-slate-500 mt-3 uppercase tracking-widest font-semibold">
+                    <LucideClockFading className="size-3" />
+                    {intlFormatDistance(new Date(post.updatedAt), new Date())}
+                  </div>
+
+                  <Button
+                    asChild
+                    variant="link"
+                    className="p-0 h-auto text-emerald-400 hover:text-emerald-300 gap-2 cursor-pointer"
+                  >
+                    <Link to="/blog/$slug" params={{ slug: post.slug }}>
+                      Read Full Blog →
+                    </Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+            )
+          })}
         </div>
         <Dialog
           open={isOpen}

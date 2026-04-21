@@ -416,11 +416,11 @@ function PostComponent() {
                     <Link
                       to="/user/$userId"
                       params={{
-                        userId: session.user.id,
+                        userId: session.user.id as string,
                       }}
                       target="_blank"
                     >
-                      <Avatar className="h-10 w-10 shrink-0 border border-slate-700 items-center justify-center">
+                      <Avatar className="h-10 w-10 shrink-0 items-center justify-center">
                         <AvatarImage src={session.user.image as string} />
                         <AvatarFallback>
                           {' '}
