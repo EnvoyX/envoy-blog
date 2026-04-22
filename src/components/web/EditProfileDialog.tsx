@@ -85,7 +85,7 @@ export function EditProfileDialog({ user }: { user: any }) {
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
         </DialogHeader>
-        <div className="max-h-[85vh] overflow-y-auto p-0 custom-scrollbar">
+        <div className="max-h-[85vh] overflow-y-auto p-0 scrollbar-hide">
           <form
             onSubmit={(e) => {
               e.preventDefault()

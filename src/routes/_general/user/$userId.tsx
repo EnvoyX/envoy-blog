@@ -46,7 +46,7 @@ function PublicProfileComponent() {
         <div className="size-40 rounded-3xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1 shadow-2xl shadow-emerald-500/10">
           <div className="w-full h-full rounded-3xl bg-slate-950 flex items-center justify-center overflow-hidden">
             {user?.image || user?.defaultImage ? (
-              <Avatar className="size-40 shrink-0">
+              <Avatar className="size-40 shrink-0 after:border-none!">
                 <AvatarImage
                   src={
                     (user?.image as string) ?? (user?.defaultImage as string)
@@ -59,7 +59,7 @@ function PublicProfileComponent() {
                   className="w-full h-full object-cover object-center rounded-lg"
                 />
 
-                <AvatarFallback className="w-full h-full object-cover object-center rounded-lg">
+                <AvatarFallback className="w-full h-full object-cover object-center rounded-lg text-3xl">
                   {' '}
                   {(user?.name as string)
                     ? (user?.name as string)

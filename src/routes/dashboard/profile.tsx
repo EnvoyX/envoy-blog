@@ -114,7 +114,7 @@ function RouteComponent() {
           <div className="size-40 rounded-2xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1">
             <div className="w-full h-full rounded-2xl bg-background flex items-center justify-center overflow-hidden">
               {user.image || user.defaultImage ? (
-                <Avatar className="size-40 shrink-0">
+                <Avatar className="size-40 shrink-0 after:border-none!">
                   <AvatarImage
                     src={
                       (user.image as string) ?? (user?.defaultImage as string)
@@ -127,7 +127,7 @@ function RouteComponent() {
                     className="w-full h-full object-cover object-center rounded-lg"
                   />
 
-                  <AvatarFallback className="w-full h-full object-cover object-center rounded-lg">
+                  <AvatarFallback className="w-full h-full object-cover object-center rounded-lg text-3xl">
                     {' '}
                     {(user.name as string)
                       ? (user.name as string)
