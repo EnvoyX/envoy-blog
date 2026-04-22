@@ -21,9 +21,12 @@ export function AppSidebar({ user }: UserSession) {
       className="bg-emerald-950/50!"
     >
       <SidebarHeader className="bg-emerald-950/50!">
-        <SidebarMenu className="bg-emerald-950/50!">
-          <SidebarMenuButton size="lg" asChild>
-            <Link to="/" className="flex items-center hover:bg-emerald-500/30!">
+        <SidebarMenu className="bg-emerald-950/50! rounded-lg">
+          <SidebarMenuButton size="lg" asChild className="">
+            <Link
+              to="/"
+              className="flex items-center hover:bg-emerald-500/30! "
+            >
               <div className="flex items-center justify-center aspect-square size-8">
                 <img
                   src="https://tanstack.com/images/logos/logo-color-600.png"
