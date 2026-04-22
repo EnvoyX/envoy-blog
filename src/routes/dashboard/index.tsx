@@ -222,15 +222,13 @@ function RouteComponent() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {data?.taksLists?.map((list) => (
                 <Link
+                  key={list.id}
                   to="/dashboard/task-tracker/$taskListId"
                   params={{
                     taskListId: list.id,
                   }}
                 >
-                  <div
-                    key={list.id}
-                    className="group relative p-5 rounded-2xl border border-zinc-800 bg-zinc-900/20 hover:bg-zinc-800/40 transition-all cursor-pointer"
-                  >
+                  <div className="group relative p-5 rounded-2xl border border-zinc-800 bg-zinc-900/20 hover:bg-zinc-800/40 transition-all cursor-pointer">
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-bold text-zinc-200 group-hover:text-white">
                         {list.title}
