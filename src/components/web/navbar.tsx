@@ -166,7 +166,7 @@ export function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className={buttonVariants({ variant: 'secondary' })}
+                  className={buttonVariants({ variant: 'default' })}
                 >
                   Login
                 </Link>

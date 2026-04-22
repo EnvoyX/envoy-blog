@@ -95,7 +95,14 @@ export function CommentItem({
       >
         <Avatar className="h-10 w-10 shrink-0 items-center justify-center">
           <AvatarImage src={comment.user.image as string} />
-          <AvatarFallback>{comment.user.name}</AvatarFallback>
+          <AvatarFallback>
+            {comment.user.name
+              ? comment.user.name
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')
+              : ''}
+          </AvatarFallback>
         </Avatar>
       </Link>
 

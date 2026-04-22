@@ -62,7 +62,7 @@ export function LoginForm() {
   })
 
   return (
-    <Card className="max-w-md w-full">
+    <Card className="max-w-md w-full bg-emerald-950">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>Sign in to continue</CardDescription>
