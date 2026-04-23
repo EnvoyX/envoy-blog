@@ -145,6 +145,7 @@ export const Route = createFileRoute('/api/chat-gemini')({
             messages,
             middleware: [logger, usageTracker, terminal],
             conversationId: chatId,
+            debug: true,
             context: {
               chatId: chatId,
             },

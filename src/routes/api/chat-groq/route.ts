@@ -145,6 +145,7 @@ export const Route = createFileRoute('/api/chat-groq')({
             messages,
             middleware: [logger, usageTracker, terminal],
             conversationId: chatId,
+            debug: true,
             context: {
               chatId: chatId,
             },

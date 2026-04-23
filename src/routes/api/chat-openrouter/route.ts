@@ -144,6 +144,7 @@ export const Route = createFileRoute('/api/chat-openrouter')({
             messages,
             middleware: [logger, usageTracker, terminal],
             conversationId: chatId,
+            debug: true,
             context: {
               chatId: chatId,
             },
