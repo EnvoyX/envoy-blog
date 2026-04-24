@@ -73,6 +73,9 @@ function RouteComponent() {
           chatId: chatId,
         },
       }),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
   });
   const { mutate } = useMutation({
     mutationFn: saveAssistantMessageFn,
