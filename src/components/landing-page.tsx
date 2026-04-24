@@ -1,16 +1,18 @@
-import { getUser } from '@/data/session'
-import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
-import { ShieldCheck, Zap, Globe, ArrowRight, Code2 } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
+import { ShieldCheck, Zap, Globe, ArrowRight, Code2 } from 'lucide-react';
+
+import { getUser } from '@/data/session';
 
 const LandingPage = () => {
   const { data } = useQuery({
     queryKey: ['get-session'],
     queryFn: async () => {
-      const data = await getUser()
-      return data
+      const data = await getUser();
+      return data;
     },
-  })
+  });
+  // throw new Error('Test error');
   return (
     <div>
       <section className="relative pt-20 pb-32 px-8 overflow-hidden">
@@ -28,9 +30,8 @@ const LandingPage = () => {
             Envoy <br /> Mindpalace.
           </h1>
           <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto">
-            This is my own TanStack Start playground to learn and experiment
-            with. Powered by TanStack Router, Vite, and server-side functions
-            that feel like magic.
+            This is my own TanStack Start playground to learn and experiment with. Powered by
+            TanStack Router, Vite, and with many other TanStack's Ecosystem.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -70,17 +71,17 @@ const LandingPage = () => {
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
 const FeatureCard = ({
   icon,
   title,
   description,
 }: {
-  icon: React.ReactNode
-  title: string
-  description: string
+  icon: React.ReactNode;
+  title: string;
+  description: string;
 }) => (
   <div className="group p-8 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-emerald-500/50 transition-all">
     <div className="mb-4 p-3 bg-slate-950 w-fit rounded-lg border border-slate-800 group-hover:scale-110 transition-transform">
@@ -89,6 +90,6 @@ const FeatureCard = ({
     <h3 className="text-xl font-bold mb-3">{title}</h3>
     <p className="text-slate-400 leading-relaxed text-sm">{description}</p>
   </div>
-)
+);
 
-export default LandingPage
+export default LandingPage;

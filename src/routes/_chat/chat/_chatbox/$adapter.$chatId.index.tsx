@@ -1,35 +1,28 @@
-import { ChatInput } from '@/components/ai-elements/ChatInput'
-import { Button } from '@/components/ui/button'
-import HeaderChat from '@/components/web/HeaderChat'
-import { MarkdownRenderer } from '@/components/web/markdown/Markdown'
-import { UserAvatar } from '@/components/web/user-profile'
-import { getChatHistoryFn, saveAssistantMessageFn } from '@/data/chat-ai'
-import { getUser } from '@/data/session'
-import { MODEL_CONFIG } from '@/lib/constants'
-import { cn } from '@/lib/utils'
-import { UIMessage } from '@tanstack/ai'
-import { fetchServerSentEvents, useChat } from '@tanstack/ai-react'
+import { UIMessage } from '@tanstack/ai';
+import { fetchServerSentEvents, useChat } from '@tanstack/ai-react';
 import {
   useMutation,
   useQuery,
   useQueryClient,
   // useSuspenseQuery,
-} from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
-import { createFileRoute } from '@tanstack/react-router'
-import { zodValidator } from '@tanstack/zod-adapter'
-import {
-  Bot,
-  Check,
-  Copy,
-  Loader,
-  Loader2,
-  RepeatIcon,
-  User,
-} from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import { toast } from 'sonner'
-import z from 'zod'
+} from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+import { zodValidator } from '@tanstack/zod-adapter';
+import { Bot, Check, Copy, Loader, Loader2, RepeatIcon, User } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import z from 'zod';
+
+import { ChatInput } from '@/components/ai-elements/ChatInput';
+import { Button } from '@/components/ui/button';
+import HeaderChat from '@/components/web/HeaderChat';
+import { MarkdownRenderer } from '@/components/web/markdown/Markdown';
+import { UserAvatar } from '@/components/web/user-profile';
+import { getChatHistoryFn, saveAssistantMessageFn } from '@/data/chat-ai';
+import { getUser } from '@/data/session';
+import { MODEL_CONFIG } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/_chat/chat/_chatbox/$adapter/$chatId/')({
   component: RouteComponent,
@@ -38,51 +31,40 @@ export const Route = createFileRoute('/_chat/chat/_chatbox/$adapter/$chatId/')({
       model: z.string().optional(),
     }),
   ),
-})
+});
 
 function CopyButton({ content }: { content: string }) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(content)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    await navigator.clipboard.writeText(content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={handleCopy}
-      className="h-8 px-2 text-zinc-400"
-    >
-      {copied ? (
-        <Check size={14} className="text-emerald-500" />
-      ) : (
-        <Copy size={14} />
-      )}
+    <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8 px-2 text-zinc-400">
+      {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
       <span className="ml-2 text-xs">{copied ? 'Copied' : 'Copy'}</span>
     </Button>
-  )
+  );
 }
 
 function RouteComponent() {
-  const { adapter, chatId } = Route.useParams()
-  const { model } = Route.useSearch()
-  const navigate = useNavigate({ from: Route.fullPath })
-  const currentModel = model
-  const [targetMessageIds, setTargetMessageIds] = useState<Set<string>>(
-    new Set(),
-  )
-  const queryClient = useQueryClient()
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const { adapter, chatId } = Route.useParams();
+  const { model } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
+  const currentModel = model;
+  const [targetMessageIds, setTargetMessageIds] = useState<Set<string>>(new Set());
+  const queryClient = useQueryClient();
+  const scrollRef = useRef<HTMLDivElement>(null);
   const { data } = useQuery({
     queryKey: ['get-session'],
     queryFn: async () => {
-      const data = await getUser()
-      return data
+      const data = await getUser();
+      return data;
     },
-  })
+  });
   const { data: chatData, isLoading: isLoadingMessages } = useQuery({
     queryKey: ['chat', chatId],
     queryFn: () =>
@@ -91,26 +73,26 @@ function RouteComponent() {
           chatId: chatId,
         },
       }),
-  })
+  });
   const { mutate } = useMutation({
     mutationFn: saveAssistantMessageFn,
     mutationKey: ['saveAssistantMessage', chatId],
     onError: (err) => {
-      console.error('Failed to sync parts:', err.message)
+      console.error('Failed to sync parts:', err.message);
     },
     onSettled: () => {
       // console.log('Assistant message synced with parts!')
-      queryClient.invalidateQueries({ queryKey: ['chat', chatId] })
-      queryClient.invalidateQueries({ queryKey: ['chats'] })
+      queryClient.invalidateQueries({ queryKey: ['chat', chatId] });
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
     },
-  })
+  });
 
   function onModelChange(model: string) {
     navigate({
       search: (prev) => ({ ...prev, model: model }),
       replace: true,
       reloadDocument: true,
-    })
+    });
   }
 
   const { messages, sendMessage, isLoading, setMessages } = useChat({
@@ -124,7 +106,7 @@ function RouteComponent() {
             conversationId: chatId,
             requestModel: currentModel,
           },
-        }
+        };
       },
     ),
     onError(error) {
@@ -132,8 +114,8 @@ function RouteComponent() {
         description:
           'Please try again or try use different model. The model you used may not available right now.',
         duration: 5000,
-      })
-      console.error(error.message)
+      });
+      console.error(error.message);
     },
     onFinish: (message) => {
       // console.log('Message from Client: ', message)
@@ -151,33 +133,33 @@ function RouteComponent() {
           model: adapter,
           recentModel: currentModel,
         },
-      })
+      });
     },
-  })
+  });
 
   function onSend(input: string) {
     if (!model) {
-      toast.error('Select the model first!')
-      return
+      toast.error('Select the model first!');
+      return;
     }
-    sendMessage(input)
+    sendMessage(input);
   }
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages])
+  }, [messages]);
 
   useEffect(() => {
-    setMessages([])
-    queryClient.invalidateQueries({ queryKey: ['chat', chatId] })
-  }, [chatId])
+    setMessages([]);
+    queryClient.invalidateQueries({ queryKey: ['chat', chatId] });
+  }, [chatId]);
 
   useEffect(() => {
     if (chatData?.messages) {
-      setMessages(chatData.messages as unknown as UIMessage[])
+      setMessages(chatData.messages as unknown as UIMessage[]);
     }
-  }, [chatData?.messages, setMessages])
+  }, [chatData?.messages, setMessages]);
 
   if (isLoadingMessages) {
     return (
@@ -197,14 +179,14 @@ function RouteComponent() {
           className="flex-1 flex overflow-y-auto scrollbar-hide space-y-8 py-8 px-4 items-center justify-center"
           key={chatId}
         >
-          <Loader2 className="animate-spin size-12" />
+          <Loader2 className="animate-spin size-12 text-emerald-500" />
         </div>
 
         <footer className="p-4 bg-linear-to-t from-[#09090b] via-[#09090b] to-transparent">
           <ChatInput onSend={onSend} isLoading={isLoading} />
         </footer>
       </div>
-    )
+    );
   }
 
   return (
@@ -231,9 +213,7 @@ function RouteComponent() {
                 <Bot size={24} />
               </div>
               <div>
-                <h2 className="text-xl font-semibold">
-                  How can I help you today?
-                </h2>
+                <h2 className="text-xl font-semibold">How can I help you today?</h2>
                 <p className="text-zinc-500 text-sm mt-1">
                   Start a conversation or ask a technical question.
                 </p>
@@ -353,9 +333,7 @@ function RouteComponent() {
             <div
               key={message.id}
               className={`flex gap-4 group animate-in fade-in slide-in-from-bottom-2 duration-300 ${
-                message.role === 'assistant'
-                  ? 'items-start'
-                  : 'items-start flex-row-reverse'
+                message.role === 'assistant' ? 'items-start' : 'items-start flex-row-reverse'
               }`}
             >
               <div
@@ -368,10 +346,7 @@ function RouteComponent() {
                 {message.role === 'assistant' ? (
                   <Bot size={16} />
                 ) : data?.user ? (
-                  <UserAvatar
-                    src={data?.user.image as string}
-                    alt={data?.user.name as string}
-                  />
+                  <UserAvatar src={data?.user.image as string} alt={data?.user.name as string} />
                 ) : (
                   <User size={16} />
                 )}
@@ -391,10 +366,7 @@ function RouteComponent() {
                 >
                   <div className="prose prose-invert prose-sm sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
                     {message.parts.map((part, idx) => {
-                      if (
-                        part.type === 'thinking' &&
-                        !targetMessageIds.has(message.id)
-                      ) {
+                      if (part.type === 'thinking' && !targetMessageIds.has(message.id)) {
                         return (
                           <div
                             key={idx}
@@ -403,13 +375,10 @@ function RouteComponent() {
                             <Loader className="animate-spin size-4" />
                             {part.content}
                           </div>
-                        )
+                        );
                       }
 
-                      if (
-                        part.type === 'thinking' &&
-                        targetMessageIds.has(message.id)
-                      ) {
+                      if (part.type === 'thinking' && targetMessageIds.has(message.id)) {
                         return (
                           <div
                             key={idx}
@@ -423,40 +392,33 @@ function RouteComponent() {
                               {part.content}
                             </pre>
                           </div>
-                        )
+                        );
                       }
 
-                      if (
-                        part.type === 'text' &&
-                        !targetMessageIds.has(message.id)
-                      ) {
+                      if (part.type === 'text' && !targetMessageIds.has(message.id)) {
                         return (
                           <MarkdownRenderer
                             markdown={part.content || '*Nothing to preview...*'}
                             key={idx}
                           />
-                        )
+                        );
                       }
 
-                      if (
-                        part.type === 'text' &&
-                        targetMessageIds.has(message.id)
-                      ) {
+                      if (part.type === 'text' && targetMessageIds.has(message.id)) {
                         return (
                           <pre
                             className={cn(
                               'whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800',
                               {
-                                'bg-emerald-600 border-none':
-                                  message.role === 'user',
+                                'bg-emerald-600 border-none': message.role === 'user',
                               },
                             )}
                           >
                             {part.content}
                           </pre>
-                        )
+                        );
                       }
-                      return null
+                      return null;
                     })}
                   </div>
                 </div>
@@ -466,7 +428,7 @@ function RouteComponent() {
                     <CopyButton
                       content={message.parts
                         .map((part) => {
-                          if (part.type === 'text') return part.content
+                          if (part.type === 'text') return part.content;
                         })
                         .join('')}
                     />
@@ -476,19 +438,17 @@ function RouteComponent() {
                       size="sm"
                       onClick={() => {
                         setTargetMessageIds((prev) => {
-                          const next = new Set(prev)
-                          if (next.has(message.id)) next.delete(message.id)
-                          else next.add(message.id)
-                          return next
-                        })
+                          const next = new Set(prev);
+                          if (next.has(message.id)) next.delete(message.id);
+                          else next.add(message.id);
+                          return next;
+                        });
                       }}
                       className="h-8 px-2 text-zinc-400"
                     >
                       <RepeatIcon size={14} />
                       <span className="ml-2 text-xs">
-                        {targetMessageIds.has(message.id)
-                          ? `View Original`
-                          : `View Raw`}
+                        {targetMessageIds.has(message.id) ? `View Original` : `View Raw`}
                       </span>
                     </Button>
                   </div>
@@ -503,5 +463,5 @@ function RouteComponent() {
         <ChatInput onSend={onSend} isLoading={isLoading} />
       </footer>
     </div>
-  )
+  );
 }
