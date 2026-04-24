@@ -3,20 +3,21 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev --port 3000",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest run",
+    "dev": "vp dev --port 3000",
+    "build": "vp build",
+    "preview": "vp preview",
+    "test": "vp test run",
     "lint": "eslint",
     "nitro": "npm:nitro-nightly@latest",
-    "format": "prettier",
-    "check": "prettier --write . && eslint --fix",
+    "format": "vp fmt",
+    "check": "vp fmt . && eslint --fix",
     "post-cta-init": "npx create-db@latest --user-agent tanstack/tsrouter",
     "db:generate": "dotenv -e .env.local -- prisma generate",
     "db:push": "dotenv -e .env.local -- prisma db push",
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
     "db:studio": "dotenv -e .env.local -- prisma studio",
-    "db:seed": "dotenv -e .env.local -- prisma db seed"
+    "db:seed": "dotenv -e .env.local -- prisma db seed",
+    "prepare": "vp config"
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.88",
@@ -141,12 +142,13 @@
     "@vitejs/plugin-react": "^6.0.1",
     "dotenv-cli": "^10.0.0",
     "jsdom": "^27.0.0",
-    "prettier": "^3.8.1",
     "prisma": "^7.6.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
-    "vite": "^8.0.8",
-    "vitest": "^4.1.2",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:",
     "web-vitals": "^5.1.0"
-  }
+  },
+  "packageManager": "pnpm@10.33.2"
 }

@@ -1,9 +1,8 @@
-import {
-  createFileRoute,
-  Link,
-  useNavigate,
-  useRouter,
-} from '@tanstack/react-router'
+import { useDebouncedCallback } from '@tanstack/react-pacer';
+import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router';
+import { createStore, useSelector } from '@tanstack/react-store';
+import { zodValidator } from '@tanstack/zod-adapter';
+import { intlFormat, intlFormatDistance } from 'date-fns';
 import {
   Plus,
   MoreVertical,
@@ -17,19 +16,13 @@ import {
   Search,
   Heart,
   MessageSquare,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { getMyPostsFn, deletePostFn, getPostsFn } from '@/data/blog'
-import { toast } from 'sonner'
-import { intlFormat, intlFormatDistance } from 'date-fns'
-import { createStore, useSelector } from '@tanstack/react-store'
+} from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -38,31 +31,34 @@ import {
   DialogHeader,
   DialogTitle,
   DialogClose,
-} from '@/components/ui/dialog'
-import { useState } from 'react'
-import { Input } from '@/components/ui/input'
-import { useDebouncedCallback } from '@tanstack/react-pacer'
-import { zodValidator } from '@tanstack/zod-adapter'
-import { postSearchSchema } from '@/schemas/blog'
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { BlogStatus } from '@/lib/constants'
-import { Badge } from '@/components/ui/badge'
-import { getUser } from '@/data/session'
+} from '@/components/ui/select';
+import { getMyPostsFn, deletePostFn } from '@/data/blog';
+import { getUser } from '@/data/session';
+import { BlogStatus } from '@/lib/constants';
+import { postSearchSchema } from '@/schemas/blog';
 
 export const Route = createFileRoute('/dashboard/blog/')({
   loader: async () => {
-    const allPosts = await getPostsFn()
-    const session = await getUser()
+    const allPosts = await getMyPostsFn();
+    const session = await getUser();
     return {
       allPosts,
       session,
-    }
+    };
   },
   component: BlogPageComponent,
   validateSearch: zodValidator(postSearchSchema),
@@ -85,49 +81,45 @@ export const Route = createFileRoute('/dashboard/blog/')({
       { property: 'og:type', content: 'website' },
     ],
   }),
-})
+});
 
 function BlogPageComponent() {
-  const { allPosts, session } = Route.useLoaderData()
-  const { visibility, query } = Route.useSearch()
-  const navigate = useNavigate({ from: Route.fullPath })
-  const router = useRouter()
+  const { allPosts, session } = Route.useLoaderData();
+  const { visibility, query } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
+  const router = useRouter();
   const [modalStore] = useState(() =>
     createStore({
       dialogId: '',
       isOpen: false,
       isLoading: false,
     }),
-  )
-  const isOpen = useSelector(modalStore, (state) => state.isOpen)
-  const isLoading = useSelector(modalStore, (state) => state.isLoading)
+  );
+  const isOpen = useSelector(modalStore, (state) => state.isOpen);
+  const isLoading = useSelector(modalStore, (state) => state.isLoading);
 
   const filteredPosts = allPosts.filter((post) => {
     const matchedQuery =
       post.title?.toLowerCase().includes(query.toLowerCase()) ||
       post.description?.toLowerCase().includes(query.toLowerCase()) ||
-      query === ''
+      query === '';
     const matchedStatus =
-      visibility === 'PUBLIC'
-        ? post.published
-        : visibility === 'PRIVATE'
-          ? !post.published
-          : null
-    if (matchedStatus === null) return matchedQuery
+      visibility === 'PUBLIC' ? post.published : visibility === 'PRIVATE' ? !post.published : null;
+    if (matchedStatus === null) return matchedQuery;
 
-    return matchedQuery && matchedStatus
-  })
+    return matchedQuery && matchedStatus;
+  });
 
   const debouncedSearch = useDebouncedCallback(
     (searchTerm: string) => {
       navigate({
         search: (prev) => ({ ...prev, query: searchTerm }),
-      })
+      });
     },
     {
       wait: 500, // Wait 500ms after last keystroke
     },
-  )
+  );
 
   //   const { unsubscribe } = modalStore.subscribe(() => {
   //     console.log('The state is now:', modalStore.state)
@@ -141,9 +133,7 @@ function BlogPageComponent() {
             <h1 className="text-4xl font-black tracking-tight bg-linear-to-r from-white to-slate-500 bg-clip-text text-transparent">
               My Collections
             </h1>
-            <p className="text-slate-400 mt-2">
-              Manage and curate your digital thoughts.
-            </p>
+            <p className="text-slate-400 mt-2">Manage and curate your digital thoughts.</p>
           </div>
           <Button
             asChild
@@ -167,7 +157,7 @@ function BlogPageComponent() {
               placeholder="Search blogs..."
               className="pl-10 bg-emerald-900/40  focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
               onChange={(e) => {
-                debouncedSearch(e.target.value)
+                debouncedSearch(e.target.value);
               }}
             />
           </div>
@@ -200,18 +190,15 @@ function BlogPageComponent() {
 
         {filteredPosts.length === 0 && (
           <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
-            <p className="text-slate-500">
-              No posts found. Create your first blog post!
-            </p>
+            <p className="text-slate-500">No posts found. Create your first blog post!</p>
           </div>
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
           {filteredPosts.map((post) => {
             const hasLiked = post.likes.find(
-              (like) =>
-                like.userId === session.user.id && like.postId === post.id,
-            )
+              (like) => like.userId === session.user.id && like.postId === post.id,
+            );
             return (
               <Card
                 key={post.id}
@@ -219,10 +206,7 @@ function BlogPageComponent() {
               >
                 <div className="aspect-video relative overflow-hidden">
                   <img
-                    src={
-                      post.image ??
-                      'https://tanstack.com/assets/og-C0HGjoLl.png'
-                    }
+                    src={post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
                     alt={post.title}
                     className="object-cover w-full h-full transition-transform duration-500"
                   />
@@ -244,14 +228,8 @@ function BlogPageComponent() {
                           align="end"
                           className="w-40 bg-slate-900 border-slate-800 text-slate-200"
                         >
-                          <DropdownMenuItem
-                            asChild
-                            className="cursor-pointer gap-2"
-                          >
-                            <Link
-                              to="/dashboard/blog/$slug"
-                              params={{ slug: post.slug }}
-                            >
+                          <DropdownMenuItem asChild className="cursor-pointer gap-2">
+                            <Link to="/dashboard/blog/$slug" params={{ slug: post.slug }}>
                               <ExternalLink className="size-4" /> View Post
                             </Link>
                           </DropdownMenuItem>
@@ -271,8 +249,8 @@ function BlogPageComponent() {
                                   ...prev,
                                   isOpen: !prev.isOpen,
                                   dialogId: post.id,
-                                }
-                              })
+                                };
+                              });
                             }}
                             className="cursor-pointer gap-2 text-red-400 focus:text-red-400 focus:bg-red-400/10"
                           >
@@ -343,16 +321,13 @@ function BlogPageComponent() {
                     variant="link"
                     className="p-0 h-auto text-emerald-400 hover:text-emerald-300 gap-2 cursor-pointer mt-3.5"
                   >
-                    <Link
-                      to="/dashboard/blog/$slug"
-                      params={{ slug: post.slug }}
-                    >
+                    <Link to="/dashboard/blog/$slug" params={{ slug: post.slug }}>
                       Read Full Blog →
                     </Link>
                   </Button>
                 </CardFooter>
               </Card>
-            )
+            );
           })}
         </div>
         <Dialog
@@ -362,8 +337,8 @@ function BlogPageComponent() {
               return {
                 ...prev,
                 isOpen: open,
-              }
-            })
+              };
+            });
           }}
         >
           <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
@@ -373,31 +348,30 @@ function BlogPageComponent() {
                   return {
                     ...prev,
                     isLoading: true,
-                  }
-                })
-                e.preventDefault()
+                  };
+                });
+                e.preventDefault();
                 await deletePostFn({
                   data: {
                     postId: modalStore.state.dialogId,
                   },
-                })
-                toast.success('Post deleted')
-                router.invalidate()
+                });
+                toast.success('Post deleted');
+                router.invalidate();
                 modalStore.setState((prev) => {
                   return {
                     ...prev,
                     isLoading: false,
                     dialogId: '',
-                  }
-                })
+                  };
+                });
                 // unsubscribe()
               }}
             >
               <DialogHeader className="mb-6">
                 <DialogTitle>Delete Task List</DialogTitle>
                 <DialogDescription>
-                  Are you sure to delete this task list? This action cannot be
-                  undone.
+                  Are you sure to delete this task list? This action cannot be undone.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="mt-6">
@@ -406,11 +380,7 @@ function BlogPageComponent() {
                     Cancel
                   </Button>
                 </DialogClose>
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="cursor-pointer"
-                >
+                <Button type="submit" disabled={isLoading} className="cursor-pointer">
                   {isLoading ? (
                     <>
                       <Loader2 className="size-4 animate-spin" />
@@ -429,5 +399,5 @@ function BlogPageComponent() {
         </Dialog>
       </div>
     </div>
-  )
+  );
 }
