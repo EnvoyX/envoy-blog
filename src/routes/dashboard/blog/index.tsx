@@ -142,7 +142,7 @@ function BlogPageComponent() {
           >
             <Link to="/dashboard/blog/create-blog" className="gap-2">
               <Plus className="size-5" />
-              Create New Post
+              Create New Blog
             </Link>
           </Button>
         </div>

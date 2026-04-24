@@ -10,6 +10,8 @@
  */
 export type * from './models/SavedItem.ts'
 export type * from './models/QuranTrack.ts'
+export type * from './models/ShortPost.ts'
+export type * from './models/Image.ts'
 export type * from './models/Post.ts'
 export type * from './models/Tag.ts'
 export type * from './models/TaskList.ts'

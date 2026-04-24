@@ -12,7 +12,6 @@ const LandingPage = () => {
       return data;
     },
   });
-  // throw new Error('Test error');
   return (
     <div>
       <section className="relative pt-20 pb-32 px-8 overflow-hidden">

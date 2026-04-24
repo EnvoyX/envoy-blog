@@ -386,6 +386,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   SavedItem: 'SavedItem',
   QuranTrack: 'QuranTrack',
+  ShortPost: 'ShortPost',
+  Image: 'Image',
   Post: 'Post',
   Tag: 'Tag',
   TaskList: 'TaskList',
@@ -413,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "savedItem" | "quranTrack" | "post" | "tag" | "taskList" | "task" | "chat" | "message" | "like" | "comment" | "user" | "session" | "account" | "verification"
+    modelProps: "savedItem" | "quranTrack" | "shortPost" | "image" | "post" | "tag" | "taskList" | "task" | "chat" | "message" | "like" | "comment" | "user" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -562,6 +564,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.QuranTrackCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.QuranTrackCountAggregateOutputType> | number
+        }
+      }
+    }
+    ShortPost: {
+      payload: Prisma.$ShortPostPayload<ExtArgs>
+      fields: Prisma.ShortPostFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ShortPostFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortPostPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ShortPostFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortPostPayload>
+        }
+        findFirst: {
+          args: Prisma.ShortPostFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortPostPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ShortPostFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortPostPayload>
+        }
+        findMany: {
+          args: Prisma.ShortPostFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortPostPayload>[]
+        }
+        create: {
+          args: Prisma.ShortPostCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortPostPayload>
+        }
+        createMany: {
+          args: Prisma.ShortPostCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ShortPostCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortPostPayload>[]
+        }
+        delete: {
+          args: Prisma.ShortPostDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortPostPayload>
+        }
+        update: {
+          args: Prisma.ShortPostUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortPostPayload>
+        }
+        deleteMany: {
+          args: Prisma.ShortPostDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ShortPostUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ShortPostUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortPostPayload>[]
+        }
+        upsert: {
+          args: Prisma.ShortPostUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortPostPayload>
+        }
+        aggregate: {
+          args: Prisma.ShortPostAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateShortPost>
+        }
+        groupBy: {
+          args: Prisma.ShortPostGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShortPostGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ShortPostCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShortPostCountAggregateOutputType> | number
+        }
+      }
+    }
+    Image: {
+      payload: Prisma.$ImagePayload<ExtArgs>
+      fields: Prisma.ImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        findFirst: {
+          args: Prisma.ImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        findMany: {
+          args: Prisma.ImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>[]
+        }
+        create: {
+          args: Prisma.ImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        createMany: {
+          args: Prisma.ImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>[]
+        }
+        delete: {
+          args: Prisma.ImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        update: {
+          args: Prisma.ImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.ImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.ImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagePayload>
+        }
+        aggregate: {
+          args: Prisma.ImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateImage>
+        }
+        groupBy: {
+          args: Prisma.ImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImageCountAggregateOutputType> | number
         }
       }
     }
@@ -1532,6 +1682,29 @@ export const QuranTrackScalarFieldEnum = {
 export type QuranTrackScalarFieldEnum = (typeof QuranTrackScalarFieldEnum)[keyof typeof QuranTrackScalarFieldEnum]
 
 
+export const ShortPostScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  published: 'published',
+  authorId: 'authorId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShortPostScalarFieldEnum = (typeof ShortPostScalarFieldEnum)[keyof typeof ShortPostScalarFieldEnum]
+
+
+export const ImageScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  shortPostId: 'shortPostId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof ImageScalarFieldEnum]
+
+
 export const PostScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -1620,7 +1793,8 @@ export const LikeScalarFieldEnum = {
   createdAt: 'createdAt',
   userId: 'userId',
   postId: 'postId',
-  post_slug: 'post_slug'
+  post_slug: 'post_slug',
+  shortPostId: 'shortPostId'
 } as const
 
 export type LikeScalarFieldEnum = (typeof LikeScalarFieldEnum)[keyof typeof LikeScalarFieldEnum]
@@ -1634,7 +1808,8 @@ export const CommentScalarFieldEnum = {
   userId: 'userId',
   postId: 'postId',
   post_slug: 'post_slug',
-  parentId: 'parentId'
+  parentId: 'parentId',
+  shortPostId: 'shortPostId'
 } as const
 
 export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
@@ -1992,6 +2167,8 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   savedItem?: Prisma.SavedItemOmit
   quranTrack?: Prisma.QuranTrackOmit
+  shortPost?: Prisma.ShortPostOmit
+  image?: Prisma.ImageOmit
   post?: Prisma.PostOmit
   tag?: Prisma.TagOmit
   taskList?: Prisma.TaskListOmit

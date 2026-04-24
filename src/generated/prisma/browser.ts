@@ -28,6 +28,16 @@ export type SavedItem = Prisma.SavedItemModel
  */
 export type QuranTrack = Prisma.QuranTrackModel
 /**
+ * Model ShortPost
+ * 
+ */
+export type ShortPost = Prisma.ShortPostModel
+/**
+ * Model Image
+ * 
+ */
+export type Image = Prisma.ImageModel
+/**
  * Model Post
  * 
  */

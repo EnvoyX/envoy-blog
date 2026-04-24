@@ -81,18 +81,46 @@ model QuranTrack {
   updatedAt DateTime @updatedAt
 }
 
+model ShortPost {
+  id String @id @default(cuid())
+
+  Images  Image[]
+  content String?
+
+  likes    Like[]
+  comments Comment[]
+
+  published Boolean @default(false)
+
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Image {
+  id  String @id @default(cuid())
+  url String
+
+  shortPost   ShortPost? @relation(fields: [shortPostId], references: [id], onDelete: Cascade)
+  shortPostId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Post {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   description String
   image       String?
-  slug        String   @unique
+  slug        String    @unique
   excerpt     String?
-  content     String   @db.Text
-  published   Boolean  @default(false) // Public or private
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  content     String    @db.Text
+  published   Boolean   @default(false) // Public or private
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId    String
   tags        Tag[]
   likes       Like[]
@@ -138,14 +166,14 @@ model Task {
 }
 
 model Chat {
-  id        String    @id @default(cuid())
-  title     String?
-  userId    String    @map("user_id")
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  messages  Message[]
-  model     String?
+  id          String    @id @default(cuid())
+  title       String?
+  userId      String    @map("user_id")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  messages    Message[]
+  model       String?
   recentModel String?
 
   isPublic Boolean @default(false) @map("is_public")
@@ -156,13 +184,13 @@ model Chat {
 }
 
 model Message {
-  id      String      @id @default(cuid())
+  id        String      @id @default(cuid())
   messageId String
-  chatId  String      @map("chat_id")
-  chat    Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  role    MessageRole
-  content String      @db.Text
-  model   String?
+  chatId    String      @map("chat_id")
+  chat      Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  role      MessageRole
+  content   String      @db.Text
+  model     String?
   parts     Json?
 
   createdAt DateTime @default(now())
@@ -175,11 +203,13 @@ model Like {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  post      Post    @relation(fields: [postId, post_slug], references: [id, slug], onDelete: Cascade)
-  postId    String
-  post_slug String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  post        Post       @relation(fields: [postId, post_slug], references: [id, slug], onDelete: Cascade)
+  postId      String
+  post_slug   String
+  shortPost   ShortPost? @relation(fields: [shortPostId], references: [id], onDelete: Cascade)
+  shortPostId String?
 
   @@unique([userId, postId])
 }
@@ -190,17 +220,18 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  post      Post     @relation(fields: [postId, post_slug], references: [id, slug], onDelete: Cascade)
+  post      Post   @relation(fields: [postId, post_slug], references: [id, slug], onDelete: Cascade)
   postId    String
   post_slug String
 
   // for threading
-  parentId  String?
-  parent    Comment?  @relation("ReplyTo", fields: [parentId], references: [id], onDelete: Cascade)
-  replies   Comment[] @relation("ReplyTo")
-
+  parentId    String?
+  parent      Comment?   @relation("ReplyTo", fields: [parentId], references: [id], onDelete: Cascade)
+  replies     Comment[]  @relation("ReplyTo")
+  shortPost   ShortPost? @relation(fields: [shortPostId], references: [id], onDelete: Cascade)
+  shortPostId String?
 }
 
 model User {
@@ -212,7 +243,7 @@ model User {
   image         String?
   defaultImage  String?
   biodata       String?
-  role          UserRole @default(USER)
+  role          UserRole    @default(USER)
   createdAt     DateTime
   updatedAt     DateTime
   sessions      Session[]
@@ -225,12 +256,11 @@ model User {
   chats         Chat[]
   likes         Like[]
   comments      Comment[]
+  shortPosts    ShortPost[]
 
   @@unique([email])
   @@map("user")
 }
-
-
 
 model Session {
   id        String   @id

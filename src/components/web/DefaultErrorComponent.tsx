@@ -14,7 +14,7 @@ export function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 px-6 py-24 text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-transparent px-6 py-24 text-center">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -bottom-[20%] right-[10%] h-125 w-125 rounded-full bg-red-900/10 blur-[120px]" />
         <div className="absolute -top-[10%] left-[10%] h-100 w-100 rounded-full bg-emerald-900/10 blur-[100px]" />
@@ -42,8 +42,8 @@ export function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
         </h1>
 
         <p className="mt-4 text-slate-400">
-          An unexpected error occurred while processing your request. Please try again or back to
-          the home page.
+          An unexpected error occurred while processing your request. Please try again or come back
+          later.
         </p>
 
         <div className="mt-8 overflow-hidden rounded-lg bg-slate-900/50 border border-slate-800 p-4 text-left">

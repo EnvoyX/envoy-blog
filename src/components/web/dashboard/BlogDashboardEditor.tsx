@@ -1,5 +1,5 @@
-import { useDeferredValue, useState } from 'react'
-import { useForm } from '@tanstack/react-form'
+import { useForm } from '@tanstack/react-form';
+import { Link } from '@tanstack/react-router';
 import {
   Pencil,
   Eye,
@@ -10,82 +10,72 @@ import {
   PencilRulerIcon,
   CopyCheck,
   Copy,
-} from 'lucide-react'
+} from 'lucide-react';
+import { useDeferredValue, useState } from 'react';
+import { toast } from 'sonner';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
-import { MarkdownRenderer } from '@/components/web/markdown/Markdown'
-import { postSchema } from '@/schemas/blog'
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldError,
   FieldLabel,
-} from '@/components/ui/field'
-import { Switch } from '@/components/ui/switch'
-import { createPostFn, updatePostFn } from '@/data/blog'
-import { Post } from '@/generated/prisma/client'
-import { Link } from '@tanstack/react-router'
-import { cn } from '@/lib/utils'
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { MarkdownRenderer } from '@/components/web/markdown/Markdown';
+import { createPostFn, updatePostFn } from '@/data/blog';
+import { Post } from '@/generated/prisma/client';
+import { cn } from '@/lib/utils';
+import { postSchema } from '@/schemas/blog';
 
 export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
-  const [activeTab, setActiveTab] = useState('edit-blog')
-  const [markdown, setMarkdown] = useState(initialData?.content ?? '')
-  const [copied, setCopied] = useState(false)
+  const [activeTab, setActiveTab] = useState('edit-blog');
+  const [markdown, setMarkdown] = useState(initialData?.content ?? '');
+  const [copied, setCopied] = useState(false);
 
-  const deferredMarkdown = useDeferredValue(
-    markdown,
-    initialData?.content ?? '',
-  )
+  const deferredMarkdown = useDeferredValue(markdown, initialData?.content ?? '');
 
   const handleCopy = async (markdown: string) => {
-    await navigator.clipboard.writeText(markdown)
-    setMarkdown(markdown)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1800)
-  }
+    await navigator.clipboard.writeText(markdown);
+    setMarkdown(markdown);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
 
   const form = useForm({
     defaultValues: {
       title: initialData?.title || '',
       content: initialData?.content || '',
       description: initialData?.description || '',
-      image:
-        initialData?.image || 'https://tanstack.com/assets/og-C0HGjoLl.png',
+      image: initialData?.image || 'https://tanstack.com/assets/og-C0HGjoLl.png',
       published: initialData?.published || false,
     },
     validators: {
       onSubmit: postSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value)
+      console.log(value);
       if (initialData?.id) {
         await updatePostFn({
           data: {
             postId: initialData.id,
             ...value,
           },
-        })
-        toast.success('Post updated succesfully!')
+        });
+        toast.success('Blog updated succesfully!');
       } else {
-        console.log(value)
-        await createPostFn({ data: value })
-        toast.success('Post published succesfully!')
+        console.log(value);
+        await createPostFn({ data: value });
+        toast.success('Blog published succesfully!');
       }
     },
-  })
+  });
 
   const EditorFields = (
     <div className="space-y-6">
@@ -93,8 +83,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
         <form.Field
           name="title"
           children={(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
             return (
               <>
                 <Label htmlFor={`${field.name}-input`}>Title</Label>
@@ -107,7 +96,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </>
-            )
+            );
           }}
         />
       </div>
@@ -116,8 +105,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
         <form.Field
           name="description"
           children={(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
             return (
               <>
                 <Label htmlFor={`${field.name}-input`}>Description</Label>
@@ -130,7 +118,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </>
-            )
+            );
           }}
         />
       </div>
@@ -139,13 +127,10 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
         <form.Field
           name="image"
           children={(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
             return (
               <>
-                <Label htmlFor={`${field.name}-input`}>
-                  Image URL (Optional)
-                </Label>
+                <Label htmlFor={`${field.name}-input`}>Image URL (Optional)</Label>
                 <Input
                   id={`${field.name}-input`}
                   placeholder="https://tanstack.com/assets/og-C0HGjoLl.png"
@@ -155,7 +140,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </>
-            )
+            );
           }}
         />
       </div>
@@ -164,18 +149,15 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
         <form.Field
           name="published"
           children={(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
             return (
               <Field orientation="horizontal" data-invalid={isInvalid}>
                 <FieldContent>
                   <FieldLabel htmlFor="form-tanstack-switch-visibility">
-                    Visibility (
-                    {field.state.value === true ? 'Public' : 'Private'})
+                    Visibility ({field.state.value === true ? 'Public' : 'Private'})
                   </FieldLabel>
                   <FieldDescription>
-                    Enable whether this post published to public or keep in
-                    private.
+                    Enable whether this blog published to public or keep in private.
                   </FieldDescription>
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </FieldContent>
@@ -187,7 +169,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                   aria-invalid={isInvalid}
                 />
               </Field>
-            )
+            );
           }}
         />
       </div>
@@ -196,13 +178,10 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
         <form.Field
           name="content"
           children={(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
             return (
               <>
-                <Label htmlFor={`${field.name}-input`}>
-                  Content (Markdown)
-                </Label>
+                <Label htmlFor={`${field.name}-input`}>Content (Markdown)</Label>
                 <div className="flex items-center gap-2 max-sm:flex-col max-sm:mt-4 max-sm:mb-4">
                   <Button size={'sm'} variant={'default'} asChild>
                     <Link
@@ -247,19 +226,19 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => {
-                      field.handleChange(e.target.value)
-                      setMarkdown(e.target.value)
+                      field.handleChange(e.target.value);
+                      setMarkdown(e.target.value);
                     }}
                   />
                 </div>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </>
-            )
+            );
           }}
         />
       </div>
     </div>
-  )
+  );
 
   return (
     <div className="px-2 min-h-screen flex flex-col w-full mx-auto">
@@ -275,9 +254,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
       <header className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Blog Editor</h1>
-          <p className="text-muted-foreground">
-            Draft your thoughts in Markdown.
-          </p>
+          <p className="text-muted-foreground">Draft your thoughts in Markdown.</p>
         </div>
 
         <div className="hidden md:block">
@@ -285,9 +262,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
             <Button variant={'outline'} asChild>
               <Link
                 to={
-                  initialData
-                    ? '/dashboard/blog/$slug/edit/md-editor'
-                    : '/dashboard/blog/md-editor'
+                  initialData ? '/dashboard/blog/$slug/edit/md-editor' : '/dashboard/blog/md-editor'
                 }
                 params={{
                   slug: initialData?.slug,
@@ -330,7 +305,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                   ) : (
                     <Save className="size-4" />
                   )}
-                  {initialData ? 'Update Post' : 'Publish Post'}
+                  {initialData ? 'Update Blog' : 'Publish Blog'}
                 </Button>
               )}
             />
@@ -354,12 +329,8 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
             <Card className="bg-transparent!">
               <CardContent className="pt-6">
                 {EditorFields}
-                <Button
-                  onClick={() => form.handleSubmit()}
-                  className="w-full mt-6 gap-2"
-                >
-                  <Save className="size-4" />{' '}
-                  {initialData ? 'Update' : 'Publish'}
+                <Button onClick={() => form.handleSubmit()} className="w-full mt-6 gap-2">
+                  <Save className="size-4" /> {initialData ? 'Update' : 'Publish'}
                 </Button>
               </CardContent>
             </Card>
@@ -372,27 +343,19 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                   selector={(state) => [state.values]}
                   children={([values]) => (
                     <>
-                      <h1 className="text-2xl font-bold mb-4">
-                        {values.title || 'Untitled'}
-                      </h1>
+                      <h1 className="text-2xl font-bold mb-4">{values.title || 'Untitled'}</h1>
                       <h3>
-                        {values.description ||
-                          'Some description that makes you flabbergasted...'}
+                        {values.description || 'Some description that makes you flabbergasted...'}
                       </h3>
                       <div className="aspect-video w-full overflow-hidden">
                         <h4>Image Preview</h4>
                         <img
-                          src={
-                            values.image ??
-                            'https://tanstack.com/assets/og-C0HGjoLl.png'
-                          }
+                          src={values.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
                           alt={values.title ?? 'Blog Thumbnail'}
                           className="h-full w-full object-cover group-hover:scale-105 transition-transform "
                         />
                       </div>
-                      <MarkdownRenderer
-                        markdown={deferredMarkdown || '*Nothing to preview...*'}
-                      />
+                      <MarkdownRenderer markdown={deferredMarkdown || '*Nothing to preview...*'} />
                     </>
                   )}
                 />
@@ -424,26 +387,20 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
               selector={(state) => [state.values]}
               children={([values]) => (
                 <main>
-                  <h1 className="mt-0">{values.title || 'Untitled Post'}</h1>
+                  <h1 className="mt-0">{values.title || 'Untitled Blog'}</h1>
                   <h3>
-                    {values.description ||
-                      'Some description that makes you flabbergasted...'}
+                    {values.description || 'Some description that makes you flabbergasted...'}
                   </h3>
                   <div className="aspect-video w-full overflow-hidden">
                     <h4>Image Preview</h4>
                     <img
-                      src={
-                        values.image ??
-                        'https://tanstack.com/assets/og-C0HGjoLl.png'
-                      }
+                      src={values.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
                       alt={values.title ?? 'Blog Thumbnail'}
                       className="h-full w-full object-cover group-hover:scale-105 transition-transform"
                     />
                   </div>
                   <MarkdownRenderer
-                    markdown={
-                      deferredMarkdown || 'Start typing to see the preview...'
-                    }
+                    markdown={deferredMarkdown || 'Start typing to see the preview...'}
                   />
                 </main>
               )}
@@ -452,5 +409,5 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
         </Card>
       </main>
     </div>
-  )
+  );
 }

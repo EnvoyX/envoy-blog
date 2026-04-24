@@ -1,12 +1,18 @@
+export const allowedRoles = ['SUPERADMIN', 'ADMIN'];
 export const BlogStatus = {
   ALL: 'ALL',
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE',
-} as const
+} as const;
 
-export const allowedRoles = ['SUPERADMIN', 'ADMIN']
+export type BlogStatus = (typeof BlogStatus)[keyof typeof BlogStatus];
 
-export type BlogStatus = (typeof BlogStatus)[keyof typeof BlogStatus]
+export const SortedByStatus = {
+  ASC: 'ASC',
+  DESC: 'DESC',
+} as const;
+
+export type SortedByStatus = (typeof SortedByStatus)[keyof typeof SortedByStatus];
 
 export const MODEL_CONFIG = {
   groq: [
@@ -104,4 +110,4 @@ export const MODEL_CONFIG = {
     // { label: 'Gemini 2.0 Flash', value: 'gemini-2.0-flash' },
     // { label: 'Gemini 2.0 Flash Lite', value: 'gemini-2.0-flash-lite' },
   ],
-} as const
+} as const;

@@ -24,7 +24,9 @@ import { Route as ApiChatGeminiRouteRouteImport } from './routes/api/chat-gemini
 import { Route as DashboardTicTacToeIndexRouteImport } from './routes/dashboard/tic-tac-toe/index'
 import { Route as DashboardTaskTrackerIndexRouteImport } from './routes/dashboard/task-tracker/index'
 import { Route as DashboardQuranTrackerIndexRouteImport } from './routes/dashboard/quran-tracker/index'
+import { Route as DashboardPostIndexRouteImport } from './routes/dashboard/post/index'
 import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
+import { Route as DashboardImagesIndexRouteImport } from './routes/dashboard/images/index'
 import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
 import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
 import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog/index'
@@ -126,9 +128,19 @@ const DashboardQuranTrackerIndexRoute =
     path: '/quran-tracker/',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
+const DashboardPostIndexRoute = DashboardPostIndexRouteImport.update({
+  id: '/post/',
+  path: '/post/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardItemsIndexRoute = DashboardItemsIndexRouteImport.update({
   id: '/items/',
   path: '/items/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardImagesIndexRoute = DashboardImagesIndexRouteImport.update({
+  id: '/images/',
+  path: '/images/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
 const DashboardBlogIndexRoute = DashboardBlogIndexRouteImport.update({
@@ -292,7 +304,9 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof GeneralBlogIndexRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
+  '/dashboard/images/': typeof DashboardImagesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
+  '/dashboard/post/': typeof DashboardPostIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
   '/dashboard/tic-tac-toe/': typeof DashboardTicTacToeIndexRoute
@@ -331,7 +345,9 @@ export interface FileRoutesByTo {
   '/blog': typeof GeneralBlogIndexRoute
   '/dashboard/admin': typeof DashboardAdminIndexRoute
   '/dashboard/blog': typeof DashboardBlogIndexRoute
+  '/dashboard/images': typeof DashboardImagesIndexRoute
   '/dashboard/items': typeof DashboardItemsIndexRoute
+  '/dashboard/post': typeof DashboardPostIndexRoute
   '/dashboard/quran-tracker': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker': typeof DashboardTaskTrackerIndexRoute
   '/dashboard/tic-tac-toe': typeof DashboardTicTacToeIndexRoute
@@ -375,7 +391,9 @@ export interface FileRoutesById {
   '/_general/blog/': typeof GeneralBlogIndexRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
+  '/dashboard/images/': typeof DashboardImagesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
+  '/dashboard/post/': typeof DashboardPostIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
   '/dashboard/tic-tac-toe/': typeof DashboardTicTacToeIndexRoute
@@ -418,7 +436,9 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/dashboard/admin/'
     | '/dashboard/blog/'
+    | '/dashboard/images/'
     | '/dashboard/items/'
+    | '/dashboard/post/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/task-tracker/'
     | '/dashboard/tic-tac-toe/'
@@ -457,7 +477,9 @@ export interface FileRouteTypes {
     | '/blog'
     | '/dashboard/admin'
     | '/dashboard/blog'
+    | '/dashboard/images'
     | '/dashboard/items'
+    | '/dashboard/post'
     | '/dashboard/quran-tracker'
     | '/dashboard/task-tracker'
     | '/dashboard/tic-tac-toe'
@@ -500,7 +522,9 @@ export interface FileRouteTypes {
     | '/_general/blog/'
     | '/dashboard/admin/'
     | '/dashboard/blog/'
+    | '/dashboard/images/'
     | '/dashboard/items/'
+    | '/dashboard/post/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/task-tracker/'
     | '/dashboard/tic-tac-toe/'
@@ -640,11 +664,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardQuranTrackerIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/post/': {
+      id: '/dashboard/post/'
+      path: '/post'
+      fullPath: '/dashboard/post/'
+      preLoaderRoute: typeof DashboardPostIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/items/': {
       id: '/dashboard/items/'
       path: '/items'
       fullPath: '/dashboard/items/'
       preLoaderRoute: typeof DashboardItemsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/images/': {
+      id: '/dashboard/images/'
+      path: '/images'
+      fullPath: '/dashboard/images/'
+      preLoaderRoute: typeof DashboardImagesIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/blog/': {
@@ -874,7 +912,9 @@ interface DashboardRouteRouteChildren {
   DashboardTaskTrackerTaskListIdRoute: typeof DashboardTaskTrackerTaskListIdRoute
   DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
   DashboardBlogIndexRoute: typeof DashboardBlogIndexRoute
+  DashboardImagesIndexRoute: typeof DashboardImagesIndexRoute
   DashboardItemsIndexRoute: typeof DashboardItemsIndexRoute
+  DashboardPostIndexRoute: typeof DashboardPostIndexRoute
   DashboardQuranTrackerIndexRoute: typeof DashboardQuranTrackerIndexRoute
   DashboardTaskTrackerIndexRoute: typeof DashboardTaskTrackerIndexRoute
   DashboardTicTacToeIndexRoute: typeof DashboardTicTacToeIndexRoute
@@ -894,7 +934,9 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardTaskTrackerTaskListIdRoute: DashboardTaskTrackerTaskListIdRoute,
   DashboardAdminIndexRoute: DashboardAdminIndexRoute,
   DashboardBlogIndexRoute: DashboardBlogIndexRoute,
+  DashboardImagesIndexRoute: DashboardImagesIndexRoute,
   DashboardItemsIndexRoute: DashboardItemsIndexRoute,
+  DashboardPostIndexRoute: DashboardPostIndexRoute,
   DashboardQuranTrackerIndexRoute: DashboardQuranTrackerIndexRoute,
   DashboardTaskTrackerIndexRoute: DashboardTaskTrackerIndexRoute,
   DashboardTicTacToeIndexRoute: DashboardTicTacToeIndexRoute,

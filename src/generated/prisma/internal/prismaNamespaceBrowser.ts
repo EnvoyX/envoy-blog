@@ -53,6 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   SavedItem: 'SavedItem',
   QuranTrack: 'QuranTrack',
+  ShortPost: 'ShortPost',
+  Image: 'Image',
   Post: 'Post',
   Tag: 'Tag',
   TaskList: 'TaskList',
@@ -121,6 +123,29 @@ export const QuranTrackScalarFieldEnum = {
 } as const
 
 export type QuranTrackScalarFieldEnum = (typeof QuranTrackScalarFieldEnum)[keyof typeof QuranTrackScalarFieldEnum]
+
+
+export const ShortPostScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  published: 'published',
+  authorId: 'authorId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShortPostScalarFieldEnum = (typeof ShortPostScalarFieldEnum)[keyof typeof ShortPostScalarFieldEnum]
+
+
+export const ImageScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  shortPostId: 'shortPostId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof ImageScalarFieldEnum]
 
 
 export const PostScalarFieldEnum = {
@@ -211,7 +236,8 @@ export const LikeScalarFieldEnum = {
   createdAt: 'createdAt',
   userId: 'userId',
   postId: 'postId',
-  post_slug: 'post_slug'
+  post_slug: 'post_slug',
+  shortPostId: 'shortPostId'
 } as const
 
 export type LikeScalarFieldEnum = (typeof LikeScalarFieldEnum)[keyof typeof LikeScalarFieldEnum]
@@ -225,7 +251,8 @@ export const CommentScalarFieldEnum = {
   userId: 'userId',
   postId: 'postId',
   post_slug: 'post_slug',
-  parentId: 'parentId'
+  parentId: 'parentId',
+  shortPostId: 'shortPostId'
 } as const
 
 export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]

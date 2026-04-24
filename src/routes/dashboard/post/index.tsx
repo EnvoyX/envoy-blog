@@ -1,8 +1,8 @@
-import { useDebouncedCallback } from '@tanstack/react-pacer';
 import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router';
 import { createStore, useSelector } from '@tanstack/react-store';
 import { zodValidator } from '@tanstack/zod-adapter';
 import { intlFormat, intlFormatDistance } from 'date-fns';
+import { compareAsc, compareDesc } from 'date-fns';
 import {
   Plus,
   MoreVertical,
@@ -38,29 +38,37 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { deletePostFn, getPostsFn } from '@/data/blog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { deleteShortPostFn, getShortPostsFn } from '@/data/post';
 import { getUser } from '@/data/session';
-import { postPublishedSearchSchema } from '@/schemas/blog';
+import { SortedByStatus } from '@/lib/constants';
+import { shortPostSearchSchema } from '@/schemas/post';
 
-export const Route = createFileRoute('/_general/blog/')({
+export const Route = createFileRoute('/dashboard/post/')({
   loader: async () => {
-    const allPosts = await getPostsFn();
+    const allPosts = await getShortPostsFn();
     const session = await getUser();
     return {
       allPosts,
       session,
     };
   },
-  component: BlogPageComponent,
-  validateSearch: zodValidator(postPublishedSearchSchema),
+  component: PostPageComponent,
+  validateSearch: zodValidator(shortPostSearchSchema),
   head: () => ({
     meta: [
-      { title: `My Blogs | Envoy Mindpalace` },
+      { title: `My Posts | Envoy Mindpalace` },
       {
         name: 'Envoy Mindpalace',
         content: 'Welcome to my TanStack Start playground!',
       },
-      { property: 'og:title', content: 'My Blogs | Envoy Mindpalace' },
+      { property: 'og:title', content: 'My Posts | Envoy Mindpalace' },
       {
         property: 'og:description',
         content: 'Create your own blog and write your thoughts!',
@@ -74,9 +82,9 @@ export const Route = createFileRoute('/_general/blog/')({
   }),
 });
 
-function BlogPageComponent() {
+function PostPageComponent() {
   const { allPosts, session } = Route.useLoaderData();
-  const { query } = Route.useSearch();
+  const { sortDateBy } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const router = useRouter();
   const [modalStore] = useState(() =>
@@ -84,82 +92,83 @@ function BlogPageComponent() {
       dialogId: '',
       isOpen: false,
       isLoading: false,
+      isEditing: false,
+      currentPostId: '',
     }),
   );
+
+  const currentPostId = useSelector(modalStore, (state) => state.currentPostId);
   const isOpen = useSelector(modalStore, (state) => state.isOpen);
   const isLoading = useSelector(modalStore, (state) => state.isLoading);
+  const isEditing = useSelector(modalStore, (state) => state.isEditing);
 
-  const filteredPosts = allPosts.filter((post) => {
-    const matchedQuery =
-      post.title?.toLowerCase().includes(query.toLowerCase()) ||
-      post.description?.toLowerCase().includes(query.toLowerCase()) ||
-      query === '';
+  const sortedPosts = [...allPosts].sort((a, b) => {
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
 
-    return matchedQuery;
+    if (sortDateBy === 'ASC') {
+      return compareAsc(dateA, dateB);
+    } else {
+      return compareDesc(dateA, dateB);
+    }
   });
-
-  const debouncedSearch = useDebouncedCallback(
-    (searchTerm: string) => {
-      navigate({
-        search: (prev) => ({ ...prev, query: searchTerm }),
-      });
-    },
-    {
-      wait: 500, // Wait 500ms after last keystroke
-    },
-  );
-
-  //   const { unsubscribe } = modalStore.subscribe(() => {
-  //     console.log('The state is now:', modalStore.state)
-  //   })
-
   return (
-    <div className="min-h-screen text-slate-50 my-16 p-4">
+    <div className="min-h-screen  text-slate-50">
       <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col ">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black tracking-tight text-white">Blog Posts</h1>
-            <p className="text-slate-400 mt-2">View latest blog posts.</p>
+            <h1 className="text-4xl font-black tracking-tight bg-linear-to-r from-white to-slate-500 bg-clip-text text-transparent">
+              My Posts
+            </h1>
+            <p className="text-slate-400 mt-2">Create and edit your posts here.</p>
           </div>
           <Button
-            asChild
             size="lg"
             className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 shadow-lg shadow-emerald-500/20 cursor-pointer"
           >
-            <Link to="/blog/create-blog" className="gap-2">
+            <>
               <Plus className="size-5" />
-              Create New Blog
-            </Link>
+              Create New Post
+            </>
           </Button>
         </div>
 
         <div className="flex max-sm:flex-col items-center max-sm:justify-center gap-4 mb-8">
-          <div className="relative w-full  group">
-            <div className="absolute inset-y-0 z-10 left-3 flex items-center  pointer-events-none">
-              <Search className="size-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
-            </div>
-            <Input
-              type="search"
-              placeholder="Search blogs..."
-              className="pl-10 bg-emerald-900/40  focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
-              onChange={(e) => {
-                debouncedSearch(e.target.value);
-              }}
-            />
+          <div className="flex items-center gap-2 rounded-lg">
+            <h3 className="text-muted-foreground">Sort By:</h3>
+            <Select
+              value={sortDateBy}
+              onValueChange={(value) =>
+                navigate({
+                  search: (prev) => ({
+                    ...prev,
+                    sortDateBy: value as SortedByStatus,
+                  }),
+                })
+              }
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Sort By Date" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.values(SortedByStatus).map((status) => (
+                  <SelectItem key={status} value={status}>
+                    {status.charAt(0) + status.slice(1).toLowerCase()}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
-        {filteredPosts.length === 0 && (
+        {sortedPosts.length === 0 && (
           <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
-            <p className="text-slate-500">No posts found. Create your first blog post!</p>
+            <p className="text-slate-500">No posts found. Create your first post!</p>
           </div>
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
-          {filteredPosts.map((post) => {
-            const hasLiked = post.likes.find(
-              (like) => like.userId === session.user.id && like.postId === post.id,
-            );
+          {sortedPosts.map((post) => {
             return (
               <Card
                 key={post.id}
@@ -167,8 +176,8 @@ function BlogPageComponent() {
               >
                 <div className="aspect-video relative overflow-hidden">
                   <img
-                    src={post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
-                    alt={post.title}
+                    src={post.Images[0]?.url ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
+                    alt={post.id}
                     className="object-cover w-full h-full transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
@@ -190,18 +199,10 @@ function BlogPageComponent() {
                           className="w-40 bg-slate-900 border-slate-800 text-slate-200"
                         >
                           <DropdownMenuItem asChild className="cursor-pointer gap-2">
-                            <Link to="/dashboard/blog/$slug" params={{ slug: post.slug }}>
-                              <ExternalLink className="size-4" /> View Post
-                            </Link>
+                            <ExternalLink className="size-4" /> View Post
                           </DropdownMenuItem>
                           <DropdownMenuItem className="cursor-pointer gap-2">
-                            <Link
-                              to="/dashboard/blog/$slug/edit"
-                              params={{ slug: post.slug }}
-                              className="flex gap-1"
-                            >
-                              <Pencil className="size-4" /> Edit Post
-                            </Link>
+                            <Pencil className="size-4" /> Edit Post
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => {
@@ -222,60 +223,6 @@ function BlogPageComponent() {
                     </div>
                   )}
                 </div>
-
-                <CardContent className="p-6 flex-1">
-                  <div className="flex flex-col justify-start items-start sm:flex-row  sm:items-center">
-                    <div className="flex items-center gap-2 text-xs text-slate-500 mb-3 uppercase tracking-widest font-semibold">
-                      <Calendar className="size-3" />
-                      {intlFormat(new Date(post.createdAt), {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}
-                    </div>
-                  </div>
-                  <h2 className="text-xl font-bold leading-tight group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
-                    {post.title}
-                  </h2>
-
-                  <p className="text-slate-400 text-sm line-clamp-3 leading-relaxed">
-                    {post.description}
-                  </p>
-                </CardContent>
-
-                <CardFooter className="p-6 pt-0 flex flex-col justify-start items-start gap-1">
-                  <span className="absolute flex flex-col items-center gap-1 bottom-6 right-3 group">
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-emerald-500/30 transition-colors">
-                      <Heart
-                        className={`size-3.5 ${hasLiked ? 'fill-emerald-500 text-emerald-500' : ''}`}
-                      />
-                      <span className="text-[11px] font-bold tabular-nums">
-                        {post._count.likes}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-blue-500/30 transition-colors">
-                      <MessageSquare className="size-3.5" />
-                      <span className="text-[11px] font-bold tabular-nums">
-                        {post._count.comments}
-                      </span>
-                    </div>
-                  </span>
-                  <div className="flex items-center gap-2 text-xs text-slate-500 mt-3 uppercase tracking-widest font-semibold">
-                    <LucideClockFading className="size-3" />
-                    {intlFormatDistance(new Date(post.updatedAt), new Date())}
-                  </div>
-
-                  <Button
-                    asChild
-                    variant="link"
-                    className="p-0 h-auto text-emerald-400 hover:text-emerald-300 gap-2 cursor-pointer"
-                  >
-                    <Link to="/blog/$slug" params={{ slug: post.slug }}>
-                      Read Full Blog →
-                    </Link>
-                  </Button>
-                </CardFooter>
               </Card>
             );
           })}
@@ -301,9 +248,9 @@ function BlogPageComponent() {
                   };
                 });
                 e.preventDefault();
-                await deletePostFn({
+                await deleteShortPostFn({
                   data: {
-                    postId: modalStore.state.dialogId,
+                    shortPostId: modalStore.state.dialogId,
                   },
                 });
                 toast.success('Post deleted');

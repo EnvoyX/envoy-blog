@@ -1,16 +1,18 @@
-import { NavPrimaryProps, NavProps } from '@/lib/types'
-import { linkOptions } from '@tanstack/react-router'
+import { linkOptions } from '@tanstack/react-router';
 import {
   BookMarkedIcon,
   BookmarkIcon,
   Check,
   Compass,
-  Gamepad2,
   Import,
   LayoutDashboardIcon,
   Newspaper,
   UserIcon,
-} from 'lucide-react'
+  MailboxIcon,
+  ImagesIcon,
+} from 'lucide-react';
+
+import { NavPrimaryProps, NavProps } from '@/lib/types';
 
 export const navItemsMain: NavProps['items'] = linkOptions([
   {
@@ -34,7 +36,7 @@ export const navItemsMain: NavProps['items'] = linkOptions([
       exact: false,
     },
   },
-])
+]);
 
 export const navItemsDashboard: NavPrimaryProps['items'] = linkOptions([
   {
@@ -78,6 +80,22 @@ export const navItemsDashboard: NavPrimaryProps['items'] = linkOptions([
     },
   },
   {
+    title: 'Posts',
+    icon: MailboxIcon,
+    to: '/dashboard/post',
+    activeOptions: {
+      exact: false,
+    },
+  },
+  {
+    title: 'Images',
+    icon: ImagesIcon,
+    to: '/dashboard/images',
+    activeOptions: {
+      exact: false,
+    },
+  },
+  {
     title: 'Items',
     icon: BookmarkIcon,
     to: '/dashboard/items',
@@ -101,7 +119,7 @@ export const navItemsDashboard: NavPrimaryProps['items'] = linkOptions([
       exact: false,
     },
   },
-])
+]);
 export const sidebarNavItems: NavPrimaryProps['items'] = linkOptions([
   {
     title: 'Dashboard',
@@ -167,4 +185,4 @@ export const sidebarNavItems: NavPrimaryProps['items'] = linkOptions([
       exact: false,
     },
   },
-])
+]);
