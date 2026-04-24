@@ -1,21 +1,18 @@
-import {
-  HeadContent,
-  Scripts,
-  createRootRoute,
-  useRouter,
-} from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-import appCss from '../styles.css?url'
-import { ThemeProvider } from '@/lib/theme-provider'
-import { Toaster } from '@/components/ui/sonner'
-import { QueryProvider } from '@/components/web/query-provider'
-import { formDevtoolsPlugin } from '@tanstack/react-form-devtools'
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
-import { pacerDevtoolsPlugin } from '@tanstack/react-pacer-devtools'
-import { hotkeysDevtoolsPlugin } from '@tanstack/react-hotkeys-devtools'
-import { aiDevtoolsPlugin } from '@tanstack/react-ai-devtools'
-import { HotkeysProvider, useHotkey } from '@tanstack/react-hotkeys'
+import { aiDevtoolsPlugin } from '@tanstack/react-ai-devtools';
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
+import { HotkeysProvider, useHotkey } from '@tanstack/react-hotkeys';
+import { hotkeysDevtoolsPlugin } from '@tanstack/react-hotkeys-devtools';
+import { pacerDevtoolsPlugin } from '@tanstack/react-pacer-devtools';
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
+import { HeadContent, Scripts, createRootRoute, useRouter } from '@tanstack/react-router';
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
+
+import { Toaster } from '@/components/ui/sonner';
+import { QueryProvider } from '@/components/web/query-provider';
+import { ThemeProvider } from '@/lib/theme-provider';
+
+import appCss from '../styles.css?url';
 
 export const Route = createRootRoute({
   head: () => ({
@@ -48,17 +45,17 @@ export const Route = createRootRoute({
   }),
 
   shellComponent: RootDocument,
-})
+});
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   // Hotkeys
-  const router = useRouter()
+  const router = useRouter();
   useHotkey(
     'Alt+H',
     () => {
       router.navigate({
         to: '/',
-      })
+      });
     },
     {
       meta: {
@@ -66,13 +63,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         description: 'Shortcut hotkeys to home page',
       },
     },
-  )
+  );
   useHotkey(
     'Alt+S',
     () => {
       router.navigate({
         to: '/dashboard',
-      })
+      });
     },
     {
       meta: {
@@ -80,13 +77,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         description: 'Shortcut hotkeys to dashboard page',
       },
     },
-  )
+  );
   useHotkey(
     'Alt+1',
     () => {
       router.navigate({
         to: '/dashboard/task-tracker',
-      })
+      });
     },
     {
       meta: {
@@ -94,13 +91,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         description: 'Shortcut hotkeys to task tracker page',
       },
     },
-  )
+  );
   useHotkey(
     'Alt+2',
     () => {
       router.navigate({
         to: '/dashboard/quran-tracker',
-      })
+      });
     },
     {
       meta: {
@@ -108,13 +105,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         description: `Shortcut hotkeys to qur'an tracker page`,
       },
     },
-  )
-  ;(useHotkey(
+  );
+  useHotkey(
     'Alt+3',
     () => {
       router.navigate({
         to: '/dashboard/blog',
-      })
+      });
     },
     {
       meta: {
@@ -122,21 +119,22 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         description: `Shortcut hotkeys to dashboard blog page`,
       },
     },
-  ),
-    useHotkey(
-      'Alt+4',
-      () => {
-        router.navigate({
-          to: '/blog',
-        })
+  );
+  useHotkey(
+    'Alt+4',
+    () => {
+      router.navigate({
+        to: '/blog',
+      });
+    },
+    {
+      meta: {
+        name: `Blog Shortcut`,
+        description: `Shortcut hotkeys to blog page`,
       },
-      {
-        meta: {
-          name: `Blog Shortcut`,
-          description: `Shortcut hotkeys to blog page`,
-        },
-      },
-    ))
+    },
+  );
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -194,5 +192,5 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         </QueryProvider>
       </body>
     </html>
-  )
+  );
 }
