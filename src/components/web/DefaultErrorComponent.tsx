@@ -47,9 +47,9 @@ export function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
         </p>
 
         <div className="mt-8 overflow-hidden rounded-lg bg-slate-900/50 border border-slate-800 p-4 text-left">
-          <p className="font-mono text-xs text-emerald-400 truncate">
+          <pre className="font-mono whitespace-pre-wrap text-xs text-emerald-400 ">
             {error.message || 'Unknown system error'}
-          </p>
+          </pre>
         </div>
 
         <div className="mt-10 flex items-center justify-center gap-x-4">

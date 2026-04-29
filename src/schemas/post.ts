@@ -1,8 +1,12 @@
 import z from 'zod';
 
 export const shortPostSchema = z.object({
-  image: z.string().min(1, 'Image Link is required'),
-  content: z.string().min(1, 'Content is required'),
+  image: z.array(z.string()).optional(),
+  content: z
+    .string({
+      error: 'Content is required',
+    })
+    .min(10, 'Content is must be at least 10 characters'),
   published: z.boolean({
     error: 'Published status is required',
   }),

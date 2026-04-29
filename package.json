@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vp dev --port 3000",
+    "dev": "NODE_OPTIONS=--max-old-space-size=4096 vp dev --port 3000",
     "build": "vp build",
     "preview": "vp preview",
     "test": "vp test run",
@@ -28,7 +28,10 @@
     "@elysiajs/eden": "^1.4.8",
     "@elysiajs/openapi": "^1.4.14",
     "@fontsource-variable/inter": "^5.2.8",
+    "@heroui/react": "^3.0.3",
+    "@heroui/styles": "^3.0.3",
     "@heyputer/puter.js": "^2.2.15",
+    "@internationalized/date": "^3.12.1",
     "@jsdevtools/rehype-toc": "^3.0.2",
     "@mendable/firecrawl-js": "^4.18.1",
     "@openrouter/ai-sdk-provider": "^2.2.3",
@@ -58,6 +61,7 @@
     "@tanstack/react-devtools": "^0.10.1 ",
     "@tanstack/react-form": "^1.29.0",
     "@tanstack/react-form-devtools": "^0.2.21",
+    "@tanstack/react-form-start": "^1.29.1",
     "@tanstack/react-hotkeys": "^0.9.1",
     "@tanstack/react-hotkeys-devtools": "^0.6.6",
     "@tanstack/react-pacer": "^0.22.0",
@@ -82,6 +86,7 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "elysia": "^1.4.26",
+    "embla-carousel-react": "^8.6.0",
     "es-toolkit": "^1.44.0",
     "esbuild": "^0.28.0",
     "gray-matter": "^4.0.3",
@@ -97,6 +102,7 @@
     "radix-ui": "^1.4.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-icons": "^5.6.0",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^16.1.1",
     "rehype-autolink-headings": "^7.1.0",
@@ -151,5 +157,5 @@
     "vitest": "catalog:",
     "web-vitals": "^5.1.0"
   },
-  "packageManager": "pnpm@10.33.2"
+  "packageManager": "pnpm@11.0.0"
 }

@@ -1,56 +1,41 @@
-import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router';
-import { createStore, useSelector } from '@tanstack/react-store';
-import { zodValidator } from '@tanstack/zod-adapter';
-import { intlFormat, intlFormatDistance } from 'date-fns';
-import { compareAsc, compareDesc } from 'date-fns';
-import {
-  Plus,
-  MoreVertical,
-  Pencil,
-  Trash2,
-  ExternalLink,
-  Calendar,
-  LucideClockFading,
-  ListXIcon,
-  Loader2,
-  Search,
-  Heart,
-  MessageSquare,
-} from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createStore } from "@tanstack/react-store";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { compareAsc, compareDesc } from "date-fns";
+import { MoreVertical } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-} from '@/components/ui/dialog';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { deleteShortPostFn, getShortPostsFn } from '@/data/post';
-import { getUser } from '@/data/session';
-import { SortedByStatus } from '@/lib/constants';
-import { shortPostSearchSchema } from '@/schemas/post';
+} from "@/components/ui/select";
+import { getShortPostsFn } from "@/data/post";
+import { getUser } from "@/data/session";
+import { SortedByStatus } from "@/lib/constants";
+import { shortPostSearchSchema } from "@/schemas/post";
+import { PostDialog } from "@/components/web/post/PostDialog";
+import { EditPostDialog } from "@/components/web/post/EditPostDialog";
 
-export const Route = createFileRoute('/dashboard/post/')({
+export const postModalStore = createStore({
+  dialogId: "",
+  isOpen: false,
+  isCreatePostDialog: false,
+  isEditPostDialog: false,
+  isLoading: false,
+  currentPostId: "",
+});
+
+export const Route = createFileRoute("/dashboard/post/")({
   loader: async () => {
     const allPosts = await getShortPostsFn();
     const session = await getUser();
@@ -65,19 +50,19 @@ export const Route = createFileRoute('/dashboard/post/')({
     meta: [
       { title: `My Posts | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
-      { property: 'og:title', content: 'My Posts | Envoy Mindpalace' },
+      { property: "og:title", content: "My Posts | Envoy Mindpalace" },
       {
-        property: 'og:description',
-        content: 'Create your own blog and write your thoughts!',
+        property: "og:description",
+        content: "Create your own blog and write your thoughts!",
       },
       {
-        property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
@@ -86,32 +71,21 @@ function PostPageComponent() {
   const { allPosts, session } = Route.useLoaderData();
   const { sortDateBy } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
-  const router = useRouter();
-  const [modalStore] = useState(() =>
-    createStore({
-      dialogId: '',
-      isOpen: false,
-      isLoading: false,
-      isEditing: false,
-      currentPostId: '',
-    }),
-  );
-
-  const currentPostId = useSelector(modalStore, (state) => state.currentPostId);
-  const isOpen = useSelector(modalStore, (state) => state.isOpen);
-  const isLoading = useSelector(modalStore, (state) => state.isLoading);
-  const isEditing = useSelector(modalStore, (state) => state.isEditing);
-
   const sortedPosts = [...allPosts].sort((a, b) => {
     const dateA = new Date(a.createdAt);
     const dateB = new Date(b.createdAt);
 
-    if (sortDateBy === 'ASC') {
+    if (sortDateBy === "ASC") {
       return compareAsc(dateA, dateB);
     } else {
       return compareDesc(dateA, dateB);
     }
   });
+
+  // const { unsubscribe } = postModalStore.subscribe((state) => {
+  //   console.log("The state is now:", state);
+  // });
+
   return (
     <div className="min-h-screen  text-slate-50">
       <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col ">
@@ -122,15 +96,7 @@ function PostPageComponent() {
             </h1>
             <p className="text-slate-400 mt-2">Create and edit your posts here.</p>
           </div>
-          <Button
-            size="lg"
-            className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 shadow-lg shadow-emerald-500/20 cursor-pointer"
-          >
-            <>
-              <Plus className="size-5" />
-              Create New Post
-            </>
-          </Button>
+          <PostDialog />
         </div>
 
         <div className="flex max-sm:flex-col items-center max-sm:justify-center gap-4 mb-8">
@@ -169,14 +135,20 @@ function PostPageComponent() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
           {sortedPosts.map((post) => {
+            const imgs = post.Images.map((img) => img.url);
+            const firstImageUrl = imgs[0];
             return (
               <Card
                 key={post.id}
                 className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0"
               >
-                <div className="aspect-video relative overflow-hidden">
+                <div className="aspect-square relative overflow-hidden">
                   <img
-                    src={post.Images[0]?.url ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
+                    src={
+                      firstImageUrl
+                        ? firstImageUrl
+                        : "https://tanstack.dev/_build/assets/splash-light-CHqMsyq8.png"
+                    }
                     alt={post.id}
                     className="object-cover w-full h-full transition-transform duration-500"
                   />
@@ -198,25 +170,19 @@ function PostPageComponent() {
                           align="end"
                           className="w-40 bg-slate-900 border-slate-800 text-slate-200"
                         >
-                          <DropdownMenuItem asChild className="cursor-pointer gap-2">
-                            <ExternalLink className="size-4" /> View Post
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="cursor-pointer gap-2">
-                            <Pencil className="size-4" /> Edit Post
-                          </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => {
-                              modalStore.setState((prev) => {
-                                return {
-                                  ...prev,
-                                  isOpen: !prev.isOpen,
-                                  dialogId: post.id,
-                                };
-                              });
-                            }}
-                            className="cursor-pointer gap-2 text-red-400 focus:text-red-400 focus:bg-red-400/10"
+                            className="cursor-pointer"
+                            onSelect={(e) => e.preventDefault()}
+                            asChild
                           >
-                            <Trash2 className="size-4" /> Delete
+                            <EditPostDialog
+                              initialValues={{
+                                images: imgs.length > 0 ? imgs : [""],
+                                content: post.content ?? "",
+                                published: post.published,
+                                currentPostId: post.id,
+                              }}
+                            />
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -227,73 +193,6 @@ function PostPageComponent() {
             );
           })}
         </div>
-        <Dialog
-          open={isOpen}
-          onOpenChange={(open) => {
-            modalStore.setState((prev) => {
-              return {
-                ...prev,
-                isOpen: open,
-              };
-            });
-          }}
-        >
-          <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
-            <form
-              onSubmit={async (e) => {
-                modalStore.setState((prev) => {
-                  return {
-                    ...prev,
-                    isLoading: true,
-                  };
-                });
-                e.preventDefault();
-                await deleteShortPostFn({
-                  data: {
-                    shortPostId: modalStore.state.dialogId,
-                  },
-                });
-                toast.success('Post deleted');
-                router.invalidate();
-                modalStore.setState((prev) => {
-                  return {
-                    ...prev,
-                    isLoading: false,
-                    dialogId: '',
-                  };
-                });
-                // unsubscribe()
-              }}
-            >
-              <DialogHeader className="mb-6">
-                <DialogTitle>Delete Task List</DialogTitle>
-                <DialogDescription>
-                  Are you sure to delete this task list? This action cannot be undone.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="mt-6">
-                <DialogClose asChild>
-                  <Button variant="outline" className="cursor-pointer">
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <Button type="submit" disabled={isLoading} className="cursor-pointer">
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="size-4 animate-spin" />
-                      Deleting...
-                    </>
-                  ) : (
-                    <>
-                      <ListXIcon className="size-4" />
-                      Delete
-                    </>
-                  )}
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );

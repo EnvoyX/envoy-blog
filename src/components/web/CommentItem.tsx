@@ -6,83 +6,80 @@ import {
   //   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useState } from 'react'
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
-import { Button } from '../ui/button'
-import { intlFormatDistance } from 'date-fns'
-import { VirtualOrigin } from '@tanstack/react-db'
-import { CommentCollection } from '@/collections/blog'
-import { Link } from '@tanstack/react-router'
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Button } from "../ui/button";
+import { intlFormatDistance } from "date-fns";
+import { VirtualOrigin } from "@tanstack/react-db";
+import { CommentCollection } from "@/collections/blog";
+import { Link } from "@tanstack/react-router";
 
 interface ChatItemProps {
   comment: {
-    id: string
-    createdAt: Date
-    updatedAt: Date
-    userId: string
-    content: string
-    postId: string
-    post_slug: string
-    parentId: string | null
-    readonly $synced: boolean
-    readonly $origin: VirtualOrigin
-    readonly $key: string
-    readonly $collectionId: string
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    content: string;
+    postId: string | null;
+    post_slug: string | null;
+    shortPostId: string | null;
+    parentId: string | null;
+    readonly $synced: boolean;
+    readonly $origin: VirtualOrigin;
+    readonly $key: string;
+    readonly $collectionId: string;
     user: {
-      id: string
-      createdAt: Date
-      updatedAt: Date
-      email: string
-      emailVerified: boolean
-      name: string
-      image: string | null
-      password: string | null
-    }
-  }
+      id: string;
+      createdAt: Date;
+      updatedAt: Date;
+      email: string;
+      emailVerified: boolean;
+      name: string;
+      image: string | null;
+      password: string | null;
+    };
+  };
   session: {
     user: {
-      id?: string | undefined
-      image?: string | null | undefined
-      name?: string | undefined
-      createdAt?: Date | undefined
-      email?: string | undefined
-      updatedAt?: Date | undefined
-      emailVerified?: boolean | undefined
-      password?: string | null | undefined
-    }
-  }
-  commentCollection: CommentCollection
+      id?: string | undefined;
+      image?: string | null | undefined;
+      name?: string | undefined;
+      createdAt?: Date | undefined;
+      email?: string | undefined;
+      updatedAt?: Date | undefined;
+      emailVerified?: boolean | undefined;
+      password?: string | null | undefined;
+    };
+  };
+  commentCollection: CommentCollection;
 }
 
-export function CommentItem({
-  comment,
-  session,
-  commentCollection,
-}: ChatItemProps) {
-  const [isEditing, setIsEditing] = useState(false)
-  const [editContent, setEditContent] = useState(comment.content)
+export function CommentItem({ comment, session, commentCollection }: ChatItemProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(comment.content);
 
   const handleUpdate = () => {
     if (editContent.trim() === comment.content) {
-      setIsEditing(false)
-      return
+      setIsEditing(false);
+      return;
     }
     // optimistic update
     commentCollection.update(comment.id, (draft) => {
-      draft.content = editContent
-    })
+      draft.content = editContent;
+    });
 
-    setIsEditing(false)
-  }
+    setIsEditing(false);
+  };
 
   const handleDelete = () => {
     // optimistic delete
-    commentCollection.delete(comment.id)
-  }
+    commentCollection.delete(comment.id);
+  };
 
-  const isOwner = session?.user?.id === comment.userId
+  const isOwner = session?.user?.id === comment.userId;
 
   return (
     <div className="group flex gap-4 p-4 rounded-2xl transition-all hover:bg-slate-900/40 border border-transparent hover:border-slate-800">
@@ -98,10 +95,10 @@ export function CommentItem({
           <AvatarFallback>
             {comment.user.name
               ? comment.user.name
-                  .split(' ')
+                  .split(" ")
                   .map((n) => n[0])
-                  .join('')
-              : ''}
+                  .join("")
+              : ""}
           </AvatarFallback>
         </Avatar>
       </Link>
@@ -109,9 +106,7 @@ export function CommentItem({
       <div className="flex-1 space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-200">
-              {comment.user.name}
-            </span>
+            <span className="font-semibold text-slate-200">{comment.user.name}</span>
             <span className="text-xs text-slate-500">
               {intlFormatDistance(new Date(comment.createdAt), new Date())}
             </span>
@@ -179,5 +174,5 @@ export function CommentItem({
         )}
       </div>
     </div>
-  )
+  );
 }

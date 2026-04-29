@@ -7,7 +7,7 @@ import {
   getAllLikes,
   toggleLikeFn,
   updateCommentFn,
-} from "@/data/blog";
+} from "@/data/post";
 import { getQueryClient } from "@/components/web/query-provider";
 
 const queryClient = getQueryClient();
@@ -24,13 +24,13 @@ export const likeCollection = createCollection(
     onInsert: async ({ transaction }) => {
       const { modified } = transaction.mutations[0];
       await toggleLikeFn({
-        data: { id: modified.id, postId: modified.postId ?? "", slug: modified.post_slug ?? "" },
+        data: { id: modified.id, shortPostId: modified.shortPostId ?? "" },
       });
     },
     onDelete: async ({ transaction }) => {
       const { modified } = transaction.mutations[0];
       await toggleLikeFn({
-        data: { id: modified.id, postId: modified.postId ?? "", slug: modified.post_slug ?? "" },
+        data: { id: modified.id, shortPostId: modified.shortPostId ?? "" },
       });
     },
   }),
@@ -50,8 +50,7 @@ export const commentCollection = createCollection(
       const newRecord = await createCommentFn({
         data: {
           id: modified.id,
-          postId: modified.postId as string,
-          slug: modified.post_slug as string,
+          shortPostId: modified.shortPostId as string,
           content: modified.content as string,
         },
       });

@@ -1,9 +1,9 @@
-import { db } from '@/lib/db'
-import { authMiddleware } from '@/middlewares/auth'
-import { createServerFn } from '@tanstack/react-start'
-import z from 'zod'
+import { db } from "@/lib/db";
+import { authMiddleware } from "@/middlewares/auth";
+import { createServerFn } from "@tanstack/react-start";
+import z from "zod";
 
-export const getPublicProfileFn = createServerFn({ method: 'GET' })
+export const getPublicProfileFn = createServerFn({ method: "GET" })
   .inputValidator(
     z.object({
       userId: z.string(),
@@ -16,14 +16,29 @@ export const getPublicProfileFn = createServerFn({ method: 'GET' })
         posts: {
           where: { published: true },
           include: { _count: { select: { likes: true, comments: true } } },
-          orderBy: { createdAt: 'desc' },
+          orderBy: { createdAt: "desc" },
+        },
+        shortPosts: {
+          where: { published: true },
+          include: {
+            _count: { select: { likes: true, comments: true } },
+            likes: true,
+            comments: {
+              include: {
+                user: true,
+              },
+            },
+            author: true,
+            Images: true,
+          },
+          orderBy: { createdAt: "desc" },
         },
       },
-    })
-    return profile
-  })
+    });
+    return profile;
+  });
 
-export const updateProfile = createServerFn({ method: 'POST' })
+export const updateProfile = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .inputValidator(
     z.object({
@@ -43,8 +58,8 @@ export const updateProfile = createServerFn({ method: 'POST' })
           biodata: data.biodata,
           defaultImage: context.user.image,
         },
-      })
-      return updatedUser
+      });
+      return updatedUser;
     }
 
     const updatedUser = await db.user.update({
@@ -54,6 +69,6 @@ export const updateProfile = createServerFn({ method: 'POST' })
         image: data.image,
         biodata: data.biodata,
       },
-    })
-    return updatedUser
-  })
+    });
+    return updatedUser;
+  });
