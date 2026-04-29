@@ -157,5 +157,5 @@
     "vitest": "catalog:",
     "web-vitals": "^5.1.0"
   },
-  "packageManager": "pnpm@11.0.0"
+  "packageManager": "pnpm@10.33.2"
 }
