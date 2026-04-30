@@ -1,5 +1,6 @@
-import { Prisma } from "@/generated/prisma/client";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon } from 'lucide-react';
+
+import { Prisma } from '@/generated/prisma/client';
 
 export interface NavPrimaryProps {
   items: {
@@ -33,5 +34,19 @@ export type ShortPostPublic = Prisma.ShortPostGetPayload<{
     };
     author: true;
     Images: true;
+  };
+}>;
+
+export type BlogPostPublic = Prisma.PostGetPayload<{
+  include: {
+    author: true;
+    comments: {
+      include: { user: true };
+      orderBy: { createdAt: 'desc' };
+    };
+    _count: {
+      select: { likes: true; comments: true };
+    };
+    likes: true;
   };
 }>;

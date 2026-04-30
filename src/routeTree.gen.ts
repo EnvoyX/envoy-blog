@@ -29,6 +29,7 @@ import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/item
 import { Route as DashboardImagesIndexRouteImport } from './routes/dashboard/images/index'
 import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
 import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
+import { Route as GeneralPostIndexRouteImport } from './routes/_general/post/index'
 import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog/index'
 import { Route as GeneralArticleIndexRouteImport } from './routes/_general/article/index'
 import { Route as ChatChatIndexRouteImport } from './routes/_chat/chat/index'
@@ -43,6 +44,7 @@ import { Route as ChatChatChatboxRouteRouteImport } from './routes/_chat/chat/_c
 import { Route as DashboardBlogMdEditorIndexRouteImport } from './routes/dashboard/blog/md-editor/index'
 import { Route as DashboardBlogCreateBlogIndexRouteImport } from './routes/dashboard/blog/create-blog/index'
 import { Route as DashboardBlogSlugIndexRouteImport } from './routes/dashboard/blog/$slug.index'
+import { Route as GeneralPostPostIdIndexRouteImport } from './routes/_general/post/$postId.index'
 import { Route as GeneralBlogMdEditorIndexRouteImport } from './routes/_general/blog/md-editor/index'
 import { Route as GeneralBlogCreateBlogIndexRouteImport } from './routes/_general/blog/create-blog/index'
 import { Route as GeneralBlogSlugIndexRouteImport } from './routes/_general/blog/$slug.index'
@@ -153,6 +155,11 @@ const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const GeneralPostIndexRoute = GeneralPostIndexRouteImport.update({
+  id: '/post/',
+  path: '/post/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
 const GeneralBlogIndexRoute = GeneralBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -225,6 +232,11 @@ const DashboardBlogSlugIndexRoute = DashboardBlogSlugIndexRouteImport.update({
   id: '/blog/$slug/',
   path: '/blog/$slug/',
   getParentRoute: () => DashboardRouteRoute,
+} as any)
+const GeneralPostPostIdIndexRoute = GeneralPostPostIdIndexRouteImport.update({
+  id: '/post/$postId/',
+  path: '/post/$postId/',
+  getParentRoute: () => GeneralRouteRoute,
 } as any)
 const GeneralBlogMdEditorIndexRoute =
   GeneralBlogMdEditorIndexRouteImport.update({
@@ -302,6 +314,7 @@ export interface FileRoutesByFullPath {
   '/chat/': typeof ChatChatIndexRoute
   '/article/': typeof GeneralArticleIndexRoute
   '/blog/': typeof GeneralBlogIndexRoute
+  '/post/': typeof GeneralPostIndexRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/images/': typeof DashboardImagesIndexRoute
@@ -313,6 +326,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug/': typeof GeneralBlogSlugIndexRoute
   '/blog/create-blog/': typeof GeneralBlogCreateBlogIndexRoute
   '/blog/md-editor/': typeof GeneralBlogMdEditorIndexRoute
+  '/post/$postId/': typeof GeneralPostPostIdIndexRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
@@ -343,6 +357,7 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginIndexRoute
   '/article': typeof GeneralArticleIndexRoute
   '/blog': typeof GeneralBlogIndexRoute
+  '/post': typeof GeneralPostIndexRoute
   '/dashboard/admin': typeof DashboardAdminIndexRoute
   '/dashboard/blog': typeof DashboardBlogIndexRoute
   '/dashboard/images': typeof DashboardImagesIndexRoute
@@ -354,6 +369,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof GeneralBlogSlugIndexRoute
   '/blog/create-blog': typeof GeneralBlogCreateBlogIndexRoute
   '/blog/md-editor': typeof GeneralBlogMdEditorIndexRoute
+  '/post/$postId': typeof GeneralPostPostIdIndexRoute
   '/dashboard/blog/$slug': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor': typeof DashboardBlogMdEditorIndexRoute
@@ -389,6 +405,7 @@ export interface FileRoutesById {
   '/_chat/chat/': typeof ChatChatIndexRoute
   '/_general/article/': typeof GeneralArticleIndexRoute
   '/_general/blog/': typeof GeneralBlogIndexRoute
+  '/_general/post/': typeof GeneralPostIndexRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/images/': typeof DashboardImagesIndexRoute
@@ -400,6 +417,7 @@ export interface FileRoutesById {
   '/_general/blog/$slug/': typeof GeneralBlogSlugIndexRoute
   '/_general/blog/create-blog/': typeof GeneralBlogCreateBlogIndexRoute
   '/_general/blog/md-editor/': typeof GeneralBlogMdEditorIndexRoute
+  '/_general/post/$postId/': typeof GeneralPostPostIdIndexRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
@@ -434,6 +452,7 @@ export interface FileRouteTypes {
     | '/chat/'
     | '/article/'
     | '/blog/'
+    | '/post/'
     | '/dashboard/admin/'
     | '/dashboard/blog/'
     | '/dashboard/images/'
@@ -445,6 +464,7 @@ export interface FileRouteTypes {
     | '/blog/$slug/'
     | '/blog/create-blog/'
     | '/blog/md-editor/'
+    | '/post/$postId/'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
     | '/dashboard/blog/md-editor/'
@@ -475,6 +495,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/article'
     | '/blog'
+    | '/post'
     | '/dashboard/admin'
     | '/dashboard/blog'
     | '/dashboard/images'
@@ -486,6 +507,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/create-blog'
     | '/blog/md-editor'
+    | '/post/$postId'
     | '/dashboard/blog/$slug'
     | '/dashboard/blog/create-blog'
     | '/dashboard/blog/md-editor'
@@ -520,6 +542,7 @@ export interface FileRouteTypes {
     | '/_chat/chat/'
     | '/_general/article/'
     | '/_general/blog/'
+    | '/_general/post/'
     | '/dashboard/admin/'
     | '/dashboard/blog/'
     | '/dashboard/images/'
@@ -531,6 +554,7 @@ export interface FileRouteTypes {
     | '/_general/blog/$slug/'
     | '/_general/blog/create-blog/'
     | '/_general/blog/md-editor/'
+    | '/_general/post/$postId/'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
     | '/dashboard/blog/md-editor/'
@@ -699,6 +723,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/_general/post/': {
+      id: '/_general/post/'
+      path: '/post'
+      fullPath: '/post/'
+      preLoaderRoute: typeof GeneralPostIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
+    }
     '/_general/blog/': {
       id: '/_general/blog/'
       path: '/blog'
@@ -797,6 +828,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardBlogSlugIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/_general/post/$postId/': {
+      id: '/_general/post/$postId/'
+      path: '/post/$postId'
+      fullPath: '/post/$postId/'
+      preLoaderRoute: typeof GeneralPostPostIdIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
+    }
     '/_general/blog/md-editor/': {
       id: '/_general/blog/md-editor/'
       path: '/blog/md-editor'
@@ -880,9 +918,11 @@ interface GeneralRouteRouteChildren {
   GeneralUserUserIdRoute: typeof GeneralUserUserIdRoute
   GeneralArticleIndexRoute: typeof GeneralArticleIndexRoute
   GeneralBlogIndexRoute: typeof GeneralBlogIndexRoute
+  GeneralPostIndexRoute: typeof GeneralPostIndexRoute
   GeneralBlogSlugIndexRoute: typeof GeneralBlogSlugIndexRoute
   GeneralBlogCreateBlogIndexRoute: typeof GeneralBlogCreateBlogIndexRoute
   GeneralBlogMdEditorIndexRoute: typeof GeneralBlogMdEditorIndexRoute
+  GeneralPostPostIdIndexRoute: typeof GeneralPostPostIdIndexRoute
   GeneralBlogSlugEditMdEditorRoute: typeof GeneralBlogSlugEditMdEditorRoute
   GeneralBlogSlugEditIndexRoute: typeof GeneralBlogSlugEditIndexRoute
 }
@@ -892,9 +932,11 @@ const GeneralRouteRouteChildren: GeneralRouteRouteChildren = {
   GeneralUserUserIdRoute: GeneralUserUserIdRoute,
   GeneralArticleIndexRoute: GeneralArticleIndexRoute,
   GeneralBlogIndexRoute: GeneralBlogIndexRoute,
+  GeneralPostIndexRoute: GeneralPostIndexRoute,
   GeneralBlogSlugIndexRoute: GeneralBlogSlugIndexRoute,
   GeneralBlogCreateBlogIndexRoute: GeneralBlogCreateBlogIndexRoute,
   GeneralBlogMdEditorIndexRoute: GeneralBlogMdEditorIndexRoute,
+  GeneralPostPostIdIndexRoute: GeneralPostPostIdIndexRoute,
   GeneralBlogSlugEditMdEditorRoute: GeneralBlogSlugEditMdEditorRoute,
   GeneralBlogSlugEditIndexRoute: GeneralBlogSlugEditIndexRoute,
 }

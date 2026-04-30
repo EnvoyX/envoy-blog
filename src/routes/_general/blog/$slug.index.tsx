@@ -1,21 +1,13 @@
-import { MarkdownRenderer } from '@/components/web/markdown/Markdown'
-import { getPostFn } from '@/data/blog'
-import {
-  createFileRoute,
-  Link,
-  redirect,
-  useNavigate,
-} from '@tanstack/react-router'
-import {
-  ChevronDown,
-  ChevronLeft,
-  Heart,
-  ListIcon,
-  MessagesSquareIcon,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { useEffect, useState } from 'react'
-import { intlFormat, intlFormatDistance } from 'date-fns'
+import { createId } from '@paralleldrive/cuid2';
+import { useLiveQuery, eq } from '@tanstack/react-db';
+import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router';
+import { intlFormat, intlFormatDistance } from 'date-fns';
+import { ChevronDown, ChevronLeft, Heart, ListIcon, MessagesSquareIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+import { commentCollection, likeCollection } from '@/collections/blog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,32 +16,30 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { cn } from '@/lib/utils'
-import { getUser } from '@/data/session'
-import { useLiveQuery, eq } from '@tanstack/react-db'
-import { UserAvatar } from '@/components/web/user-profile'
-import { createId } from '@paralleldrive/cuid2'
-import { User } from '@/generated/prisma/browser'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { commentCollection, likeCollection } from '@/collections/blog'
-import { CommentItem } from '@/components/web/CommentItem'
-import CommentInput from '@/components/web/CommentInput'
+} from '@/components/ui/dropdown-menu';
+import CommentInput from '@/components/web/CommentInput';
+import { CommentItem } from '@/components/web/CommentItem';
+import { MarkdownRenderer } from '@/components/web/markdown/Markdown';
+import { UserAvatar } from '@/components/web/user-profile';
+import { getPostFn } from '@/data/blog';
+import { getUser } from '@/data/session';
+import { User } from '@/generated/prisma/browser';
+import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/_general/blog/$slug/')({
   component: PostComponent,
   loader: async ({ params }) => {
-    const post = await getPostFn({ data: params.slug })
-    const session = await getUser()
+    const post = await getPostFn({ data: params.slug });
+    const session = await getUser();
     if (!post?.published && session.user.id !== post?.authorId) {
       throw redirect({
         to: '/blog',
-      })
+      });
     }
     return {
       post,
       session,
-    }
+    };
   },
   head: ({ loaderData }) => ({
     meta: [
@@ -73,57 +63,55 @@ export const Route = createFileRoute('/_general/blog/$slug/')({
       { property: 'og:type', content: 'website' },
     ],
   }),
-})
+});
 
 function extractHeadings(markdown: string) {
   // use a regex to find everything between ``` and ``` and replace it with an empty string before looking for headings.
   const cleanMarkdown = markdown
     .replace(/```[\s\S]*?```/g, '') // remove code blocks within ```
-    .replace(/`.*?`/g, '') // remove inline code (i.e. comments)
+    .replace(/`.*?`/g, ''); // remove inline code (i.e. comments)
 
-  const lines = cleanMarkdown.split('\n')
-  const headings: { text: string; id: string; level: number }[] = []
+  const lines = cleanMarkdown.split('\n');
+  const headings: { text: string; id: string; level: number }[] = [];
 
   lines.forEach((line) => {
     // adjust the # match: i.e. {2,3} or {1,6} to match 1 to 6 '#' symbols
-    const match = line.match(/^(#{1,6})\s+(.*)/)
+    const match = line.match(/^(#{1,6})\s+(.*)/);
     if (match) {
-      const level = match[1].length
-      const text = match[2]
+      const level = match[1].length;
+      const text = match[2];
       const id = text
         .toLowerCase()
         .replace(/\s+/g, '-')
-        .replace(/[^\w-]/g, '')
+        .replace(/[^\w-]/g, '');
 
-      headings.push({ text, id, level })
+      headings.push({ text, id, level });
     }
-  })
-  return headings
+  });
+  return headings;
 }
 
 function PostComponent() {
-  const { post, session } = Route.useLoaderData()
-  const { slug } = Route.useParams()
-  const [visibleIds, setVisibleIds] = useState<string[]>([])
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const headings = post?.content ? extractHeadings(post.content) : []
-  const navigate = useNavigate()
+  const { post, session } = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const [visibleIds, setVisibleIds] = useState<string[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const headings = post?.content ? extractHeadings(post.content) : [];
+  const navigate = useNavigate();
   const { data: likes } = useLiveQuery((q) =>
-    q
-      .from({ like: likeCollection })
-      .where(({ like }) => eq(like.postId, post?.id)),
-  )
+    q.from({ like: likeCollection }).where(({ like }) => eq(like.postId, post?.id)),
+  );
   const { data: comments } = useLiveQuery((q) =>
     q
       .from({ comment: commentCollection })
       .where(({ comment }) => eq(comment.postId, post?.id))
       .orderBy(({ comment }) => comment.createdAt, 'desc'),
-  )
+  );
 
-  const hasLiked = likes.find((like) => like.userId === session.user.id)
+  const hasLiked = likes.find((like) => like.userId === session.user.id);
 
   function handleToggleLike() {
-    const existingLike = likes.find((like) => like.userId === session.user.id)
+    const existingLike = likes.find((like) => like.userId === session.user.id);
 
     if (!existingLike) {
       // optimistic Insert like
@@ -133,15 +121,15 @@ function PostComponent() {
         postId: post?.id as string,
         userId: session.user.id as string,
         createdAt: new Date(),
-      })
+      });
     } else {
       // optimistic delete like
-      likeCollection.delete(existingLike.id)
+      likeCollection.delete(existingLike.id);
     }
   }
 
   function handleAddComment(commentText: string) {
-    if (!commentText.trim()) return
+    if (!commentText.trim()) return;
 
     // optimistic Insert comment
     commentCollection.insert({
@@ -154,38 +142,36 @@ function PostComponent() {
       user: session.user as User,
       parentId: createId(),
       updatedAt: new Date(),
-    })
+    });
   }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         setVisibleIds((prev) => {
-          let next = [...prev]
+          let next = [...prev];
 
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               // add heading id if it's not already there (within viewport)
               if (!next.includes(entry.target.id)) {
-                next.push(entry.target.id)
+                next.push(entry.target.id);
               }
             } else {
               // remove id of the heading when it leaves the viewport
-              next = next.filter((id) => id !== entry.target.id)
+              next = next.filter((id) => id !== entry.target.id);
             }
-          })
-          return next
-        })
+          });
+          return next;
+        });
       },
       // rootMargin: -top -right -bottom -left
       { rootMargin: '-80px 0px 0px 0px', threshold: 0 }, // adjusts when the link triggers
-    )
+    );
 
-    document
-      .querySelectorAll('h1, h2, h3, h4, h5, h6')
-      .forEach((h) => observer.observe(h))
-    return () => observer.disconnect()
-  }, [])
+    document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((h) => observer.observe(h));
+    return () => observer.disconnect();
+  }, []);
 
   if (!post) {
     return (
@@ -214,8 +200,7 @@ function PostComponent() {
               Post Not Found
             </h1>
             <p className="text-slate-400 text-lg leading-relaxed">
-              The blog post you're looking for doesn't exist or may have been
-              moved.
+              The blog post you're looking for doesn't exist or may have been moved.
             </p>
             <div className="pt-4">
               <Button asChild size="lg" className="rounded-full px-8">
@@ -225,7 +210,7 @@ function PostComponent() {
           </div>
         </main>
       </div>
-    )
+    );
   }
 
   return (
@@ -245,19 +230,15 @@ function PostComponent() {
           <DropdownMenu
             open={dropdownOpen}
             onOpenChange={(open) => {
-              setDropdownOpen(open)
+              setDropdownOpen(open);
             }}
           >
             <DropdownMenuTrigger asChild>
               <div className="text-sm font-medium text-slate-500 truncate md:max-w-none flex gap-1 items-center group">
                 <ChevronDown
-                  className={cn(
-                    'size-4 group-hover:text-emerald-500 shrink-0',
-                    {
-                      'rotate-180 transition-all text-emerald-500':
-                        dropdownOpen,
-                    },
-                  )}
+                  className={cn('size-4 group-hover:text-emerald-500 shrink-0', {
+                    'rotate-180 transition-all text-emerald-500': dropdownOpen,
+                  })}
                 />
                 <span
                   className={cn('group-hover:text-emerald-500', {
@@ -273,7 +254,7 @@ function PostComponent() {
                 <DropdownMenuLabel>On This Page </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {headings.map((heading) => {
-                  const isActive = visibleIds.includes(heading.id)
+                  const isActive = visibleIds.includes(heading.id);
                   return (
                     <DropdownMenuItem>
                       <a
@@ -293,7 +274,7 @@ function PostComponent() {
                         {heading.text}
                       </a>
                     </DropdownMenuItem>
-                  )
+                  );
                 })}
               </DropdownMenuGroup>
             </DropdownMenuContent>
@@ -307,9 +288,7 @@ function PostComponent() {
             <header className="mb-8">
               <div className="aspect-video w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 mb-8">
                 <img
-                  src={
-                    post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'
-                  }
+                  src={post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
                   alt={post.title ?? 'Blog Thumbnail'}
                   className="h-full w-full object-cover"
                 />
@@ -331,12 +310,8 @@ function PostComponent() {
                   </Link>
 
                   <div className="flex flex-col">
-                    <span className="font-medium text-slate-200">
-                      {post.author.name}
-                    </span>
-                    <span className="text-xs text-slate-500 uppercase tracking-wider">
-                      Author
-                    </span>
+                    <span className="font-medium text-slate-200">{post.author.name}</span>
+                    <span className="text-xs text-slate-500 uppercase tracking-wider">Author</span>
                   </div>
                 </div>
 
@@ -350,8 +325,7 @@ function PostComponent() {
                   </p>
                   <span className="hidden sm:inline text-slate-700">•</span>
                   <span className="text-slate-500 italic">
-                    Updated{' '}
-                    {intlFormatDistance(new Date(post.updatedAt), new Date())}
+                    Updated {intlFormatDistance(new Date(post.updatedAt), new Date())}
                   </span>
                 </div>
               </div>
@@ -370,9 +344,7 @@ function PostComponent() {
               prose-pre:bg-slate-900
               prose-pre:border prose-pre:border-slate-800 mb-25"
             >
-              <MarkdownRenderer
-                markdown={post.content || '*Nothing to preview...*'}
-              />
+              <MarkdownRenderer markdown={post.content || '*Nothing to preview...*'} />
 
               <div className="mt-16 pt-8 border-t border-slate-800 space-y-12">
                 <section className="flex items-center justify-between max-sm:flex-col max-sm:justify-center bg-slate-900/40 p-6 rounded-2xl border border-slate-800">
@@ -385,9 +357,7 @@ function PostComponent() {
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-slate-300">
-                      {likes.length} likes
-                    </span>
+                    <span className="text-sm font-medium text-slate-300">{likes.length} likes</span>
                     <button
                       onClick={() => handleToggleLike()}
                       className={`p-3 rounded-full transition-all border cursor-pointer ${
@@ -396,9 +366,7 @@ function PostComponent() {
                           : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
                       }`}
                     >
-                      <Heart
-                        className={`size-6 ${hasLiked && 'fill-current'}`}
-                      />
+                      <Heart className={`size-6 ${hasLiked && 'fill-current'}`} />
                     </button>
                   </div>
                 </section>
@@ -445,6 +413,7 @@ function PostComponent() {
                         comment={comment}
                         session={session}
                         commentCollection={commentCollection}
+                        post={post}
                       />
                     ))}
                   </div>
@@ -462,7 +431,7 @@ function PostComponent() {
 
               <nav className="space-y-1 border-l border-slate-800">
                 {headings.map((heading) => {
-                  const isActive = visibleIds.includes(heading.id)
+                  const isActive = visibleIds.includes(heading.id);
                   return (
                     <a
                       key={heading.id}
@@ -480,7 +449,7 @@ function PostComponent() {
                     >
                       {heading.text}
                     </a>
-                  )
+                  );
                 })}
               </nav>
 
@@ -510,5 +479,5 @@ function PostComponent() {
         </div>
       </main>
     </div>
-  )
+  );
 }

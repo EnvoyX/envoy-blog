@@ -1,5 +1,16 @@
-import { Link, useNavigate } from '@tanstack/react-router'
-import { Button, buttonVariants } from '../ui/button'
+import { useQuery } from '@tanstack/react-query';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { Loader2, LogOut, Menu } from 'lucide-react';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 import {
   Sheet,
   SheetClose,
@@ -9,63 +20,54 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet'
-import { authClient } from '@/lib/auth-client'
-import { Loader2, LogOut, Menu } from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu'
-import { useState, useTransition } from 'react'
-import { toast } from 'sonner'
-import { UserAvatar } from './user-profile'
-import { useQuery } from '@tanstack/react-query'
-import { navItemsMain, sidebarNavItems } from './NavItems'
+} from '@/components/ui/sheet';
+import { authClient } from '@/lib/auth-client';
+
+import { Button, buttonVariants } from '../ui/button';
+import { navItemsMain, sidebarNavItems } from './NavItems';
+import { UserAvatar } from './user-profile';
 
 export function Navbar() {
   const session = useQuery({
     queryKey: ['session'],
     queryFn: async () => {
-      const data = await authClient.getSession()
-      return data.data
+      const data = await authClient.getSession();
+      return data.data;
     },
-  })
-  const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
-  const [isTransition, startTransition] = useTransition()
+  });
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTransition, startTransition] = useTransition();
   const handleLogout = () => {
-    setIsLoading(true)
+    setIsLoading(true);
     startTransition(async () => {
       await authClient.signOut({
         fetchOptions: {
           onRequest: () => {
             toast.loading('Logging out...', {
               id: 'logout',
-            })
-            setIsLoading(true)
+            });
+            setIsLoading(true);
           },
           onError: ({ error }) => {
-            setIsLoading(false)
-            toast.dismiss('logout')
+            setIsLoading(false);
+            toast.dismiss('logout');
             toast.error('Failed to log out', {
               description: error.message,
-            })
+            });
           },
           onSuccess: () => {
-            setIsLoading(false)
-            toast.dismiss('logout')
-            toast.success('Logged out successfully')
-            navigate({
+            setIsLoading(false);
+            toast.dismiss('logout');
+            toast.success('Logged out successfully');
+            void navigate({
               to: '/login',
-            })
+            });
           },
         },
-      })
-    })
-  }
+      });
+    });
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-transparent backdrop-blur">
@@ -91,8 +93,7 @@ export function Navbar() {
               <Link
                 to={item.to}
                 activeProps={{
-                  className:
-                    'bg-primary/10 text-primary border-b-2 border-primary',
+                  className: 'bg-primary/10 text-primary border-b-2 border-primary',
                 }}
                 activeOptions={item.activeOptions}
                 key={index}
@@ -100,7 +101,7 @@ export function Navbar() {
               >
                 {item.title}
               </Link>
-            )
+            );
           })}
         </ul>
 
@@ -124,9 +125,7 @@ export function Navbar() {
                     className="w-56 bg-background/25 backdrop-blur-xl border-white/25 "
                   >
                     <div className="p-2 px-3">
-                      <p className="text-sm font-medium truncate">
-                        {session.data?.user.name}
-                      </p>
+                      <p className="text-sm font-medium truncate">{session.data?.user.name}</p>
                       <p className="text-xs text-accent-foreground truncate">
                         {session.data.user.email}
                       </p>
@@ -147,7 +146,7 @@ export function Navbar() {
                             <span>{item.title}</span>
                           </Link>
                         </DropdownMenuItem>
-                      )
+                      );
                     })}
 
                     <DropdownMenuSeparator />
@@ -164,10 +163,7 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <Link
-                  to="/login"
-                  className={buttonVariants({ variant: 'default' })}
-                >
+                <Link to="/login" className={buttonVariants({ variant: 'default' })}>
                   Login
                 </Link>
               </>
@@ -193,9 +189,7 @@ export function Navbar() {
                   className="size-8"
                   alt="Logo"
                 />
-                <span className="font-bold tracking-tight">
-                  Envoy Mindpalace
-                </span>
+                <span className="font-bold tracking-tight">Envoy Mindpalace</span>
               </SheetTitle>
             </SheetHeader>
 
@@ -228,8 +222,7 @@ export function Navbar() {
                       <Link
                         to={item.to}
                         activeProps={{
-                          className:
-                            'bg-primary/10 text-primary border-r-2 border-primary',
+                          className: 'bg-primary/10 text-primary border-r-2 border-primary',
                         }}
                         className="flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors hover:bg-white/5"
                       >
@@ -252,8 +245,7 @@ export function Navbar() {
                           <Link
                             to={item.to}
                             activeProps={{
-                              className:
-                                'bg-primary/10 text-primary border-r-2 border-primary',
+                              className: 'bg-primary/10 text-primary border-r-2 border-primary',
                             }}
                             className="flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors hover:bg-white/5"
                           >
@@ -280,10 +272,7 @@ export function Navbar() {
                 </Button>
               ) : (
                 <SheetClose asChild>
-                  <Link
-                    to="/login"
-                    className={buttonVariants({ className: 'w-full' })}
-                  >
+                  <Link to="/login" className={buttonVariants({ className: 'w-full' })}>
                     Login
                   </Link>
                 </SheetClose>
@@ -293,5 +282,5 @@ export function Navbar() {
         </Sheet>
       </div>
     </nav>
-  )
+  );
 }

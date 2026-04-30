@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buttonVariants } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BlogCard } from '@/components/web/BlogCard';
-import { ShortPostModal } from '@/components/web/post/ShortPostModal';
+import { ShortPostCard } from '@/components/web/post/ShortPostCard';
 import { getUser } from '@/data/session';
 import { getPublicProfileFn } from '@/data/user';
 
@@ -26,6 +26,28 @@ export const Route = createFileRoute('/_general/user/$userId')({
       session,
     };
   },
+  head: ({ loaderData }) => ({
+    meta: [
+      { title: `${loaderData?.user?.name} | Profile | Envoy Mindpalace` },
+      {
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
+      },
+      {
+        property: 'og:title',
+        content: `${loaderData?.user?.name} | Profile | Envoy Mindpalace`,
+      },
+      {
+        property: 'og:description',
+        content: `${loaderData?.user?.biodata}`,
+      },
+      {
+        property: 'og:image',
+        content: `${loaderData?.user?.image}`,
+      },
+      { property: 'og:type', content: 'website' },
+    ],
+  }),
 });
 
 function PendingPublicProfileComponent() {
@@ -111,7 +133,7 @@ function PublicProfileComponent() {
 
         <TabsContent value="blogs">
           {user && user?.posts?.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mx-auto">
               {user.posts.map((post) => {
                 return <BlogCard key={post.id} post={post} />;
               })}
@@ -124,13 +146,10 @@ function PublicProfileComponent() {
         </TabsContent>
 
         <TabsContent value="posts">
-          <div className="max-w-2xl mx-auto space-y-6">
+          <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {user?.shortPosts.length ? (
               user?.shortPosts.map((post) => {
-                return (
-                  // <ShortPostCard key={post.id} post={post} session={session} />
-                  <ShortPostModal key={post.id} post={post} session={session} />
-                );
+                return <ShortPostCard key={post.id} post={post} session={session} />;
               })
             ) : (
               <div className="py-20 text-center border border-dashed border-slate-800 rounded-3xl">

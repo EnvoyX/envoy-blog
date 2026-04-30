@@ -30,6 +30,13 @@ export const navItemsMain: NavProps['items'] = linkOptions([
     },
   },
   {
+    title: 'Posts',
+    to: '/post',
+    activeOptions: {
+      exact: false,
+    },
+  },
+  {
     title: 'Chat',
     to: '/chat',
     activeOptions: {

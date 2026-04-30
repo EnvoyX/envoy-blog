@@ -94,8 +94,8 @@ export function ImageModal({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="cursor-pointer ml-3 absolute top-1/2 left-0 bg-emerald-500!" />
-            <CarouselNext className="cursor-pointer mr-3 absolute top-1/2 right-0 bg-emerald-500!" />
+            <CarouselPrevious className="cursor-pointer ml-3 absolute top-1/2 left-0 bg-emerald-500! text-slate-900!" />
+            <CarouselNext className="cursor-pointer mr-3 absolute top-1/2 right-0 bg-emerald-500! text-slate-900!" />
             <div className="py-2 text-center flex items-center gap-2 font-bold absolute bottom-0">
               {post?.Images.map((_, index) => {
                 return (

@@ -414,6 +414,7 @@ function PostComponent() {
                         comment={comment}
                         session={session}
                         commentCollection={commentCollection}
+                        post={post}
                       />
                     ))}
                   </div>

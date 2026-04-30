@@ -1,41 +1,41 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { createStore } from "@tanstack/react-store";
-import { zodValidator } from "@tanstack/zod-adapter";
-import { compareAsc, compareDesc } from "date-fns";
-import { MoreVertical } from "lucide-react";
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { createStore } from '@tanstack/react-store';
+import { zodValidator } from '@tanstack/zod-adapter';
+import { compareAsc, compareDesc } from 'date-fns';
+import { MoreVertical } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { getShortPostsFn } from "@/data/post";
-import { getUser } from "@/data/session";
-import { SortedByStatus } from "@/lib/constants";
-import { shortPostSearchSchema } from "@/schemas/post";
-import { PostDialog } from "@/components/web/post/PostDialog";
-import { EditPostDialog } from "@/components/web/post/EditPostDialog";
+} from '@/components/ui/select';
+import { EditPostDialog } from '@/components/web/post/EditPostDialog';
+import { PostDialog } from '@/components/web/post/PostDialog';
+import { getShortPostsFn } from '@/data/post';
+import { getUser } from '@/data/session';
+import { SortedByStatus } from '@/lib/constants';
+import { shortPostSearchSchema } from '@/schemas/post';
 
 export const postModalStore = createStore({
-  dialogId: "",
+  dialogId: '',
   isOpen: false,
   isCreatePostDialog: false,
   isEditPostDialog: false,
   isLoading: false,
-  currentPostId: "",
+  currentPostId: '',
 });
 
-export const Route = createFileRoute("/dashboard/post/")({
+export const Route = createFileRoute('/dashboard/post/')({
   loader: async () => {
     const allPosts = await getShortPostsFn();
     const session = await getUser();
@@ -50,19 +50,19 @@ export const Route = createFileRoute("/dashboard/post/")({
     meta: [
       { title: `My Posts | Envoy Mindpalace` },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
-      { property: "og:title", content: "My Posts | Envoy Mindpalace" },
+      { property: 'og:title', content: 'My Posts | Envoy Mindpalace' },
       {
-        property: "og:description",
-        content: "Create your own blog and write your thoughts!",
+        property: 'og:description',
+        content: 'Create your own blog and write your thoughts!',
       },
       {
-        property: "og:image",
-        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+        property: 'og:image',
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
 });
@@ -75,7 +75,7 @@ function PostPageComponent() {
     const dateA = new Date(a.createdAt);
     const dateB = new Date(b.createdAt);
 
-    if (sortDateBy === "ASC") {
+    if (sortDateBy === 'ASC') {
       return compareAsc(dateA, dateB);
     } else {
       return compareDesc(dateA, dateB);
@@ -147,7 +147,7 @@ function PostPageComponent() {
                     src={
                       firstImageUrl
                         ? firstImageUrl
-                        : "https://tanstack.dev/_build/assets/splash-light-CHqMsyq8.png"
+                        : 'https://tanstack.com/images/logos/logo-color-600.png'
                     }
                     alt={post.id}
                     className="object-cover w-full h-full transition-transform duration-500"
@@ -177,8 +177,8 @@ function PostPageComponent() {
                           >
                             <EditPostDialog
                               initialValues={{
-                                images: imgs.length > 0 ? imgs : [""],
-                                content: post.content ?? "",
+                                images: imgs.length > 0 ? imgs : [''],
+                                content: post.content ?? '',
                                 published: post.published,
                                 currentPostId: post.id,
                               }}

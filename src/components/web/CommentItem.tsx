@@ -1,3 +1,11 @@
+import { VirtualOrigin } from '@tanstack/react-db';
+import { Link } from '@tanstack/react-router';
+import { intlFormatDistance } from 'date-fns';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+
+import { CommentCollection } from '@/collections/blog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,15 +14,10 @@ import {
   //   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
-import { Button } from "../ui/button";
-import { intlFormatDistance } from "date-fns";
-import { VirtualOrigin } from "@tanstack/react-db";
-import { CommentCollection } from "@/collections/blog";
-import { Link } from "@tanstack/react-router";
+} from '@/components/ui/dropdown-menu';
+import { BlogPostPublic } from '@/lib/types';
+
+import { Button } from '../ui/button';
 
 interface ChatItemProps {
   comment: {
@@ -54,10 +57,11 @@ interface ChatItemProps {
       password?: string | null | undefined;
     };
   };
+  post: BlogPostPublic;
   commentCollection: CommentCollection;
 }
 
-export function CommentItem({ comment, session, commentCollection }: ChatItemProps) {
+export function CommentItem({ comment, session, commentCollection, post }: ChatItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
 
@@ -79,7 +83,8 @@ export function CommentItem({ comment, session, commentCollection }: ChatItemPro
     commentCollection.delete(comment.id);
   };
 
-  const isOwner = session?.user?.id === comment.userId;
+  const isOwner = session?.user?.id === post.authorId;
+  const isCommentOwner = session?.user?.id === comment.user.id;
 
   return (
     <div className="group flex gap-4 p-4 rounded-2xl transition-all hover:bg-slate-900/40 border border-transparent hover:border-slate-800">
@@ -95,10 +100,10 @@ export function CommentItem({ comment, session, commentCollection }: ChatItemPro
           <AvatarFallback>
             {comment.user.name
               ? comment.user.name
-                  .split(" ")
+                  .split(' ')
                   .map((n) => n[0])
-                  .join("")
-              : ""}
+                  .join('')
+              : ''}
           </AvatarFallback>
         </Avatar>
       </Link>
@@ -121,7 +126,35 @@ export function CommentItem({ comment, session, commentCollection }: ChatItemPro
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="bg-slate-950 border-slate-800 text-slate-300"
+                className="bg-slate-900/50 border-slate-800 text-slate-300"
+              >
+                {isCommentOwner && (
+                  <DropdownMenuItem
+                    onClick={() => setIsEditing(true)}
+                    className="gap-2 focus:bg-slate-800 focus:text-white cursor-pointer"
+                  >
+                    <Pencil className="size-3.5" /> Edit
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem
+                  onClick={handleDelete}
+                  className="gap-2 text-rose-500 focus:bg-rose-500/10 focus:text-rose-400 cursor-pointer"
+                >
+                  <Trash2 className="size-3.5" /> Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          {!isOwner && isCommentOwner && !isEditing && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="p-1 rounded-md text-slate-500 hover:bg-slate-800 hover:text-white transition-all cursor-pointer">
+                  <MoreHorizontal className="size-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-slate-900/50 border-slate-800 text-slate-300"
               >
                 <DropdownMenuItem
                   onClick={() => setIsEditing(true)}
@@ -129,7 +162,6 @@ export function CommentItem({ comment, session, commentCollection }: ChatItemPro
                 >
                   <Pencil className="size-3.5" /> Edit
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-slate-800 " />
                 <DropdownMenuItem
                   onClick={handleDelete}
                   className="gap-2 text-rose-500 focus:bg-rose-500/10 focus:text-rose-400 cursor-pointer"
