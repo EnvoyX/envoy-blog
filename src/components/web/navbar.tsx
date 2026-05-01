@@ -24,7 +24,7 @@ import {
 import { authClient } from '@/lib/auth-client';
 
 import { Button, buttonVariants } from '../ui/button';
-import { navItemsMain, sidebarNavItems } from './NavItems';
+import { navItemsDashboard, navItemsMain } from './NavItems';
 import { UserAvatar } from './user-profile';
 
 export function Navbar() {
@@ -131,7 +131,7 @@ export function Navbar() {
                       </p>
                     </div>
                     <DropdownMenuSeparator />
-                    {sidebarNavItems.map((item, idx) => {
+                    {navItemsDashboard.map((item, idx) => {
                       return (
                         <DropdownMenuItem asChild key={idx}>
                           <Link
@@ -240,7 +240,7 @@ export function Navbar() {
                   </p>
                   <div className="grid gap-1">
                     {session.data.user &&
-                      sidebarNavItems.map((item, idx) => (
+                      navItemsDashboard.map((item, idx) => (
                         <SheetClose key={idx} asChild>
                           <Link
                             to={item.to}

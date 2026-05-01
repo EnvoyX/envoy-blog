@@ -19,9 +19,8 @@ import {
 import { ImageModal } from '@/components/web/ImageModal';
 import CommentInput from '@/components/web/post/CommentInput';
 import { getShortPostByIdFn } from '@/data/post';
-import { getUser, GetUserType } from '@/data/session';
+import { getUser } from '@/data/session';
 import { User } from '@/generated/prisma/client';
-import { ShortPostPublic } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/_general/post/$postId/')({
@@ -121,7 +120,7 @@ function RouteComponent() {
           <ImageModal
             imageUrl={firstImage}
             className="max-h-full max-w-full object-contain cursor-pointer"
-            post={post}
+            images={post.Images}
           />
         </div>
       )}
@@ -142,7 +141,7 @@ function RouteComponent() {
                     imageUrl={image.url}
                     className="max-h-full max-w-full object-contain object-center cursor-pointer"
                     alt={`Preview ${index + 1}`}
-                    post={post}
+                    images={post.Images}
                     imageOrder={index}
                   />
                 </div>

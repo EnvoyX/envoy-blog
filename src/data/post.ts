@@ -36,7 +36,6 @@ export const getShortPostsFn = createServerFn({ method: 'GET' })
 
 export const getShortPostByIdFn = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ shortPostId: z.string() }))
-  .middleware([authMiddleware])
   .handler(async ({ data }) => {
     return await db.shortPost.findUnique({
       where: { id: data.shortPostId },
@@ -86,11 +85,12 @@ export const createShortPostFn = createServerFn({ method: 'POST' })
           published: data.published,
         },
       });
-
+      if (!data.images?.length) return;
       if (data.images) {
         await ctx.image.createMany({
           data: data.images.map((image) => ({
             shortPostId: shortPost.id,
+            userId: context.user.id as string,
             url: image,
           })),
         });
@@ -127,11 +127,12 @@ export const editShortPostFn = createServerFn({ method: 'POST' })
           where: { shortPostId: shortPost.id },
         });
       }
-
+      if (!data.images?.length) return;
       if (data.images) {
         await ctx.image.createMany({
           data: data.images.map((image) => ({
             shortPostId: shortPost.id,
+            userId: context.user.id as string,
             url: image,
           })),
         });
@@ -153,7 +154,6 @@ export const getAllComments = createServerFn({ method: 'GET' }).handler(async ()
 });
 
 export const getShortPostLikesFn = createServerFn({ method: 'GET' })
-  .middleware([authMiddleware])
   .inputValidator(
     z.object({
       shortPostId: z.string(),
@@ -168,7 +168,6 @@ export const getShortPostLikesFn = createServerFn({ method: 'GET' })
   });
 
 export const getPostCommentsFn = createServerFn({ method: 'GET' })
-  .middleware([authMiddleware])
   .inputValidator(
     z.object({
       shortPostId: z.string(),
@@ -251,7 +250,7 @@ export const updateCommentFn = createServerFn({ method: 'POST' })
 export const deleteCommentFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(z.object({ commentId: z.string() }))
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data }) => {
     await db.comment.delete({
       where: { id: data.commentId },
     });

@@ -7,9 +7,8 @@ import { authMiddleware } from '@/middlewares/auth';
 import { postSchema } from '@/schemas/blog';
 
 export const getPostFn = createServerFn({ method: 'GET' })
-  .middleware([authMiddleware])
   .inputValidator((slug: string) => slug)
-  .handler(async ({ data: slug, context }) => {
+  .handler(async ({ data: slug }) => {
     return await db.post.findUnique({
       where: { slug },
       include: {
@@ -21,9 +20,7 @@ export const getPostFn = createServerFn({ method: 'GET' })
         _count: {
           select: { likes: true, comments: true },
         },
-        likes: {
-          where: { userId: context.session.user.id },
-        },
+        likes: true,
       },
     });
   });
@@ -41,7 +38,6 @@ export const getAllComments = createServerFn({ method: 'GET' }).handler(async ()
 });
 
 export const getPostLikesFn = createServerFn({ method: 'GET' })
-  .middleware([authMiddleware])
   .inputValidator(
     z.object({
       postId: z.string(),
@@ -58,7 +54,6 @@ export const getPostLikesFn = createServerFn({ method: 'GET' })
   });
 
 export const getPostCommentsFn = createServerFn({ method: 'GET' })
-  .middleware([authMiddleware])
   .inputValidator(
     z.object({
       postId: z.string(),
@@ -235,15 +230,13 @@ export const getMyPostsFn = createServerFn({ method: 'GET' })
     });
   });
 
-export const getPostsFn = createServerFn({ method: 'GET' })
-  .middleware([authMiddleware])
-  .handler(async () => {
-    return await db.post.findMany({
-      where: { published: true },
-      orderBy: { createdAt: 'desc' },
-      include: { author: true, likes: true, comments: true, _count: true },
-    });
+export const getPostsFn = createServerFn({ method: 'GET' }).handler(async () => {
+  return await db.post.findMany({
+    where: { published: true },
+    orderBy: { createdAt: 'desc' },
+    include: { author: true, likes: true, comments: true, _count: true },
   });
+});
 
 export const deletePostFn = createServerFn({ method: 'POST' })
   .inputValidator(

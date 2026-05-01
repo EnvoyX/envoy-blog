@@ -57,7 +57,7 @@ export function PostDialog() {
   }, [api]);
   const form = useForm({
     defaultValues: {
-      image: [''],
+      image: [] as string[],
       content: '',
       published: false,
     },

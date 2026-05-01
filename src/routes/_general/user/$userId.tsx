@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Loader2, UserIcon } from 'lucide-react';
+import { ImageIcon, Loader2, UserIcon } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buttonVariants } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BlogCard } from '@/components/web/BlogCard';
+import PhotoGallery from '@/components/web/PhotoGallery';
 import { ShortPostCard } from '@/components/web/post/ShortPostCard';
 import { getUser } from '@/data/session';
 import { getPublicProfileFn } from '@/data/user';
@@ -102,7 +103,14 @@ function PublicProfileComponent() {
           <p className="text-slate-400 max-w-md italic">{user?.biodata}</p>
           <div className="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
             <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium">
-              {user?.posts.length} Posts
+              {user?.posts.length} Blogs
+            </span>
+            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium">
+              {user?.shortPosts.length} Posts
+            </span>
+            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium flex items-center gap-1">
+              <ImageIcon className="size-4" />
+              <p>{user?.images.length} Images</p>
             </span>
             <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium">
               Verified
@@ -160,9 +168,15 @@ function PublicProfileComponent() {
         </TabsContent>
 
         <TabsContent value="images">
-          <div className="p-12 rounded-3xl border border-dashed border-slate-800 text-center">
-            <p className="text-slate-500">No images posted yet.</p>
-          </div>
+          {user?.images.length ? (
+            <div className="container mx-auto p-4">
+              <PhotoGallery images={user?.images} />
+            </div>
+          ) : (
+            <div className="p-12 rounded-3xl border border-dashed border-slate-800 text-center">
+              <p className="text-slate-500">No images posted yet.</p>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </main>

@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { ArrowUpRight, Command, ShieldCheck, Zap } from 'lucide-react';
 // import { authClient } from '@/lib/auth-client';
 
-import { navItemsMain, sidebarNavItems } from './NavItems';
+import { navItemsMain } from './NavItems';
 
 export function Footer() {
   // const { data: session } = useQuery({

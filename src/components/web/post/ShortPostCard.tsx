@@ -91,7 +91,7 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
         >
           <ImageModal
             imageUrl={firstImage}
-            post={post}
+            images={post.Images}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
           />
           {post.Images.length > 1 && (

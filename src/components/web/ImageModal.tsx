@@ -10,17 +10,17 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
-import { ShortPostPublic } from '@/lib/types';
+import { Image } from '@/generated/prisma/client';
 import { cn } from '@/lib/utils';
 
 export function ImageModal({
   imageUrl,
   className,
   alt,
-  post,
+  images,
   imageOrder,
 }: {
-  post?: ShortPostPublic;
+  images?: Image[];
   imageUrl: string;
   className?: string;
   alt?: string;
@@ -57,7 +57,7 @@ export function ImageModal({
         showCloseButton={false}
         className="min-h-screen min-w-screen bg-transparent border-none shadow-none p-0 flex items-center justify-center outline-none sm:rounded-none"
       >
-        {imageUrl && post?.Images?.length === 1 && (
+        {imageUrl && images?.length === 1 && (
           <div className="relative group w-[90vw] h-full flex items-center justify-center">
             <img
               src={imageUrl}
@@ -70,7 +70,7 @@ export function ImageModal({
           </div>
         )}
 
-        {imageUrl && post && post?.Images?.length > 1 && (
+        {imageUrl && images && images?.length > 1 && (
           <Carousel
             className="bg-transparent! relative group w-[90vw] h-full flex items-center justify-center  "
             onClick={(e) => {
@@ -82,13 +82,13 @@ export function ImageModal({
             }}
           >
             <CarouselContent>
-              {post?.Images?.map((image, index) => (
+              {images?.map((image, index) => (
                 <CarouselItem key={index} className="flex items-center justify-center">
                   <div className="relative overflow-hidden flex items-center justify-center">
                     <img
                       src={image.url}
                       className="max-w-full max-h-[90vh] object-contain object-center rounded-lg shadow-2xl animate-in zoom-in-95 duration-200"
-                      alt={`Preview ${index + 1}`}
+                      alt={`Image ${index + 1}`}
                     />
                   </div>
                 </CarouselItem>
@@ -97,7 +97,7 @@ export function ImageModal({
             <CarouselPrevious className="cursor-pointer ml-3 absolute top-1/2 left-0 bg-emerald-500! text-slate-900!" />
             <CarouselNext className="cursor-pointer mr-3 absolute top-1/2 right-0 bg-emerald-500! text-slate-900!" />
             <div className="py-2 text-center flex items-center gap-2 font-bold absolute bottom-0">
-              {post?.Images.map((_, index) => {
+              {images?.map((_, index) => {
                 return (
                   <span
                     key={index}

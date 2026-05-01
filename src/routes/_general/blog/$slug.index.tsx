@@ -4,6 +4,7 @@ import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-ro
 import { intlFormat, intlFormatDistance } from 'date-fns';
 import { ChevronDown, ChevronLeft, Heart, ListIcon, MessagesSquareIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { commentCollection, likeCollection } from '@/collections/blog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -119,6 +120,7 @@ function PostComponent() {
         id: createId(),
         post_slug: post?.slug as string,
         postId: post?.id as string,
+        shortPostId: uuidv4(),
         userId: session.user.id as string,
         createdAt: new Date(),
       });
@@ -136,6 +138,7 @@ function PostComponent() {
       id: createId(),
       content: commentText,
       postId: post?.id as string,
+      shortPostId: uuidv4(),
       post_slug: post?.slug as string,
       userId: session.user.id as string,
       createdAt: new Date(),

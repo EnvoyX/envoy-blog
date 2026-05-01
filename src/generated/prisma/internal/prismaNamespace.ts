@@ -1698,6 +1698,7 @@ export const ImageScalarFieldEnum = {
   id: 'id',
   url: 'url',
   shortPostId: 'shortPostId',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

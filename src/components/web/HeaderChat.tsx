@@ -1,37 +1,39 @@
-import { getUser } from '@/data/session'
-import { authClient } from '@/lib/auth-client'
-import { useQuery } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
-import { Cpu, Loader2, LogOut, Menu, Sparkles } from 'lucide-react'
-import { useState, useTransition } from 'react'
-import { toast } from 'sonner'
-import { sidebarNavItems } from './NavItems'
-import { Link } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
+import { Cpu, Loader2, LogOut, Menu, Sparkles } from 'lucide-react';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu'
-import { Button, buttonVariants } from '../ui/button'
-import { UserAvatar } from './user-profile'
-import { useSidebarMobileStore } from '@/store/sidebar'
-import { SidebarTrigger } from '../ui/sidebar'
+} from '@/components/ui/dropdown-menu';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { MODEL_CONFIG } from '@/lib/constants'
+} from '@/components/ui/select';
+import { getUser } from '@/data/session';
+import { authClient } from '@/lib/auth-client';
+import { MODEL_CONFIG } from '@/lib/constants';
+import { useSidebarMobileStore } from '@/store/sidebar';
+
+import { Button, buttonVariants } from '../ui/button';
+import { SidebarTrigger } from '../ui/sidebar';
+import { navItemsDashboard } from './NavItems';
+import { UserAvatar } from './user-profile';
 
 interface ModelChange {
-  model: string
-  currentModel: string
-  onModelChange: (model: string) => void
-  provider?: keyof typeof MODEL_CONFIG
+  model: string;
+  currentModel: string;
+  onModelChange: (model: string) => void;
+  provider?: keyof typeof MODEL_CONFIG;
 }
 
 export default function HeaderChat({
@@ -43,45 +45,45 @@ export default function HeaderChat({
   const session = useQuery({
     queryKey: ['get-session'],
     queryFn: async () => {
-      const data = await getUser()
-      return data
+      const data = await getUser();
+      return data;
     },
-  })
-  const { toggleMobileSidebar } = useSidebarMobileStore()
-  const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
-  const [isTransition, startTransition] = useTransition()
-  const availableModels = MODEL_CONFIG[provider]
+  });
+  const { toggleMobileSidebar } = useSidebarMobileStore();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTransition, startTransition] = useTransition();
+  const availableModels = MODEL_CONFIG[provider];
   const handleLogout = () => {
-    setIsLoading(true)
+    setIsLoading(true);
     startTransition(async () => {
       await authClient.signOut({
         fetchOptions: {
           onRequest: () => {
             toast.loading('Logging out...', {
               id: 'logout',
-            })
-            setIsLoading(true)
+            });
+            setIsLoading(true);
           },
           onError: ({ error }) => {
-            setIsLoading(false)
-            toast.dismiss('logout')
+            setIsLoading(false);
+            toast.dismiss('logout');
             toast.error('Failed to log out', {
               description: error.message,
-            })
+            });
           },
           onSuccess: () => {
-            setIsLoading(false)
-            toast.dismiss('logout')
-            toast.success('Logged out successfully')
+            setIsLoading(false);
+            toast.dismiss('logout');
+            toast.success('Logged out successfully');
             navigate({
               to: '/login',
-            })
+            });
           },
         },
-      })
-    })
-  }
+      });
+    });
+  };
   return (
     <header className="sticky top-0 z-10 border-b border-zinc-800/50 bg-zinc-950/70 backdrop-blur-xl p-4">
       <main className="w-full mx-auto flex items-center justify-between">
@@ -163,15 +165,13 @@ export default function HeaderChat({
                   className="w-56 bg-background/25 backdrop-blur-xl border-white/25 "
                 >
                   <div className="p-2 px-3">
-                    <p className="text-sm font-medium truncate">
-                      {session.data?.user.name}
-                    </p>
+                    <p className="text-sm font-medium truncate">{session.data?.user.name}</p>
                     <p className="text-xs text-accent-foreground truncate">
                       {session.data.user.email}
                     </p>
                   </div>
                   <DropdownMenuSeparator />
-                  {sidebarNavItems.map((item, idx) => {
+                  {navItemsDashboard.map((item, idx) => {
                     return (
                       <DropdownMenuItem asChild key={idx}>
                         <Link
@@ -186,7 +186,7 @@ export default function HeaderChat({
                           <span>{item.title}</span>
                         </Link>
                       </DropdownMenuItem>
-                    )
+                    );
                   })}
 
                   <DropdownMenuSeparator />
@@ -203,10 +203,7 @@ export default function HeaderChat({
             </>
           ) : (
             <>
-              <Link
-                to="/login"
-                className={buttonVariants({ variant: 'secondary' })}
-              >
+              <Link to="/login" className={buttonVariants({ variant: 'secondary' })}>
                 Login
               </Link>
             </>
@@ -214,5 +211,5 @@ export default function HeaderChat({
         </div>
       </main>
     </header>
-  )
+  );
 }
