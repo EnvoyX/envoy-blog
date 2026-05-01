@@ -50,3 +50,16 @@ export type BlogPostPublic = Prisma.PostGetPayload<{
     likes: true;
   };
 }>;
+
+export type BlogPostUserPublic = Prisma.PostGetPayload<{
+  include: {
+    author: true;
+    likes: true;
+    comments: {
+      include: { user: true };
+    };
+    _count: {
+      select: { likes: true; comments: true };
+    };
+  };
+}>;

@@ -16,7 +16,16 @@ export const getPublicProfileFn = createServerFn({ method: 'GET' })
       include: {
         posts: {
           where: { published: true },
-          include: { _count: { select: { likes: true, comments: true } } },
+          include: {
+            author: true,
+            likes: true,
+            comments: {
+              include: {
+                user: true,
+              },
+            },
+            _count: { select: { likes: true, comments: true } },
+          },
           orderBy: { createdAt: 'desc' },
         },
         shortPosts: {

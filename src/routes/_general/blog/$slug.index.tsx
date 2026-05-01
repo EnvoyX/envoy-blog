@@ -32,7 +32,7 @@ export const Route = createFileRoute('/_general/blog/$slug/')({
   loader: async ({ params }) => {
     const post = await getPostFn({ data: params.slug });
     const session = await getUser();
-    if (!post?.published && session.user.id !== post?.authorId) {
+    if (!post?.published && session?.user?.id !== post?.authorId) {
       throw redirect({
         to: '/blog',
       });
@@ -109,10 +109,11 @@ function PostComponent() {
       .orderBy(({ comment }) => comment.createdAt, 'desc'),
   );
 
-  const hasLiked = likes.find((like) => like.userId === session.user.id);
+  const hasLiked = likes.find((like) => like.userId === session?.user?.id);
 
   function handleToggleLike() {
-    const existingLike = likes.find((like) => like.userId === session.user.id);
+    if (!session.user) return;
+    const existingLike = likes.find((like) => like.userId === session?.user?.id);
 
     if (!existingLike) {
       // optimistic Insert like
@@ -131,6 +132,7 @@ function PostComponent() {
   }
 
   function handleAddComment(commentText: string) {
+    if (!session.user) return;
     if (!commentText.trim()) return;
 
     // optimistic Insert comment
@@ -363,7 +365,7 @@ function PostComponent() {
                     <span className="text-sm font-medium text-slate-300">{likes.length} likes</span>
                     <button
                       onClick={() => handleToggleLike()}
-                      className={`p-3 rounded-full transition-all border cursor-pointer ${
+                      className={`p-3 rounded-full transition-all border ${session.user ? 'cursor-pointer' : 'cursor-not-allowed'}  ${
                         hasLiked
                           ? 'bg-emerald-500/10 border-emerald-500 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
                           : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
@@ -384,30 +386,48 @@ function PostComponent() {
                     </h3>
                   </div>
 
-                  <div className="flex gap-4">
-                    <Link
-                      to="/user/$userId"
-                      params={{
-                        userId: session.user.id as string,
-                      }}
-                      target="_blank"
-                    >
-                      <Avatar className="h-10 w-10 shrink-0 items-center justify-center">
-                        <AvatarImage src={session.user.image as string} />
-                        <AvatarFallback>
-                          {' '}
-                          {(session.user.name as string)
-                            ? (session.user.name as string)
-                                .split(' ')
-                                .map((n) => n[0])
-                                .join('')
-                            : ''}
-                        </AvatarFallback>
-                      </Avatar>
-                    </Link>
+                  {session?.user ? (
+                    <div className="flex gap-4">
+                      <Link
+                        to="/user/$userId"
+                        params={{
+                          userId: session.user.id as string,
+                        }}
+                        target="_blank"
+                      >
+                        <Avatar className="h-10 w-10 shrink-0 items-center justify-center">
+                          <AvatarImage src={session.user.image as string} />
+                          <AvatarFallback>
+                            {' '}
+                            {(session.user.name as string)
+                              ? (session.user.name as string)
+                                  .split(' ')
+                                  .map((n) => n[0])
+                                  .join('')
+                              : ''}
+                          </AvatarFallback>
+                        </Avatar>
+                      </Link>
 
-                    <CommentInput handleAddComment={handleAddComment} />
-                  </div>
+                      <CommentInput handleAddComment={handleAddComment} />
+                    </div>
+                  ) : (
+                    <div className="flex-1 space-y-3">
+                      <div className="w-full min-h-25 p-4 bg-slate-900/50 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-200 placeholder:text-slate-600 resize-none flex items-center justify-center ">
+                        <Button
+                          variant="default"
+                          className="cursor-pointer"
+                          onClick={() =>
+                            navigate({
+                              to: '/login',
+                            })
+                          }
+                        >
+                          Login to comment
+                        </Button>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="space-y-6 pt-4">
                     {comments.map((comment) => (
@@ -462,7 +482,7 @@ function PostComponent() {
               >
                 Back to top ↑
               </button>
-              {session.user.id === post.authorId && (
+              {session?.user && session?.user?.id === post.authorId && (
                 <button
                   onClick={() =>
                     navigate({

@@ -100,7 +100,7 @@ function BlogPageComponent() {
 
   const debouncedSearch = useDebouncedCallback(
     (searchTerm: string) => {
-      navigate({
+      void navigate({
         search: (prev) => ({ ...prev, query: searchTerm }),
       });
     },
@@ -121,16 +121,18 @@ function BlogPageComponent() {
             <h1 className="text-4xl font-black tracking-tight text-white">Blog Posts</h1>
             <p className="text-slate-400 mt-2">View latest blog posts.</p>
           </div>
-          <Button
-            asChild
-            size="lg"
-            className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 shadow-lg shadow-emerald-500/20 cursor-pointer"
-          >
-            <Link to="/blog/create-blog" className="gap-2">
-              <Plus className="size-5" />
-              Create New Blog
-            </Link>
-          </Button>
+          {session.user && (
+            <Button
+              asChild
+              size="lg"
+              className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 shadow-lg shadow-emerald-500/20 cursor-pointer"
+            >
+              <Link to="/blog/create-blog" className="gap-2">
+                <Plus className="size-5" />
+                Create New Blog
+              </Link>
+            </Button>
+          )}
         </div>
 
         <div className="flex max-sm:flex-col items-center max-sm:justify-center gap-4 mb-8">
@@ -158,12 +160,12 @@ function BlogPageComponent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
           {filteredPosts.map((post) => {
             const hasLiked = post.likes.find(
-              (like) => like.userId === session.user.id && like.postId === post.id,
+              (like) => like.userId === session?.user?.id && like.postId === post.id,
             );
             return (
               <Card
                 key={post.id}
-                className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0"
+                className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0 animate-in fade-in slide-in-from-bottom-4"
               >
                 <div className="aspect-video relative overflow-hidden">
                   <img
@@ -173,7 +175,7 @@ function BlogPageComponent() {
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
 
-                  {post.authorId === session.user.id && (
+                  {post.authorId === session?.user?.id && (
                     <div className="absolute top-3 right-3">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -307,7 +309,7 @@ function BlogPageComponent() {
                   },
                 });
                 toast.success('Post deleted');
-                router.invalidate();
+                void router.invalidate();
                 modalStore.setState((prev) => {
                   return {
                     ...prev,

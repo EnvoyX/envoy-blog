@@ -41,7 +41,7 @@ export default function PhotoGallery({ images }: { images: Image[] }) {
           return (
             <div
               key={photo.id}
-              className="group relative overflow-hidden rounded-2xl shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl "
+              className="group relative overflow-hidden rounded-2xl shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               {/*<ImageModal
                 imageUrl={photo.url}
@@ -52,7 +52,7 @@ export default function PhotoGallery({ images }: { images: Image[] }) {
               <img
                 src={photo.url}
                 alt={photo.id}
-                className="w-full h-auto display:block transition-transform duration-500 group-hover:scale-105 cursor-pointer"
+                className="w-full h-auto display:block transition-transform duration-500 group-hover:scale-105 cursor-pointer animate-in fade-in slide-in-from-bottom-4"
                 onClick={() => {
                   setOpen(true);
                   setIndex(photo.globalIndex);

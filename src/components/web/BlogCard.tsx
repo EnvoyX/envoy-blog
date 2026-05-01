@@ -1,6 +1,5 @@
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import { Link } from '@tanstack/react-router'
-import { intlFormat, intlFormatDistance } from 'date-fns'
+import { Link } from '@tanstack/react-router';
+import { intlFormat, intlFormatDistance } from 'date-fns';
 import {
   Calendar,
   ExternalLink,
@@ -10,14 +9,44 @@ import {
   MoreVertical,
   Pencil,
   Trash2,
-} from 'lucide-react'
-import { Button } from '../ui/button'
+} from 'lucide-react';
 
-export function BlogCard({ post }: { post: any }) {
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { UserRole } from '@/generated/prisma/enums';
+import { BlogPostUserPublic } from '@/lib/types';
+
+import { Button } from '../ui/button';
+
+export function BlogCard({
+  post,
+  session,
+}: {
+  post: BlogPostUserPublic;
+  session: {
+    user:
+      | {
+          name?: string | undefined;
+          image?: string | null | undefined;
+          id?: string | undefined;
+          createdAt?: Date | undefined;
+          updatedAt?: Date | undefined;
+          role?: UserRole | undefined;
+          email?: string | undefined;
+          emailVerified?: boolean | undefined;
+          password?: string | null | undefined;
+          defaultImage?: string | null | undefined;
+          biodata?: string | null | undefined;
+        }
+      | undefined;
+  };
+}) {
+  const hasLiked = post.likes.find(
+    (like) => like.userId === session?.user?.id && like.postId === post.id,
+  );
   return (
     <Card
       key={post.id}
-      className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0"
+      className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0 animate-in fade-in slide-in-from-bottom-4"
     >
       <div className="aspect-video relative overflow-hidden">
         <img
@@ -43,27 +72,19 @@ export function BlogCard({ post }: { post: any }) {
           {post.title}
         </h2>
 
-        <p className="text-slate-400 text-sm line-clamp-3 leading-relaxed">
-          {post.description}
-        </p>
+        <p className="text-slate-400 text-sm line-clamp-3 leading-relaxed">{post.description}</p>
       </CardContent>
 
       <CardFooter className="p-6 pt-0 flex flex-col justify-start items-start gap-1">
         <span className="absolute flex flex-col items-center gap-1 bottom-6 right-3 group">
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-emerald-500/30 transition-colors">
-            <Heart
-              className={`size-3.5 ${post._count.likes > 0 ? 'fill-emerald-500 text-emerald-500' : ''}`}
-            />
-            <span className="text-[11px] font-bold tabular-nums">
-              {post._count.likes}
-            </span>
+            <Heart className={`size-3.5 ${hasLiked ? 'fill-emerald-500 text-emerald-500' : ''}`} />
+            <span className="text-[11px] font-bold tabular-nums">{post._count.likes}</span>
           </div>
 
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-blue-500/30 transition-colors">
             <MessageSquare className="size-3.5" />
-            <span className="text-[11px] font-bold tabular-nums">
-              {post._count.comments}
-            </span>
+            <span className="text-[11px] font-bold tabular-nums">{post._count.comments}</span>
           </div>
         </span>
         <div className="flex items-center gap-2 text-xs text-slate-500 mt-3 uppercase tracking-widest font-semibold">
@@ -82,5 +103,5 @@ export function BlogCard({ post }: { post: any }) {
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

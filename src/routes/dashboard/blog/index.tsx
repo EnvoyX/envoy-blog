@@ -112,7 +112,7 @@ function BlogPageComponent() {
 
   const debouncedSearch = useDebouncedCallback(
     (searchTerm: string) => {
-      navigate({
+      void navigate({
         search: (prev) => ({ ...prev, query: searchTerm }),
       });
     },
@@ -194,15 +194,15 @@ function BlogPageComponent() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto ">
           {filteredPosts.map((post) => {
             const hasLiked = post.likes.find(
-              (like) => like.userId === session.user.id && like.postId === post.id,
+              (like) => like.userId === session?.user?.id && like.postId === post.id,
             );
             return (
               <Card
                 key={post.id}
-                className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0"
+                className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0 animate-in fade-in slide-in-from-bottom-4"
               >
                 <div className="aspect-video relative overflow-hidden">
                   <img
@@ -212,7 +212,7 @@ function BlogPageComponent() {
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
 
-                  {post.authorId === session.user.id && (
+                  {post.authorId === session?.user?.id && (
                     <div className="absolute top-3 right-3">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -357,7 +357,7 @@ function BlogPageComponent() {
                   },
                 });
                 toast.success('Post deleted');
-                router.invalidate();
+                void router.invalidate();
                 modalStore.setState((prev) => {
                   return {
                     ...prev,

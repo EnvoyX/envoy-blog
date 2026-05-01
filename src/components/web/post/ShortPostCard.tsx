@@ -18,7 +18,7 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
   const { data: likes } = useLiveQuery((q) =>
     q.from({ like: likeCollection }).where(({ like }) => eq(like.shortPostId, post?.id)),
   );
-  const hasLiked = likes.find((like) => like.userId === session.user.id);
+  const hasLiked = likes.find((like) => like.userId === session?.user?.id);
   const { data: comments } = useLiveQuery((q) =>
     q
       .from({ comment: commentCollection })
@@ -26,7 +26,8 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
       .orderBy(({ comment }) => comment.createdAt, 'desc'),
   );
   function handleToggleLike() {
-    const existingLike = likes.find((like) => like.userId === session.user.id);
+    if (!session.user) return;
+    const existingLike = likes.find((like) => like.userId === session?.user?.id);
 
     if (!existingLike) {
       // optimistic Insert like
@@ -104,7 +105,7 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
 
       <div className="relative z-20 flex items-center gap-6 pt-2 border-t border-slate-900">
         <button
-          className="flex items-center gap-2 text-slate-500 hover:text-emerald-500 transition-colors group/stat cursor-pointer"
+                  className={`flex items-center gap-2 text-slate-500 hover:text-emerald-500 transition-colors group/stat ${session.user ? "cursor-pointer" : "cursor-not-allowed"}`}
           onClick={(e) => {
             handleToggleLike();
             e.stopPropagation();

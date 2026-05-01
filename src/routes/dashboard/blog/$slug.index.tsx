@@ -32,7 +32,7 @@ export const Route = createFileRoute('/dashboard/blog/$slug/')({
   loader: async ({ params }) => {
     const post = await getPostFn({ data: params.slug });
     const session = await getUser();
-    if (!post?.published && session.user.id !== post?.authorId) {
+    if (!post?.published && session?.user?.id !== post?.authorId) {
       throw redirect({
         to: '/dashboard/blog',
       });
@@ -109,10 +109,10 @@ function PostComponent() {
       .orderBy(({ comment }) => comment.createdAt, 'desc'),
   );
 
-  const hasLiked = likes.find((like) => like.userId === session.user.id);
+  const hasLiked = likes.find((like) => like.userId === session?.user?.id);
 
   function handleToggleLike() {
-    const existingLike = likes.find((like) => like.userId === session.user.id);
+    const existingLike = likes.find((like) => like.userId === session?.user?.id);
 
     if (!existingLike) {
       // optimistic Insert like
@@ -121,7 +121,7 @@ function PostComponent() {
         post_slug: post?.slug as string,
         postId: post?.id as string,
         shortPostId: uuidv4(),
-        userId: session.user.id as string,
+        userId: session?.user?.id as string,
         createdAt: new Date(),
       });
     } else {
@@ -140,7 +140,7 @@ function PostComponent() {
       postId: post?.id as string,
       shortPostId: uuidv4(),
       post_slug: post?.slug as string,
-      userId: session.user.id as string,
+      userId: session?.user?.id as string,
       createdAt: new Date(),
       user: session.user as User,
       parentId: createId(),
@@ -387,16 +387,16 @@ function PostComponent() {
                     <Link
                       to="/user/$userId"
                       params={{
-                        userId: session.user.id as string,
+                        userId: session?.user?.id as string,
                       }}
                       target="_blank"
                     >
                       <Avatar className="h-10 w-10 shrink-0 items-center justify-center">
-                        <AvatarImage src={session.user.image as string} />
+                        <AvatarImage src={session?.user?.image as string} />
                         <AvatarFallback>
                           {' '}
-                          {(session.user.name as string)
-                            ? (session.user.name as string)
+                          {(session?.user?.name as string)
+                            ? (session?.user?.name as string)
                                 .split(' ')
                                 .map((n) => n[0])
                                 .join('')
@@ -460,7 +460,7 @@ function PostComponent() {
               >
                 Back to top ↑
               </button>
-              {session.user.id === post.authorId && (
+              {session?.user?.id === post.authorId && (
                 <button
                   onClick={() =>
                     navigate({

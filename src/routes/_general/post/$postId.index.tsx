@@ -1,6 +1,7 @@
 import { createId } from '@paralleldrive/cuid2';
 import { eq, useLiveQuery } from '@tanstack/react-db';
 import { createFileRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { formatDistanceToNow } from 'date-fns';
 import { Heart, MessageSquare } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -8,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { commentCollection, likeCollection } from '@/collections/post';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselApi,
@@ -44,6 +46,7 @@ function RouteComponent() {
   const firstImage = post?.Images?.[0]?.url;
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const navigate = useNavigate();
   useEffect(() => {
     if (!api) {
       return;
@@ -63,10 +66,11 @@ function RouteComponent() {
       .where(({ comment }) => eq(comment.shortPostId, post?.id))
       .orderBy(({ comment }) => comment.createdAt, 'desc'),
   );
-  const hasLiked = likes.find((like) => like.userId === session.user.id);
+  const hasLiked = likes.find((like) => like.userId === session?.user?.id);
 
   function handleToggleLike() {
-    const existingLike = likes.find((like) => like.userId === session.user.id);
+    if (!session.user) return;
+    const existingLike = likes.find((like) => like.userId === session?.user?.id);
 
     if (!existingLike) {
       // optimistic Insert like
@@ -85,6 +89,8 @@ function RouteComponent() {
   }
 
   function handleAddComment(commentText: string) {
+    if (!session.user) return;
+
     if (!commentText.trim()) return;
 
     // optimistic Insert comment
@@ -233,7 +239,7 @@ function RouteComponent() {
             <div className="flex items-center gap-4">
               <button
                 onClick={handleToggleLike}
-                className={`flex items-center gap-1.5 transition-colors cursor-pointer ${hasLiked ? 'text-emerald-500' : 'text-slate-400 hover:text-white'}`}
+                className={`flex items-center gap-1.5 transition-colors ${session.user ? 'cursor-pointer' : 'cursor-not-allowed'} ${hasLiked ? 'text-emerald-500' : 'text-slate-400 hover:text-white'}`}
               >
                 <Heart className={`size-5 ${hasLiked && 'fill-current'}`} />
                 <span className="text-xs font-bold">{likes.length}</span>
@@ -245,7 +251,24 @@ function RouteComponent() {
             </div>
           </div>
 
-          <CommentInput handleAddComment={handleAddComment} />
+          {session.user ? (
+            <CommentInput handleAddComment={handleAddComment} />
+          ) : (
+            <div className="relative flex items-center gap-3">
+              <div className="w-full flex items-center justify-center px-4 py-3 text-sm resize-none pr-12">
+                <Button
+                  className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 cursor-pointer font-bold text-xs"
+                  onClick={() => {
+                    void navigate({
+                      to: '/login',
+                    });
+                  }}
+                >
+                  Login to comment
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

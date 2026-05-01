@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { UserRole } from '@/generated/prisma/enums';
 import { BlogPostPublic } from '@/lib/types';
 
 import { Button } from '../ui/button';
@@ -45,17 +46,22 @@ interface ChatItemProps {
       password: string | null;
     };
   };
-  session: {
-    user: {
-      id?: string | undefined;
-      image?: string | null | undefined;
-      name?: string | undefined;
-      createdAt?: Date | undefined;
-      email?: string | undefined;
-      updatedAt?: Date | undefined;
-      emailVerified?: boolean | undefined;
-      password?: string | null | undefined;
-    };
+  session?: {
+    user:
+      | {
+          id?: string | undefined;
+          name?: string | undefined;
+          createdAt?: Date | undefined;
+          updatedAt?: Date | undefined;
+          email?: string | undefined;
+          emailVerified?: boolean | undefined;
+          image?: string | null | undefined;
+          password?: string | null | undefined;
+          defaultImage?: string | null | undefined;
+          biodata?: string | null | undefined;
+          role?: UserRole | undefined;
+        }
+      | undefined;
   };
   post: BlogPostPublic;
   commentCollection: CommentCollection;

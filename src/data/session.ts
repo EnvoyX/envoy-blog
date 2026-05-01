@@ -1,41 +1,42 @@
-import { auth } from "@/lib/auth";
-import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
-import { redirect } from "@tanstack/react-router";
-import { db } from "@/lib/db";
-import { ReturnType } from "@sinclair/typebox";
+import { ReturnType } from '@sinclair/typebox';
+import { redirect } from '@tanstack/react-router';
+import { createServerFn } from '@tanstack/react-start';
+import { getRequestHeaders } from '@tanstack/react-start/server';
 
-export const getSession = createServerFn({ method: "GET" }).handler(async () => {
+import { auth } from '@/lib/auth';
+import { db } from '@/lib/db';
+
+export const getSession = createServerFn({ method: 'GET' }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
-  if (!session) {
-    throw redirect({ to: "/login" });
-  }
+  // if (!session) {
+  //   throw redirect({ to: "/login" });
+  // }
   return session;
 });
 
-export const getUser = createServerFn({ method: "GET" }).handler(async () => {
+export const getUser = createServerFn({ method: 'GET' }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
-  if (!session) {
-    throw redirect({ to: "/login" });
-  }
+  // if (!session) {
+  //   throw redirect({ to: "/login" });
+  // }
   return {
-    user: session.user,
+    user: session?.user,
   };
 });
 
 export type GetUserType = Awaited<ReturnType<typeof getUser>>;
 
-export const getProfileData = createServerFn({ method: "GET" }).handler(async () => {
+export const getProfileData = createServerFn({ method: 'GET' }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
-  if (!session) {
-    throw redirect({ to: "/login" });
-  }
+  // if (!session) {
+  //   throw redirect({ to: "/login" });
+  // }
   const user = await db.user.findUnique({
     where: {
-      id: session.user.id,
+      id: session?.user.id,
     },
     include: {
       accounts: true,
@@ -50,7 +51,7 @@ export const getProfileData = createServerFn({ method: "GET" }).handler(async ()
 
 export type UserSession = Awaited<ReturnType<typeof getUser>>;
 
-export const getUserData = createServerFn({ method: "GET" }).handler(async () => {
+export const getUserData = createServerFn({ method: 'GET' }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
   return {

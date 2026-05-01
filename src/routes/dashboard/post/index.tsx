@@ -154,7 +154,7 @@ function PostPageComponent() {
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
 
-                  {post.authorId === session.user.id && (
+                  {post.authorId === session?.user?.id && (
                     <div className="absolute top-3 right-3">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>

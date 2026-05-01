@@ -117,7 +117,7 @@ function PublicProfileComponent() {
             </span>
           </div>
         </div>
-        {userId === session.user.id && (
+        {userId === session?.user?.id && (
           <div className="flex justify-end">
             <Link to="/dashboard/profile" className={buttonVariants({ variant: 'default' })}>
               Edit Profile
@@ -143,7 +143,7 @@ function PublicProfileComponent() {
           {user && user?.posts?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mx-auto">
               {user.posts.map((post) => {
-                return <BlogCard key={post.id} post={post} />;
+                return <BlogCard key={post.id} post={post} session={session} />;
               })}
             </div>
           ) : (
