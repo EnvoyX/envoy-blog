@@ -1,19 +1,11 @@
-import { buttonVariants } from '@/components/ui/button'
-import { getUserData } from '@/data/session'
-import { createFileRoute, Link, Outlet, redirect } from '@tanstack/react-router'
-import { ArrowLeft } from 'lucide-react'
+import { createFileRoute, Link, Outlet } from '@tanstack/react-router';
+import { ArrowLeft } from 'lucide-react';
+
+import { buttonVariants } from '@/components/ui/button';
 
 export const Route = createFileRoute('/_auth')({
   component: RouteComponent,
-  beforeLoad: async () => {
-    const data = await getUserData()
-    if (data.session || data.user) {
-      throw redirect({
-        to: '/dashboard',
-      })
-    }
-  },
-})
+});
 
 function RouteComponent() {
   return (
@@ -28,5 +20,5 @@ function RouteComponent() {
         <Outlet />
       </div>
     </div>
-  )
+  );
 }

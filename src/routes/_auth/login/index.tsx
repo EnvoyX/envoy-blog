@@ -1,7 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useParams } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { zodValidator } from '@tanstack/zod-adapter';
-import { useEffect, useRef, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import z from 'zod';
 
@@ -14,9 +13,20 @@ import {
   FieldGroup,
   //   FieldLabel,
 } from '@/components/ui/field';
+import { getUser } from '@/data/session';
 import { authClient } from '@/lib/auth-client';
 
 export const Route = createFileRoute('/_auth/login/')({
+  beforeLoad: async () => {
+    const session = await getUser();
+    if (session.user) throw redirect({ to: '/dashboard' });
+    return;
+  },
+  loader: async () => {
+    const session = await getUser();
+    if (session.user) throw redirect({ to: '/dashboard' });
+    return { session };
+  },
   validateSearch: zodValidator(
     z.object({
       callbackUrl: z.string().optional().default('/dashboard'),
@@ -40,13 +50,10 @@ export const Route = createFileRoute('/_auth/login/')({
 
 function RouteComponent() {
   const { callbackUrl } = Route.useSearch();
+  const { session } = Route.useLoaderData();
   const [isPending, startTransition] = useTransition();
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const hasInitialized = useRef(false);
-  useEffect(() => {
-    if (hasInitialized.current) return;
-
-    hasInitialized.current = true;
-  });
   function handleLogin(provider: 'github' | 'google') {
     startTransition(async () => {
       await authClient.signIn.social({
@@ -61,7 +68,9 @@ function RouteComponent() {
           onSuccess: () => {
             toast.dismiss('login-oauth');
             toast.success(`Logged in with ${provider.toUpperCase()} successfully`);
+            setIsRedirecting(true);
           },
+
           onError: ({ error }) => {
             toast.dismiss('login-oauth');
             toast.error(`Failed to login with ${provider.toUpperCase()}`, {
@@ -72,6 +81,34 @@ function RouteComponent() {
       });
     });
   }
+  useEffect(() => {
+    if (hasInitialized.current) return;
+
+    hasInitialized.current = true;
+  });
+  useEffect(() => {
+    if (!session.user) {
+      setIsRedirecting(false);
+    }
+  }, [session, session.user]);
+
+  if (isRedirecting) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-transparent rounded-lg">
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="relative h-16 w-16">
+            <div className="absolute inset-0 rounded-full border-4 border-emerald-500/20" />
+            <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin" />
+          </div>
+
+          <div className="mt-8 space-y-3 flex flex-col items-center">
+            <p className="text-lg font-semibold animate-pulse text-emerald-500">Redirecting...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Card className="max-w-md w-full bg-emerald-950">
       <CardHeader>
