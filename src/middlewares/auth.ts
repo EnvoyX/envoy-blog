@@ -47,7 +47,13 @@ export const authGlobalMiddleware = createMiddleware({ type: 'request' }).server
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
     if (!session) {
-      throw redirect({ to: '/login' });
+      const redirectTo = `${url.pathname}${url.search}`;
+      throw redirect({
+        to: '/login',
+        search: {
+          callbackUrl: redirectTo,
+        },
+      });
     }
 
     return next({
