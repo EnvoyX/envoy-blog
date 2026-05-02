@@ -1,7 +1,7 @@
 import { useForm } from '@tanstack/react-form';
 import { useRouter } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
-import { ImageIcon, Loader2, Plus, Trash2 } from 'lucide-react';
+import { ImageIcon, Loader2, MailboxIcon, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -87,218 +87,267 @@ export function PostDialog() {
     <Dialog
       open={isOpen && isCreatePostDialog}
       onOpenChange={(open) => {
-        postModalStore.setState((prev) => {
-          return {
-            ...prev,
-            isOpen: open,
-            isCreatePostDialog: !prev.isCreatePostDialog,
-          };
-        });
+        postModalStore.setState((prev) => ({
+          ...prev,
+          isOpen: open,
+          isCreatePostDialog: !prev.isCreatePostDialog,
+        }));
       }}
     >
       <DialogTrigger asChild>
         <Button
           size="lg"
-          className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 shadow-lg shadow-emerald-500/20 cursor-pointer"
+          className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
         >
-          <span className="flex items-center gap-2">
-            <Plus className="size-5" />
-            Create New Post
-          </span>
+          <div className="flex items-center gap-2">
+            <Plus className="size-5 group-hover:rotate-90 transition-transform duration-300" />
+            <span className="font-semibold tracking-tight">New Post</span>
+          </div>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-6xl">
-        <DialogHeader>
-          <DialogTitle>Create Post</DialogTitle>
-          <DialogDescription>Fill out the form below to create a post.</DialogDescription>
-        </DialogHeader>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            void form.handleSubmit();
-          }}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
-            <FieldGroup>
-              <Field>
+
+      <DialogContent className="sm:max-w-6xl p-0 overflow-hidden border-zinc-800 bg-zinc-950">
+        <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
+          <div className="w-full md:w-2/5 p-8 border-r border-zinc-800/50 bg-zinc-900/20">
+            <DialogHeader className="mb-8">
+              <div className="bg-emerald-500/10 w-fit p-2 rounded-lg mb-4">
+                <MailboxIcon className="text-emerald-500 size-6" />
+              </div>
+              <DialogTitle className="text-2xl font-bold text-zinc-100">New Post</DialogTitle>
+              <DialogDescription className="text-zinc-400">
+                Configure your new post and visibility settings.
+              </DialogDescription>
+            </DialogHeader>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                void form.handleSubmit();
+              }}
+              className="space-y-8"
+            >
+              <form.Field
+                name="published"
+                children={(field) => (
+                  <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-medium text-zinc-200">
+                        Visibility:{' '}
+                        <span className={field.state.value ? 'text-emerald-400' : 'text-zinc-400'}>
+                          {field.state.value ? 'Public' : 'Private'}
+                        </span>
+                      </Label>
+                      <p className="text-xs text-zinc-500">Visible to all users in the app</p>
+                    </div>
+                    <Switch
+                      checked={field.state.value}
+                      onCheckedChange={field.handleChange}
+                      className="data-[state=checked]:bg-emerald-500"
+                    />
+                  </div>
+                )}
+              />
+              <Field className="space-y-3">
                 <form.Field
                   name="content"
                   children={(field) => {
                     const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                    const charCount = field.state.value?.length || 0;
                     return (
-                      <>
-                        <Label htmlFor={`${field.name}-input`}>Content</Label>
-                        <Textarea
-                          id={`${field.name}-input`}
-                          placeholder="What's happening today?"
-                          value={field.state.value}
-                          onBlur={field.handleBlur}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                        />
-                        {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                      </>
-                    );
-                  }}
-                />
-              </Field>
-              <Field>
-                <form.Field
-                  name="published"
-                  children={(field) => {
-                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-                    return (
-                      <Field orientation="horizontal" data-invalid={isInvalid}>
-                        <FieldContent>
-                          <FieldLabel htmlFor="form-tanstack-switch-visibility">
-                            Visibility ({field.state.value === true ? 'Public' : 'Private'})
-                          </FieldLabel>
-                          <FieldDescription>
-                            Enable whether this post published to public or keep in private.
-                          </FieldDescription>
-                          {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                        </FieldContent>
-                        <Switch
-                          id="form-tanstack-switch-visibility"
-                          name={field.name}
-                          checked={field.state.value}
-                          onCheckedChange={field.handleChange}
-                          aria-invalid={isInvalid}
-                        />
-                      </Field>
-                    );
-                  }}
-                />
-              </Field>
-              <Field>
-                <form.Field name="image" mode="array">
-                  {(field) => {
-                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-                    return (
-                      <FieldContent>
-                        {field.state.value.map((_, i) => {
-                          return (
-                            <form.Field key={i} name={`image[${i}]`}>
-                              {(subField) => {
-                                return (
-                                  <div className="flex flex-col gap-3">
-                                    <FieldLabel htmlFor="">
-                                      <Label htmlFor={`${field.name}-input`}>Image {i + 1}</Label>
-                                    </FieldLabel>
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <Input
-                                        value={subField.state.value}
-                                        onChange={(e) => {
-                                          subField.handleChange(e.target.value);
-                                          setImageUrl(e.target.value);
-                                        }}
-                                      />
-                                      <Button
-                                        onClick={() => {
-                                          field.removeValue(i);
-                                          setImageUrl('');
-                                        }}
-                                        variant={'destructive'}
-                                        type="button"
-                                        size={'icon'}
-                                        className="cursor-pointer"
-                                      >
-                                        <Trash2 className="size-4" />
-                                      </Button>
-                                    </div>
-                                  </div>
-                                );
-                              }}
-                            </form.Field>
-                          );
-                        })}
-                        <Button
-                          onClick={() => {
-                            field.pushValue(imageUrl);
-                            setImageUrl('');
-                          }}
-                          type="button"
-                          className="cursor-pointer"
-                        >
-                          Add Image
-                        </Button>
-                        {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                      </FieldContent>
-                    );
-                  }}
-                </form.Field>
-              </Field>
-            </FieldGroup>
-            <div className="flex flex-col items-center justify-center bg-zinc-900/50 rounded-lg p-6">
-              <form.Subscribe
-                selector={(state) => state.values.image}
-                children={(images) => {
-                  const validImages = images?.filter((img) => img && img.trim() !== '') || [];
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between">
+                          <Label
+                            htmlFor={`${field.name}-input`}
+                            className="text-sm font-semibold uppercase tracking-wider text-zinc-500"
+                          >
+                            Content
+                          </Label>
+                          <span
+                            className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
+                              charCount > 0
+                                ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/5'
+                                : 'text-zinc-600 border-zinc-800'
+                            }`}
+                          >
+                            {charCount} CHARS
+                          </span>
+                        </div>
 
-                  if (validImages.length === 0) {
-                    return (
-                      <div className="text-center text-zinc-500">
-                        <ImageIcon className="mx-auto size-12 mb-2 opacity-20" />
-                        <p className="text-sm">No images added yet</p>
+                        <div className="relative group">
+                          <Textarea
+                            id={`${field.name}-input`}
+                            placeholder="Provide a story or description for the post..."
+                            className={`
+                              min-h-30 resize-none p-4
+                              bg-zinc-900/50 border-zinc-800
+                              placeholder:text-zinc-600 text-zinc-200
+                              focus-visible:ring-emerald-500/40 focus-visible:border-emerald-500/50
+                              transition-all duration-300 rounded-xl
+                              ${isInvalid ? 'border-red-500/50 focus-visible:ring-red-500/20' : 'hover:border-zinc-700'}
+                            `}
+                            value={field.state.value}
+                            onBlur={field.handleBlur}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                          />
+
+                          {/* Subtle inner glow on focus */}
+                          <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/5 group-focus-within:ring-emerald-500/10 transition-all" />
+                        </div>
+
+                        {isInvalid && (
+                          <div className="mt-1 animate-in slide-in-from-top-1 duration-200">
+                            <FieldError
+                              errors={field.state.meta.errors}
+                              className="text-xs text-red-400 font-medium flex items-center gap-1 before:content-['●'] before:text-[8px]"
+                            />
+                          </div>
+                        )}
                       </div>
                     );
-                  }
+                  }}
+                />
+              </Field>
+              <div className="space-y-4">
+                <Label className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
+                  Image Sources
+                </Label>
+                <form.Field name="image" mode="array">
+                  {(field) => (
+                    <div className="space-y-3 max-h-75 pr-2 overflow-y-auto custom-scrollbar pl-2 py-2">
+                      {field.state.value.map((_, i) => (
+                        <form.Field key={i} name={`image[${i}]`}>
+                          {(subField) => (
+                            <div className="group flex items-center gap-2 animate-in fade-in slide-in-from-left-2 duration-300">
+                              <div className="relative flex-1">
+                                <Input
+                                  placeholder="https://..."
+                                  className="bg-zinc-900! border-zinc-800 focus-visible:ring-emerald-500/50 rounded-lg h-10 transition-all"
+                                  value={subField.state.value}
+                                  onChange={(e) => {
+                                    subField.handleChange(e.target.value);
+                                    setImageUrl(e.target.value);
+                                  }}
+                                />
+                              </div>
+                              <Button
+                                onClick={(e) => {
+                                  field.removeValue(i);
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                }}
+                                variant="ghost"
+                                size="icon"
+                                className="text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-colors cursor-pointer"
+                              >
+                                <Trash2 className="size-4" />
+                              </Button>
+                            </div>
+                          )}
+                        </form.Field>
+                      ))}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full border-dashed border-zinc-700 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all text-zinc-400 hover:text-emerald-400 py-6 cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
 
+                          field.pushValue(imageUrl);
+                          setImageUrl('');
+                        }}
+                      >
+                        <Plus className="mr-2 size-4" /> Add Another URL
+                      </Button>
+                    </div>
+                  )}
+                </form.Field>
+              </div>
+
+              <div className="flex flex-col gap-3 pt-4">
+                <form.Subscribe
+                  selector={(state) => [state.canSubmit, state.isSubmitting]}
+                  children={([canSubmit, isSubmitting]) => (
+                    <Button
+                      type="submit"
+                      disabled={!canSubmit || isSubmitting}
+                      className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 rounded-xl transition-all shadow-lg shadow-emerald-900/20 cursor-pointer"
+                    >
+                      {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
+                      Submit
+                    </Button>
+                  )}
+                />
+                <DialogClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="text-zinc-500 hover:text-zinc-200 cursor-pointer"
+                  >
+                    Dismiss
+                  </Button>
+                </DialogClose>
+              </div>
+            </form>
+          </div>
+
+          <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-[#09090b] relative overflow-hidden">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 blur-[120px] rounded-full" />
+
+            <form.Subscribe
+              selector={(state) => state.values.image}
+              children={(images) => {
+                const validImages = images?.filter((img) => img && img.trim() !== '') || [];
+
+                if (validImages.length === 0) {
                   return (
+                    <div className="relative z-10 text-center space-y-4">
+                      <div className="mx-auto size-20 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                        <ImageIcon className="size-10 text-zinc-700" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-zinc-200 font-medium">Gallery Preview</p>
+                        <p className="text-xs text-zinc-500">Your images will appear here</p>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="w-full max-w-lg px-12 relative z-10">
                     <Carousel className="w-full" setApi={setApi}>
                       <CarouselContent>
                         {validImages.map((src, index) => (
                           <CarouselItem key={index}>
-                            <div className="p-1">
-                              <div className="relative aspect-square overflow-hidden rounded-md border">
-                                <img
-                                  src={src}
-                                  alt={`Preview ${index + 1}`}
-                                  className="object-contain w-full h-full"
-                                  onError={(e) => {
-                                    (e.target as HTMLImageElement).src =
-                                      'https://placehold.co/400?text=Invalid+Image';
-                                  }}
-                                />
-                              </div>
+                            <div className="relative group aspect-4/5 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl">
+                              <img
+                                src={src}
+                                alt={`Preview ${index + 1}`}
+                                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 "
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src =
+                                    'https://placehold.co/600x800?text=Invalid+Image';
+                                }}
+                              />
+                              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
                           </CarouselItem>
                         ))}
                       </CarouselContent>
-                      <CarouselPrevious className="cursor-pointer ml-3" />
-                      <CarouselNext className="cursor-pointer mr-3" />
-                      <div className="py-2 text-center text-sm text-muted-foreground">
-                        Image {current} of {images.length}
+                      <CarouselPrevious className="-left-4 bg-zinc-900/80 border-zinc-700 text-white hover:bg-emerald-600 transition-colors" />
+                      <CarouselNext className="-right-4 bg-zinc-900/80 border-zinc-700 text-white hover:bg-emerald-600 transition-colors" />
+                      <div className="absolute -bottom-10 left-0 right-0 flex justify-center gap-2">
+                        <span className="text-xs font-mono text-zinc-500 tracking-widest">
+                          IMAGE {current} // {images.length}
+                        </span>
                       </div>
                     </Carousel>
-                  );
-                }}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
-                <Button
-                  type="submit"
-                  disabled={!canSubmit || isSubmitting}
-                  className=" bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    {isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />}
-                    Save Post
-                  </span>
-                </Button>
-              )}
+                  </div>
+                );
+              }}
             />
-            <DialogClose asChild>
-              <Button variant="outline" className="cursor-pointer">
-                Cancel
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </form>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

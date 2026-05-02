@@ -33,6 +33,11 @@ export type QuranTrack = Prisma.QuranTrackModel
  */
 export type ShortPost = Prisma.ShortPostModel
 /**
+ * Model Album
+ * 
+ */
+export type Album = Prisma.AlbumModel
+/**
  * Model Image
  * 
  */

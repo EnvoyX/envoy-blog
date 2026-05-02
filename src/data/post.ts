@@ -122,22 +122,33 @@ export const editShortPostFn = createServerFn({ method: 'POST' })
       const existingImages = await ctx.image.findMany({
         where: { shortPostId: shortPost.id },
       });
+      const existingImageUrls = existingImages?.map((image) => image.url);
 
-      if (existingImages.length > 0) {
-        await ctx.image.deleteMany({
+      const removedImages = existingImages?.filter((image) => !data.images?.includes(image.url));
+
+      if (removedImages && removedImages.length > 0) {
+        await ctx.image.updateMany({
           where: { shortPostId: shortPost.id },
+          data: removedImages.map((image) => ({
+            shortPostId: null,
+            published: data.published,
+            url: image.url,
+          })),
         });
       }
       if (!data.images?.length) return;
       if (data.images) {
-        await ctx.image.createMany({
-          data: data.images.map((image) => ({
-            shortPostId: shortPost.id,
-            userId: context.user.id as string,
-            url: image,
-            published: data.published,
-          })),
-        });
+        const newImages = data.images.filter((image) => !existingImageUrls?.includes(image));
+        if (newImages && newImages.length > 0) {
+          await ctx.image.createMany({
+            data: newImages.map((image) => ({
+              shortPostId: shortPost.id,
+              userId: context.user.id as string,
+              url: image,
+              published: data.published,
+            })),
+          });
+        }
       }
     });
     return true;

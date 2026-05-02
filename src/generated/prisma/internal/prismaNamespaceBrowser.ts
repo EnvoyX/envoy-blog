@@ -54,6 +54,7 @@ export const ModelName = {
   SavedItem: 'SavedItem',
   QuranTrack: 'QuranTrack',
   ShortPost: 'ShortPost',
+  Album: 'Album',
   Image: 'Image',
   Post: 'Post',
   Tag: 'Tag',
@@ -135,6 +136,20 @@ export const ShortPostScalarFieldEnum = {
 } as const
 
 export type ShortPostScalarFieldEnum = (typeof ShortPostScalarFieldEnum)[keyof typeof ShortPostScalarFieldEnum]
+
+
+export const AlbumScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  coverImageUrl: 'coverImageUrl',
+  authorId: 'authorId',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AlbumScalarFieldEnum = (typeof AlbumScalarFieldEnum)[keyof typeof AlbumScalarFieldEnum]
 
 
 export const ImageScalarFieldEnum = {
