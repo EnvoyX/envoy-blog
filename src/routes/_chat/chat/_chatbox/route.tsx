@@ -1,20 +1,20 @@
+import { useDebouncedCallback } from '@tanstack/react-pacer';
+import { useQuery } from '@tanstack/react-query';
+import { createFileRoute, Link, Outlet, redirect, useNavigate } from '@tanstack/react-router';
+import { Plus, Search, LogOut, Sparkles, ChevronDown, ChevronLeft } from 'lucide-react';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
+
+import { ChatItem } from '@/components/ai-elements/ChatItem';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
-  createFileRoute,
-  Link,
-  Outlet,
-  redirect,
-  useNavigate,
-} from '@tanstack/react-router'
-import {
-  Plus,
-  Search,
-  LogOut,
-  Sparkles,
-  ChevronDown,
-  ChevronLeft,
-} from 'lucide-react'
-import { getChatListFn } from '@/data/chat-ai'
-import { useSidebarMobileStore } from '@/store/sidebar'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   Sheet,
   SheetClose,
@@ -24,102 +24,90 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Button, buttonVariants } from '@/components/ui/button'
-import { authClient } from '@/lib/auth-client'
-import { UserAvatar } from '@/components/web/user-profile'
-import { useState, useTransition } from 'react'
-import { toast } from 'sonner'
-import { ChatItem } from '@/components/ai-elements/ChatItem'
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { ChatAppSidebar } from '@/components/web/sidebar/chat-app-sidebar'
-import { useDebouncedCallback } from '@tanstack/react-pacer'
-import { getSession } from '@/data/session'
-import { useQuery } from '@tanstack/react-query'
-import { MODEL_CONFIG } from '@/lib/constants'
+} from '@/components/ui/sheet';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { ChatAppSidebar } from '@/components/web/sidebar/chat-app-sidebar';
+import { UserAvatar } from '@/components/web/user-profile';
+import { getChatListFn } from '@/data/chat-ai';
+import { getSession } from '@/data/session';
+import { authClient } from '@/lib/auth-client';
+import { MODEL_CONFIG } from '@/lib/constants';
+import { useSidebarMobileStore } from '@/store/sidebar';
 
 export const Route = createFileRoute('/_chat/chat/_chatbox')({
   component: RouteComponent,
   loader: async () => {
-    const session = await getSession()
+    const session = await getSession();
     if (!session)
       throw redirect({
         to: '/login',
-      })
+      });
     return {
       session,
-    }
+    };
   },
-})
+});
 
 function RouteComponent() {
-  const { session } = Route.useLoaderData()
-  const { isSidebarMobileOpen, toggleSheet } = useSidebarMobileStore()
-  const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
-  const [isTransition, startTransition] = useTransition()
-  const [query, setQuery] = useState<string>('')
+  const { session } = Route.useLoaderData();
+  const { isSidebarMobileOpen, toggleSheet } = useSidebarMobileStore();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTransition, startTransition] = useTransition();
+  const [query, setQuery] = useState<string>('');
 
   const { data: chats, isLoading: isLoadingChats } = useQuery({
     queryKey: ['chats'],
     queryFn: async () => {
-      const chats = await getChatListFn()
+      const chats = await getChatListFn();
 
-      return chats
+      return chats;
     },
-  })
+  });
 
   const debouncedSearch = useDebouncedCallback(
     (searchTerm: string) => {
-      setQuery(searchTerm)
+      setQuery(searchTerm);
     },
     {
       wait: 500, // Wait 500ms after last keystroke
     },
-  )
+  );
   const handleLogout = () => {
-    setIsLoading(true)
+    setIsLoading(true);
     startTransition(async () => {
       await authClient.signOut({
         fetchOptions: {
           onRequest: () => {
             toast.loading('Logging out...', {
               id: 'logout',
-            })
-            setIsLoading(true)
+            });
+            setIsLoading(true);
           },
           onError: ({ error }) => {
-            setIsLoading(false)
-            toast.dismiss('logout')
+            setIsLoading(false);
+            toast.dismiss('logout');
             toast.error('Failed to log out', {
               description: error.message,
-            })
+            });
           },
           onSuccess: () => {
-            setIsLoading(false)
-            toast.dismiss('logout')
-            toast.success('Logged out successfully')
-            navigate({
+            setIsLoading(false);
+            toast.dismiss('logout');
+            toast.success('Logged out successfully');
+            void navigate({
               to: '/login',
-            })
+            });
           },
         },
-      })
-    })
-  }
+      });
+    });
+  };
   const filteredChats = chats?.filter((chat) => {
-    const matchedQuery = chat.title?.toLowerCase().includes(query.toLowerCase())
+    const matchedQuery = chat.title?.toLowerCase().includes(query.toLowerCase());
 
-    return matchedQuery
-  })
+    return matchedQuery;
+  });
 
   return (
     <SidebarProvider>
@@ -133,10 +121,7 @@ function RouteComponent() {
             <Outlet />
           </section>
 
-          <Sheet
-            open={isSidebarMobileOpen}
-            onOpenChange={(open) => toggleSheet(!open)}
-          >
+          <Sheet open={isSidebarMobileOpen} onOpenChange={(open) => toggleSheet(!open)}>
             <SheetContent
               side="left"
               className="w-75 bg-transparent! backdrop-blur-2xl border-l border-white/10 p-0 flex flex-col"
@@ -148,14 +133,12 @@ function RouteComponent() {
                     className="size-8"
                     alt="Logo"
                   />
-                  <span className="font-bold tracking-tight">
-                    Envoy Mindpalace
-                  </span>
+                  <span className="font-bold tracking-tight">Envoy Mindpalace</span>
                 </SheetTitle>
                 <Button
                   variant={'outline'}
                   onClick={() =>
-                    navigate({
+                    void navigate({
                       to: '/',
                     })
                   }
@@ -186,38 +169,33 @@ function RouteComponent() {
                     </DropdownMenuLabel>
 
                     <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
-                      {Object.entries(MODEL_CONFIG).map(
-                        ([provider, models]) => (
-                          <div key={provider} className="mb-2">
-                            <div className="px-2 py-2 text-[10px] font-black uppercase text-zinc-600 tracking-widest border-b border-white/5 mb-1">
-                              {provider}
-                            </div>
-                            {models.map((m) => (
-                              <DropdownMenuItem
-                                key={m.value}
-                                className="cursor-pointer py-3 px-3 focus:bg-zinc-900 focus:text-white rounded-lg transition-colors"
-                                onClick={() => {
-                                  navigate({
-                                    to: '/chat/$adapter',
-                                    params: {
-                                      adapter: provider,
-                                    },
-                                    search: {
-                                      model: m.value,
-                                    },
-                                  })
-                                  if (typeof toggleSheet === 'function')
-                                    toggleSheet(false)
-                                }}
-                              >
-                                <span className="truncate text-sm font-medium">
-                                  {m.label}
-                                </span>
-                              </DropdownMenuItem>
-                            ))}
+                      {Object.entries(MODEL_CONFIG).map(([provider, models]) => (
+                        <div key={provider} className="mb-2">
+                          <div className="px-2 py-2 text-[10px] font-black uppercase text-zinc-600 tracking-widest border-b border-white/5 mb-1">
+                            {provider}
                           </div>
-                        ),
-                      )}
+                          {models.map((m) => (
+                            <DropdownMenuItem
+                              key={m.value}
+                              className="cursor-pointer py-3 px-3 focus:bg-zinc-900 focus:text-white rounded-lg transition-colors"
+                              onClick={() => {
+                                void navigate({
+                                  to: '/chat/$adapter',
+                                  params: {
+                                    adapter: provider,
+                                  },
+                                  search: {
+                                    model: m.value,
+                                  },
+                                });
+                                if (typeof toggleSheet === 'function') toggleSheet(false);
+                              }}
+                            >
+                              <span className="truncate text-sm font-medium">{m.label}</span>
+                            </DropdownMenuItem>
+                          ))}
+                        </div>
+                      ))}
                     </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -236,7 +214,7 @@ function RouteComponent() {
               </p>
               <div className="flex-1 overflow-y-auto px-2 custom-scrollbar ">
                 {filteredChats?.map((chat) => {
-                  return <ChatItem key={chat.id} chat={chat} />
+                  return <ChatItem key={chat.id} chat={chat} />;
                 })}
               </div>
 
@@ -249,9 +227,7 @@ function RouteComponent() {
                       className="w-12 h-12"
                     />
                     <div className="flex flex-col overflow-hidden">
-                      <span className="text-sm font-semibold truncate">
-                        {session.user.name}
-                      </span>
+                      <span className="text-sm font-semibold truncate">{session.user.name}</span>
                       <span className="text-xs text-muted-foreground truncate">
                         {session.user.email}
                       </span>
@@ -270,10 +246,7 @@ function RouteComponent() {
                   </Button>
                 ) : (
                   <SheetClose asChild>
-                    <Link
-                      to="/login"
-                      className={buttonVariants({ className: 'w-full' })}
-                    >
+                    <Link to="/login" className={buttonVariants({ className: 'w-full' })}>
                       Login
                     </Link>
                   </SheetClose>
@@ -284,5 +257,5 @@ function RouteComponent() {
         </main>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

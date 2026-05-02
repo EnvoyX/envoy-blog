@@ -170,7 +170,7 @@ function PublicProfileComponent() {
         <TabsContent value="images">
           {user?.images.length ? (
             <div className="container mx-auto p-4">
-              <PhotoGallery images={user?.images} />
+              <PhotoGallery images={user?.images} type="public" />
             </div>
           ) : (
             <div className="p-12 rounded-3xl border border-dashed border-slate-800 text-center">

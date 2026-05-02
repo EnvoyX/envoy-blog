@@ -85,13 +85,13 @@ function RouteComponent() {
     },
     onSettled: () => {
       // console.log('Assistant message synced with parts!')
-      queryClient.invalidateQueries({ queryKey: ['chat', chatId] });
-      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      void queryClient.invalidateQueries({ queryKey: ['chat', chatId] });
+      void queryClient.invalidateQueries({ queryKey: ['chats'] });
     },
   });
 
   function onModelChange(model: string) {
-    navigate({
+    void navigate({
       search: (prev) => ({ ...prev, model: model }),
       replace: true,
       reloadDocument: true,
@@ -145,7 +145,7 @@ function RouteComponent() {
       toast.error('Select the model first!');
       return;
     }
-    sendMessage(input);
+    void sendMessage(input);
   }
   useEffect(() => {
     if (scrollRef.current) {
@@ -155,7 +155,7 @@ function RouteComponent() {
 
   useEffect(() => {
     setMessages([]);
-    queryClient.invalidateQueries({ queryKey: ['chat', chatId] });
+    void queryClient.invalidateQueries({ queryKey: ['chat', chatId] });
   }, [chatId]);
 
   useEffect(() => {
@@ -332,6 +332,7 @@ function RouteComponent() {
                 </div>
               </div>
             ))} */}
+
           {messages.map((message) => (
             <div
               key={message.id}

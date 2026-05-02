@@ -92,6 +92,7 @@ export const createShortPostFn = createServerFn({ method: 'POST' })
             shortPostId: shortPost.id,
             userId: context.user.id as string,
             url: image,
+            published: data.published,
           })),
         });
       }
@@ -134,6 +135,7 @@ export const editShortPostFn = createServerFn({ method: 'POST' })
             shortPostId: shortPost.id,
             userId: context.user.id as string,
             url: image,
+            published: data.published,
           })),
         });
       }

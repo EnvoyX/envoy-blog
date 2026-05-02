@@ -29,6 +29,7 @@ export type ImageMinAggregateOutputType = {
   url: string | null
   shortPostId: string | null
   userId: string | null
+  published: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -38,6 +39,7 @@ export type ImageMaxAggregateOutputType = {
   url: string | null
   shortPostId: string | null
   userId: string | null
+  published: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -47,6 +49,7 @@ export type ImageCountAggregateOutputType = {
   url: number
   shortPostId: number
   userId: number
+  published: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -58,6 +61,7 @@ export type ImageMinAggregateInputType = {
   url?: true
   shortPostId?: true
   userId?: true
+  published?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -67,6 +71,7 @@ export type ImageMaxAggregateInputType = {
   url?: true
   shortPostId?: true
   userId?: true
+  published?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -76,6 +81,7 @@ export type ImageCountAggregateInputType = {
   url?: true
   shortPostId?: true
   userId?: true
+  published?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -158,6 +164,7 @@ export type ImageGroupByOutputType = {
   url: string
   shortPostId: string | null
   userId: string | null
+  published: boolean
   createdAt: Date
   updatedAt: Date
   _count: ImageCountAggregateOutputType | null
@@ -188,6 +195,7 @@ export type ImageWhereInput = {
   url?: Prisma.StringFilter<"Image"> | string
   shortPostId?: Prisma.StringNullableFilter<"Image"> | string | null
   userId?: Prisma.StringNullableFilter<"Image"> | string | null
+  published?: Prisma.BoolFilter<"Image"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Image"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Image"> | Date | string
   shortPost?: Prisma.XOR<Prisma.ShortPostNullableScalarRelationFilter, Prisma.ShortPostWhereInput> | null
@@ -199,6 +207,7 @@ export type ImageOrderByWithRelationInput = {
   url?: Prisma.SortOrder
   shortPostId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  published?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   shortPost?: Prisma.ShortPostOrderByWithRelationInput
@@ -213,6 +222,7 @@ export type ImageWhereUniqueInput = Prisma.AtLeast<{
   url?: Prisma.StringFilter<"Image"> | string
   shortPostId?: Prisma.StringNullableFilter<"Image"> | string | null
   userId?: Prisma.StringNullableFilter<"Image"> | string | null
+  published?: Prisma.BoolFilter<"Image"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Image"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Image"> | Date | string
   shortPost?: Prisma.XOR<Prisma.ShortPostNullableScalarRelationFilter, Prisma.ShortPostWhereInput> | null
@@ -224,6 +234,7 @@ export type ImageOrderByWithAggregationInput = {
   url?: Prisma.SortOrder
   shortPostId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  published?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ImageCountOrderByAggregateInput
@@ -239,6 +250,7 @@ export type ImageScalarWhereWithAggregatesInput = {
   url?: Prisma.StringWithAggregatesFilter<"Image"> | string
   shortPostId?: Prisma.StringNullableWithAggregatesFilter<"Image"> | string | null
   userId?: Prisma.StringNullableWithAggregatesFilter<"Image"> | string | null
+  published?: Prisma.BoolWithAggregatesFilter<"Image"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Image"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Image"> | Date | string
 }
@@ -246,6 +258,7 @@ export type ImageScalarWhereWithAggregatesInput = {
 export type ImageCreateInput = {
   id?: string
   url: string
+  published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   shortPost?: Prisma.ShortPostCreateNestedOneWithoutImagesInput
@@ -257,6 +270,7 @@ export type ImageUncheckedCreateInput = {
   url: string
   shortPostId?: string | null
   userId?: string | null
+  published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -264,6 +278,7 @@ export type ImageUncheckedCreateInput = {
 export type ImageUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   shortPost?: Prisma.ShortPostUpdateOneWithoutImagesNestedInput
@@ -275,6 +290,7 @@ export type ImageUncheckedUpdateInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -284,6 +300,7 @@ export type ImageCreateManyInput = {
   url: string
   shortPostId?: string | null
   userId?: string | null
+  published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -291,6 +308,7 @@ export type ImageCreateManyInput = {
 export type ImageUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -300,6 +318,7 @@ export type ImageUncheckedUpdateManyInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -319,6 +338,7 @@ export type ImageCountOrderByAggregateInput = {
   url?: Prisma.SortOrder
   shortPostId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  published?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -328,6 +348,7 @@ export type ImageMaxOrderByAggregateInput = {
   url?: Prisma.SortOrder
   shortPostId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  published?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -337,6 +358,7 @@ export type ImageMinOrderByAggregateInput = {
   url?: Prisma.SortOrder
   shortPostId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  published?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -428,6 +450,7 @@ export type ImageUncheckedUpdateManyWithoutUserNestedInput = {
 export type ImageCreateWithoutShortPostInput = {
   id?: string
   url: string
+  published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutImagesInput
@@ -437,6 +460,7 @@ export type ImageUncheckedCreateWithoutShortPostInput = {
   id?: string
   url: string
   userId?: string | null
+  published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -475,6 +499,7 @@ export type ImageScalarWhereInput = {
   url?: Prisma.StringFilter<"Image"> | string
   shortPostId?: Prisma.StringNullableFilter<"Image"> | string | null
   userId?: Prisma.StringNullableFilter<"Image"> | string | null
+  published?: Prisma.BoolFilter<"Image"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Image"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Image"> | Date | string
 }
@@ -482,6 +507,7 @@ export type ImageScalarWhereInput = {
 export type ImageCreateWithoutUserInput = {
   id?: string
   url: string
+  published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   shortPost?: Prisma.ShortPostCreateNestedOneWithoutImagesInput
@@ -491,6 +517,7 @@ export type ImageUncheckedCreateWithoutUserInput = {
   id?: string
   url: string
   shortPostId?: string | null
+  published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -525,6 +552,7 @@ export type ImageCreateManyShortPostInput = {
   id?: string
   url: string
   userId?: string | null
+  published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -532,6 +560,7 @@ export type ImageCreateManyShortPostInput = {
 export type ImageUpdateWithoutShortPostInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutImagesNestedInput
@@ -541,6 +570,7 @@ export type ImageUncheckedUpdateWithoutShortPostInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -549,6 +579,7 @@ export type ImageUncheckedUpdateManyWithoutShortPostInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -557,6 +588,7 @@ export type ImageCreateManyUserInput = {
   id?: string
   url: string
   shortPostId?: string | null
+  published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -564,6 +596,7 @@ export type ImageCreateManyUserInput = {
 export type ImageUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   shortPost?: Prisma.ShortPostUpdateOneWithoutImagesNestedInput
@@ -573,6 +606,7 @@ export type ImageUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -581,6 +615,7 @@ export type ImageUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -592,6 +627,7 @@ export type ImageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   url?: boolean
   shortPostId?: boolean
   userId?: boolean
+  published?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   shortPost?: boolean | Prisma.Image$shortPostArgs<ExtArgs>
@@ -603,6 +639,7 @@ export type ImageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   url?: boolean
   shortPostId?: boolean
   userId?: boolean
+  published?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   shortPost?: boolean | Prisma.Image$shortPostArgs<ExtArgs>
@@ -614,6 +651,7 @@ export type ImageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   url?: boolean
   shortPostId?: boolean
   userId?: boolean
+  published?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   shortPost?: boolean | Prisma.Image$shortPostArgs<ExtArgs>
@@ -625,11 +663,12 @@ export type ImageSelectScalar = {
   url?: boolean
   shortPostId?: boolean
   userId?: boolean
+  published?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "url" | "shortPostId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["image"]>
+export type ImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "url" | "shortPostId" | "userId" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["image"]>
 export type ImageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   shortPost?: boolean | Prisma.Image$shortPostArgs<ExtArgs>
   user?: boolean | Prisma.Image$userArgs<ExtArgs>
@@ -654,6 +693,7 @@ export type $ImagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     url: string
     shortPostId: string | null
     userId: string | null
+    published: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["image"]>
@@ -1085,6 +1125,7 @@ export interface ImageFieldRefs {
   readonly url: Prisma.FieldRef<"Image", 'String'>
   readonly shortPostId: Prisma.FieldRef<"Image", 'String'>
   readonly userId: Prisma.FieldRef<"Image", 'String'>
+  readonly published: Prisma.FieldRef<"Image", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Image", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Image", 'DateTime'>
 }

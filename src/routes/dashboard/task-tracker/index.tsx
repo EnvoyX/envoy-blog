@@ -101,7 +101,7 @@ function RouteComponent() {
       startTransition(async () => {
         await createTaskListFn({ data: value });
         toast.success('Task list created!');
-        queryClient.invalidateQueries({ queryKey: ['query-task-lists'] });
+        void queryClient.invalidateQueries({ queryKey: ['query-task-lists'] });
         setDialogOpen(false);
         form.reset();
       });
@@ -119,7 +119,7 @@ function RouteComponent() {
       startTransition(async () => {
         await updateTaskListFn({ data: value });
         toast.success('Task list updated!');
-        queryClient.invalidateQueries({ queryKey: ['query-task-lists'] });
+        void queryClient.invalidateQueries({ queryKey: ['query-task-lists'] });
         setDialogOpen(false);
         form.reset();
       });

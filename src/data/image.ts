@@ -29,3 +29,81 @@ export const getImagesByIdFn = createServerFn({ method: 'GET' })
       orderBy: { createdAt: 'desc' },
     });
   });
+
+export const ImportImagesFn = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({
+      published: z.boolean(),
+      images: z.array(z.string()),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ context, data }) => {
+    await db.$transaction(async (ctx) => {
+      if (!data.images?.length) return;
+      if (data.images) {
+        await ctx.image.createMany({
+          data: data.images.map((image) => ({
+            userId: context.user.id as string,
+            url: image,
+            published: data.published,
+          })),
+        });
+      }
+    });
+    return true;
+  });
+
+export const DeleteImageFn = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({
+      imageId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data }) => {
+    await db.$transaction(async (ctx) => {
+      await ctx.image.delete({
+        where: { id: data.imageId },
+      });
+    });
+    return true;
+  });
+
+export const SetPrivateImageFn = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({
+      imageId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data }) => {
+    await db.$transaction(async (ctx) => {
+      await ctx.image.update({
+        where: { id: data.imageId },
+        data: {
+          published: false,
+        },
+      });
+    });
+    return true;
+  });
+
+export const SetPublicImageFn = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({
+      imageId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data }) => {
+    await db.$transaction(async (ctx) => {
+      await ctx.image.update({
+        where: { id: data.imageId },
+        data: {
+          published: true,
+        },
+      });
+    });
+    return true;
+  });

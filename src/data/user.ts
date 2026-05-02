@@ -47,7 +47,7 @@ export const getPublicProfileFn = createServerFn({ method: 'GET' })
           },
           orderBy: { createdAt: 'desc' },
         },
-        images: { where: { shortPost: { published: true } } },
+        images: { where: { published: true } },
       },
     });
     return profile;

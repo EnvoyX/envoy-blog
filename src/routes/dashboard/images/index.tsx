@@ -1,7 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { createStore } from '@tanstack/react-store';
 
+import { ImportImageModal } from '@/components/web/image/ImportImageModal';
 import PhotoGallery from '@/components/web/PhotoGallery';
 import { getImagesFn } from '@/data/image';
+
+export const imageModalStore = createStore({
+  dialogId: '',
+  isOpen: false,
+  isImportDialog: false,
+  isLoading: false,
+});
 
 export const Route = createFileRoute('/dashboard/images/')({
   component: RouteComponent,
@@ -47,6 +56,7 @@ function RouteComponent() {
             </h1>
             <p className="text-slate-400 mt-2">Manage and edit your images here.</p>
           </div>
+          <ImportImageModal />
         </div>
         {images.length === 0 && (
           <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
@@ -54,7 +64,7 @@ function RouteComponent() {
           </div>
         )}
         <div className="container mx-auto p-4">
-          <PhotoGallery images={images} />
+          <PhotoGallery images={images} type="private" />
         </div>
       </div>
     </div>
