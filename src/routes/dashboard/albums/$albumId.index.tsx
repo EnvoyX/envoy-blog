@@ -45,7 +45,6 @@ export default function AlbumPage() {
   const album = Route.useLoaderData();
   const { albumId } = Route.useParams();
   const navigate = useNavigate();
-  // const [index, setIndex] = useState(-1);
   const { toggleDialog, setInitialValues } = useAlbumStore();
 
   const handleEdit = () => {
@@ -62,7 +61,7 @@ export default function AlbumPage() {
   return (
     <div className="min-h-screen bg-transparent text-white">
       <header className="sticky top-0 z-30 w-full border-b border-white/5 bg-transparent backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
@@ -95,7 +94,16 @@ export default function AlbumPage() {
               variant="ghost"
               size="sm"
               className="hidden sm:flex gap-2 rounded-full hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer"
-              onClick={() => toggleDialog("import", albumId)}
+              onClick={() => {
+                setInitialValues({
+                  name: album?.name ?? "",
+                  description: album?.description || "",
+                  published: album?.published as boolean,
+                  coverImageUrl: album?.coverImageUrl || "",
+                  type: "edit",
+                });
+                toggleDialog("bulk", albumId);
+              }}
             >
               <Plus className="size-4" /> Add Photos
             </Button>
@@ -124,7 +132,16 @@ export default function AlbumPage() {
                   <FileDown className="mr-2 size-4" /> Import Photos
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => toggleDialog("import", albumId)}
+                  onClick={() => {
+                    setInitialValues({
+                      name: album?.name ?? "",
+                      description: album?.description || "",
+                      published: album?.published as boolean,
+                      coverImageUrl: album?.coverImageUrl || "",
+                      type: "edit",
+                    });
+                    toggleDialog("bulk", albumId);
+                  }}
                   className="cursor-pointer sm:hidden"
                 >
                   <Plus className="mr-2 size-4" /> Add Photos

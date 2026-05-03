@@ -22,7 +22,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAlbumsFn } from "@/data/album";
 import { ImportImageToAlbumFn } from "@/data/image";
 import { toast } from "sonner";
-import { useRouter } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { IconAlbumOff } from "@tabler/icons-react";
 
@@ -30,6 +30,7 @@ export function ImportToAlbumModal() {
   const queryClient = useQueryClient();
   const { isImportToAlbumModalOpen, onOpenChangeDialog, imageId, imageUrl } = useImageStore();
   const router = useRouter();
+  const navigate = useNavigate();
   const { data: albums, isPending } = useQuery({
     queryKey: ["albums"],
     queryFn: async () => {
@@ -118,7 +119,15 @@ export function ImportToAlbumModal() {
                     </EmptyDescription>
                   </EmptyHeader>
                   <EmptyContent>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        void navigate({
+                          to: "/dashboard/albums",
+                        });
+                      }}
+                    >
                       Create Album
                     </Button>
                   </EmptyContent>

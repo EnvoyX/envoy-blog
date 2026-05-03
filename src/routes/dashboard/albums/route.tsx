@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { AlbumDialog } from "@/components/web/album/AlbumDialog";
+import { BulkImportDialog } from "@/components/web/album/BulkImportDialog";
 import { deleteAlbumFn } from "@/data/album";
 import { useAlbumStore } from "@/store/album";
 import { useRouter } from "@tanstack/react-router";
@@ -37,6 +38,7 @@ function RouteComponent() {
     <>
       <Outlet />
       <AlbumDialog />
+      <BulkImportDialog />
       <Dialog
         open={isDeleteDialogOpen}
         onOpenChange={(open) => {

@@ -4,6 +4,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { AppSidebar } from "@/components/web/sidebar/app-sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { ImportImageModal } from "@/components/web/image/ImportImageModal";
+import { ImportToAlbumModal } from "@/components/web/image/ImportToAlbumModal";
 
 export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
@@ -36,6 +37,7 @@ function RouteComponent() {
         </div>
       </SidebarInset>
       <ImportImageModal />
+      <ImportToAlbumModal />
     </SidebarProvider>
   );
 }

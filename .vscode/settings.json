@@ -14,5 +14,18 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.oxc": "always"
   },
-  "oxc.typeAware": true
+  "oxc.typeAware": true,
+  "piny.project_settings": {
+    "open-pages": ["pinyfakepage.html"],
+    "urls": {
+      "pinyfakepage.html": {
+        "open-page-views": [
+          {
+            "w": 788,
+            "h": 0
+          }
+        ]
+      }
+    }
+  }
 }

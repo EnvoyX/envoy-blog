@@ -10,6 +10,7 @@ export const useAlbumStore = create(
         isAlbumDialogOpen: false,
         isDeleteDialogOpen: false,
         isImageImportDialogOpen: false,
+        isBulkDialogImportOpen: false,
         initialValues: null as {
           name: string;
           description: string;
@@ -19,13 +20,14 @@ export const useAlbumStore = create(
         } | null,
       },
       (set) => ({
-        toggleDialog: (dialog: "open" | "import" | "delete" | "close", albumId?: string) =>
+        toggleDialog: (dialog: "open" | "import" | "delete" | "bulk" | "close", albumId?: string) =>
           set(() => {
             switch (dialog) {
               case "open":
                 return {
                   currentAlbumId: albumId ?? "",
                   isImageImportDialogOpen: false,
+                  isBulkDialogImportOpen: false,
                   isDeleteDialogOpen: false,
                   isAlbumDialogOpen: true,
                 };
@@ -33,13 +35,23 @@ export const useAlbumStore = create(
                 return {
                   currentAlbumId: albumId ?? "",
                   isImageImportDialogOpen: true,
+                  isBulkDialogImportOpen: false,
                   isDeleteDialogOpen: false,
                   isAlbumDialogOpen: false,
+                };
+              case "bulk":
+                return {
+                  currentAlbumId: albumId ?? "",
+                  isImageImportDialogOpen: false,
+                  isBulkDialogImportOpen: true,
+                  isAlbumDialogOpen: false,
+                  isDeleteDialogOpen: false,
                 };
               case "delete":
                 return {
                   currentAlbumId: albumId ?? "",
                   isImageImportDialogOpen: false,
+                  isBulkDialogImportOpen: false,
                   isAlbumDialogOpen: false,
                   isDeleteDialogOpen: true,
                 };
@@ -47,12 +59,13 @@ export const useAlbumStore = create(
                 return {
                   currentAlbumId: "",
                   isImageImportDialogOpen: false,
+                  isBulkDialogImportOpen: false,
                   isAlbumDialogOpen: false,
                   isDeleteDialogOpen: false,
                 };
             }
           }),
-        onOpenDialogChange: (dialog: "open" | "import" | "delete", open: boolean) =>
+        onOpenDialogChange: (dialog: "open" | "import" | "bulk" | "delete", open: boolean) =>
           set(() => {
             if (dialog === "open") {
               return {
@@ -61,6 +74,10 @@ export const useAlbumStore = create(
             } else if (dialog === "import") {
               return {
                 isImageImportDialogOpen: open,
+              };
+            } else if (dialog === "bulk") {
+              return {
+                isBulkDialogImportOpen: open,
               };
             } else if (dialog === "delete") {
               return {
@@ -103,6 +120,7 @@ export const useAlbumStore = create(
         isAlbumDialogOpen: state.isAlbumDialogOpen,
         isDeleteDialogOpen: state.isDeleteDialogOpen,
         isImageImportDialogOpen: state.isImageImportDialogOpen,
+        isBulkDialogImportOpen: state.isBulkDialogImportOpen,
       }),
     },
   ),

@@ -13,6 +13,19 @@ export const getImagesFn = createServerFn({ method: "GET" })
     });
   });
 
+export const getImagesWithAlbumsFn = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    return await db.image.findMany({
+      where: { userId: context.user.id },
+      orderBy: { createdAt: "desc" },
+      include: {
+        albums: true,
+        user: true,
+      },
+    });
+  });
+
 export const getPublicImagesFn = createServerFn({ method: "GET" }).handler(async () => {
   return await db.image.findMany({
     where: { shortPost: { published: true } },
