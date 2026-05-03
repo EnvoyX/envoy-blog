@@ -1,8 +1,8 @@
-import { useDebouncedCallback } from '@tanstack/react-pacer';
-import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router';
-import { createStore, useSelector } from '@tanstack/react-store';
-import { zodValidator } from '@tanstack/zod-adapter';
-import { intlFormat, intlFormatDistance } from 'date-fns';
+import { useDebouncedCallback } from "@tanstack/react-pacer";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { createStore, useSelector } from "@tanstack/react-store";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { intlFormat, intlFormatDistance } from "date-fns";
 import {
   Plus,
   MoreVertical,
@@ -16,13 +16,13 @@ import {
   Search,
   Heart,
   MessageSquare,
-} from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+} from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -31,27 +31,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogClose,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { getMyPostsFn, deletePostFn } from '@/data/blog';
-import { getUser } from '@/data/session';
-import { BlogStatus } from '@/lib/constants';
-import { postSearchSchema } from '@/schemas/blog';
+} from "@/components/ui/select";
+import { getMyPostsFn, deletePostFn } from "@/data/blog";
+import { getUser } from "@/data/session";
+import { BlogStatus } from "@/lib/constants";
+import { postSearchSchema } from "@/schemas/blog";
 
-export const Route = createFileRoute('/dashboard/blog/')({
+export const Route = createFileRoute("/dashboard/blog/")({
   loader: async () => {
     const allPosts = await getMyPostsFn();
     const session = await getUser();
@@ -66,19 +66,19 @@ export const Route = createFileRoute('/dashboard/blog/')({
     meta: [
       { title: `My Blogs | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
-      { property: 'og:title', content: 'My Blogs | Envoy Mindpalace' },
+      { property: "og:title", content: "My Blogs | Envoy Mindpalace" },
       {
-        property: 'og:description',
-        content: 'Create your own blog and write your thoughts!',
+        property: "og:description",
+        content: "Create your own blog and write your thoughts!",
       },
       {
-        property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
@@ -90,7 +90,7 @@ function BlogPageComponent() {
   const router = useRouter();
   const [modalStore] = useState(() =>
     createStore({
-      dialogId: '',
+      dialogId: "",
       isOpen: false,
       isLoading: false,
     }),
@@ -102,9 +102,9 @@ function BlogPageComponent() {
     const matchedQuery =
       post.title?.toLowerCase().includes(query.toLowerCase()) ||
       post.description?.toLowerCase().includes(query.toLowerCase()) ||
-      query === '';
+      query === "";
     const matchedStatus =
-      visibility === 'PUBLIC' ? post.published : visibility === 'PRIVATE' ? !post.published : null;
+      visibility === "PUBLIC" ? post.published : visibility === "PRIVATE" ? !post.published : null;
     if (matchedStatus === null) return matchedQuery;
 
     return matchedQuery && matchedStatus;
@@ -126,13 +126,11 @@ function BlogPageComponent() {
   //   })
 
   return (
-    <div className="min-h-screen  text-slate-50">
+    <div className="min-h-screen text-slate-50 p-8">
       <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col ">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black tracking-tight bg-linear-to-r from-white to-slate-500 bg-clip-text text-transparent">
-              My Collections
-            </h1>
+            <h1 className="text-4xl font-black tracking-tight text-white">My Blogs</h1>
             <p className="text-slate-400 mt-2">Manage and curate your digital thoughts.</p>
           </div>
           <Button
@@ -206,7 +204,7 @@ function BlogPageComponent() {
               >
                 <div className="aspect-video relative overflow-hidden">
                   <img
-                    src={post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
+                    src={post.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
                     alt={post.title}
                     className="object-cover w-full h-full transition-transform duration-500"
                   />
@@ -267,17 +265,17 @@ function BlogPageComponent() {
                     <div className="flex items-center gap-2 text-xs text-slate-500 mb-3 uppercase tracking-widest font-semibold">
                       <Calendar className="size-3" />
                       {intlFormat(new Date(post.createdAt), {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
                       })}
                     </div>
                   </div>
                   <span>
                     {post.published ? (
-                      <Badge variant={'default'}>Public</Badge>
+                      <Badge variant={"default"}>Public</Badge>
                     ) : (
-                      <Badge className="bg-white/20!" variant={'outline'}>
+                      <Badge className="bg-white/20!" variant={"outline"}>
                         Private
                       </Badge>
                     )}
@@ -296,7 +294,7 @@ function BlogPageComponent() {
                     <div className="flex flex-col items-center gap-1 group">
                       <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-emerald-500/30 transition-colors">
                         <Heart
-                          className={`size-3.5 ${hasLiked ? 'fill-emerald-500 text-emerald-500' : ''}`}
+                          className={`size-3.5 ${hasLiked ? "fill-emerald-500 text-emerald-500" : ""}`}
                         />
                         <span className="text-[11px] font-bold tabular-nums">
                           {post._count.likes}
@@ -356,13 +354,13 @@ function BlogPageComponent() {
                     postId: modalStore.state.dialogId,
                   },
                 });
-                toast.success('Post deleted');
+                toast.success("Post deleted");
                 void router.invalidate();
                 modalStore.setState((prev) => {
                   return {
                     ...prev,
                     isLoading: false,
-                    dialogId: '',
+                    dialogId: "",
                   };
                 });
                 // unsubscribe()

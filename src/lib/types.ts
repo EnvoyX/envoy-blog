@@ -63,3 +63,11 @@ export type BlogPostUserPublic = Prisma.PostGetPayload<{
     };
   };
 }>;
+
+export type AlbumPrisma = Prisma.AlbumGetPayload<{
+  include: {
+    author: true;
+    images: true;
+    _count: { select: { images: true } };
+  };
+}>;

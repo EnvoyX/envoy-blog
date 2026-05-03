@@ -194,17 +194,15 @@ function RouteComponent() {
 
       <footer className="mt-12 pt-6 border-t border-border flex max-sm:flex-col gap-4">
         <EditProfileDialog user={user} />
-        <div className="flex max-sm:w-full">
-          <Link
-            to="/user/$userId"
-            className={buttonVariants({ variant: "default" })}
-            params={{
-              userId: user.id,
-            }}
-          >
-            View on Public
-          </Link>
-        </div>
+        <Link
+          to="/user/$userId"
+          className={buttonVariants({ variant: "default" })}
+          params={{
+            userId: user.id,
+          }}
+        >
+          View on Public
+        </Link>
         <Button
           variant={"outline"}
           onClick={handleLogout}

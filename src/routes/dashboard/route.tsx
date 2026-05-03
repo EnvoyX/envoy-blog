@@ -1,26 +1,23 @@
-import { getSession } from '@/data/session'
+import { getSession } from "@/data/session";
 // import { Separator } from '@/components/ui/separator'
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/components/ui/sidebar'
-import { AppSidebar } from '@/components/web/sidebar/app-sidebar'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/web/sidebar/app-sidebar";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { ImportImageModal } from "@/components/web/image/ImportImageModal";
 
-export const Route = createFileRoute('/dashboard')({
+export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
   loader: async () => {
-    const session = await getSession()
+    const session = await getSession();
 
     return {
-      user: session.user,
-    }
+      user: session?.user,
+    };
   },
-})
+});
 
 function RouteComponent() {
-  const { user } = Route.useLoaderData()
+  const { user } = Route.useLoaderData();
   return (
     <SidebarProvider>
       <AppSidebar user={user} />
@@ -34,10 +31,11 @@ function RouteComponent() {
             />*/}
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 bg-linear-to-b from-slate-950 to-emerald-500/30 linear text-slate-50 selection:bg-emerald-500/30">
+        <div className="flex flex-1 flex-col gap-4 bg-linear-to-b from-slate-950 to-emerald-500/30 linear text-slate-50 selection:bg-emerald-500/30">
           <Outlet />
         </div>
       </SidebarInset>
+      <ImportImageModal />
     </SidebarProvider>
-  )
+  );
 }

@@ -108,7 +108,7 @@ export function PostDialog() {
 
       <DialogContent className="sm:max-w-6xl p-0 overflow-hidden border-zinc-800 bg-zinc-950">
         <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
-          <div className="w-full md:w-2/5 p-8 border-r border-zinc-800/50 bg-zinc-900/20">
+          <div className="w-full md:w-2/5 p-8 border-r border-zinc-800/50 bg-zinc-900/20 overflow-y-auto">
             <DialogHeader className="mb-8">
               <div className="bg-emerald-500/10 w-fit p-2 rounded-lg mb-4">
                 <MailboxIcon className="text-emerald-500 size-6" />
@@ -191,7 +191,6 @@ export function PostDialog() {
                             onChange={(e) => field.handleChange(e.target.value)}
                           />
 
-                          {/* Subtle inner glow on focus */}
                           <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/5 group-focus-within:ring-emerald-500/10 transition-all" />
                         </div>
 

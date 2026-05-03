@@ -10,6 +10,7 @@ import {
   UserIcon,
   MailboxIcon,
   ImagesIcon,
+  AlbumIcon,
 } from 'lucide-react';
 
 import { NavPrimaryProps, NavProps } from '@/lib/types';
@@ -90,6 +91,14 @@ export const navItemsDashboard: NavPrimaryProps['items'] = linkOptions([
     title: 'Posts',
     icon: MailboxIcon,
     to: '/dashboard/post',
+    activeOptions: {
+      exact: false,
+    },
+  },
+  {
+    title: 'Albums',
+    icon: AlbumIcon,
+    to: '/dashboard/albums',
     activeOptions: {
       exact: false,
     },

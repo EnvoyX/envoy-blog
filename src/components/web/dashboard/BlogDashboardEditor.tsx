@@ -1,5 +1,5 @@
-import { useForm } from '@tanstack/react-form';
-import { Link } from '@tanstack/react-router';
+import { useForm } from "@tanstack/react-form";
+import { Link } from "@tanstack/react-router";
 import {
   Pencil,
   Eye,
@@ -10,36 +10,36 @@ import {
   PencilRulerIcon,
   CopyCheck,
   Copy,
-} from 'lucide-react';
-import { useDeferredValue, useState } from 'react';
-import { toast } from 'sonner';
+} from "lucide-react";
+import { useDeferredValue, useState } from "react";
+import { toast } from "sonner";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldError,
   FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
-import { MarkdownRenderer } from '@/components/web/markdown/Markdown';
-import { createPostFn, updatePostFn } from '@/data/blog';
-import { Post } from '@/generated/prisma/client';
-import { cn } from '@/lib/utils';
-import { postSchema } from '@/schemas/blog';
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { MarkdownRenderer } from "@/components/web/markdown/Markdown";
+import { createPostFn, updatePostFn } from "@/data/blog";
+import { Post } from "@/generated/prisma/client";
+import { cn } from "@/lib/utils";
+import { postSchema } from "@/schemas/blog";
 
 export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
-  const [activeTab, setActiveTab] = useState('edit-blog');
-  const [markdown, setMarkdown] = useState(initialData?.content ?? '');
+  const [activeTab, setActiveTab] = useState("edit-blog");
+  const [markdown, setMarkdown] = useState(initialData?.content ?? "");
   const [copied, setCopied] = useState(false);
 
-  const deferredMarkdown = useDeferredValue(markdown, initialData?.content ?? '');
+  const deferredMarkdown = useDeferredValue(markdown, initialData?.content ?? "");
 
   const handleCopy = async (markdown: string) => {
     await navigator.clipboard.writeText(markdown);
@@ -50,10 +50,10 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
 
   const form = useForm({
     defaultValues: {
-      title: initialData?.title || '',
-      content: initialData?.content || '',
-      description: initialData?.description || '',
-      image: initialData?.image || 'https://tanstack.com/assets/og-C0HGjoLl.png',
+      title: initialData?.title || "",
+      content: initialData?.content || "",
+      description: initialData?.description || "",
+      image: initialData?.image || "https://tanstack.com/assets/og-C0HGjoLl.png",
       published: initialData?.published || false,
     },
     validators: {
@@ -68,11 +68,11 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
             ...value,
           },
         });
-        toast.success('Blog updated succesfully!');
+        toast.success("Blog updated succesfully!");
       } else {
         console.log(value);
         await createPostFn({ data: value });
-        toast.success('Blog published succesfully!');
+        toast.success("Blog published succesfully!");
       }
     },
   });
@@ -154,7 +154,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
               <Field orientation="horizontal" data-invalid={isInvalid}>
                 <FieldContent>
                   <FieldLabel htmlFor="form-tanstack-switch-visibility">
-                    Visibility ({field.state.value === true ? 'Public' : 'Private'})
+                    Visibility ({field.state.value === true ? "Public" : "Private"})
                   </FieldLabel>
                   <FieldDescription>
                     Enable whether this blog published to public or keep in private.
@@ -183,12 +183,12 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
               <>
                 <Label htmlFor={`${field.name}-input`}>Content (Markdown)</Label>
                 <div className="flex items-center gap-2 max-sm:flex-col max-sm:mt-4 max-sm:mb-4">
-                  <Button size={'sm'} variant={'default'} asChild>
+                  <Button size={"sm"} variant={"default"} asChild>
                     <Link
                       to={
                         initialData
-                          ? '/dashboard/blog/$slug/edit/md-editor'
-                          : '/dashboard/blog/md-editor'
+                          ? "/dashboard/blog/$slug/edit/md-editor"
+                          : "/dashboard/blog/md-editor"
                       }
                       params={{
                         slug: initialData?.slug,
@@ -199,8 +199,8 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                     </Link>
                   </Button>
                   <Button
-                    size={'sm'}
-                    variant={'default'}
+                    size={"sm"}
+                    variant={"default"}
                     onClick={() => handleCopy(field.state.value)}
                     className="cursor-pointer"
                   >
@@ -241,7 +241,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
   );
 
   return (
-    <div className="px-2 min-h-screen flex flex-col w-full mx-auto">
+    <div className="p-8 min-h-screen flex flex-col w-full mx-auto">
       <header className="flex items-center mb-4">
         <Button variant="default" asChild className="">
           <Link to="/dashboard/blog">
@@ -259,10 +259,10 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
 
         <div className="hidden md:block">
           <div className="flex gap-2 items-center">
-            <Button variant={'outline'} asChild>
+            <Button variant={"outline"} asChild>
               <Link
                 to={
-                  initialData ? '/dashboard/blog/$slug/edit/md-editor' : '/dashboard/blog/md-editor'
+                  initialData ? "/dashboard/blog/$slug/edit/md-editor" : "/dashboard/blog/md-editor"
                 }
                 params={{
                   slug: initialData?.slug,
@@ -275,7 +275,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
             <Button
               onClick={() => handleCopy(markdown)}
               className="cursor-pointer"
-              variant={'outline'}
+              variant={"outline"}
             >
               {copied ? (
                 <span className="flex gap-1">
@@ -295,9 +295,9 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                 <Button
                   onClick={() => form.handleSubmit()}
                   disabled={isSubmitting}
-                  className={cn('gap-2', {
-                    'cursor-pointer': !isSubmitting,
-                    'cursor-not-allowed': isSubmitting,
+                  className={cn("gap-2", {
+                    "cursor-pointer": !isSubmitting,
+                    "cursor-not-allowed": isSubmitting,
                   })}
                 >
                   {isSubmitting ? (
@@ -305,7 +305,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                   ) : (
                     <Save className="size-4" />
                   )}
-                  {initialData ? 'Update Blog' : 'Publish Blog'}
+                  {initialData ? "Update Blog" : "Publish Blog"}
                 </Button>
               )}
             />
@@ -330,7 +330,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
               <CardContent className="pt-6">
                 {EditorFields}
                 <Button onClick={() => form.handleSubmit()} className="w-full mt-6 gap-2">
-                  <Save className="size-4" /> {initialData ? 'Update' : 'Publish'}
+                  <Save className="size-4" /> {initialData ? "Update" : "Publish"}
                 </Button>
               </CardContent>
             </Card>
@@ -343,19 +343,19 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                   selector={(state) => [state.values]}
                   children={([values]) => (
                     <>
-                      <h1 className="text-2xl font-bold mb-4">{values.title || 'Untitled'}</h1>
+                      <h1 className="text-2xl font-bold mb-4">{values.title || "Untitled"}</h1>
                       <h3>
-                        {values.description || 'Some description that makes you flabbergasted...'}
+                        {values.description || "Some description that makes you flabbergasted..."}
                       </h3>
                       <div className="aspect-video w-full overflow-hidden">
                         <h4>Image Preview</h4>
                         <img
-                          src={values.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
-                          alt={values.title ?? 'Blog Thumbnail'}
+                          src={values.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
+                          alt={values.title ?? "Blog Thumbnail"}
                           className="h-full w-full object-cover group-hover:scale-105 transition-transform "
                         />
                       </div>
-                      <MarkdownRenderer markdown={deferredMarkdown || '*Nothing to preview...*'} />
+                      <MarkdownRenderer markdown={deferredMarkdown || "*Nothing to preview...*"} />
                     </>
                   )}
                 />
@@ -387,20 +387,20 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
               selector={(state) => [state.values]}
               children={([values]) => (
                 <main>
-                  <h1 className="mt-0">{values.title || 'Untitled Blog'}</h1>
+                  <h1 className="mt-0">{values.title || "Untitled Blog"}</h1>
                   <h3>
-                    {values.description || 'Some description that makes you flabbergasted...'}
+                    {values.description || "Some description that makes you flabbergasted..."}
                   </h3>
                   <div className="aspect-video w-full overflow-hidden">
                     <h4>Image Preview</h4>
                     <img
-                      src={values.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
-                      alt={values.title ?? 'Blog Thumbnail'}
+                      src={values.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
+                      alt={values.title ?? "Blog Thumbnail"}
                       className="h-full w-full object-cover group-hover:scale-105 transition-transform"
                     />
                   </div>
                   <MarkdownRenderer
-                    markdown={deferredMarkdown || 'Start typing to see the preview...'}
+                    markdown={deferredMarkdown || "Start typing to see the preview..."}
                   />
                 </main>
               )}

@@ -1,9 +1,8 @@
-import { useForm } from '@tanstack/react-form';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { format, intlFormatDistance } from 'date-fns';
+import { useForm } from "@tanstack/react-form";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { format, intlFormatDistance } from "date-fns";
 import {
-  ArrowRight,
   CalendarDays,
   CheckCircle2Icon,
   Clock,
@@ -17,13 +16,13 @@ import {
   Pencil,
   Plus,
   Trash2,
-} from 'lucide-react';
-import { useState, useTransition } from 'react';
-import { toast } from 'sonner';
+} from "lucide-react";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import {
   Dialog,
   DialogClose,
@@ -33,7 +32,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,37 +40,37 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/dropdown-menu";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   createTaskListFn,
   deleteTaskListFn,
   fetchTaskListsFn,
   setStatusTaskListFn,
   updateTaskListFn,
-} from '@/data/task-tracker';
-import { taskListSchema, updateTaskListSchema } from '@/schemas/task-tracker';
+} from "@/data/task-tracker";
+import { taskListSchema, updateTaskListSchema } from "@/schemas/task-tracker";
 
-export const Route = createFileRoute('/dashboard/task-tracker/')({
+export const Route = createFileRoute("/dashboard/task-tracker/")({
   head: () => ({
     meta: [
       { title: `Task Tracker | Envoy Blog` },
       {
-        name: 'Envoy Blog',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Blog",
+        content: "Welcome to my TanStack Start playground!",
       },
-      { property: 'og:title', content: 'Task Tracker | Envoy Blog' },
+      { property: "og:title", content: "Task Tracker | Envoy Blog" },
       {
-        property: 'og:description',
-        content: 'Track your project, task, and todos!',
+        property: "og:description",
+        content: "Track your project, task, and todos!",
       },
       {
-        property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
   component: RouteComponent,
@@ -83,11 +82,11 @@ function RouteComponent() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [activeId, setActiveId] = useState('');
+  const [activeId, setActiveId] = useState("");
   const [isPending, startTransition] = useTransition();
 
   const { data: taskLists, isPending: isPendingQuery } = useQuery({
-    queryKey: ['query-task-lists'],
+    queryKey: ["query-task-lists"],
     queryFn: fetchTaskListsFn,
   });
 
@@ -95,13 +94,13 @@ function RouteComponent() {
   const inactiveTaskLists = taskLists?.filter((taskList) => !taskList.active);
 
   const form = useForm({
-    defaultValues: { title: '', description: '' },
+    defaultValues: { title: "", description: "" },
     validators: { onSubmit: taskListSchema, onChange: taskListSchema },
     onSubmit: async ({ value }) => {
       startTransition(async () => {
         await createTaskListFn({ data: value });
-        toast.success('Task list created!');
-        void queryClient.invalidateQueries({ queryKey: ['query-task-lists'] });
+        toast.success("Task list created!");
+        void queryClient.invalidateQueries({ queryKey: ["query-task-lists"] });
         setDialogOpen(false);
         form.reset();
       });
@@ -110,16 +109,16 @@ function RouteComponent() {
 
   const updateForm = useForm({
     defaultValues: {
-      title: '',
-      description: '',
-      taskListId: '',
+      title: "",
+      description: "",
+      taskListId: "",
     },
     validators: { onSubmit: updateTaskListSchema, onChange: updateTaskListSchema },
     onSubmit: async ({ value }) => {
       startTransition(async () => {
         await updateTaskListFn({ data: value });
-        toast.success('Task list updated!');
-        void queryClient.invalidateQueries({ queryKey: ['query-task-lists'] });
+        toast.success("Task list updated!");
+        void queryClient.invalidateQueries({ queryKey: ["query-task-lists"] });
         setDialogOpen(false);
         form.reset();
       });
@@ -127,12 +126,10 @@ function RouteComponent() {
   });
 
   return (
-    <div className="min-h-screen  text-zinc-100 max-sm:p-6">
+    <div className="min-h-screen text-zinc-100 max-sm:p-6 p-8">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight bg-linear-to-r from-white to-zinc-500 bg-clip-text text-transparent">
-            Task Tracker
-          </h1>
+          <h1 className="text-4xl font-black tracking-tight text-white">Task Tracker</h1>
           <p className="text-zinc-400 mt-2">Manage your projects, tasks and todos.</p>
         </div>
 
@@ -146,7 +143,7 @@ function RouteComponent() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                form.handleSubmit();
+                void form.handleSubmit();
               }}
             >
               <FieldGroup>
@@ -286,8 +283,8 @@ function RouteComponent() {
                             onClick={() => {
                               setActiveId(item.id);
                               setUpdateDialogOpen(true);
-                              updateForm.setFieldValue('title', item.title);
-                              updateForm.setFieldValue('description', item.description ?? '');
+                              updateForm.setFieldValue("title", item.title);
+                              updateForm.setFieldValue("description", item.description ?? "");
                             }}
                             className="cursor-pointer"
                           >
@@ -296,19 +293,19 @@ function RouteComponent() {
                           {item.active && (
                             <DropdownMenuItem
                               onClick={async () => {
-                                toast.loading('Updating Status...', {
-                                  id: 'status-update',
+                                toast.loading("Updating Status...", {
+                                  id: "status-update",
                                 });
                                 await setStatusTaskListFn({
                                   data: {
                                     taskId: item.id,
-                                    status: 'INACTIVE',
+                                    status: "INACTIVE",
                                   },
                                 });
-                                toast.dismiss('status-update');
-                                toast.success('Status Updated!');
-                                queryClient.invalidateQueries({
-                                  queryKey: ['query-task-lists'],
+                                toast.dismiss("status-update");
+                                toast.success("Status Updated!");
+                                void queryClient.invalidateQueries({
+                                  queryKey: ["query-task-lists"],
                                 });
                               }}
                               className="cursor-pointer "
@@ -320,19 +317,19 @@ function RouteComponent() {
                           {!item.active && (
                             <DropdownMenuItem
                               onClick={async () => {
-                                toast.loading('Updating Status...', {
-                                  id: 'status-update',
+                                toast.loading("Updating Status...", {
+                                  id: "status-update",
                                 });
                                 await setStatusTaskListFn({
                                   data: {
                                     taskId: item.id,
-                                    status: 'ACTIVE',
+                                    status: "ACTIVE",
                                   },
                                 });
-                                toast.dismiss('status-update');
-                                toast.success('Status Updated!');
-                                queryClient.invalidateQueries({
-                                  queryKey: ['query-task-lists'],
+                                toast.dismiss("status-update");
+                                toast.success("Status Updated!");
+                                void queryClient.invalidateQueries({
+                                  queryKey: ["query-task-lists"],
                                 });
                               }}
                               className="cursor-pointer "
@@ -357,18 +354,18 @@ function RouteComponent() {
                         onOpenChange={() => {
                           setUpdateDialogOpen((prev) => !prev);
                           setActiveId(item.id);
-                          updateForm.setFieldValue('title', item.title);
-                          updateForm.setFieldValue('description', item.description ?? '');
-                          updateForm.setFieldValue('taskListId', item.id);
+                          updateForm.setFieldValue("title", item.title);
+                          updateForm.setFieldValue("description", item.description ?? "");
+                          updateForm.setFieldValue("taskListId", item.id);
                         }}
                       >
                         <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
                           <form
                             onSubmit={(e) => {
                               e.preventDefault();
-                              updateForm.setFieldValue('taskListId', item.id);
-                              updateForm.handleSubmit();
-                              setActiveId('');
+                              updateForm.setFieldValue("taskListId", item.id);
+                              void updateForm.handleSubmit();
+                              setActiveId("");
                             }}
                           >
                             <DialogHeader className="mb-6">
@@ -502,9 +499,9 @@ function RouteComponent() {
                               });
                               setIsLoading(false);
                               setDeleteDialogOpen((prev) => !prev);
-                              setActiveId('');
-                              queryClient.invalidateQueries({
-                                queryKey: ['query-task-lists'],
+                              setActiveId("");
+                              void queryClient.invalidateQueries({
+                                queryKey: ["query-task-lists"],
                               });
                             }}
                           >
@@ -540,14 +537,14 @@ function RouteComponent() {
 
                   <CardContent className="pb-6">
                     <p className="text-sm text-zinc-400 line-clamp-2 min-h-10">
-                      {item.description || 'No description provided.'}
+                      {item.description || "No description provided."}
                     </p>
                   </CardContent>
 
                   <CardFooter className="pt-4 border-t border-zinc-800/50 flex flex-col items-start gap-2 text-[11px] text-zinc-500">
                     <div className="flex items-center gap-2">
                       <CalendarDays className="h-3 w-3" />
-                      <span>Created: {format(new Date(item.createdAt), 'MMM dd, yyyy')}</span>
+                      <span>Created: {format(new Date(item.createdAt), "MMM dd, yyyy")}</span>
                     </div>
                     <div className="flex items-center justify-between w-full">
                       <div className="flex items-center gap-2">
@@ -639,19 +636,19 @@ function RouteComponent() {
                             {item.active && (
                               <DropdownMenuItem
                                 onClick={async () => {
-                                  toast.loading('Updating Status...', {
-                                    id: 'status-update',
+                                  toast.loading("Updating Status...", {
+                                    id: "status-update",
                                   });
                                   await setStatusTaskListFn({
                                     data: {
                                       taskId: item.id,
-                                      status: 'INACTIVE',
+                                      status: "INACTIVE",
                                     },
                                   });
-                                  toast.dismiss('status-update');
-                                  toast.success('Status Updated!');
-                                  queryClient.invalidateQueries({
-                                    queryKey: ['query-task-lists'],
+                                  toast.dismiss("status-update");
+                                  toast.success("Status Updated!");
+                                  void queryClient.invalidateQueries({
+                                    queryKey: ["query-task-lists"],
                                   });
                                 }}
                                 className="cursor-pointer "
@@ -663,19 +660,19 @@ function RouteComponent() {
                             {!item.active && (
                               <DropdownMenuItem
                                 onClick={async () => {
-                                  toast.loading('Updating Status...', {
-                                    id: 'status-update',
+                                  toast.loading("Updating Status...", {
+                                    id: "status-update",
                                   });
                                   await setStatusTaskListFn({
                                     data: {
                                       taskId: item.id,
-                                      status: 'ACTIVE',
+                                      status: "ACTIVE",
                                     },
                                   });
-                                  toast.dismiss('status-update');
-                                  toast.success('Status Updated!');
-                                  queryClient.invalidateQueries({
-                                    queryKey: ['query-task-lists'],
+                                  toast.dismiss("status-update");
+                                  toast.success("Status Updated!");
+                                  void queryClient.invalidateQueries({
+                                    queryKey: ["query-task-lists"],
                                   });
                                 }}
                                 className="cursor-pointer "
@@ -706,8 +703,8 @@ function RouteComponent() {
                             <form
                               onSubmit={(e) => {
                                 e.preventDefault();
-                                updateForm.setFieldValue('taskListId', item.id);
-                                updateForm.handleSubmit();
+                                updateForm.setFieldValue("taskListId", item.id);
+                                void updateForm.handleSubmit();
                               }}
                             >
                               <DialogHeader className="mb-6">
@@ -838,9 +835,9 @@ function RouteComponent() {
                                 });
                                 setIsLoading(false);
                                 setDeleteDialogOpen((prev) => !prev);
-                                setActiveId('');
-                                queryClient.invalidateQueries({
-                                  queryKey: ['query-task-lists'],
+                                setActiveId("");
+                                void queryClient.invalidateQueries({
+                                  queryKey: ["query-task-lists"],
                                 });
                               }}
                             >
@@ -877,14 +874,14 @@ function RouteComponent() {
 
                     <CardContent className="pb-6">
                       <p className="text-sm text-zinc-400 line-clamp-2 min-h-10">
-                        {item.description || 'No description provided.'}
+                        {item.description || "No description provided."}
                       </p>
                     </CardContent>
 
                     <CardFooter className="pt-4 border-t border-zinc-800/50 flex flex-col items-start gap-2 text-[11px] text-zinc-500">
                       <div className="flex items-center gap-2">
                         <CalendarDays className="h-3 w-3" />
-                        <span>Created: {format(new Date(item.createdAt), 'MMM dd, yyyy')}</span>
+                        <span>Created: {format(new Date(item.createdAt), "MMM dd, yyyy")}</span>
                       </div>
                       <div className="flex items-center justify-between w-full">
                         <div className="flex items-center gap-2">

@@ -18,6 +18,8 @@ import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile
 import { Route as DashboardImportRouteImport } from './routes/dashboard/import'
 import { Route as DashboardDiscoverRouteImport } from './routes/dashboard/discover'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as DashboardImagesRouteRouteImport } from './routes/dashboard/images/route'
+import { Route as DashboardAlbumsRouteRouteImport } from './routes/dashboard/albums/route'
 import { Route as ApiChatOpenrouterRouteRouteImport } from './routes/api/chat-openrouter/route'
 import { Route as ApiChatGroqRouteRouteImport } from './routes/api/chat-groq/route'
 import { Route as ApiChatGeminiRouteRouteImport } from './routes/api/chat-gemini/route'
@@ -28,6 +30,7 @@ import { Route as DashboardPostIndexRouteImport } from './routes/dashboard/post/
 import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
 import { Route as DashboardImagesIndexRouteImport } from './routes/dashboard/images/index'
 import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
+import { Route as DashboardAlbumsIndexRouteImport } from './routes/dashboard/albums/index'
 import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
 import { Route as GeneralPostIndexRouteImport } from './routes/_general/post/index'
 import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog/index'
@@ -44,6 +47,7 @@ import { Route as ChatChatChatboxRouteRouteImport } from './routes/_chat/chat/_c
 import { Route as DashboardBlogMdEditorIndexRouteImport } from './routes/dashboard/blog/md-editor/index'
 import { Route as DashboardBlogCreateBlogIndexRouteImport } from './routes/dashboard/blog/create-blog/index'
 import { Route as DashboardBlogSlugIndexRouteImport } from './routes/dashboard/blog/$slug.index'
+import { Route as DashboardAlbumsAlbumIdIndexRouteImport } from './routes/dashboard/albums/$albumId.index'
 import { Route as GeneralPostPostIdIndexRouteImport } from './routes/_general/post/$postId.index'
 import { Route as GeneralBlogMdEditorIndexRouteImport } from './routes/_general/blog/md-editor/index'
 import { Route as GeneralBlogCreateBlogIndexRouteImport } from './routes/_general/blog/create-blog/index'
@@ -98,6 +102,16 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardImagesRouteRoute = DashboardImagesRouteRouteImport.update({
+  id: '/images',
+  path: '/images',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardAlbumsRouteRoute = DashboardAlbumsRouteRouteImport.update({
+  id: '/albums',
+  path: '/albums',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const ApiChatOpenrouterRouteRoute = ApiChatOpenrouterRouteRouteImport.update({
   id: '/api/chat-openrouter',
   path: '/api/chat-openrouter',
@@ -141,14 +155,19 @@ const DashboardItemsIndexRoute = DashboardItemsIndexRouteImport.update({
   getParentRoute: () => DashboardRouteRoute,
 } as any)
 const DashboardImagesIndexRoute = DashboardImagesIndexRouteImport.update({
-  id: '/images/',
-  path: '/images/',
-  getParentRoute: () => DashboardRouteRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardImagesRouteRoute,
 } as any)
 const DashboardBlogIndexRoute = DashboardBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
   getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardAlbumsIndexRoute = DashboardAlbumsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardAlbumsRouteRoute,
 } as any)
 const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
   id: '/admin/',
@@ -233,6 +252,12 @@ const DashboardBlogSlugIndexRoute = DashboardBlogSlugIndexRouteImport.update({
   path: '/blog/$slug/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardAlbumsAlbumIdIndexRoute =
+  DashboardAlbumsAlbumIdIndexRouteImport.update({
+    id: '/$albumId/',
+    path: '/$albumId/',
+    getParentRoute: () => DashboardAlbumsRouteRoute,
+  } as any)
 const GeneralPostPostIdIndexRoute = GeneralPostPostIdIndexRouteImport.update({
   id: '/post/$postId/',
   path: '/post/$postId/',
@@ -298,6 +323,8 @@ export interface FileRoutesByFullPath {
   '/api/chat-gemini': typeof ApiChatGeminiRouteRoute
   '/api/chat-groq': typeof ApiChatGroqRouteRoute
   '/api/chat-openrouter': typeof ApiChatOpenrouterRouteRoute
+  '/dashboard/albums': typeof DashboardAlbumsRouteRouteWithChildren
+  '/dashboard/images': typeof DashboardImagesRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
   '/dashboard/discover': typeof DashboardDiscoverRoute
   '/dashboard/import': typeof DashboardImportRoute
@@ -316,6 +343,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof GeneralBlogIndexRoute
   '/post/': typeof GeneralPostIndexRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
+  '/dashboard/albums/': typeof DashboardAlbumsIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/images/': typeof DashboardImagesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
@@ -327,6 +355,7 @@ export interface FileRoutesByFullPath {
   '/blog/create-blog/': typeof GeneralBlogCreateBlogIndexRoute
   '/blog/md-editor/': typeof GeneralBlogMdEditorIndexRoute
   '/post/$postId/': typeof GeneralPostPostIdIndexRoute
+  '/dashboard/albums/$albumId/': typeof DashboardAlbumsAlbumIdIndexRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
@@ -359,6 +388,7 @@ export interface FileRoutesByTo {
   '/blog': typeof GeneralBlogIndexRoute
   '/post': typeof GeneralPostIndexRoute
   '/dashboard/admin': typeof DashboardAdminIndexRoute
+  '/dashboard/albums': typeof DashboardAlbumsIndexRoute
   '/dashboard/blog': typeof DashboardBlogIndexRoute
   '/dashboard/images': typeof DashboardImagesIndexRoute
   '/dashboard/items': typeof DashboardItemsIndexRoute
@@ -370,6 +400,7 @@ export interface FileRoutesByTo {
   '/blog/create-blog': typeof GeneralBlogCreateBlogIndexRoute
   '/blog/md-editor': typeof GeneralBlogMdEditorIndexRoute
   '/post/$postId': typeof GeneralPostPostIdIndexRoute
+  '/dashboard/albums/$albumId': typeof DashboardAlbumsAlbumIdIndexRoute
   '/dashboard/blog/$slug': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor': typeof DashboardBlogMdEditorIndexRoute
@@ -389,6 +420,8 @@ export interface FileRoutesById {
   '/api/chat-gemini': typeof ApiChatGeminiRouteRoute
   '/api/chat-groq': typeof ApiChatGroqRouteRoute
   '/api/chat-openrouter': typeof ApiChatOpenrouterRouteRoute
+  '/dashboard/albums': typeof DashboardAlbumsRouteRouteWithChildren
+  '/dashboard/images': typeof DashboardImagesRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
   '/dashboard/discover': typeof DashboardDiscoverRoute
   '/dashboard/import': typeof DashboardImportRoute
@@ -407,6 +440,7 @@ export interface FileRoutesById {
   '/_general/blog/': typeof GeneralBlogIndexRoute
   '/_general/post/': typeof GeneralPostIndexRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
+  '/dashboard/albums/': typeof DashboardAlbumsIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/images/': typeof DashboardImagesIndexRoute
   '/dashboard/items/': typeof DashboardItemsIndexRoute
@@ -418,6 +452,7 @@ export interface FileRoutesById {
   '/_general/blog/create-blog/': typeof GeneralBlogCreateBlogIndexRoute
   '/_general/blog/md-editor/': typeof GeneralBlogMdEditorIndexRoute
   '/_general/post/$postId/': typeof GeneralPostPostIdIndexRoute
+  '/dashboard/albums/$albumId/': typeof DashboardAlbumsAlbumIdIndexRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
   '/dashboard/blog/md-editor/': typeof DashboardBlogMdEditorIndexRoute
@@ -436,6 +471,8 @@ export interface FileRouteTypes {
     | '/api/chat-gemini'
     | '/api/chat-groq'
     | '/api/chat-openrouter'
+    | '/dashboard/albums'
+    | '/dashboard/images'
     | '/api/$'
     | '/dashboard/discover'
     | '/dashboard/import'
@@ -454,6 +491,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/post/'
     | '/dashboard/admin/'
+    | '/dashboard/albums/'
     | '/dashboard/blog/'
     | '/dashboard/images/'
     | '/dashboard/items/'
@@ -465,6 +503,7 @@ export interface FileRouteTypes {
     | '/blog/create-blog/'
     | '/blog/md-editor/'
     | '/post/$postId/'
+    | '/dashboard/albums/$albumId/'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
     | '/dashboard/blog/md-editor/'
@@ -497,6 +536,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/post'
     | '/dashboard/admin'
+    | '/dashboard/albums'
     | '/dashboard/blog'
     | '/dashboard/images'
     | '/dashboard/items'
@@ -508,6 +548,7 @@ export interface FileRouteTypes {
     | '/blog/create-blog'
     | '/blog/md-editor'
     | '/post/$postId'
+    | '/dashboard/albums/$albumId'
     | '/dashboard/blog/$slug'
     | '/dashboard/blog/create-blog'
     | '/dashboard/blog/md-editor'
@@ -526,6 +567,8 @@ export interface FileRouteTypes {
     | '/api/chat-gemini'
     | '/api/chat-groq'
     | '/api/chat-openrouter'
+    | '/dashboard/albums'
+    | '/dashboard/images'
     | '/api/$'
     | '/dashboard/discover'
     | '/dashboard/import'
@@ -544,6 +587,7 @@ export interface FileRouteTypes {
     | '/_general/blog/'
     | '/_general/post/'
     | '/dashboard/admin/'
+    | '/dashboard/albums/'
     | '/dashboard/blog/'
     | '/dashboard/images/'
     | '/dashboard/items/'
@@ -555,6 +599,7 @@ export interface FileRouteTypes {
     | '/_general/blog/create-blog/'
     | '/_general/blog/md-editor/'
     | '/_general/post/$postId/'
+    | '/dashboard/albums/$albumId/'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
     | '/dashboard/blog/md-editor/'
@@ -646,6 +691,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/images': {
+      id: '/dashboard/images'
+      path: '/images'
+      fullPath: '/dashboard/images'
+      preLoaderRoute: typeof DashboardImagesRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/albums': {
+      id: '/dashboard/albums'
+      path: '/albums'
+      fullPath: '/dashboard/albums'
+      preLoaderRoute: typeof DashboardAlbumsRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/api/chat-openrouter': {
       id: '/api/chat-openrouter'
       path: '/api/chat-openrouter'
@@ -704,10 +763,10 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/images/': {
       id: '/dashboard/images/'
-      path: '/images'
+      path: '/'
       fullPath: '/dashboard/images/'
       preLoaderRoute: typeof DashboardImagesIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      parentRoute: typeof DashboardImagesRouteRoute
     }
     '/dashboard/blog/': {
       id: '/dashboard/blog/'
@@ -715,6 +774,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/blog/'
       preLoaderRoute: typeof DashboardBlogIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/albums/': {
+      id: '/dashboard/albums/'
+      path: '/'
+      fullPath: '/dashboard/albums/'
+      preLoaderRoute: typeof DashboardAlbumsIndexRouteImport
+      parentRoute: typeof DashboardAlbumsRouteRoute
     }
     '/dashboard/admin/': {
       id: '/dashboard/admin/'
@@ -827,6 +893,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/blog/$slug/'
       preLoaderRoute: typeof DashboardBlogSlugIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/albums/$albumId/': {
+      id: '/dashboard/albums/$albumId/'
+      path: '/$albumId'
+      fullPath: '/dashboard/albums/$albumId/'
+      preLoaderRoute: typeof DashboardAlbumsAlbumIdIndexRouteImport
+      parentRoute: typeof DashboardAlbumsRouteRoute
     }
     '/_general/post/$postId/': {
       id: '/_general/post/$postId/'
@@ -945,7 +1018,33 @@ const GeneralRouteRouteWithChildren = GeneralRouteRoute._addFileChildren(
   GeneralRouteRouteChildren,
 )
 
+interface DashboardAlbumsRouteRouteChildren {
+  DashboardAlbumsIndexRoute: typeof DashboardAlbumsIndexRoute
+  DashboardAlbumsAlbumIdIndexRoute: typeof DashboardAlbumsAlbumIdIndexRoute
+}
+
+const DashboardAlbumsRouteRouteChildren: DashboardAlbumsRouteRouteChildren = {
+  DashboardAlbumsIndexRoute: DashboardAlbumsIndexRoute,
+  DashboardAlbumsAlbumIdIndexRoute: DashboardAlbumsAlbumIdIndexRoute,
+}
+
+const DashboardAlbumsRouteRouteWithChildren =
+  DashboardAlbumsRouteRoute._addFileChildren(DashboardAlbumsRouteRouteChildren)
+
+interface DashboardImagesRouteRouteChildren {
+  DashboardImagesIndexRoute: typeof DashboardImagesIndexRoute
+}
+
+const DashboardImagesRouteRouteChildren: DashboardImagesRouteRouteChildren = {
+  DashboardImagesIndexRoute: DashboardImagesIndexRoute,
+}
+
+const DashboardImagesRouteRouteWithChildren =
+  DashboardImagesRouteRoute._addFileChildren(DashboardImagesRouteRouteChildren)
+
 interface DashboardRouteRouteChildren {
+  DashboardAlbumsRouteRoute: typeof DashboardAlbumsRouteRouteWithChildren
+  DashboardImagesRouteRoute: typeof DashboardImagesRouteRouteWithChildren
   DashboardDiscoverRoute: typeof DashboardDiscoverRoute
   DashboardImportRoute: typeof DashboardImportRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
@@ -954,7 +1053,6 @@ interface DashboardRouteRouteChildren {
   DashboardTaskTrackerTaskListIdRoute: typeof DashboardTaskTrackerTaskListIdRoute
   DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
   DashboardBlogIndexRoute: typeof DashboardBlogIndexRoute
-  DashboardImagesIndexRoute: typeof DashboardImagesIndexRoute
   DashboardItemsIndexRoute: typeof DashboardItemsIndexRoute
   DashboardPostIndexRoute: typeof DashboardPostIndexRoute
   DashboardQuranTrackerIndexRoute: typeof DashboardQuranTrackerIndexRoute
@@ -968,6 +1066,8 @@ interface DashboardRouteRouteChildren {
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardAlbumsRouteRoute: DashboardAlbumsRouteRouteWithChildren,
+  DashboardImagesRouteRoute: DashboardImagesRouteRouteWithChildren,
   DashboardDiscoverRoute: DashboardDiscoverRoute,
   DashboardImportRoute: DashboardImportRoute,
   DashboardProfileRoute: DashboardProfileRoute,
@@ -976,7 +1076,6 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardTaskTrackerTaskListIdRoute: DashboardTaskTrackerTaskListIdRoute,
   DashboardAdminIndexRoute: DashboardAdminIndexRoute,
   DashboardBlogIndexRoute: DashboardBlogIndexRoute,
-  DashboardImagesIndexRoute: DashboardImagesIndexRoute,
   DashboardItemsIndexRoute: DashboardItemsIndexRoute,
   DashboardPostIndexRoute: DashboardPostIndexRoute,
   DashboardQuranTrackerIndexRoute: DashboardQuranTrackerIndexRoute,

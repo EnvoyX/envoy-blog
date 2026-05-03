@@ -1,23 +1,23 @@
-import { IconDownload } from '@tabler/icons-react';
-import { useRouter } from '@tanstack/react-router';
-import { createStore, useSelector } from '@tanstack/react-store';
-import { Eye, EyeOff, Lock, MoreVertical, Trash2, Unlock } from 'lucide-react';
-import { useRef, useState } from 'react';
-import { Masonry } from 'react-plock';
-import { toast } from 'sonner';
-import Lightbox from 'yet-another-react-lightbox';
-import Counter from 'yet-another-react-lightbox/plugins/counter';
-import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
+import { IconDownload } from "@tabler/icons-react";
+import { useRouter } from "@tanstack/react-router";
+import { createStore, useSelector } from "@tanstack/react-store";
+import { AlbumIcon, Eye, EyeOff, Lock, MoreVertical, Trash2, Unlock } from "lucide-react";
+import { useRef, useState } from "react";
+import { Masonry } from "react-plock";
+import { toast } from "sonner";
+import Lightbox from "yet-another-react-lightbox";
+import Counter from "yet-another-react-lightbox/plugins/counter";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 // import Slideshow from 'yet-another-react-lightbox/plugins/slideshow';
 
-import 'yet-another-react-lightbox/styles.css';
-import 'yet-another-react-lightbox/plugins/counter.css';
-import 'yet-another-react-lightbox/plugins/thumbnails.css';
-import Share from 'yet-another-react-lightbox/plugins/share';
-import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
-import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/counter.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import Share from "yet-another-react-lightbox/plugins/share";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -26,16 +26,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { DeleteImageFn, SetPrivateImageFn, SetPublicImageFn } from '@/data/image';
-import { Image } from '@/generated/prisma/client';
+} from "@/components/ui/dropdown-menu";
+import { DeleteImageFn, SetPrivateImageFn, SetPublicImageFn } from "@/data/image";
+import { Image } from "@/generated/prisma/client";
+import { useImageStore } from "@/store/image";
 
 // custom image modal or lightbox
 // import { ImageModal } from './ImageModal';
@@ -43,22 +44,22 @@ import { Image } from '@/generated/prisma/client';
 const photoGalleryStore = createStore({
   isOpen: false,
   isCounterVisible: true,
-  photoId: '',
+  photoId: "",
 });
 
 async function downloadExternalFile(externalUrl: string, fileName: string) {
   try {
     const response = await fetch(externalUrl, {
-      method: 'GET',
-      mode: 'cors',
+      method: "GET",
+      mode: "cors",
     });
 
-    if (!response.ok) throw new Error('Network response was not ok');
+    if (!response.ok) throw new Error("Network response was not ok");
 
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
 
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = fileName;
 
@@ -68,8 +69,8 @@ async function downloadExternalFile(externalUrl: string, fileName: string) {
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   } catch (error) {
-    console.error('External download failed:', error);
-    window.open(externalUrl, '_blank');
+    console.error("External download failed:", error);
+    window.open(externalUrl, "_blank");
   }
 }
 
@@ -78,10 +79,11 @@ export default function PhotoGallery({
   type,
 }: {
   images: Image[];
-  type?: 'public' | 'private';
+  type?: "public" | "private";
 }) {
   const isOpen = useSelector(photoGalleryStore, (state) => state.isOpen);
   const isCounterVisible = useSelector(photoGalleryStore, (state) => state.isCounterVisible);
+  const { toggleDialog } = useImageStore();
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const fullscreenRef = useRef(null);
@@ -96,33 +98,39 @@ export default function PhotoGallery({
 
   async function handleAction(action: string, photoId: string) {
     console.log(`Action: ${action} for Photo: ${photoId}`);
-    if (action === 'public') {
+    if (action === "public") {
       await SetPublicImageFn({
         data: {
           imageId: photoId,
         },
       });
-      toast.success('Photo successfully set to public');
+      toast.success("Photo successfully set to public");
       void router.invalidate();
-    } else if (action === 'private') {
+    } else if (action === "private") {
       await SetPrivateImageFn({
         data: {
           imageId: photoId,
         },
       });
-      toast.success('Photo successfully set to private');
+      toast.success("Photo successfully set to private");
       void router.invalidate();
-    } else if (action === 'delete') {
+    } else if (action === "delete") {
       await DeleteImageFn({
         data: {
           imageId: photoId,
         },
       });
-      toast.success('Photo deleted successfully');
+      photoGalleryStore.setState((prev) => {
+        return {
+          ...prev,
+          isOpen: false,
+        };
+      });
+      toast.success("Photo deleted successfully");
       void router.invalidate();
     }
   }
-  if (type === 'private') {
+  if (type === "private") {
     return (
       <div className="p-4 min-h-screen">
         <Masonry
@@ -184,9 +192,9 @@ export default function PhotoGallery({
             <DialogFooter className="sm:justify-center">
               <Button
                 type="button"
-                variant={'destructive'}
+                variant={"destructive"}
                 className="cursor-pointer"
-                onClick={() => handleAction('delete', photos[index].id)}
+                onClick={() => handleAction("delete", photos[index].id)}
               >
                 Delete Image
               </Button>
@@ -228,17 +236,24 @@ export default function PhotoGallery({
                     ) : (
                       <Eye className="mr-2 h-4 w-4" />
                     )}
-                    {isCounterVisible ? 'Hide slide counter' : 'Show slide counter'}
+                    {isCounterVisible ? "Hide slide counter" : "Show slide counter"}
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleAction('public', photos[index].id)}
+                    onClick={() => toggleDialog("open", photos[index].id, photos[index].url)}
+                    className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
+                  >
+                    <AlbumIcon className="mr-2 h-4 w-4" />
+                    <span>Import to album</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleAction("public", photos[index].id)}
                     className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
                   >
                     <Unlock className="mr-2 h-4 w-4" />
                     <span>Set Public</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleAction('private', photos[index].id)}
+                    onClick={() => handleAction("private", photos[index].id)}
                     className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
                   >
                     <Lock className="mr-2 h-4 w-4" />
@@ -270,7 +285,7 @@ export default function PhotoGallery({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>,
-              'close',
+              "close",
             ],
           }}
           on={{ view: ({ index: currentIndex }) => setIndex(currentIndex) }}
@@ -283,46 +298,46 @@ export default function PhotoGallery({
             showToggle: true,
             hidden: true,
             vignette: false,
-            borderColor: 'transparent',
+            borderColor: "transparent",
           }}
           zoom={{ ref: zoomRef }}
           counter={{
             container: {
               style: {
-                top: 'unset',
-                bottom: '-25px',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                color: 'oklch(69.6% 0.17 162.48)',
-                display: isCounterVisible ? 'flex' : 'none',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 'fit-content',
+                top: "unset",
+                bottom: "-25px",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                color: "oklch(69.6% 0.17 162.48)",
+                display: isCounterVisible ? "flex" : "none",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "fit-content",
               },
             },
           }}
           styles={{
             root: {
-              backgroundColor: 'transparent',
-              backdropFilter: 'blur(24px)',
+              backgroundColor: "transparent",
+              backdropFilter: "blur(24px)",
             },
             container: {
-              backgroundColor: 'transparent',
-              backdropFilter: 'blur(24px)',
+              backgroundColor: "transparent",
+              backdropFilter: "blur(24px)",
             },
             button: {
-              color: 'oklch(69.6% 0.17 162.48)',
+              color: "oklch(69.6% 0.17 162.48)",
             },
             thumbnailsContainer: {
-              backgroundColor: 'transparent',
-              backdropFilter: 'blur(24px)',
+              backgroundColor: "transparent",
+              backdropFilter: "blur(24px)",
             },
             thumbnailsTrack: {
-              backgroundColor: 'transparent',
+              backgroundColor: "transparent",
             },
             thumbnail: {
-              backgroundColor: 'transparent',
+              backgroundColor: "transparent",
             },
           }}
           slides={photos.map((photo) => {
@@ -404,7 +419,7 @@ export default function PhotoGallery({
                   ) : (
                     <Eye className="mr-2 h-4 w-4" />
                   )}
-                  {isCounterVisible ? 'Hide slide counter' : 'Show slide counter'}
+                  {isCounterVisible ? "Hide slide counter" : "Show slide counter"}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => downloadExternalFile(photos[index].url, photos[index].id)}
@@ -415,7 +430,7 @@ export default function PhotoGallery({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>,
-            'close',
+            "close",
           ],
         }}
         on={{ view: ({ index: currentIndex }) => setIndex(currentIndex) }}
@@ -428,43 +443,43 @@ export default function PhotoGallery({
           showToggle: true,
           hidden: true,
           vignette: false,
-          borderColor: 'transparent',
+          borderColor: "transparent",
         }}
         zoom={{ ref: zoomRef }}
         counter={{
           container: {
             style: {
-              top: 'unset',
-              bottom: '-25px',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              color: 'oklch(69.6% 0.17 162.48)',
-              display: isCounterVisible ? 'flex' : 'none',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: 'fit-content',
+              top: "unset",
+              bottom: "-25px",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              color: "oklch(69.6% 0.17 162.48)",
+              display: isCounterVisible ? "flex" : "none",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "fit-content",
             },
           },
         }}
         styles={{
           root: {
-            backgroundColor: 'transparent',
-            backdropFilter: 'blur(24px)',
+            backgroundColor: "transparent",
+            backdropFilter: "blur(24px)",
           },
           container: {
-            backgroundColor: 'transparent',
-            backdropFilter: 'blur(24px)',
+            backgroundColor: "transparent",
+            backdropFilter: "blur(24px)",
           },
           button: {
-            color: 'oklch(69.6% 0.17 162.48)',
+            color: "oklch(69.6% 0.17 162.48)",
           },
           thumbnailsContainer: {
             // backgroundColor: 'transparent',
             // backdropFilter: 'blur(24px)',
           },
           thumbnail: {
-            backgroundColor: 'transparent',
+            backgroundColor: "transparent",
           },
         }}
         slides={photos.map((photo) => {

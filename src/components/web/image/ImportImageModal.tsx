@@ -1,11 +1,10 @@
-import { useForm } from '@tanstack/react-form';
-import { useRouter } from '@tanstack/react-router';
-import { useSelector } from '@tanstack/react-store';
-import { ImageIcon, Loader2, Plus, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useForm } from "@tanstack/react-form";
+import { useRouter } from "@tanstack/react-router";
+import { ImageIcon, Loader2, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselContent,
@@ -13,35 +12,43 @@ import {
   CarouselNext,
   CarouselPrevious,
   type CarouselApi,
-} from '@/components/ui/carousel';
+} from "@/components/ui/carousel";
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
+  // DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { ImportImagesFn } from '@/data/image';
-import { imageModalStore } from '@/routes/dashboard/images';
-import { imageSchema } from '@/schemas/image';
+  // DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { ImportImagesFn } from "@/data/image";
+import { imageSchema } from "@/schemas/image";
+import { useAlbumStore } from "@/store/album";
+import { useQuery } from "@tanstack/react-query";
+import { getAlbumByIdFn, ImportImagesToAlbumFn } from "@/data/album";
 
 export function ImportImageModal() {
   const router = useRouter();
-  const [imageUrl, setImageUrl] = useState('');
+  const { isImageImportDialogOpen, onOpenDialogChange, toggleDialog, currentAlbumId } =
+    useAlbumStore();
+  const { data: album } = useQuery({
+    queryKey: ["album", currentAlbumId],
+    queryFn: async () => {
+      const album = await getAlbumByIdFn({
+        data: {
+          albumId: currentAlbumId,
+        },
+      });
+      return album;
+    },
+    enabled: currentAlbumId ? true : false,
+  });
+  const [imageUrl, setImageUrl] = useState("");
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   useEffect(() => {
@@ -50,7 +57,7 @@ export function ImportImageModal() {
     }
     // setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
-    api.on('select', () => {
+    api.on("select", () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
@@ -66,51 +73,70 @@ export function ImportImageModal() {
     },
     onSubmit: async ({ value }) => {
       console.log(value);
-      await ImportImagesFn({
-        data: {
-          images: value.image,
-          published: value.published,
-        },
-      });
-      toast.success('Images imported successfully');
-      form.reset();
-      void router.invalidate();
+      if (currentAlbumId) {
+        await ImportImagesToAlbumFn({
+          data: {
+            albumId: currentAlbumId,
+            images: value.image,
+            published: value.published,
+          },
+        });
+        toast.success("Images imported successfully", {
+          description: `Album | ${album?.name}`,
+        });
+        form.reset();
+        void router.invalidate();
+        toggleDialog("close", "");
+      } else if (!currentAlbumId) {
+        await ImportImagesFn({
+          data: {
+            images: value.image,
+            published: value.published,
+          },
+        });
+        toast.success("Images imported successfully");
+        form.reset();
+        void router.invalidate();
+        toggleDialog("close", "");
+      }
     },
   });
-  const isOpen = useSelector(imageModalStore, (state) => state.isOpen);
-  const isImportDialog = useSelector(imageModalStore, (state) => state.isImportDialog);
 
   return (
     <Dialog
-      open={isOpen && isImportDialog}
+      open={isImageImportDialogOpen}
       onOpenChange={(open) => {
-        imageModalStore.setState((prev) => ({
-          ...prev,
-          isOpen: open,
-          isImportDialog: !prev.isImportDialog,
-        }));
+        onOpenDialogChange("import", open);
       }}
     >
-      <DialogTrigger asChild>
-        <Button
-          size="lg"
-          className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
-        >
-          <div className="flex items-center gap-2">
-            <Plus className="size-5 group-hover:rotate-90 transition-transform duration-300" />
-            <span className="font-semibold tracking-tight">Import Images</span>
-          </div>
-        </Button>
-      </DialogTrigger>
-
       <DialogContent className="sm:max-w-6xl p-0 overflow-hidden border-zinc-800 bg-zinc-950">
         <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
-          <div className="w-full md:w-2/5 p-8 border-r border-zinc-800/50 bg-zinc-900/20">
+          <div className="w-full md:w-2/5 p-8 border-r border-zinc-800/50 bg-zinc-900/20 overflow-y-auto">
             <DialogHeader className="mb-8">
-              <div className="bg-emerald-500/10 w-fit p-2 rounded-lg mb-4">
-                <ImageIcon className="text-emerald-500 size-6" />
-              </div>
+              <header className="flex max-sm:flex-col sm:justify-between items-center">
+                <div className="bg-emerald-500/10 w-fit p-2 rounded-lg mb-4">
+                  <ImageIcon className="text-emerald-500 size-6" />
+                </div>
+                {album?.coverImageUrl && (
+                  <div className="max-sm:hidden size-16 relative group aspect-square overflow-hidden rounded-2xl border shadow-2xl">
+                    <img
+                      src={
+                        album?.coverImageUrl ?? "https://placehold.co/600x800?text=Invalid+Image"
+                      }
+                      alt={album?.name}
+                      className="object-cover transition-transform duration-500 group-hover:scale-105 "
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "https://placehold.co/600x800?text=Invalid+Image";
+                      }}
+                    />
+                  </div>
+                )}
+              </header>
               <DialogTitle className="text-2xl font-bold text-zinc-100">Image Import</DialogTitle>
+              <h1 className="text-xl font-bold text-zinc-100">
+                {currentAlbumId && ` Album | ${album?.name}`}
+              </h1>
               <DialogDescription className="text-zinc-400">
                 Configure your batch upload and visibility settings.
               </DialogDescription>
@@ -130,9 +156,9 @@ export function ImportImageModal() {
                   <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30">
                     <div className="space-y-0.5">
                       <Label className="text-sm font-medium text-zinc-200">
-                        Visibility:{' '}
-                        <span className={field.state.value ? 'text-emerald-400' : 'text-zinc-400'}>
-                          {field.state.value ? 'Public' : 'Private'}
+                        Visibility:{" "}
+                        <span className={field.state.value ? "text-emerald-400" : "text-zinc-400"}>
+                          {field.state.value ? "Public" : "Private"}
                         </span>
                       </Label>
                       <p className="text-xs text-zinc-500">Visible to all users in the gallery</p>
@@ -193,7 +219,7 @@ export function ImportImageModal() {
                           e.stopPropagation();
 
                           field.pushValue(imageUrl);
-                          setImageUrl('');
+                          setImageUrl("");
                         }}
                       >
                         <Plus className="mr-2 size-4" /> Add Another URL
@@ -235,7 +261,7 @@ export function ImportImageModal() {
             <form.Subscribe
               selector={(state) => state.values.image}
               children={(images) => {
-                const validImages = images?.filter((img) => img && img.trim() !== '') || [];
+                const validImages = images?.filter((img) => img && img.trim() !== "") || [];
 
                 if (validImages.length === 0) {
                   return (
@@ -264,7 +290,7 @@ export function ImportImageModal() {
                                 className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 "
                                 onError={(e) => {
                                   (e.target as HTMLImageElement).src =
-                                    'https://placehold.co/600x800?text=Invalid+Image';
+                                    "https://placehold.co/600x800?text=Invalid+Image";
                                 }}
                               />
                               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

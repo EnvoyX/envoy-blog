@@ -1,17 +1,17 @@
-import { fileURLToPath, URL } from 'url';
+import { fileURLToPath, URL } from "url";
 
-import contentCollections from '@content-collections/vite';
-import tailwindcss from '@tailwindcss/vite';
-import { devtools } from '@tanstack/devtools-vite';
-import { tanstackStart } from '@tanstack/react-start/plugin/vite';
-import viteReact from '@vitejs/plugin-react';
-import { nitro } from 'nitro/vite';
-import { defineConfig } from 'vite-plus';
+import contentCollections from "@content-collections/vite";
+import tailwindcss from "@tailwindcss/vite";
+import { devtools } from "@tanstack/devtools-vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
+import { defineConfig } from "vite-plus";
+import { nitro } from "nitro/vite";
 // import netlify from '@netlify/vite-plugin-tanstack-start'
 
 const config = defineConfig({
   staged: {
-    '*': 'vp check --fix',
+    "*": "vp check --fix",
   },
   lint: { options: { typeAware: true, typeCheck: true } },
   fmt: {
@@ -21,7 +21,7 @@ const config = defineConfig({
 
     // Style Preferences
     singleQuote: true,
-    trailingComma: 'all',
+    trailingComma: "all",
     semi: true,
     bracketSpacing: true,
 
@@ -30,19 +30,19 @@ const config = defineConfig({
     sortPackageJson: true,
 
     // Tailwind CSS Native Support
-    tailwindAttributes: ['className', 'class', 'containerClassName'],
-    tailwindFunctions: ['clsx', 'twMerge', 'cn'],
+    tailwindAttributes: ["className", "class", "containerClassName"],
+    tailwindFunctions: ["clsx", "twMerge", "cn"],
 
     // JSDoc Formatting
     jsdoc: {
-      commentLineStrategy: 'singleLine',
+      commentLineStrategy: "singleLine",
       addDefaultToDescription: true,
       verticalAlignment: true,
     },
   },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
     tsconfigPaths: true,
   },

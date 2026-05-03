@@ -120,7 +120,8 @@ model Image {
   id  String @id @default(cuid())
   url String
 
-  shortPost   ShortPost? @relation(fields: [shortPostId], references: [id], onDelete: Cascade)
+  // keep image doesn't deleted if shortpost is removed
+  shortPost   ShortPost? @relation(fields: [shortPostId], references: [id])
   shortPostId String?
 
   albums Album[]
