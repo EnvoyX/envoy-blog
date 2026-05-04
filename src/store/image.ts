@@ -6,6 +6,8 @@ export const useImageStore = create(
     combine(
       {
         isImportToAlbumModalOpen: false,
+        isCounterVisible: true,
+        isCaptionVisible: false,
         imageId: "",
         imageUrl: "",
       },
@@ -40,6 +42,14 @@ export const useImageStore = create(
               isImportToAlbumModalOpen: false,
             };
           }),
+        toggleCounter: () =>
+          set((prev) => ({
+            isCounterVisible: !prev.isCounterVisible,
+          })),
+        toggleCaptions: () =>
+          set((prev) => ({
+            isCaptionVisible: !prev.isCaptionVisible,
+          })),
       }),
     ),
     {

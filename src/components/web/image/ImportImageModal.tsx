@@ -48,7 +48,6 @@ export function ImportImageModal() {
     },
     enabled: currentAlbumId ? true : false,
   });
-  const [imageUrl, setImageUrl] = useState("");
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   useEffect(() => {
@@ -63,7 +62,7 @@ export function ImportImageModal() {
   }, [api]);
   const form = useForm({
     defaultValues: {
-      image: [] as string[],
+      image: [] as { url: string; title: string; description: string }[],
       published: false,
     },
     validators: {
@@ -77,7 +76,7 @@ export function ImportImageModal() {
         await ImportImagesToAlbumFn({
           data: {
             albumId: currentAlbumId,
-            images: value.image,
+            image: value.image,
             published: value.published,
           },
         });
@@ -90,7 +89,7 @@ export function ImportImageModal() {
       } else if (!currentAlbumId) {
         await ImportImagesFn({
           data: {
-            images: value.image,
+            image: value.image,
             published: value.published,
           },
         });
@@ -182,30 +181,62 @@ export function ImportImageModal() {
                       {field.state.value.map((_, i) => (
                         <form.Field key={i} name={`image[${i}]`}>
                           {(subField) => (
-                            <div className="group flex items-center gap-2 animate-in fade-in slide-in-from-left-2 duration-300">
-                              <div className="relative flex-1">
-                                <Input
-                                  placeholder="https://..."
-                                  className="bg-zinc-900! border-zinc-800 focus-visible:ring-emerald-500/50 rounded-lg h-10 transition-all"
-                                  value={subField.state.value}
-                                  onChange={(e) => {
-                                    subField.handleChange(e.target.value);
-                                    setImageUrl(e.target.value);
+                            <div className="flex flex-col gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900/30 animate-in fade-in slide-in-from-left-2">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">
+                                  Image {i + 1}
+                                </span>
+                                <Button
+                                  onClick={(e) => {
+                                    field.removeValue(i);
+                                    e.preventDefault();
                                   }}
+                                  variant="ghost"
+                                  size="icon"
+                                  className="text-zinc-500 hover:text-red-400 hover:bg-red-400/10 h-6 w-6"
+                                >
+                                  <Trash2 className="size-3" />
+                                </Button>
+                              </div>
+
+                              <div className="space-y-1">
+                                <Input
+                                  placeholder="Image URL (https://...)"
+                                  className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
+                                  value={subField.state.value.url}
+                                  onChange={(e) =>
+                                    subField.handleChange({
+                                      ...subField.state.value,
+                                      url: e.target.value,
+                                    })
+                                  }
                                 />
                               </div>
-                              <Button
-                                onClick={(e) => {
-                                  field.removeValue(i);
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                }}
-                                variant="ghost"
-                                size="icon"
-                                className="text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-colors cursor-pointer"
-                              >
-                                <Trash2 className="size-4" />
-                              </Button>
+
+                              <div className="grid grid-cols-2 gap-2">
+                                <Input
+                                  placeholder="Title"
+                                  className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
+                                  value={subField.state.value.title}
+                                  onChange={(e) =>
+                                    subField.handleChange({
+                                      ...subField.state.value,
+                                      title: e.target.value,
+                                    })
+                                  }
+                                />
+                                <Input
+                                  placeholder="Description"
+                                  className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
+                                  value={subField.state.value.description}
+                                  onChange={(e) =>
+                                    subField.handleChange({
+                                      ...subField.state.value,
+                                      description: e.target.value,
+                                    })
+                                  }
+                                />
+                              </div>
                             </div>
                           )}
                         </form.Field>
@@ -218,8 +249,11 @@ export function ImportImageModal() {
                           e.preventDefault();
                           e.stopPropagation();
 
-                          field.pushValue(imageUrl);
-                          setImageUrl("");
+                          field.pushValue({
+                            url: "",
+                            title: "",
+                            description: "",
+                          });
                         }}
                       >
                         <Plus className="mr-2 size-4" /> Add Another URL
@@ -261,7 +295,7 @@ export function ImportImageModal() {
             <form.Subscribe
               selector={(state) => state.values.image}
               children={(images) => {
-                const validImages = images?.filter((img) => img && img.trim() !== "") || [];
+                const validImages = images?.filter((img) => img.url && img.url.trim() !== "") || [];
 
                 if (validImages.length === 0) {
                   return (
@@ -285,7 +319,7 @@ export function ImportImageModal() {
                           <CarouselItem key={index}>
                             <div className="relative group aspect-4/5 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl">
                               <img
-                                src={src}
+                                src={src.url}
                                 alt={`Preview ${index + 1}`}
                                 className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 "
                                 onError={(e) => {

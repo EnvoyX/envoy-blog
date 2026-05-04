@@ -155,6 +155,8 @@ export type AlbumScalarFieldEnum = (typeof AlbumScalarFieldEnum)[keyof typeof Al
 export const ImageScalarFieldEnum = {
   id: 'id',
   url: 'url',
+  title: 'title',
+  description: 'description',
   shortPostId: 'shortPostId',
   userId: 'userId',
   published: 'published',

@@ -27,6 +27,8 @@ export type AggregateImage = {
 export type ImageMinAggregateOutputType = {
   id: string | null
   url: string | null
+  title: string | null
+  description: string | null
   shortPostId: string | null
   userId: string | null
   published: boolean | null
@@ -37,6 +39,8 @@ export type ImageMinAggregateOutputType = {
 export type ImageMaxAggregateOutputType = {
   id: string | null
   url: string | null
+  title: string | null
+  description: string | null
   shortPostId: string | null
   userId: string | null
   published: boolean | null
@@ -47,6 +51,8 @@ export type ImageMaxAggregateOutputType = {
 export type ImageCountAggregateOutputType = {
   id: number
   url: number
+  title: number
+  description: number
   shortPostId: number
   userId: number
   published: number
@@ -59,6 +65,8 @@ export type ImageCountAggregateOutputType = {
 export type ImageMinAggregateInputType = {
   id?: true
   url?: true
+  title?: true
+  description?: true
   shortPostId?: true
   userId?: true
   published?: true
@@ -69,6 +77,8 @@ export type ImageMinAggregateInputType = {
 export type ImageMaxAggregateInputType = {
   id?: true
   url?: true
+  title?: true
+  description?: true
   shortPostId?: true
   userId?: true
   published?: true
@@ -79,6 +89,8 @@ export type ImageMaxAggregateInputType = {
 export type ImageCountAggregateInputType = {
   id?: true
   url?: true
+  title?: true
+  description?: true
   shortPostId?: true
   userId?: true
   published?: true
@@ -162,6 +174,8 @@ export type ImageGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type ImageGroupByOutputType = {
   id: string
   url: string
+  title: string | null
+  description: string | null
   shortPostId: string | null
   userId: string
   published: boolean
@@ -193,6 +207,8 @@ export type ImageWhereInput = {
   NOT?: Prisma.ImageWhereInput | Prisma.ImageWhereInput[]
   id?: Prisma.StringFilter<"Image"> | string
   url?: Prisma.StringFilter<"Image"> | string
+  title?: Prisma.StringNullableFilter<"Image"> | string | null
+  description?: Prisma.StringNullableFilter<"Image"> | string | null
   shortPostId?: Prisma.StringNullableFilter<"Image"> | string | null
   userId?: Prisma.StringFilter<"Image"> | string
   published?: Prisma.BoolFilter<"Image"> | boolean
@@ -206,6 +222,8 @@ export type ImageWhereInput = {
 export type ImageOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   shortPostId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   published?: Prisma.SortOrder
@@ -222,6 +240,8 @@ export type ImageWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ImageWhereInput[]
   NOT?: Prisma.ImageWhereInput | Prisma.ImageWhereInput[]
   url?: Prisma.StringFilter<"Image"> | string
+  title?: Prisma.StringNullableFilter<"Image"> | string | null
+  description?: Prisma.StringNullableFilter<"Image"> | string | null
   shortPostId?: Prisma.StringNullableFilter<"Image"> | string | null
   userId?: Prisma.StringFilter<"Image"> | string
   published?: Prisma.BoolFilter<"Image"> | boolean
@@ -235,6 +255,8 @@ export type ImageWhereUniqueInput = Prisma.AtLeast<{
 export type ImageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   shortPostId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   published?: Prisma.SortOrder
@@ -251,6 +273,8 @@ export type ImageScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ImageScalarWhereWithAggregatesInput | Prisma.ImageScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Image"> | string
   url?: Prisma.StringWithAggregatesFilter<"Image"> | string
+  title?: Prisma.StringNullableWithAggregatesFilter<"Image"> | string | null
+  description?: Prisma.StringNullableWithAggregatesFilter<"Image"> | string | null
   shortPostId?: Prisma.StringNullableWithAggregatesFilter<"Image"> | string | null
   userId?: Prisma.StringWithAggregatesFilter<"Image"> | string
   published?: Prisma.BoolWithAggregatesFilter<"Image"> | boolean
@@ -261,6 +285,8 @@ export type ImageScalarWhereWithAggregatesInput = {
 export type ImageCreateInput = {
   id?: string
   url: string
+  title?: string | null
+  description?: string | null
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -272,6 +298,8 @@ export type ImageCreateInput = {
 export type ImageUncheckedCreateInput = {
   id?: string
   url: string
+  title?: string | null
+  description?: string | null
   shortPostId?: string | null
   userId: string
   published?: boolean
@@ -283,6 +311,8 @@ export type ImageUncheckedCreateInput = {
 export type ImageUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -294,6 +324,8 @@ export type ImageUpdateInput = {
 export type ImageUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -305,6 +337,8 @@ export type ImageUncheckedUpdateInput = {
 export type ImageCreateManyInput = {
   id?: string
   url: string
+  title?: string | null
+  description?: string | null
   shortPostId?: string | null
   userId: string
   published?: boolean
@@ -315,6 +349,8 @@ export type ImageCreateManyInput = {
 export type ImageUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -323,6 +359,8 @@ export type ImageUpdateManyMutationInput = {
 export type ImageUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -343,6 +381,8 @@ export type ImageOrderByRelationAggregateInput = {
 export type ImageCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   shortPostId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   published?: Prisma.SortOrder
@@ -353,6 +393,8 @@ export type ImageCountOrderByAggregateInput = {
 export type ImageMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   shortPostId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   published?: Prisma.SortOrder
@@ -363,6 +405,8 @@ export type ImageMaxOrderByAggregateInput = {
 export type ImageMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   shortPostId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   published?: Prisma.SortOrder
@@ -495,6 +539,8 @@ export type ImageUncheckedUpdateManyWithoutUserNestedInput = {
 export type ImageCreateWithoutShortPostInput = {
   id?: string
   url: string
+  title?: string | null
+  description?: string | null
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -505,6 +551,8 @@ export type ImageCreateWithoutShortPostInput = {
 export type ImageUncheckedCreateWithoutShortPostInput = {
   id?: string
   url: string
+  title?: string | null
+  description?: string | null
   userId: string
   published?: boolean
   createdAt?: Date | string
@@ -544,6 +592,8 @@ export type ImageScalarWhereInput = {
   NOT?: Prisma.ImageScalarWhereInput | Prisma.ImageScalarWhereInput[]
   id?: Prisma.StringFilter<"Image"> | string
   url?: Prisma.StringFilter<"Image"> | string
+  title?: Prisma.StringNullableFilter<"Image"> | string | null
+  description?: Prisma.StringNullableFilter<"Image"> | string | null
   shortPostId?: Prisma.StringNullableFilter<"Image"> | string | null
   userId?: Prisma.StringFilter<"Image"> | string
   published?: Prisma.BoolFilter<"Image"> | boolean
@@ -554,6 +604,8 @@ export type ImageScalarWhereInput = {
 export type ImageCreateWithoutAlbumsInput = {
   id?: string
   url: string
+  title?: string | null
+  description?: string | null
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -564,6 +616,8 @@ export type ImageCreateWithoutAlbumsInput = {
 export type ImageUncheckedCreateWithoutAlbumsInput = {
   id?: string
   url: string
+  title?: string | null
+  description?: string | null
   shortPostId?: string | null
   userId: string
   published?: boolean
@@ -595,6 +649,8 @@ export type ImageUpdateManyWithWhereWithoutAlbumsInput = {
 export type ImageCreateWithoutUserInput = {
   id?: string
   url: string
+  title?: string | null
+  description?: string | null
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -605,6 +661,8 @@ export type ImageCreateWithoutUserInput = {
 export type ImageUncheckedCreateWithoutUserInput = {
   id?: string
   url: string
+  title?: string | null
+  description?: string | null
   shortPostId?: string | null
   published?: boolean
   createdAt?: Date | string
@@ -641,6 +699,8 @@ export type ImageUpdateManyWithWhereWithoutUserInput = {
 export type ImageCreateManyShortPostInput = {
   id?: string
   url: string
+  title?: string | null
+  description?: string | null
   userId: string
   published?: boolean
   createdAt?: Date | string
@@ -650,6 +710,8 @@ export type ImageCreateManyShortPostInput = {
 export type ImageUpdateWithoutShortPostInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -660,6 +722,8 @@ export type ImageUpdateWithoutShortPostInput = {
 export type ImageUncheckedUpdateWithoutShortPostInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -670,6 +734,8 @@ export type ImageUncheckedUpdateWithoutShortPostInput = {
 export type ImageUncheckedUpdateManyWithoutShortPostInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -679,6 +745,8 @@ export type ImageUncheckedUpdateManyWithoutShortPostInput = {
 export type ImageUpdateWithoutAlbumsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -689,6 +757,8 @@ export type ImageUpdateWithoutAlbumsInput = {
 export type ImageUncheckedUpdateWithoutAlbumsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -699,6 +769,8 @@ export type ImageUncheckedUpdateWithoutAlbumsInput = {
 export type ImageUncheckedUpdateManyWithoutAlbumsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -709,6 +781,8 @@ export type ImageUncheckedUpdateManyWithoutAlbumsInput = {
 export type ImageCreateManyUserInput = {
   id?: string
   url: string
+  title?: string | null
+  description?: string | null
   shortPostId?: string | null
   published?: boolean
   createdAt?: Date | string
@@ -718,6 +792,8 @@ export type ImageCreateManyUserInput = {
 export type ImageUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -728,6 +804,8 @@ export type ImageUpdateWithoutUserInput = {
 export type ImageUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -738,6 +816,8 @@ export type ImageUncheckedUpdateWithoutUserInput = {
 export type ImageUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -778,6 +858,8 @@ export type ImageCountOutputTypeCountAlbumsArgs<ExtArgs extends runtime.Types.Ex
 export type ImageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   url?: boolean
+  title?: boolean
+  description?: boolean
   shortPostId?: boolean
   userId?: boolean
   published?: boolean
@@ -792,6 +874,8 @@ export type ImageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type ImageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   url?: boolean
+  title?: boolean
+  description?: boolean
   shortPostId?: boolean
   userId?: boolean
   published?: boolean
@@ -804,6 +888,8 @@ export type ImageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type ImageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   url?: boolean
+  title?: boolean
+  description?: boolean
   shortPostId?: boolean
   userId?: boolean
   published?: boolean
@@ -816,6 +902,8 @@ export type ImageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type ImageSelectScalar = {
   id?: boolean
   url?: boolean
+  title?: boolean
+  description?: boolean
   shortPostId?: boolean
   userId?: boolean
   published?: boolean
@@ -823,7 +911,7 @@ export type ImageSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "url" | "shortPostId" | "userId" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["image"]>
+export type ImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "url" | "title" | "description" | "shortPostId" | "userId" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["image"]>
 export type ImageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   shortPost?: boolean | Prisma.Image$shortPostArgs<ExtArgs>
   albums?: boolean | Prisma.Image$albumsArgs<ExtArgs>
@@ -849,6 +937,8 @@ export type $ImagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     url: string
+    title: string | null
+    description: string | null
     shortPostId: string | null
     userId: string
     published: boolean
@@ -1282,6 +1372,8 @@ export interface Prisma__ImageClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface ImageFieldRefs {
   readonly id: Prisma.FieldRef<"Image", 'String'>
   readonly url: Prisma.FieldRef<"Image", 'String'>
+  readonly title: Prisma.FieldRef<"Image", 'String'>
+  readonly description: Prisma.FieldRef<"Image", 'String'>
   readonly shortPostId: Prisma.FieldRef<"Image", 'String'>
   readonly userId: Prisma.FieldRef<"Image", 'String'>
   readonly published: Prisma.FieldRef<"Image", 'Boolean'>
