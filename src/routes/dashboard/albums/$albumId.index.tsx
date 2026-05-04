@@ -41,7 +41,7 @@ export const Route = createFileRoute("/dashboard/albums/$albumId/")({
   }),
 });
 
-export default function AlbumPage() {
+function AlbumPage() {
   const album = Route.useLoaderData();
   const { albumId } = Route.useParams();
   const navigate = useNavigate();

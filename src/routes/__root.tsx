@@ -1,28 +1,30 @@
-import { aiDevtoolsPlugin } from '@tanstack/react-ai-devtools';
-import { TanStackDevtools } from '@tanstack/react-devtools';
-import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
-import { HotkeysProvider, useHotkey } from '@tanstack/react-hotkeys';
-import { hotkeysDevtoolsPlugin } from '@tanstack/react-hotkeys-devtools';
-import { pacerDevtoolsPlugin } from '@tanstack/react-pacer-devtools';
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
-import { HeadContent, Scripts, createRootRoute, useRouter } from '@tanstack/react-router';
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
+import { aiDevtoolsPlugin } from "@tanstack/react-ai-devtools";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
+import { HotkeysProvider, useHotkey } from "@tanstack/react-hotkeys";
+import { hotkeysDevtoolsPlugin } from "@tanstack/react-hotkeys-devtools";
+import { pacerDevtoolsPlugin } from "@tanstack/react-pacer-devtools";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
+import { HeadContent, Scripts, createRootRoute, useRouter } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { Toaster } from "@/components/ui/sonner";
+import { QueryProvider } from "@/components/web/query-provider";
+import { ThemeProvider } from "@/lib/theme-provider";
+import { LenisRef, ReactLenis } from "lenis/react";
+import { useRef } from "react";
 
-import { Toaster } from '@/components/ui/sonner';
-import { QueryProvider } from '@/components/web/query-provider';
-import { ThemeProvider } from '@/lib/theme-provider';
-
-import appCss from '../styles.css?url';
+import appCss from "../styles.css?url";
+import "lenis/dist/lenis.css";
 
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       {
-        charSet: 'utf-8',
+        charSet: "utf-8",
       },
       {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
       },
       {
         title: `Envoy's TanStack Start Blog`,
@@ -30,16 +32,16 @@ export const Route = createRootRoute({
     ],
     links: [
       {
-        rel: 'stylesheet',
+        rel: "stylesheet",
         href: appCss,
       },
       {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap',
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap",
       },
       {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;500;600;700&display=swap',
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;500;600;700&display=swap",
       },
     ],
   }),
@@ -48,55 +50,56 @@ export const Route = createRootRoute({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  // Hotkeys
   const router = useRouter();
+  const lenisRef = useRef<LenisRef>(null);
+  // Hotkeys
   useHotkey(
-    'Alt+H',
+    "Alt+H",
     () => {
-      router.navigate({
-        to: '/',
+      void router.navigate({
+        to: "/",
       });
     },
     {
       meta: {
-        name: 'Home Shortcut',
-        description: 'Shortcut hotkeys to home page',
+        name: "Home Shortcut",
+        description: "Shortcut hotkeys to home page",
       },
     },
   );
   useHotkey(
-    'Alt+S',
+    "Alt+S",
     () => {
-      router.navigate({
-        to: '/dashboard',
+      void router.navigate({
+        to: "/dashboard",
       });
     },
     {
       meta: {
-        name: 'Dashboard Shortcut',
-        description: 'Shortcut hotkeys to dashboard page',
+        name: "Dashboard Shortcut",
+        description: "Shortcut hotkeys to dashboard page",
       },
     },
   );
   useHotkey(
-    'Alt+1',
+    "Alt+1",
     () => {
-      router.navigate({
-        to: '/dashboard/task-tracker',
+      void router.navigate({
+        to: "/dashboard/task-tracker",
       });
     },
     {
       meta: {
-        name: 'Task Tracker Shortcut',
-        description: 'Shortcut hotkeys to task tracker page',
+        name: "Task Tracker Shortcut",
+        description: "Shortcut hotkeys to task tracker page",
       },
     },
   );
   useHotkey(
-    'Alt+2',
+    "Alt+2",
     () => {
-      router.navigate({
-        to: '/dashboard/quran-tracker',
+      void router.navigate({
+        to: "/dashboard/quran-tracker",
       });
     },
     {
@@ -107,10 +110,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     },
   );
   useHotkey(
-    'Alt+3',
+    "Alt+3",
     () => {
-      router.navigate({
-        to: '/dashboard/blog',
+      void router.navigate({
+        to: "/dashboard/blog",
       });
     },
     {
@@ -121,10 +124,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     },
   );
   useHotkey(
-    'Alt+4',
+    "Alt+4",
     () => {
-      router.navigate({
-        to: '/blog',
+      void router.navigate({
+        to: "/blog",
       });
     },
     {
@@ -151,29 +154,41 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               hotkey: { preventDefault: true },
               hotkeySequence: { timeout: 1500 },
               hotkeyRecorder: {
-                onCancel: () => console.warn('Recording cancelled'),
+                onCancel: () => console.warn("Recording cancelled"),
               },
             }}
           >
             <ThemeProvider defaultTheme="dark">
+              <ReactLenis
+                root
+                options={{
+                  autoRaf: true,
+                  autoToggle: true,
+                  anchors: true,
+                  allowNestedScroll: true,
+                  naiveDimensions: true,
+                  stopInertiaOnNavigate: true,
+                }}
+                ref={lenisRef}
+              />
               {children}
               <Toaster closeButton position="top-center" />
             </ThemeProvider>
             <TanStackDevtools
               config={{
-                position: 'bottom-right',
+                position: "bottom-right",
                 defaultOpen: true,
                 hideUntilHover: true,
-                panelLocation: 'bottom',
+                panelLocation: "bottom",
               }}
               plugins={[
                 {
-                  name: 'TanStack Query',
+                  name: "TanStack Query",
                   render: <ReactQueryDevtoolsPanel />,
                   defaultOpen: true,
                 },
                 {
-                  name: 'Tanstack Router',
+                  name: "Tanstack Router",
                   render: <TanStackRouterDevtoolsPanel />,
                   defaultOpen: true,
                 },

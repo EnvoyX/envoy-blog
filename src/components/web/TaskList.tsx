@@ -1,7 +1,7 @@
-import { useState, useTransition, useEffect, startTransition } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useForm } from '@tanstack/react-form'
-import { toast } from 'sonner'
+import { useState, useTransition, useEffect, startTransition } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
 import {
   Plus,
   Loader2,
@@ -19,14 +19,14 @@ import {
   TimerResetIcon,
   ListXIcon,
   LogOutIcon,
-} from 'lucide-react'
+} from "lucide-react";
 import {
   createTaskFn,
   deleteTaskFn,
   fetchTaskListByIdFn,
   updateTaskFn,
   updateTaskStatusFn,
-} from '@/data/task-tracker'
+} from "@/data/task-tracker";
 import {
   Select,
   SelectContent,
@@ -34,60 +34,60 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { intlFormat } from 'date-fns'
-import { FieldError } from '../ui/field'
-import { validatorTaskSchema } from '@/schemas/task-tracker'
-import { Link } from '@tanstack/react-router'
+} from "@/components/ui/select";
+import { intlFormat } from "date-fns";
+import { FieldError } from "../ui/field";
+import { validatorTaskSchema } from "@/schemas/task-tracker";
+import { Link } from "@tanstack/react-router";
 
-type Status = 'TODO' | 'IN_PROGRESS' | 'DONE' | 'CANCELLED'
-type Priority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+type Status = "TODO" | "IN_PROGRESS" | "DONE" | "CANCELLED";
+type Priority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
 
 interface Task {
-  id: string
-  listId: string
-  userId: string
-  title: string
-  description?: string
-  status: Status
-  priority: Priority
-  dueDate?: string
-  createdAt: string
-  updatedAt: string
+  id: string;
+  listId: string;
+  userId: string;
+  title: string;
+  description?: string;
+  status: Status;
+  priority: Priority;
+  dueDate?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface TaskList {
-  id: string
-  title: string
-  description?: string
-  tasks: Task[]
+  id: string;
+  title: string;
+  description?: string;
+  tasks: Task[];
 }
 
 interface TaskFormModalProps {
-  open: boolean
-  onClose: () => void
+  open: boolean;
+  onClose: () => void;
   onSubmit: (values: {
-    title: string
-    description: string
-    status: Status
-    priority: Priority
-    dueDate: string
-  }) => void
+    title: string;
+    description: string;
+    status: Status;
+    priority: Priority;
+    dueDate: string;
+  }) => void;
   initialValues?: {
-    title: string
-    description: string
-    status: Status
-    priority: Priority
-    dueDate: string
-    taskId?: string
-  }
-  mode: 'create' | 'update'
-  isPending: boolean
+    title: string;
+    description: string;
+    status: Status;
+    priority: Priority;
+    dueDate: string;
+    taskId?: string;
+  };
+  mode: "create" | "update";
+  isPending: boolean;
 }
 interface TaskCardProps {
-  task: Task
-  onEdit: (task: Task) => void
-  onDelete: (id: string) => void
+  task: Task;
+  onEdit: (task: Task) => void;
+  onDelete: (id: string) => void;
 }
 
 const STATUS_CONFIG: Record<
@@ -95,49 +95,40 @@ const STATUS_CONFIG: Record<
   { label: string; icon: React.ReactNode; color: string; bg: string }
 > = {
   TODO: {
-    label: 'To Do',
+    label: "To Do",
     icon: <Circle className="w-3.5 h-3.5" />,
-    color: 'text-zinc-400',
-    bg: 'bg-zinc-800/60 border-zinc-700/50',
+    color: "text-zinc-400",
+    bg: "bg-zinc-800/60 border-zinc-700/50",
   },
   IN_PROGRESS: {
-    label: 'In Progress',
+    label: "In Progress",
     icon: <Clock className="w-3.5 h-3.5" />,
-    color: 'text-sky-400',
-    bg: 'bg-sky-950/60 border-sky-800/50',
+    color: "text-sky-400",
+    bg: "bg-sky-950/60 border-sky-800/50",
   },
   DONE: {
-    label: 'Done',
+    label: "Done",
     icon: <CheckCircle2 className="w-3.5 h-3.5" />,
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-950/60 border-emerald-800/50',
+    color: "text-emerald-400",
+    bg: "bg-emerald-950/60 border-emerald-800/50",
   },
   CANCELLED: {
-    label: 'Cancelled',
+    label: "Cancelled",
     icon: <XCircle className="w-3.5 h-3.5" />,
-    color: 'text-red-400',
-    bg: 'bg-red-950/60 border-red-800/50',
+    color: "text-red-400",
+    bg: "bg-red-950/60 border-red-800/50",
   },
-}
+};
 
-const PRIORITY_CONFIG: Record<
-  Priority,
-  { label: string; color: string; dot: string }
-> = {
-  LOW: { label: 'Low', color: 'text-zinc-400', dot: 'bg-zinc-500' },
-  MEDIUM: { label: 'Medium', color: 'text-amber-400', dot: 'bg-amber-400' },
-  HIGH: { label: 'High', color: 'text-orange-400', dot: 'bg-orange-400' },
-  URGENT: { label: 'Urgent', color: 'text-red-400', dot: 'bg-red-500' },
-}
+const PRIORITY_CONFIG: Record<Priority, { label: string; color: string; dot: string }> = {
+  LOW: { label: "Low", color: "text-zinc-400", dot: "bg-zinc-500" },
+  MEDIUM: { label: "Medium", color: "text-amber-400", dot: "bg-amber-400" },
+  HIGH: { label: "High", color: "text-orange-400", dot: "bg-orange-400" },
+  URGENT: { label: "Urgent", color: "text-red-400", dot: "bg-red-500" },
+};
 
-function StatusBadge({
-  status,
-  className,
-}: {
-  status: Status
-  className?: string
-}) {
-  const cfg = STATUS_CONFIG[status]
+function StatusBadge({ status, className }: { status: Status; className?: string }) {
+  const cfg = STATUS_CONFIG[status];
   return (
     <span
       className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-xs font-medium ${cfg.color} ${cfg.bg} ${className}`}
@@ -145,32 +136,22 @@ function StatusBadge({
       {cfg.icon}
       {cfg.label}
     </span>
-  )
+  );
 }
 
-function PriorityDot({
-  priority,
-  className,
-}: {
-  priority?: Priority
-  className?: string
-}) {
-  if (!priority) return null
-  const cfg = PRIORITY_CONFIG[priority]
+function PriorityDot({ priority, className }: { priority?: Priority; className?: string }) {
+  if (!priority) return null;
+  const cfg = PRIORITY_CONFIG[priority];
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 text-xs ${cfg.color} ${className}`}
-    >
+    <span className={`inline-flex items-center gap-1.5 text-xs ${cfg.color} ${className}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
       {cfg.label}
     </span>
-  )
+  );
 }
 
 function Skeleton({ className }: { className?: string }) {
-  return (
-    <div className={`animate-pulse rounded-md bg-zinc-800/60 ${className}`} />
-  )
+  return <div className={`animate-pulse rounded-md bg-zinc-800/60 ${className}`} />;
 }
 
 function TaskListSkeleton() {
@@ -190,7 +171,7 @@ function TaskListSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 function SidebarSkeleton() {
@@ -207,7 +188,7 @@ function SidebarSkeleton() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 function TaskFormModal({
@@ -218,64 +199,64 @@ function TaskFormModal({
   mode,
   isPending,
 }: TaskFormModalProps) {
-  const today = new Date().toISOString().split('T')[0]
+  const today = new Date().toISOString().split("T")[0];
 
   const form = useForm({
     defaultValues: initialValues ?? {
-      title: '',
-      description: '',
-      status: 'TODO' as Status,
-      priority: 'LOW' as Priority,
+      title: "",
+      description: "",
+      status: "TODO" as Status,
+      priority: "LOW" as Priority,
       dueDate: today,
     },
     validators: {
       onSubmit: validatorTaskSchema,
     },
     onSubmit: ({ value }) => {
-      onSubmit(value)
+      onSubmit(value);
     },
-  })
+  });
 
-  if (initialValues?.priority)
-    form.setFieldValue('priority', initialValues.priority)
-  if (initialValues?.status) form.setFieldValue('status', initialValues.status)
+  if (initialValues?.priority) form.setFieldValue("priority", initialValues.priority);
+  if (initialValues?.status) form.setFieldValue("status", initialValues.status);
 
   useEffect(() => {
     if (open && initialValues) {
-      console.log(initialValues)
-      form.reset(initialValues)
+      console.log(initialValues);
+      form.reset(initialValues);
     } else if (open && !initialValues) {
       form.reset({
-        title: '',
-        description: '',
-        status: 'TODO',
-        priority: 'LOW',
+        title: "",
+        description: "",
+        status: "TODO",
+        priority: "LOW",
         dueDate: today,
-      })
+      });
     }
-  }, [open])
+  }, [open]);
 
-  if (!open) return null
+  if (!open) return null;
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-      <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-700/60 rounded-2xl shadow-2xl shadow-black/60 overflow-hidden">
+      <div
+        className="relative w-full max-w-lg bg-zinc-900 border border-zinc-700/60 rounded-2xl shadow-2xl shadow-black/60 overflow-hidden"
+        data-lenis-prevent
+      >
         <div className="h-px bg-linear-to-r from-transparent via-zinc-500/40 to-transparent" />
         <div className="flex items-center justify-between px-6 pt-5 pb-4">
           <div>
             <h2 className="text-base font-semibold text-zinc-100 task-syne">
-              {mode === 'create' ? 'New Task' : 'Edit Task'}
+              {mode === "create" ? "New Task" : "Edit Task"}
             </h2>
             <p className="text-xs text-zinc-500 mt-0.5">
-              {mode === 'create'
-                ? 'Add a task to this list'
-                : 'Update the task details'}
+              {mode === "create" ? "Add a task to this list" : "Update the task details"}
             </p>
           </div>
           <button
@@ -287,16 +268,15 @@ function TaskFormModal({
         </div>
         <form
           onSubmit={(e) => {
-            e.preventDefault()
-            form.handleSubmit()
+            e.preventDefault();
+            form.handleSubmit();
           }}
           className="px-6 pb-6 flex flex-col gap-4"
         >
           <form.Field
             name="title"
             children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
               return (
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider font-mono">
@@ -310,22 +290,18 @@ function TaskFormModal({
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </div>
-              )
+              );
             }}
           ></form.Field>
 
           <form.Field
             name="description"
             children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
               return (
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider font-mono">
-                    Description{' '}
-                    <span className="normal-case text-zinc-600">
-                      (optional)
-                    </span>
+                    Description <span className="normal-case text-zinc-600">(optional)</span>
                   </label>
                   <textarea
                     value={field.state.value}
@@ -336,7 +312,7 @@ function TaskFormModal({
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </div>
-              )
+              );
             }}
           ></form.Field>
 
@@ -344,24 +320,20 @@ function TaskFormModal({
             <form.Field
               name="status"
               children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <>
-                    <Select
-                      value={field.state.value}
-                      onValueChange={field.handleChange}
-                    >
+                    <Select value={field.state.value} onValueChange={field.handleChange}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           {[
-                            { value: 'TODO', label: 'To Do' },
-                            { value: 'IN_PROGRESS', label: 'In Progress' },
-                            { value: 'DONE', label: 'Done' },
-                            { value: 'CANCELLED', label: 'Cancelled' },
+                            { value: "TODO", label: "To Do" },
+                            { value: "IN_PROGRESS", label: "In Progress" },
+                            { value: "DONE", label: "Done" },
+                            { value: "CANCELLED", label: "Cancelled" },
                           ].map((data) => (
                             <SelectItem key={data.label} value={data.value}>
                               {data.label}
@@ -370,34 +342,28 @@ function TaskFormModal({
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </>
-                )
+                );
               }}
             ></form.Field>
             <form.Field
               name="priority"
               children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <>
-                    <Select
-                      value={field.state.value}
-                      onValueChange={field.handleChange}
-                    >
+                    <Select value={field.state.value} onValueChange={field.handleChange}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Priority" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           {[
-                            { value: 'LOW', label: 'Low' },
-                            { value: 'MEDIUM', label: 'Medium' },
-                            { value: 'HIGH', label: 'High' },
-                            { value: 'URGENT', label: 'Urgent' },
+                            { value: "LOW", label: "Low" },
+                            { value: "MEDIUM", label: "Medium" },
+                            { value: "HIGH", label: "High" },
+                            { value: "URGENT", label: "Urgent" },
                           ].map((data) => (
                             <SelectItem key={data.label} value={data.value}>
                               {data.label}
@@ -406,11 +372,9 @@ function TaskFormModal({
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </>
-                )
+                );
               }}
             ></form.Field>
           </div>
@@ -418,15 +382,11 @@ function TaskFormModal({
           <form.Field
             name="dueDate"
             children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
               return (
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider font-mono">
-                    Due Date{' '}
-                    <span className="normal-case text-zinc-600">
-                      (optional)
-                    </span>
+                    Due Date <span className="normal-case text-zinc-600">(optional)</span>
                   </label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
@@ -439,7 +399,7 @@ function TaskFormModal({
                   </div>
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </div>
-              )
+              );
             }}
           ></form.Field>
 
@@ -457,13 +417,13 @@ function TaskFormModal({
               className="flex-1 px-4 py-2.5 rounded-lg bg-zinc-100 text-zinc-900 text-sm font-semibold hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isPending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-              {mode === 'create' ? 'Create Task' : 'Save Changes'}
+              {mode === "create" ? "Create Task" : "Save Changes"}
             </button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }
 
 function DeleteModal({
@@ -472,33 +432,32 @@ function DeleteModal({
   onConfirm,
   isPending,
 }: {
-  open: boolean
-  onClose: () => void
-  onConfirm: () => void
-  isPending: boolean
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  isPending: boolean;
 }) {
-  if (!open) return null
+  if (!open) return null;
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-      <div className="relative w-full max-w-sm bg-zinc-900 border border-zinc-700/60 rounded-2xl shadow-2xl shadow-black/60 overflow-hidden">
+      <div
+        className="relative w-full max-w-sm bg-zinc-900 border border-zinc-700/60 rounded-2xl shadow-2xl shadow-black/60 overflow-hidden "
+        data-lenis-prevent
+      >
         <div className="h-px bg-linear-to-r from-transparent via-red-500/40 to-transparent" />
         <div className="p-6 flex flex-col items-center text-center gap-4">
           <div className="w-12 h-12 rounded-full bg-red-950/60 border border-red-800/50 flex items-center justify-center">
             <AlertTriangle className="w-5 h-5 text-red-400" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-zinc-100 task-syne">
-              Delete this task?
-            </h2>
-            <p className="text-sm text-zinc-500 mt-1">
-              This action cannot be undone.
-            </p>
+            <h2 className="text-base font-semibold text-zinc-100 task-syne">Delete this task?</h2>
+            <p className="text-sm text-zinc-500 mt-1">This action cannot be undone.</p>
           </div>
           <div className="flex gap-2 w-full">
             <button
@@ -519,47 +478,43 @@ function DeleteModal({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const isDone = task.status === 'DONE'
-  const isCancelled = task.status === 'CANCELLED'
-  const isOverdue =
-    task.dueDate &&
-    new Date(task.dueDate) < new Date() &&
-    !isDone &&
-    !isCancelled
-  const queryClient = useQueryClient()
+  const [menuOpen, setMenuOpen] = useState(false);
+  const isDone = task.status === "DONE";
+  const isCancelled = task.status === "CANCELLED";
+  const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && !isDone && !isCancelled;
+  const queryClient = useQueryClient();
   return (
     <div
       className={`group relative flex items-start gap-4 p-4 rounded-xl border transition-all duration-200
         ${
           isDone || isCancelled
-            ? 'bg-zinc-900/30 border-zinc-800/40'
-            : 'bg-zinc-900/60 border-zinc-700/50 hover:border-zinc-600/70 hover:bg-zinc-900/80'
+            ? "bg-zinc-900/30 border-zinc-800/40"
+            : "bg-zinc-900/60 border-zinc-700/50 hover:border-zinc-600/70 hover:bg-zinc-900/80"
         }`}
     >
       <div
         className={`absolute left-0 top-3 bottom-3 w-0.5 rounded-full transition-opacity
           ${
-            task.status === 'DONE'
-              ? 'bg-emerald-500'
-              : task.status === 'IN_PROGRESS'
-                ? 'bg-sky-500'
-                : task.status === 'CANCELLED'
-                  ? 'bg-red-500'
-                  : 'bg-zinc-600'
+            task.status === "DONE"
+              ? "bg-emerald-500"
+              : task.status === "IN_PROGRESS"
+                ? "bg-sky-500"
+                : task.status === "CANCELLED"
+                  ? "bg-red-500"
+                  : "bg-zinc-600"
           }
-          ${isDone || isCancelled ? 'opacity-40' : 'opacity-100'}`}
+          ${isDone || isCancelled ? "opacity-40" : "opacity-100"}`}
       />
 
       <div className="flex-1 min-w-0 pl-2">
         <div className="flex items-start justify-between gap-2">
           <h3
             className={`text-sm font-medium leading-snug transition-colors
-              ${isDone || isCancelled ? 'line-through text-zinc-500' : 'text-zinc-100'}`}
+              ${isDone || isCancelled ? "line-through text-zinc-500" : "text-zinc-100"}`}
           >
             {task.title}
           </h3>
@@ -573,15 +528,12 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
             </button>
             {menuOpen && (
               <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setMenuOpen(false)}
-                />
+                <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
                 <div className="absolute right-0 top-8 z-20 w-36 bg-zinc-900 border border-zinc-700/60 rounded-xl shadow-xl shadow-black/40 overflow-hidden py-1">
                   <button
                     onClick={() => {
-                      onEdit(task)
-                      setMenuOpen(false)
+                      onEdit(task);
+                      setMenuOpen(false);
                     }}
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
                   >
@@ -590,22 +542,22 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
                   <button
                     onClick={() => {
                       startTransition(async () => {
-                        toast.loading('Updating task status...', {
-                          id: 'task-status',
-                        })
+                        toast.loading("Updating task status...", {
+                          id: "task-status",
+                        });
                         await updateTaskStatusFn({
                           data: {
                             taskId: task.id,
-                            status: 'DONE',
+                            status: "DONE",
                             listId: task.listId,
                           },
-                        })
+                        });
                         queryClient.invalidateQueries({
-                          queryKey: ['query-task-list-id', task.listId],
-                        })
-                        toast.dismiss('task-status')
-                        toast.success('Task status updated!')
-                      })
+                          queryKey: ["query-task-list-id", task.listId],
+                        });
+                        toast.dismiss("task-status");
+                        toast.success("Task status updated!");
+                      });
                     }}
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
                   >
@@ -614,22 +566,22 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
                   <button
                     onClick={() => {
                       startTransition(async () => {
-                        toast.loading('Updating task status...', {
-                          id: 'task-status',
-                        })
+                        toast.loading("Updating task status...", {
+                          id: "task-status",
+                        });
                         await updateTaskStatusFn({
                           data: {
                             taskId: task.id,
-                            status: 'IN_PROGRESS',
+                            status: "IN_PROGRESS",
                             listId: task.listId,
                           },
-                        })
+                        });
                         queryClient.invalidateQueries({
-                          queryKey: ['query-task-list-id', task.listId],
-                        })
-                        toast.dismiss('task-status')
-                        toast.success('Task status updated!')
-                      })
+                          queryKey: ["query-task-list-id", task.listId],
+                        });
+                        toast.dismiss("task-status");
+                        toast.success("Task status updated!");
+                      });
                     }}
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
                   >
@@ -638,22 +590,22 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
                   <button
                     onClick={() => {
                       startTransition(async () => {
-                        toast.loading('Updating task status...', {
-                          id: 'task-status',
-                        })
+                        toast.loading("Updating task status...", {
+                          id: "task-status",
+                        });
                         await updateTaskStatusFn({
                           data: {
                             taskId: task.id,
-                            status: 'TODO',
+                            status: "TODO",
                             listId: task.listId,
                           },
-                        })
+                        });
                         queryClient.invalidateQueries({
-                          queryKey: ['query-task-list-id', task.listId],
-                        })
-                        toast.dismiss('task-status')
-                        toast.success('Task status updated!')
-                      })
+                          queryKey: ["query-task-list-id", task.listId],
+                        });
+                        toast.dismiss("task-status");
+                        toast.success("Task status updated!");
+                      });
                     }}
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
                   >
@@ -662,22 +614,22 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
                   <button
                     onClick={() => {
                       startTransition(async () => {
-                        toast.loading('Updating task status...', {
-                          id: 'task-status',
-                        })
+                        toast.loading("Updating task status...", {
+                          id: "task-status",
+                        });
                         await updateTaskStatusFn({
                           data: {
                             taskId: task.id,
-                            status: 'CANCELLED',
+                            status: "CANCELLED",
                             listId: task.listId,
                           },
-                        })
+                        });
                         queryClient.invalidateQueries({
-                          queryKey: ['query-task-list-id', task.listId],
-                        })
-                        toast.dismiss('task-status')
-                        toast.success('Task status updated!')
-                      })
+                          queryKey: ["query-task-list-id", task.listId],
+                        });
+                        toast.dismiss("task-status");
+                        toast.success("Task status updated!");
+                      });
                     }}
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
                   >
@@ -685,8 +637,8 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
                   </button>
                   <button
                     onClick={() => {
-                      onDelete(task.id)
-                      setMenuOpen(false)
+                      onDelete(task.id);
+                      setMenuOpen(false);
                     }}
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-red-400 hover:bg-red-950/40 transition-colors"
                   >
@@ -705,31 +657,25 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
         )}
 
         <div className="flex items-center flex-wrap gap-2 mt-3">
-          <StatusBadge
-            status={task.status}
-            className={`${isDone && 'opacity-60'}`}
-          />
+          <StatusBadge status={task.status} className={`${isDone && "opacity-60"}`} />
           {task.priority && (
-            <PriorityDot
-              priority={task.priority}
-              className={`${isDone && 'opacity-60'}`}
-            />
+            <PriorityDot priority={task.priority} className={`${isDone && "opacity-60"}`} />
           )}
           {task.dueDate && (
             <span
-              className={`inline-flex items-center gap-1 text-xs font-mono ${isOverdue ? 'text-red-400' : 'text-zinc-500'} ${isDone && 'opacity-60'}`}
+              className={`inline-flex items-center gap-1 text-xs font-mono ${isOverdue ? "text-red-400" : "text-zinc-500"} ${isDone && "opacity-60"}`}
             >
               <Calendar className="w-3 h-3" />
-              {isOverdue && '⚠ '}
+              {isOverdue && "⚠ "}
               {intlFormat(
                 new Date(task.dueDate) as Date,
                 {
-                  month: 'long',
-                  day: 'numeric',
-                  weekday: 'short',
+                  month: "long",
+                  day: "numeric",
+                  weekday: "short",
                 },
                 {
-                  locale: 'en-US',
+                  locale: "en-US",
                 },
               )}
             </span>
@@ -737,7 +683,7 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function DesktopSidebar({
@@ -749,21 +695,21 @@ function DesktopSidebar({
   tasks,
   onAdd,
 }: {
-  data?: TaskList
-  isPendingQuery: boolean
+  data?: TaskList;
+  isPendingQuery: boolean;
   stats: {
-    total: number
-    done: number
-    inProgress: number
-    todo: number
-    cancelled: number
-  }
-  filterStatus: Status | 'ALL'
-  setFilterStatus: (s: Status | 'ALL') => void
-  tasks: Task[]
-  onAdd: () => void
+    total: number;
+    done: number;
+    inProgress: number;
+    todo: number;
+    cancelled: number;
+  };
+  filterStatus: Status | "ALL";
+  setFilterStatus: (s: Status | "ALL") => void;
+  tasks: Task[];
+  onAdd: () => void;
 }) {
-  const pct = stats.total ? Math.round((stats.done / stats.total) * 100) : 0
+  const pct = stats.total ? Math.round((stats.done / stats.total) * 100) : 0;
 
   return (
     <aside className="hidden lg:flex flex-col w-64 xl:w-72 flex-shrink-0 sticky top-12 self-start gap-5">
@@ -779,9 +725,7 @@ function DesktopSidebar({
               {data?.title}
             </h1>
             {data?.description && (
-              <p className="text-sm text-zinc-500 mt-2 leading-relaxed">
-                {data.description}
-              </p>
+              <p className="text-sm text-zinc-500 mt-2 leading-relaxed">{data.description}</p>
             )}
           </div>
 
@@ -799,9 +743,7 @@ function DesktopSidebar({
                 <span className="text-xs task-mono text-zinc-500 uppercase tracking-wider">
                   Progress
                 </span>
-                <span className="text-xs task-mono text-zinc-400 font-medium">
-                  {pct}%
-                </span>
+                <span className="text-xs task-mono text-zinc-400 font-medium">{pct}%</span>
               </div>
               <div className="h-1.5 rounded-full bg-zinc-800 overflow-hidden">
                 <div
@@ -819,40 +761,33 @@ function DesktopSidebar({
             <div className="grid grid-cols-2 gap-2">
               {[
                 {
-                  label: 'To Do',
+                  label: "To Do",
                   value: stats.todo,
-                  color: 'text-zinc-300',
-                  bg: 'bg-zinc-800/40 border-zinc-700/40',
+                  color: "text-zinc-300",
+                  bg: "bg-zinc-800/40 border-zinc-700/40",
                 },
                 {
-                  label: 'In Progress',
+                  label: "In Progress",
                   value: stats.inProgress,
-                  color: 'text-sky-400',
-                  bg: 'bg-sky-950/30 border-sky-800/30',
+                  color: "text-sky-400",
+                  bg: "bg-sky-950/30 border-sky-800/30",
                 },
                 {
-                  label: 'Done',
+                  label: "Done",
                   value: stats.done,
-                  color: 'text-emerald-400',
-                  bg: 'bg-emerald-950/30 border-emerald-800/30',
+                  color: "text-emerald-400",
+                  bg: "bg-emerald-950/30 border-emerald-800/30",
                 },
                 {
-                  label: 'Cancelled',
+                  label: "Cancelled",
                   value: stats.cancelled,
-                  color: 'text-red-400',
-                  bg: 'bg-red-950/30 border-red-800/30',
+                  color: "text-red-400",
+                  bg: "bg-red-950/30 border-red-800/30",
                 },
               ].map(({ label, value, color, bg }) => (
-                <div
-                  key={label}
-                  className={`p-3 rounded-xl border ${bg} flex flex-col gap-1`}
-                >
-                  <span className="text-xs text-zinc-500 leading-none">
-                    {label}
-                  </span>
-                  <span className={`text-2xl font-bold task-syne ${color}`}>
-                    {value}
-                  </span>
+                <div key={label} className={`p-3 rounded-xl border ${bg} flex flex-col gap-1`}>
+                  <span className="text-xs text-zinc-500 leading-none">{label}</span>
+                  <span className={`text-2xl font-bold task-syne ${color}`}>{value}</span>
                 </div>
               ))}
             </div>
@@ -864,19 +799,15 @@ function DesktopSidebar({
                 Filter
               </p>
               <div className="flex flex-col gap-0.5">
-                {(
-                  ['ALL', 'TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'] as const
-                ).map((s) => {
+                {(["ALL", "TODO", "IN_PROGRESS", "DONE", "CANCELLED"] as const).map((s) => {
                   const count =
-                    s === 'ALL'
-                      ? stats.total
-                      : tasks.filter((t) => t.status === s).length
+                    s === "ALL" ? stats.total : tasks.filter((t) => t.status === s).length;
                   const label =
-                    s === 'ALL'
-                      ? 'All tasks'
-                      : s === 'IN_PROGRESS'
-                        ? 'In Progress'
-                        : s.charAt(0) + s.slice(1).toLowerCase()
+                    s === "ALL"
+                      ? "All tasks"
+                      : s === "IN_PROGRESS"
+                        ? "In Progress"
+                        : s.charAt(0) + s.slice(1).toLowerCase();
                   return (
                     <button
                       key={s}
@@ -884,18 +815,16 @@ function DesktopSidebar({
                       className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all task-mono
                         ${
                           filterStatus === s
-                            ? 'bg-zinc-700/80 text-zinc-100'
-                            : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50'
+                            ? "bg-zinc-700/80 text-zinc-100"
+                            : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50"
                         }`}
                     >
                       <span>{label}</span>
-                      <span
-                        className={`${filterStatus === s ? 'text-zinc-400' : 'text-zinc-700'}`}
-                      >
+                      <span className={`${filterStatus === s ? "text-zinc-400" : "text-zinc-700"}`}>
                         {count}
                       </span>
                     </button>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -903,7 +832,7 @@ function DesktopSidebar({
         </>
       )}
     </aside>
-  )
+  );
 }
 
 function EmptyState({ onAdd }: { onAdd: () => void }) {
@@ -914,9 +843,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
       </div>
       <div className="text-center">
         <p className="text-sm font-medium text-zinc-400">No tasks yet</p>
-        <p className="text-xs text-zinc-600 mt-1">
-          Add your first task to get started
-        </p>
+        <p className="text-xs text-zinc-600 mt-1">Add your first task to get started</p>
       </div>
       <button
         onClick={onAdd}
@@ -925,40 +852,37 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
         <Plus className="w-3.5 h-3.5" /> Add a task
       </button>
     </div>
-  )
+  );
 }
 
-// Main Page
+// main page
 
 export function TaskListPage({ taskListId }: { taskListId: string }) {
-  const queryClient = useQueryClient()
-  const [isPending, startTransition] = useTransition()
+  const queryClient = useQueryClient();
+  const [isPending, startTransition] = useTransition();
 
-  const [createOpen, setCreateOpen] = useState(false)
-  const [updateOpen, setUpdateOpen] = useState(false)
-  const [deleteOpen, setDeleteOpen] = useState(false)
-  const [activeTask, setActiveTask] = useState<Task | null>(null)
-  const [filterStatus, setFilterStatus] = useState<Status | 'ALL'>('ALL')
+  const [createOpen, setCreateOpen] = useState(false);
+  const [updateOpen, setUpdateOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [filterStatus, setFilterStatus] = useState<Status | "ALL">("ALL");
 
   const { data, isPending: isPendingQuery } = useQuery({
-    queryKey: ['query-task-list-id', taskListId],
+    queryKey: ["query-task-list-id", taskListId],
     queryFn: () => fetchTaskListByIdFn({ data: { taskListId } }),
     refetchOnWindowFocus: false,
-  })
+  });
 
-  const tasks = data?.tasks ?? []
-  const filtered =
-    filterStatus === 'ALL'
-      ? tasks
-      : tasks.filter((t) => t.status === filterStatus)
+  const tasks = data?.tasks ?? [];
+  const filtered = filterStatus === "ALL" ? tasks : tasks.filter((t) => t.status === filterStatus);
 
   const stats = {
     total: tasks.length,
-    done: tasks.filter((t) => t.status === 'DONE').length,
-    inProgress: tasks.filter((t) => t.status === 'IN_PROGRESS').length,
-    todo: tasks.filter((t) => t.status === 'TODO').length,
-    cancelled: tasks.filter((t) => t.status === 'CANCELLED').length,
-  }
+    done: tasks.filter((t) => t.status === "DONE").length,
+    inProgress: tasks.filter((t) => t.status === "IN_PROGRESS").length,
+    todo: tasks.filter((t) => t.status === "TODO").length,
+    cancelled: tasks.filter((t) => t.status === "CANCELLED").length,
+  };
 
   function handleCreate(values: any) {
     startTransition(async () => {
@@ -968,13 +892,13 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
           dueDate: new Date(values.dueDate),
           listId: taskListId,
         },
-      })
+      });
       queryClient.invalidateQueries({
-        queryKey: ['query-task-list-id', taskListId],
-      })
-      toast.success('Task created!')
-      setCreateOpen(false)
-    })
+        queryKey: ["query-task-list-id", taskListId],
+      });
+      toast.success("Task created!");
+      setCreateOpen(false);
+    });
   }
 
   function handleUpdate(values: any) {
@@ -986,28 +910,28 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
           taskId: activeTask?.id as string,
           listId: taskListId,
         },
-      })
+      });
       queryClient.invalidateQueries({
-        queryKey: ['query-task-list-id', taskListId],
-      })
-      toast.success('Task updated!')
-      setUpdateOpen(false)
-      setActiveTask(null)
-    })
+        queryKey: ["query-task-list-id", taskListId],
+      });
+      toast.success("Task updated!");
+      setUpdateOpen(false);
+      setActiveTask(null);
+    });
   }
 
   function handleDelete() {
     startTransition(async () => {
       await deleteTaskFn({
         data: { taskId: activeTask?.id as string, listId: taskListId },
-      })
+      });
       queryClient.invalidateQueries({
-        queryKey: ['query-task-list-id', taskListId],
-      })
-      toast.success('Task deleted.')
-      setDeleteOpen(false)
-      setActiveTask(null)
-    })
+        queryKey: ["query-task-list-id", taskListId],
+      });
+      toast.success("Task deleted.");
+      setDeleteOpen(false);
+      setActiveTask(null);
+    });
   }
 
   return (
@@ -1021,10 +945,7 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
       <div className="min-h-screen text-zinc-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
           <div className="flex items-center w-full my-6">
-            <Link
-              to="/dashboard/task-tracker"
-              className="flex items-center gap-2 group"
-            >
+            <Link to="/dashboard/task-tracker" className="flex items-center gap-2 group">
               <LogOutIcon className="rotate-180 size-5 text-zinc-500 group-hover:text-white transition-colors" />
               <p className="task-mono text-zinc-500 tracking-widest text-sm group-hover:text-white transition-colors">
                 Back
@@ -1042,9 +963,9 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
               onAdd={() => setCreateOpen(true)}
             />
 
-            {/* Main content */}
+            {/* main content */}
             <main className="flex-1 min-w-0">
-              {/* Mobile header — hidden on lg+ */}
+              {/* mbile header */}
               <div className="lg:hidden mb-6">
                 {isPendingQuery ? (
                   <div className="flex flex-col gap-2">
@@ -1104,24 +1025,22 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
                 )}
               </div>
 
-              {/* Mobile filter tabs — hidden on lg+ */}
+              {/* mobile filter tabs */}
               {tasks.length > 0 && (
                 <div className="lg:hidden flex items-center gap-1 mb-5 p-1 bg-zinc-900/60 rounded-xl border border-zinc-800/50 overflow-x-auto no-scrollbar">
-                  {(
-                    ['ALL', 'TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'] as const
-                  ).map((s) => (
+                  {(["ALL", "TODO", "IN_PROGRESS", "DONE", "CANCELLED"] as const).map((s) => (
                     <button
                       key={s}
                       onClick={() => setFilterStatus(s)}
                       className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all task-mono
-                        ${filterStatus === s ? 'bg-zinc-700 text-zinc-100 shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}
+                        ${filterStatus === s ? "bg-zinc-700 text-zinc-100 shadow-sm" : "text-zinc-500 hover:text-zinc-300"}`}
                     >
-                      {s === 'ALL'
-                        ? 'All'
-                        : s === 'IN_PROGRESS'
-                          ? 'In Progress'
+                      {s === "ALL"
+                        ? "All"
+                        : s === "IN_PROGRESS"
+                          ? "In Progress"
                           : s.charAt(0) + s.slice(1).toLowerCase()}
-                      {s !== 'ALL' && (
+                      {s !== "ALL" && (
                         <span className="ml-1.5 text-zinc-600">
                           {tasks.filter((t) => t.status === s).length}
                         </span>
@@ -1131,19 +1050,18 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
                 </div>
               )}
 
-              {/* Desktop column header — hidden on mobile */}
+              {/* desktop column header */}
               <div className="hidden lg:flex items-center justify-between mb-5">
                 <div>
                   <h2 className="text-lg font-semibold task-syne text-zinc-200">
-                    {filterStatus === 'ALL'
-                      ? 'All Tasks'
-                      : filterStatus === 'IN_PROGRESS'
-                        ? 'In Progress'
-                        : filterStatus.charAt(0) +
-                          filterStatus.slice(1).toLowerCase()}
+                    {filterStatus === "ALL"
+                      ? "All Tasks"
+                      : filterStatus === "IN_PROGRESS"
+                        ? "In Progress"
+                        : filterStatus.charAt(0) + filterStatus.slice(1).toLowerCase()}
                   </h2>
                   <p className="text-xs task-mono text-zinc-600 mt-0.5">
-                    {filtered.length} {filtered.length === 1 ? 'task' : 'tasks'}
+                    {filtered.length} {filtered.length === 1 ? "task" : "tasks"}
                   </p>
                 </div>
                 <ListTodo className="w-4 h-4 text-zinc-700" />
@@ -1151,9 +1069,9 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
 
               {isPendingQuery ? (
                 <TaskListSkeleton />
-              ) : filtered.length === 0 && filterStatus !== 'ALL' ? (
+              ) : filtered.length === 0 && filterStatus !== "ALL" ? (
                 <div className="text-center py-16 text-zinc-600 text-sm task-mono">
-                  No {filterStatus.toLowerCase().replace('_', ' ')} tasks.
+                  No {filterStatus.toLowerCase().replace("_", " ")} tasks.
                 </div>
               ) : filtered.length === 0 ? (
                 <EmptyState onAdd={() => setCreateOpen(true)} />
@@ -1164,12 +1082,12 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
                       key={task.id}
                       task={task}
                       onEdit={(t) => {
-                        setActiveTask(t)
-                        setUpdateOpen(true)
+                        setActiveTask(t);
+                        setUpdateOpen(true);
                       }}
                       onDelete={(id) => {
-                        setActiveTask(tasks.find((t) => t.id === id) ?? null)
-                        setDeleteOpen(true)
+                        setActiveTask(tasks.find((t) => t.id === id) ?? null);
+                        setDeleteOpen(true);
                       }}
                     />
                   ))}
@@ -1200,21 +1118,20 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
       <TaskFormModal
         open={updateOpen}
         onClose={() => {
-          setUpdateOpen(false)
-          setActiveTask(null)
+          setUpdateOpen(false);
+          setActiveTask(null);
         }}
         onSubmit={handleUpdate}
         initialValues={
           activeTask
             ? {
                 title: activeTask.title,
-                description: activeTask.description ?? '',
+                description: activeTask.description ?? "",
                 status: activeTask.status,
                 priority: activeTask.priority,
                 dueDate:
-                  new Date(activeTask.dueDate as string)
-                    .toISOString()
-                    .split('T')[0] ?? new Date().toISOString().split('T')[0],
+                  new Date(activeTask.dueDate as string).toISOString().split("T")[0] ??
+                  new Date().toISOString().split("T")[0],
                 taskId: activeTask.id,
               }
             : undefined
@@ -1226,12 +1143,12 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
       <DeleteModal
         open={deleteOpen}
         onClose={() => {
-          setDeleteOpen(false)
-          setActiveTask(null)
+          setDeleteOpen(false);
+          setActiveTask(null);
         }}
         onConfirm={handleDelete}
         isPending={isPending}
       />
     </>
-  )
+  );
 }
