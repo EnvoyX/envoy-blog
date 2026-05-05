@@ -6,23 +6,39 @@ export const useImageStore = create(
     combine(
       {
         isImportToAlbumModalOpen: false,
+        isEditDialogOpen: false,
         isCounterVisible: true,
         isCaptionVisible: false,
         imageId: "",
         imageUrl: "",
+        initialValues: null as {
+          title: string;
+          description: string;
+          published: boolean;
+        } | null,
       },
       (set) => ({
-        toggleDialog: (dialog: "open" | "close", imageId?: string, imageUrl?: string) =>
+        toggleDialog: (dialog: "open" | "edit" | "close", imageId?: string, imageUrl?: string) =>
           set(() => {
             if (dialog === "open") {
               return {
                 isImportToAlbumModalOpen: true,
+                isEditDialogOpen: false,
+                imageId: imageId,
+                imageUrl: imageUrl,
+              };
+            }
+            if (dialog === "edit") {
+              return {
+                isImportToAlbumModalOpen: false,
+                isEditDialogOpen: true,
                 imageId: imageId,
                 imageUrl: imageUrl,
               };
             } else if (dialog === "close") {
               return {
                 isImportToAlbumModalOpen: false,
+                isEditDialogOpen: false,
                 imageId: "",
                 imageUrl: "",
               };
@@ -30,13 +46,17 @@ export const useImageStore = create(
             return {
               imageId: "",
               isImportToAlbumModalOpen: false,
+              isEditDialogOpen: false,
               imageUrl: "",
             };
           }),
-        onOpenChangeDialog: (dialog: "open", open: boolean) =>
+        onOpenChangeDialog: (dialog: "open" | "edit", open: boolean) =>
           set(() => {
             if (dialog === "open") {
               return { isImportToAlbumModalOpen: open };
+            }
+            if (dialog === "edit") {
+              return { isEditDialogOpen: open };
             }
             return {
               isImportToAlbumModalOpen: false,
@@ -50,6 +70,21 @@ export const useImageStore = create(
           set((prev) => ({
             isCaptionVisible: !prev.isCaptionVisible,
           })),
+        setInitialValues: (
+          initialValues: {
+            title: string;
+            description: string;
+            published: boolean;
+          } | null,
+        ) => {
+          set({
+            initialValues: {
+              title: initialValues ? initialValues.title : "",
+              description: initialValues ? initialValues.description : "",
+              published: initialValues ? initialValues.published : false,
+            },
+          });
+        },
       }),
     ),
     {

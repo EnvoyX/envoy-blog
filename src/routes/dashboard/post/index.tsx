@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useRouter } from "@tanstack/react-router";
-import { createStore, useSelector } from "@tanstack/react-store";
+import { useSelector } from "@tanstack/react-store";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { compareAsc, compareDesc } from "date-fns";
-import { MoreVertical, Trash2 } from "lucide-react";
+import { MoreVertical, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -30,22 +30,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { EditPostDialog } from "@/components/web/post/EditPostDialog";
-import { PostDialog } from "@/components/web/post/PostDialog";
 import { deleteShortPostFn, getShortPostsFn } from "@/data/post";
 import { getUser } from "@/data/session";
 import { SortedByStatus } from "@/lib/constants";
 import { shortPostSearchSchema } from "@/schemas/post";
-
-export const postModalStore = createStore({
-  dialogId: "",
-  isOpen: false,
-  isCreatePostDialog: false,
-  isEditPostDialog: false,
-  isDeletePostDialog: false,
-  isLoading: false,
-  currentPostId: "",
-});
+import { postModalStore } from "@/store/post";
+import { PostDialog } from "@/components/web/post/PostDialog";
 
 export const Route = createFileRoute("/dashboard/post/")({
   loader: async () => {
@@ -122,7 +112,28 @@ function PostPageComponent() {
             <h1 className="text-4xl font-black tracking-tight text-white">My Posts</h1>
             <p className="text-slate-400 mt-2">Create and edit your posts here.</p>
           </div>
-          <PostDialog />
+          <Button
+            size="lg"
+            className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
+            onClick={() => {
+              postModalStore.setState((prev) => ({
+                ...prev,
+                isOpen: true,
+                initialValues: {
+                  images: [] as string[],
+                  content: "",
+                  published: false,
+                  currentPostId: "",
+                  mode: "create",
+                },
+              }));
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <Plus className="size-5 group-hover:rotate-90 transition-transform duration-300" />
+              <span className="font-semibold tracking-tight">New Post</span>
+            </div>
+          </Button>
         </div>
 
         <div className="flex max-sm:flex-col items-center max-sm:justify-center gap-4 mb-8">
@@ -201,14 +212,24 @@ function PostPageComponent() {
                             onSelect={(e) => e.preventDefault()}
                             asChild
                           >
-                            <EditPostDialog
-                              initialValues={{
-                                images: imgs.length > 0 ? imgs : [""],
-                                content: post.content ?? "",
-                                published: post.published,
-                                currentPostId: post.id,
+                            <button
+                              className="flex items-center gap-2 p-1 cursor-pointer w-full"
+                              onClick={() => {
+                                postModalStore.setState((prev) => ({
+                                  ...prev,
+                                  isOpen: true,
+                                  initialValues: {
+                                    images: post.Images.map((image) => image.url),
+                                    content: post.content ?? "",
+                                    published: post.published,
+                                    currentPostId: post.id,
+                                    mode: "edit",
+                                  },
+                                }));
                               }}
-                            />
+                            >
+                              <Pencil className="size-4" /> Edit Post
+                            </button>
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={(e) => {
@@ -274,6 +295,7 @@ function PostPageComponent() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <PostDialog />
     </div>
   );
 }

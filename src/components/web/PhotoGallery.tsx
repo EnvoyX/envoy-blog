@@ -1,7 +1,16 @@
 import { IconDownload } from "@tabler/icons-react";
 import { useRouter } from "@tanstack/react-router";
 import { createStore, useSelector } from "@tanstack/react-store";
-import { AlbumIcon, Eye, EyeOff, Lock, MoreVertical, Trash2, Unlock } from "lucide-react";
+import {
+  AlbumIcon,
+  Eye,
+  EyeOff,
+  ImageIcon,
+  Lock,
+  MoreVertical,
+  Trash2,
+  Unlock,
+} from "lucide-react";
 import { useRef, useState } from "react";
 import { Masonry } from "react-plock";
 import { toast } from "sonner";
@@ -83,8 +92,14 @@ export default function PhotoGallery({
   type?: "public" | "private";
 }) {
   const isOpen = useSelector(photoGalleryStore, (state) => state.isOpen);
-  const { toggleDialog, toggleCaptions, toggleCounter, isCaptionVisible, isCounterVisible } =
-    useImageStore();
+  const {
+    toggleDialog,
+    toggleCaptions,
+    toggleCounter,
+    isCaptionVisible,
+    isCounterVisible,
+    setInitialValues,
+  } = useImageStore();
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const fullscreenRef = useRef(null);
@@ -264,6 +279,20 @@ export default function PhotoGallery({
                       <span>Import to album</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
+                      onClick={() => {
+                        toggleDialog("edit", photos[index].id, photos[index].url);
+                        setInitialValues({
+                          title: photos[index].title ?? "",
+                          description: photos[index].description ?? "",
+                          published: photos[index].published ?? "",
+                        });
+                      }}
+                      className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
+                    >
+                      <ImageIcon className="mr-2 h-4 w-4" />
+                      <span>Edit Image</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
                       onClick={() => handleAction("public", photos[index].id)}
                       className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
                     >
@@ -331,7 +360,6 @@ export default function PhotoGallery({
           },
         }}
         captions={{
-          hidden: true,
           descriptionTextAlign: "start",
         }}
         styles={{

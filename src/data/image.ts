@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { db } from "@/lib/db";
 import { authMiddleware } from "@/middlewares/auth";
-import { imageSchema } from "@/schemas/image";
+import { editImageSchema, imageSchema } from "@/schemas/image";
 
 export const getImagesFn = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
@@ -125,6 +125,31 @@ export const ImportImagesToAlbumFn = createServerFn({ method: "POST" })
           },
         });
       }
+    });
+    return true;
+  });
+
+export const editImageFn = createServerFn({ method: "POST" })
+  .inputValidator(
+    editImageSchema.extend({
+      imageId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data, context }) => {
+    await db.$transaction(async (ctx) => {
+      await ctx.image.update({
+        where: {
+          id: data.imageId,
+          userId: context.user.id as string,
+        },
+        data: {
+          title: data.title,
+          description: data.description,
+          url: data.imageUrl,
+          published: data.published,
+        },
+      });
     });
     return true;
   });

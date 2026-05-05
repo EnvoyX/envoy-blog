@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Sparkles, Loader2 } from 'lucide-react';
 
 import { ShortPostCard } from '@/components/web/post/ShortPostCard';
 import { getGlobalFeedFn } from '@/data/post';

@@ -13,6 +13,13 @@ export const imageSchema = z.object({
   published: z.boolean(),
 });
 
+export const editImageSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  imageUrl: z.url("Invalid URL"),
+  published: z.boolean(),
+});
+
 export const imageSearchSchema = z.object({
   sortDateBy: z.enum(["ASC", "DESC"]).default("DESC"),
 });

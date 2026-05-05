@@ -1,6 +1,6 @@
 import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { createStore, useSelector } from "@tanstack/react-store";
+import { useSelector } from "@tanstack/react-store";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { intlFormat, intlFormatDistance } from "date-fns";
 import {
@@ -17,7 +17,6 @@ import {
   Heart,
   MessageSquare,
 } from "lucide-react";
-import { useState } from "react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -50,6 +49,7 @@ import { getMyPostsFn, deletePostFn } from "@/data/blog";
 import { getUser } from "@/data/session";
 import { BlogStatus } from "@/lib/constants";
 import { postSearchSchema } from "@/schemas/blog";
+import { modalStore } from "@/store/blogStore";
 
 export const Route = createFileRoute("/dashboard/blog/")({
   loader: async () => {
@@ -88,13 +88,6 @@ function BlogPageComponent() {
   const { visibility, query } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const router = useRouter();
-  const [modalStore] = useState(() =>
-    createStore({
-      dialogId: "",
-      isOpen: false,
-      isLoading: false,
-    }),
-  );
   const isOpen = useSelector(modalStore, (state) => state.isOpen);
   const isLoading = useSelector(modalStore, (state) => state.isLoading);
 
@@ -228,7 +221,7 @@ function BlogPageComponent() {
                         >
                           <DropdownMenuItem asChild className="cursor-pointer gap-2">
                             <Link to="/dashboard/blog/$slug" params={{ slug: post.slug }}>
-                              <ExternalLink className="size-4" /> View Post
+                              <ExternalLink className="size-4" /> View Blog
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem className="cursor-pointer gap-2">
@@ -237,7 +230,7 @@ function BlogPageComponent() {
                               params={{ slug: post.slug }}
                               className="flex gap-1"
                             >
-                              <Pencil className="size-4" /> Edit Post
+                              <Pencil className="size-4" /> Edit Blog
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem
@@ -354,7 +347,7 @@ function BlogPageComponent() {
                     postId: modalStore.state.dialogId,
                   },
                 });
-                toast.success("Post deleted");
+                toast.success("Blog deleted");
                 void router.invalidate();
                 modalStore.setState((prev) => {
                   return {

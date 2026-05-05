@@ -17,72 +17,56 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { createAlbumFn, editAlbumFn } from "@/data/album";
-import { albumSchema } from "@/schemas/album";
-import { useAlbumStore } from "@/store/album";
+import { useImageStore } from "@/store/image";
+import { editImageSchema } from "@/schemas/image";
+import { editImageFn } from "@/data/image";
 
-export function AlbumDialog() {
+export function ImageDialog() {
   const router = useRouter();
   const {
-    onOpenDialogChange,
-    isAlbumDialogOpen,
-    toggleDialog,
-    initialValues,
     setInitialValues,
-    currentAlbumId,
-  } = useAlbumStore();
+    isEditDialogOpen,
+    onOpenChangeDialog,
+    initialValues,
+    imageId,
+    imageUrl,
+    toggleDialog,
+  } = useImageStore();
   const form = useForm({
     defaultValues: {
-      name: initialValues ? initialValues.name : "",
+      title: initialValues ? initialValues.title : "",
       description: initialValues ? initialValues.description : "",
       published: initialValues ? initialValues.published : false,
-      coverImageUrl: initialValues ? initialValues.coverImageUrl : "",
+      imageUrl: initialValues ? imageUrl : "",
     },
     validators: {
-      onSubmit: albumSchema,
-      onChange: albumSchema,
-      onBlur: albumSchema,
+      onSubmit: editImageSchema,
+      onChange: editImageSchema,
+      onBlur: editImageSchema,
     },
     onSubmit: async ({ value }) => {
       console.log(value);
-      console.log("Initial values", initialValues);
-      if (initialValues?.type === "edit") {
-        await editAlbumFn({
-          data: {
-            albumId: currentAlbumId,
-            name: value.name,
-            description: value.description,
-            published: value.published,
-            coverImageUrl: value.coverImageUrl,
-          },
-        });
-        toast.success("Album edited successfully");
-        form.reset();
-        void router.invalidate();
-        setInitialValues(null);
-        toggleDialog("close", "");
-      } else if (initialValues?.type === "create") {
-        await createAlbumFn({
-          data: {
-            name: value.name,
-            description: value.description,
-            published: value.published,
-            coverImageUrl: value.coverImageUrl,
-          },
-        });
-        toast.success("Album created successfully");
-        form.reset();
-        void router.invalidate();
-        toggleDialog("close", "");
-      }
+      await editImageFn({
+        data: {
+          imageId,
+          title: value.title,
+          description: value.description,
+          imageUrl: value.imageUrl,
+          published: value.published,
+        },
+      });
+      toast.success("Image edited successfully!");
+      form.reset();
+      void router.invalidate();
+      toggleDialog("close", "", "");
     },
   });
 
   return (
     <Dialog
-      open={isAlbumDialogOpen}
+      open={isEditDialogOpen}
       onOpenChange={(open) => {
-        onOpenDialogChange("open", open);
+        onOpenChangeDialog("edit", open);
         setInitialValues(null);
       }}
     >
@@ -93,12 +77,9 @@ export function AlbumDialog() {
               <div className="bg-emerald-500/10 w-fit p-2 rounded-lg">
                 <MailboxIcon className="text-emerald-500 size-6" />
               </div>
-              <DialogTitle className="text-2xl font-bold text-zinc-100">
-                {initialValues?.type === "edit" ? "Edit Album" : "New Album"}
-              </DialogTitle>
+              <DialogTitle className="text-2xl font-bold text-zinc-100">Edit Image</DialogTitle>
               <DialogDescription className="text-zinc-400">
-                Configure to {initialValues?.type === "edit" ? "edit" : "create"} your album and
-                visibility settings.
+                Configure to edit your image and visibility settings.
               </DialogDescription>
             </DialogHeader>
 
@@ -135,7 +116,7 @@ export function AlbumDialog() {
                 <Label className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
                   Album Name
                 </Label>
-                <form.Field name="name">
+                <form.Field name="title">
                   {(field) => {
                     const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                     return (
@@ -143,7 +124,7 @@ export function AlbumDialog() {
                         <div className="group flex items-center gap-2 animate-in fade-in slide-in-from-left-2 duration-300 p-2">
                           <div className="relative flex-1">
                             <Input
-                              placeholder="Name of your album"
+                              placeholder="Title of your image"
                               className="bg-zinc-900! border-zinc-800 focus-visible:ring-emerald-500/50 rounded-lg h-10 transition-all"
                               value={field.state.value}
                               onChange={(e) => {
@@ -194,7 +175,7 @@ export function AlbumDialog() {
                         <div className="relative group">
                           <Textarea
                             id={`${field.name}-input`}
-                            placeholder="Provide a story or description for the album..."
+                            placeholder="Provide description for the image..."
                             className={`
                               min-h-30 resize-none p-4
                               bg-zinc-900/50 border-zinc-800
@@ -226,9 +207,9 @@ export function AlbumDialog() {
               </Field>
               <Field>
                 <Label className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
-                  Cover Image
+                  Image URL
                 </Label>
-                <form.Field name="coverImageUrl">
+                <form.Field name="imageUrl">
                   {(field) => {
                     const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                     return (
@@ -269,7 +250,7 @@ export function AlbumDialog() {
                       className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 rounded-xl transition-all shadow-lg shadow-emerald-900/20 cursor-pointer"
                     >
                       {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
-                      {initialValues?.type === "edit" ? "Edit Album" : "Create Album"}
+                      Edit Image
                     </Button>
                   )}
                 />
@@ -281,7 +262,7 @@ export function AlbumDialog() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 blur-[120px] rounded-full" />
 
             <form.Subscribe
-              selector={(state) => state.values.coverImageUrl}
+              selector={(state) => state.values.imageUrl}
               children={(image) => {
                 if (!image || image.trim() === "") {
                   return (
