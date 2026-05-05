@@ -154,7 +154,31 @@ export const editImageFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const DeleteImageFn = createServerFn({ method: "POST" })
+  export const removeImageFromAlbumFn = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      imageId: z.string(),
+      albumId: z.string()
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data }) => {
+    await db.$transaction(async (ctx) => {
+      await ctx.album.update({
+        where: { id: data.albumId },
+        data: {
+          images: {
+            disconnect: {
+              id: data.imageId
+            }
+          }
+        }
+      });
+    });
+    return true;
+  });
+
+export const deleteImageFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       imageId: z.string(),
@@ -170,7 +194,7 @@ export const DeleteImageFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const SetPrivateImageFn = createServerFn({ method: "POST" })
+export const setPrivateImageFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       imageId: z.string(),
@@ -189,7 +213,7 @@ export const SetPrivateImageFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const SetPublicImageFn = createServerFn({ method: "POST" })
+export const setPublicImageFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       imageId: z.string(),

@@ -45,17 +45,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DeleteImageFn, SetPrivateImageFn, SetPublicImageFn } from "@/data/image";
+import { deleteImageFn, removeImageFromAlbumFn, setPrivateImageFn, setPublicImageFn } from "@/data/image";
 import { Image } from "@/generated/prisma/client";
 import { useImageStore } from "@/store/image";
+import { photoGalleryStore } from "@/store/photoGallery";
+import { useQuery } from "@tanstack/react-query";
+import { getAlbumByIdFn } from "@/data/album";
 
 // custom image modal or lightbox
 // import { ImageModal } from './ImageModal';
-
-const photoGalleryStore = createStore({
-  isOpen: false,
-  photoId: "",
-});
 
 async function downloadExternalFile(externalUrl: string, fileName: string) {
   try {
@@ -87,9 +85,11 @@ async function downloadExternalFile(externalUrl: string, fileName: string) {
 export default function PhotoGallery({
   images,
   type,
+  albumId,
 }: {
   images: Image[];
   type?: "public" | "private";
+  albumId?: string
 }) {
   const isOpen = useSelector(photoGalleryStore, (state) => state.isOpen);
   const {
@@ -107,6 +107,18 @@ export default function PhotoGallery({
   const thumbnailsRef = useRef(null);
   const zoomRef = useRef(null);
   const router = useRouter();
+   const { data: album } = useQuery({
+        queryKey: ["album", albumId],
+        queryFn: async () => {
+          const album = await getAlbumByIdFn({
+            data: {
+              albumId: albumId ?? "",
+            },
+          });
+          return album;
+        },
+        enabled: albumId ? true : false,
+      });
   const photos = images.map((photo, index) => ({
     ...photo,
     globalIndex: index,
@@ -115,23 +127,55 @@ export default function PhotoGallery({
   async function handleAction(action: string, photoId: string) {
     console.log(`Action: ${action} for Photo: ${photoId}`);
     if (action === "public") {
-      await SetPublicImageFn({
+      toast.loading("Updating...", {
+        id : "action"
+      })
+      await setPublicImageFn({
         data: {
           imageId: photoId,
         },
       });
+      toast.dismiss("action")
       toast.success("Photo successfully set to public");
       void router.invalidate();
     } else if (action === "private") {
-      await SetPrivateImageFn({
+      toast.loading("Updating...", {
+        id : "action"
+      })
+      await setPrivateImageFn({
         data: {
           imageId: photoId,
         },
       });
+      toast.dismiss("action")
       toast.success("Photo successfully set to private");
       void router.invalidate();
-    } else if (action === "delete") {
-      await DeleteImageFn({
+    } 
+    else if (action === "remove-image" && albumId) {
+       toast.loading("Updating...", {
+        id : "action"
+      })
+      await removeImageFromAlbumFn({
+        data: {
+          imageId: photoId,
+          albumId : albumId,
+        },
+      });
+      photoGalleryStore.setState((prev) => {
+        return {
+          ...prev,
+          isOpen: false,
+        };
+      });
+      toast.dismiss("action")
+      toast.success("Photo remove from album successfully");
+      void router.invalidate();
+    }    
+    else if (action === "delete") {
+        toast.loading("Updating...", {
+        id : "action"
+      })
+      await deleteImageFn({
         data: {
           imageId: photoId,
         },
@@ -142,6 +186,7 @@ export default function PhotoGallery({
           isOpen: false,
         };
       });
+      toast.dismiss("action")
       toast.success("Photo deleted successfully");
       void router.invalidate();
     }
@@ -202,20 +247,31 @@ export default function PhotoGallery({
         <DialogContent className="sm:max-w-md z-[9999]!">
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your account and remove
-              your data from our servers.
+            {albumId ?  (<DialogDescription>
+              This action cannot be undone. This will permanently remove the image from album: <span className="text-emerald-500 font-bold">{album?.name}</span>
+            </DialogDescription>) : (
+              <DialogDescription>
+              This action cannot be undone. This will permanently delete the image and remove
+              it from our servers.
             </DialogDescription>
+            ) }
           </DialogHeader>
           <DialogFooter className="sm:justify-center">
-            <Button
+            {albumId ? (<Button
+              type="button"
+              variant={"destructive"}
+              className="cursor-pointer"
+              onClick={() => handleAction("remove-image", photos[index].id)}
+            >
+              Remove Image
+            </Button>) : (<Button
               type="button"
               variant={"destructive"}
               className="cursor-pointer"
               onClick={() => handleAction("delete", photos[index].id)}
             >
               Delete Image
-            </Button>
+            </Button>)}
             <DialogClose asChild>
               <Button type="button" className="cursor-pointer">
                 Close
@@ -285,6 +341,7 @@ export default function PhotoGallery({
                           title: photos[index].title ?? "",
                           description: photos[index].description ?? "",
                           published: photos[index].published ?? "",
+                          albumId : albumId ?? "",
                         });
                       }}
                       className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
@@ -307,6 +364,24 @@ export default function PhotoGallery({
                       <span>Set Private</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-white/10" />
+                     {albumId && (
+                      <DropdownMenuItem
+                      onClick={(e) => {
+                        e.preventDefault();
+                        photoGalleryStore.setState(() => {
+                          return {
+                            photoId: photos[index].id,
+                            isOpen: true,
+                            albumId,
+                          };
+                        });
+                      }}
+                      className="focus:bg-red-500/20 text-red-400 focus:text-red-400 cursor-pointer"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      <span>Remove from album</span>
+                    </DropdownMenuItem>
+                     )}
                     <DropdownMenuItem
                       onClick={(e) => {
                         e.preventDefault();

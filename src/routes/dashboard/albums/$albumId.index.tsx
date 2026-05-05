@@ -170,7 +170,7 @@ function AlbumPage() {
         {album?.description && (
           <p className="mb-8 text-lg text-slate-400 px-4">{album.description}</p>
         )}
-        <PhotoGallery images={album?.images as Image[]} type="private" />
+        <PhotoGallery images={album?.images as Image[]} type="private" albumId={albumId}  />
       </main>
     </div>
   );

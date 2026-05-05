@@ -20,6 +20,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useImageStore } from "@/store/image";
 import { editImageSchema } from "@/schemas/image";
 import { editImageFn } from "@/data/image";
+import { useQuery } from "@tanstack/react-query";
+import { getAlbumByIdFn } from "@/data/album";
 
 export function ImageDialog() {
   const router = useRouter();
@@ -32,6 +34,18 @@ export function ImageDialog() {
     imageUrl,
     toggleDialog,
   } = useImageStore();
+  const { data: album } = useQuery({
+      queryKey: ["album", initialValues?.albumId],
+      queryFn: async () => {
+        const album = await getAlbumByIdFn({
+          data: {
+            albumId: initialValues?.albumId ?? "",
+          },
+        });
+        return album;
+      },
+      enabled: initialValues?.albumId ? true : false,
+    });
   const form = useForm({
     defaultValues: {
       title: initialValues ? initialValues.title : "",
@@ -81,6 +95,11 @@ export function ImageDialog() {
               <DialogDescription className="text-zinc-400">
                 Configure to edit your image and visibility settings.
               </DialogDescription>
+              {album && (
+                <DialogDescription className="text-zinc-400">
+                From album: <span className="text-emerald-500 font-bold">{album?.name}</span>.
+              </DialogDescription>
+              )}
             </DialogHeader>
 
             <form
@@ -114,7 +133,7 @@ export function ImageDialog() {
               />
               <Field>
                 <Label className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
-                  Album Name
+                  Image Title
                 </Label>
                 <form.Field name="title">
                   {(field) => {
@@ -255,7 +274,7 @@ export function ImageDialog() {
                   )}
                 />
               </div>
-            </form>
+            </form>          
           </div>
 
           <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-[#09090b] relative overflow-hidden">

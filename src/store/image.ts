@@ -15,6 +15,7 @@ export const useImageStore = create(
           title: string;
           description: string;
           published: boolean;
+          albumId?: string;
         } | null,
       },
       (set) => ({
@@ -74,6 +75,7 @@ export const useImageStore = create(
           initialValues: {
             title: string;
             description: string;
+            albumId: string;
             published: boolean;
           } | null,
         ) => {
@@ -82,6 +84,7 @@ export const useImageStore = create(
               title: initialValues ? initialValues.title : "",
               description: initialValues ? initialValues.description : "",
               published: initialValues ? initialValues.published : false,
+              albumId: initialValues? initialValues.albumId : "",
             },
           });
         },
