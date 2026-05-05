@@ -24,6 +24,8 @@ export const getGlobalFeedFn = createServerFn({ method: "GET" }).handler(async (
   });
 });
 
+console.log("Is authMiddleware defined?", !!authMiddleware);
+
 export const getShortPostsFn = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {

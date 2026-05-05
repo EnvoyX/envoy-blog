@@ -1,20 +1,10 @@
-// import { useQuery } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
-import { ArrowUpRight, Command, ShieldCheck, Zap } from 'lucide-react';
-// import { authClient } from '@/lib/auth-client';
+import { Link } from "@tanstack/react-router";
+import { ArrowUpRight, Command, ShieldCheck, Zap } from "lucide-react";
 
-import { navItemsMain } from './NavItems';
+import { navItemsMain } from "./NavItems";
 
 export function Footer() {
-  // const { data: session } = useQuery({
-  //   queryKey: ['session'],
-  //   queryFn: async () => {
-  //     const data = await authClient.getSession();
-  //     return data.data;
-  //   },
-  // });
   const currentYear = new Date().getFullYear();
-
   return (
     <footer className="relative border-t border-white/10 bg-background/60 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
