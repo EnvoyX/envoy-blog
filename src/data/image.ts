@@ -5,6 +5,33 @@ import { db } from "@/lib/db";
 import { authMiddleware } from "@/middlewares/auth";
 import { editImageSchema, imageSchema } from "@/schemas/image";
 
+export const saveImageUrl = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .inputValidator((data: unknown) => {
+    if (typeof data !== "object" || data === null) throw new Error("Invalid payload");
+    const d = data as Record<string, unknown>;
+    if (typeof d.url !== "string") throw new Error("url required");
+    return d as { url: string; filename: string; size: string; imgbbId: string; type?: string };
+  })
+  .handler(async ({ data, context }) => {
+    console.log("[server] Saving image URL to DB:", data);
+    await db.image.create({
+      data: {
+        id: data.imgbbId,
+        url: data.url,
+        title: data.filename,
+        userId: context.user.id as string,
+        source: "IMGBB",
+        size: String(data.size),
+      },
+    });
+    return {
+      ok: true,
+      savedAt: new Date().toISOString(),
+      url: data.url,
+    };
+  });
+
 export const getImagesFn = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
@@ -154,11 +181,11 @@ export const editImageFn = createServerFn({ method: "POST" })
     return true;
   });
 
-  export const removeImageFromAlbumFn = createServerFn({ method: "POST" })
+export const removeImageFromAlbumFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       imageId: z.string(),
-      albumId: z.string()
+      albumId: z.string(),
     }),
   )
   .middleware([authMiddleware])
@@ -169,10 +196,10 @@ export const editImageFn = createServerFn({ method: "POST" })
         data: {
           images: {
             disconnect: {
-              id: data.imageId
-            }
-          }
-        }
+              id: data.imageId,
+            },
+          },
+        },
       });
     });
     return true;

@@ -37,7 +37,7 @@ export function ImportToAlbumModal() {
       const albums = await getAlbumsFn();
       return albums;
     },
-    enabled: imageId && imageUrl ? true : false,
+    enabled: imageId && imageUrl && isImportToAlbumModalOpen ? true : false,
   });
 
   async function handleImportToAlbum(albumId: string) {

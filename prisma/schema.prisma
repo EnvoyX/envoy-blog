@@ -41,6 +41,11 @@ enum MessageRole {
   TOOL
 }
 
+enum SourceImage {
+  EXTERNAL
+  IMGBB
+}
+
 model SavedItem {
   id          String   @id @default(uuid())
   userId      String
@@ -133,6 +138,9 @@ model Image {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   published Boolean @default(false)
+
+  size    String?
+  source  SourceImage?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -281,6 +289,7 @@ model User {
   password      String?
   emailVerified Boolean
   image         String?
+  imageKey      String?
   defaultImage  String?
   biodata       String?
   role          UserRole    @default(USER)

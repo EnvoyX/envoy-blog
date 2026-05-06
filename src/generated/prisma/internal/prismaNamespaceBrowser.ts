@@ -160,6 +160,8 @@ export const ImageScalarFieldEnum = {
   shortPostId: 'shortPostId',
   userId: 'userId',
   published: 'published',
+  size: 'size',
+  source: 'source',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -284,6 +286,7 @@ export const UserScalarFieldEnum = {
   password: 'password',
   emailVerified: 'emailVerified',
   image: 'image',
+  imageKey: 'imageKey',
   defaultImage: 'defaultImage',
   biodata: 'biodata',
   role: 'role',

@@ -56,3 +56,11 @@ export const MessageRole = {
 } as const
 
 export type MessageRole = (typeof MessageRole)[keyof typeof MessageRole]
+
+
+export const SourceImage = {
+  EXTERNAL: 'EXTERNAL',
+  IMGBB: 'IMGBB'
+} as const
+
+export type SourceImage = (typeof SourceImage)[keyof typeof SourceImage]

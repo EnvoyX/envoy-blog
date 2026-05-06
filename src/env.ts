@@ -1,9 +1,9 @@
-import { createEnv } from '@t3-oss/env-core'
-import { z } from 'zod'
+import { createEnv } from "@t3-oss/env-core";
+import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    NODE_ENV: z.enum(['development', 'production']).default('development'),
+    NODE_ENV: z.enum(["development", "production"]).default("development"),
     DATABASE_URL: z.string().url(),
     DIRECT_URL: z.string().url(),
     BETTER_AUTH_SECRET: z.string().min(1),
@@ -17,13 +17,16 @@ export const env = createEnv({
     GEMINI_API_KEY: z.string().min(1),
     GROQ_API_KEY: z.string().min(1),
     OLLAMA_API_KEY: z.string().min(1),
+    UPLOADTHING_TOKEN: z.string().min(1),
+    UPLOADTHING_SECRET: z.string().min(1),
+    UPLOADTHING_APP_ID: z.string().min(1),
   },
 
   /**
    * The prefix that client-side variables must have. This is enforced both at
    * a type-level and at runtime.
    */
-  clientPrefix: 'VITE_',
+  clientPrefix: "VITE_",
 
   client: {
     VITE_BASE_URL: z.string().min(1),
@@ -49,6 +52,9 @@ export const env = createEnv({
     GEMINI_API_KEY: process.env.GEMINI_API_KEY,
     GROQ_API_KEY: process.env.GROQ_API_KEY,
     OLLAMA_API_KEY: process.env.OLLAMA_API_KEY,
+    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
+    UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
+    UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
   },
 
   /**
@@ -65,4 +71,4 @@ export const env = createEnv({
    * explicitly specify this option as true.
    */
   emptyStringAsUndefined: true,
-})
+});

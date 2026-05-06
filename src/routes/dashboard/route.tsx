@@ -1,4 +1,4 @@
-import { getSession } from "@/data/session";
+import { getUser } from "@/data/session";
 // import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/web/sidebar/app-sidebar";
@@ -10,10 +10,10 @@ import { ImageDialog } from "@/components/web/image/ImageDialog";
 export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
   loader: async () => {
-    const session = await getSession();
+    const session = await getUser();
 
     return {
-      user: session?.user,
+      user: session.user,
     };
   },
 });

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   SidebarGroup,
@@ -6,34 +6,23 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
-import { UserRole } from '@/generated/prisma/enums'
-import { allowedRoles } from '@/lib/constants'
-import { Link } from '@tanstack/react-router'
-import { Key, LucideIcon } from 'lucide-react'
+} from "@/components/ui/sidebar";
+import { allowedRoles } from "@/lib/constants";
+import { Link } from "@tanstack/react-router";
+import { Key, LucideIcon } from "lucide-react";
+import { UserSession } from "@/data/session";
 
 type NavPrimaryProps = {
   items: {
-    title: string
-    to: string
-    icon: LucideIcon
+    title: string;
+    to: string;
+    icon: LucideIcon;
     activeOptions: {
-      exact: boolean
-    }
-  }[]
-  user: {
-    id?: string | undefined
-    email?: string | undefined
-    name?: string | undefined
-    password?: string | null | undefined
-    emailVerified?: boolean | undefined
-    image?: string | null | undefined
-    defaultImage?: string | null | undefined
-    role?: UserRole | undefined
-    createdAt?: Date | undefined
-    updatedAt?: Date | undefined
-  }
-}
+      exact: boolean;
+    };
+  }[];
+  user: UserSession["user"];
+};
 
 export function NavPrimary({ items, user }: NavPrimaryProps) {
   return (
@@ -42,12 +31,11 @@ export function NavPrimary({ items, user }: NavPrimaryProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild size="sm">
-              {allowedRoles.includes(user.role as string) && (
+              {allowedRoles.includes(user?.role as string) && (
                 <Link
-                  to={'/dashboard/admin'}
+                  to={"/dashboard/admin"}
                   activeProps={{
-                    className:
-                      'bg-primary/10! text-primary! border-r-2! border-primary!',
+                    className: "bg-primary/10! text-primary! border-r-2! border-primary!",
                   }}
                   className="flex items-center gap-3! px-3! py-3! text-sm! font-medium! rounded-lg! transition-colors! hover:bg-white/5!"
                   activeOptions={{ exact: false }}
@@ -67,8 +55,7 @@ export function NavPrimary({ items, user }: NavPrimaryProps) {
                   <Link
                     to={item.to}
                     activeProps={{
-                      className:
-                        'bg-primary/10! text-primary! border-r-2! border-primary!',
+                      className: "bg-primary/10! text-primary! border-r-2! border-primary!",
                     }}
                     className="flex items-center gap-3! px-3! py-3! text-sm! font-medium! rounded-lg! transition-colors! hover:bg-white/5!"
                     activeOptions={item.activeOptions}
@@ -78,10 +65,10 @@ export function NavPrimary({ items, user }: NavPrimaryProps) {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            )
+            );
           })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
-  )
+  );
 }

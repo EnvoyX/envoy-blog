@@ -1791,6 +1791,8 @@ export const ImageScalarFieldEnum = {
   shortPostId: 'shortPostId',
   userId: 'userId',
   published: 'published',
+  size: 'size',
+  source: 'source',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1915,6 +1917,7 @@ export const UserScalarFieldEnum = {
   password: 'password',
   emailVerified: 'emailVerified',
   image: 'image',
+  imageKey: 'imageKey',
   defaultImage: 'defaultImage',
   biodata: 'biodata',
   role: 'role',
@@ -2077,6 +2080,20 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'SourceImage'
+ */
+export type EnumSourceImageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SourceImage'>
+    
+
+
+/**
+ * Reference to a field of type 'SourceImage[]'
+ */
+export type ListEnumSourceImageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SourceImage[]'>
     
 
 

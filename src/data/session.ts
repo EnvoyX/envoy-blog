@@ -26,7 +26,7 @@ export const getUser = createServerFn({ method: "GET" }).handler(async () => {
   };
 });
 
-export type GetUserType = Awaited<ReturnType<typeof getUser>>;
+export type UserSession = Awaited<ReturnType<typeof getUser>>;
 
 export const getProfileData = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
@@ -49,7 +49,7 @@ export const getProfileData = createServerFn({ method: "GET" }).handler(async ()
   };
 });
 
-export type UserSession = Awaited<ReturnType<typeof getUser>>;
+export type ProfileData = Awaited<ReturnType<typeof getProfileData>>;
 
 export const getUserData = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
