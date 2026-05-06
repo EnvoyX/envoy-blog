@@ -7,15 +7,15 @@ import {
   Loader2,
   ChevronLeft,
   PencilIcon,
-  PencilRulerIcon,
   CopyCheck,
   Copy,
+  EyeOff,
 } from "lucide-react";
 import { useDeferredValue, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Field,
   FieldContent,
@@ -36,7 +36,8 @@ import { postSchema } from "@/schemas/blog";
 
 export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
   const [activeTab, setActiveTab] = useState("edit-blog");
-  const [markdown, setMarkdown] = useState(initialData?.content ?? "");
+  const [showPreview, setShowPreview] = useState(true);
+  const [markdown, setMarkdown] = useState(() => initialData?.content ?? "");
   const [copied, setCopied] = useState(false);
 
   const deferredMarkdown = useDeferredValue(markdown, initialData?.content ?? "");
@@ -182,38 +183,23 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
             return (
               <>
                 <Label htmlFor={`${field.name}-input`}>Content (Markdown)</Label>
-                <div className="flex items-center gap-2 max-sm:flex-col max-sm:mt-4 max-sm:mb-4">
-                  <Button size={"sm"} variant={"default"} asChild>
-                    <Link
-                      to={
-                        initialData
-                          ? "/dashboard/blog/$slug/edit/md-editor"
-                          : "/dashboard/blog/md-editor"
-                      }
-                      params={{
-                        slug: initialData?.slug,
-                      }}
-                    >
-                      <PencilIcon className="size-4" />
-                      Edit in MD Editor
-                    </Link>
-                  </Button>
+                <div className="flex items-center gap-2 max-sm:flex-col max-sm:mt-4 max-sm:mb-4 overflow-auto max-sm:hidden">
                   <Button
                     size={"sm"}
                     variant={"default"}
-                    onClick={() => handleCopy(field.state.value)}
+                    onClick={() => setShowPreview((prev) => !prev)}
                     className="cursor-pointer"
                   >
-                    {copied ? (
-                      <span className="flex gap-1">
-                        <CopyCheck className="size-4" />
-                        Copied!
-                      </span>
+                    {showPreview ? (
+                      <p className="flex gap-1 items-center">
+                        <EyeOff className="size-4" />
+                        <span>Hide Preview</span>
+                      </p>
                     ) : (
-                      <span className="flex gap-1">
-                        <Copy className="size-4" />
-                        Copy Markdown
-                      </span>
+                      <p className="flex gap-1 items-center">
+                        <Eye className="size-4" />
+                        <span>Show Preview</span>
+                      </p>
                     )}
                   </Button>
                 </div>
@@ -317,10 +303,14 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
       <main className="md:hidden">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="edit-blog" className="gap-2">
+            <TabsTrigger value="edit-blog" className="gap-2" onClick={() => setShowPreview(false)}>
               <Pencil className="size-4" /> Write
             </TabsTrigger>
-            <TabsTrigger value="preview-blog" className="gap-2">
+            <TabsTrigger
+              value="preview-blog"
+              className="gap-2"
+              onClick={() => setShowPreview(true)}
+            >
               <Eye className="size-4" /> Preview
             </TabsTrigger>
           </TabsList>
@@ -339,26 +329,30 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
           <TabsContent value="preview-blog">
             <Card>
               <CardContent className="pt-6 prose dark:prose-invert max-w-none">
-                <form.Subscribe
-                  selector={(state) => [state.values]}
-                  children={([values]) => (
-                    <>
-                      <h1 className="text-2xl font-bold mb-4">{values.title || "Untitled"}</h1>
-                      <h3>
-                        {values.description || "Some description that makes you flabbergasted..."}
-                      </h3>
-                      <div className="aspect-video w-full overflow-hidden">
-                        <h4>Image Preview</h4>
-                        <img
-                          src={values.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
-                          alt={values.title ?? "Blog Thumbnail"}
-                          className="h-full w-full object-cover group-hover:scale-105 transition-transform "
+                {showPreview && (
+                  <form.Subscribe
+                    selector={(state) => [state.values]}
+                    children={([values]) => (
+                      <>
+                        <h1 className="text-2xl font-bold mb-4">{values.title || "Untitled"}</h1>
+                        <h3>
+                          {values.description || "Some description that makes you flabbergasted..."}
+                        </h3>
+                        <div className="aspect-video w-full overflow-hidden">
+                          <h4>Image Preview</h4>
+                          <img
+                            src={values.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
+                            alt={values.title ?? "Blog Thumbnail"}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform "
+                          />
+                        </div>
+                        <MarkdownRenderer
+                          markdown={deferredMarkdown || "*Nothing to preview...*"}
                         />
-                      </div>
-                      <MarkdownRenderer markdown={deferredMarkdown || "*Nothing to preview...*"} />
-                    </>
-                  )}
-                />
+                      </>
+                    )}
+                  />
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -383,28 +377,30 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
             </CardTitle>
           </CardHeader>
           <CardContent className="prose dark:prose-invert max-w-none">
-            <form.Subscribe
-              selector={(state) => [state.values]}
-              children={([values]) => (
-                <main>
-                  <h1 className="mt-0">{values.title || "Untitled Blog"}</h1>
-                  <h3>
-                    {values.description || "Some description that makes you flabbergasted..."}
-                  </h3>
-                  <div className="aspect-video w-full overflow-hidden">
-                    <h4>Image Preview</h4>
-                    <img
-                      src={values.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
-                      alt={values.title ?? "Blog Thumbnail"}
-                      className="h-full w-full object-cover group-hover:scale-105 transition-transform"
+            {showPreview && (
+              <form.Subscribe
+                selector={(state) => [state.values]}
+                children={([values]) => (
+                  <main>
+                    <h1 className="mt-0">{values.title || "Untitled Blog"}</h1>
+                    <h3>
+                      {values.description || "Some description that makes you flabbergasted..."}
+                    </h3>
+                    <div className="aspect-video w-full overflow-hidden">
+                      <h4>Image Preview</h4>
+                      <img
+                        src={values.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
+                        alt={values.title ?? "Blog Thumbnail"}
+                        className="h-full w-full object-cover group-hover:scale-105 transition-transform"
+                      />
+                    </div>
+                    <MarkdownRenderer
+                      markdown={deferredMarkdown || "Start typing to see the preview..."}
                     />
-                  </div>
-                  <MarkdownRenderer
-                    markdown={deferredMarkdown || "Start typing to see the preview..."}
-                  />
-                </main>
-              )}
-            />
+                  </main>
+                )}
+              />
+            )}
           </CardContent>
         </Card>
       </main>

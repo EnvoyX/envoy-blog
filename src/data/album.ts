@@ -89,6 +89,33 @@ export const addExistingImagesToAlbumFn = createServerFn({ method: "POST" })
     return true;
   });
 
+export const removeExistingImagesToAlbumFn = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      albumId: z.string(),
+      imageIds: z.array(z.string()),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ context, data }) => {
+    await db.$transaction(async (ctx) => {
+      if (data.imageIds.length > 0) {
+        await ctx.album.update({
+          where: {
+            id: data.albumId,
+            authorId: context.user.id,
+          },
+          data: {
+            images: {
+              disconnect: data.imageIds.map((id) => ({ id })),
+            },
+          },
+        });
+      }
+    });
+    return true;
+  });
+
 export const createAlbumFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({

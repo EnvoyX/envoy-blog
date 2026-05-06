@@ -1,6 +1,6 @@
 import { IconDownload } from "@tabler/icons-react";
 import { useRouter } from "@tanstack/react-router";
-import { createStore, useSelector } from "@tanstack/react-store";
+import { useSelector } from "@tanstack/react-store";
 import {
   AlbumIcon,
   Eye,
@@ -45,12 +45,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteImageFn, removeImageFromAlbumFn, setPrivateImageFn, setPublicImageFn } from "@/data/image";
+import {
+  deleteImageFn,
+  removeImageFromAlbumFn,
+  setPrivateImageFn,
+  setPublicImageFn,
+} from "@/data/image";
 import { Image } from "@/generated/prisma/client";
 import { useImageStore } from "@/store/image";
 import { photoGalleryStore } from "@/store/photoGallery";
 import { useQuery } from "@tanstack/react-query";
 import { getAlbumByIdFn } from "@/data/album";
+import { ZoomRef, ThumbnailsRef, FullscreenRef } from "yet-another-react-lightbox";
 
 // custom image modal or lightbox
 // import { ImageModal } from './ImageModal';
@@ -89,7 +95,7 @@ export default function PhotoGallery({
 }: {
   images: Image[];
   type?: "public" | "private";
-  albumId?: string
+  albumId?: string;
 }) {
   const isOpen = useSelector(photoGalleryStore, (state) => state.isOpen);
   const {
@@ -102,23 +108,24 @@ export default function PhotoGallery({
   } = useImageStore();
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
-  const fullscreenRef = useRef(null);
+  const [isZoom, setIsZoom] = useState(false);
+  const fullscreenRef = useRef<FullscreenRef>(null);
   // const slideshowRef = useRef(null);
-  const thumbnailsRef = useRef(null);
-  const zoomRef = useRef(null);
+  const thumbnailsRef = useRef<ThumbnailsRef>(null);
+  const zoomRef = useRef<ZoomRef>(null);
   const router = useRouter();
-   const { data: album } = useQuery({
-        queryKey: ["album", albumId],
-        queryFn: async () => {
-          const album = await getAlbumByIdFn({
-            data: {
-              albumId: albumId ?? "",
-            },
-          });
-          return album;
+  const { data: album } = useQuery({
+    queryKey: ["album", albumId],
+    queryFn: async () => {
+      const album = await getAlbumByIdFn({
+        data: {
+          albumId: albumId ?? "",
         },
-        enabled: albumId ? true : false,
       });
+      return album;
+    },
+    enabled: albumId ? true : false,
+  });
   const photos = images.map((photo, index) => ({
     ...photo,
     globalIndex: index,
@@ -128,37 +135,36 @@ export default function PhotoGallery({
     console.log(`Action: ${action} for Photo: ${photoId}`);
     if (action === "public") {
       toast.loading("Updating...", {
-        id : "action"
-      })
+        id: "action",
+      });
       await setPublicImageFn({
         data: {
           imageId: photoId,
         },
       });
-      toast.dismiss("action")
+      toast.dismiss("action");
       toast.success("Photo successfully set to public");
       void router.invalidate();
     } else if (action === "private") {
       toast.loading("Updating...", {
-        id : "action"
-      })
+        id: "action",
+      });
       await setPrivateImageFn({
         data: {
           imageId: photoId,
         },
       });
-      toast.dismiss("action")
+      toast.dismiss("action");
       toast.success("Photo successfully set to private");
       void router.invalidate();
-    } 
-    else if (action === "remove-image" && albumId) {
-       toast.loading("Updating...", {
-        id : "action"
-      })
+    } else if (action === "remove-image" && albumId) {
+      toast.loading("Updating...", {
+        id: "action",
+      });
       await removeImageFromAlbumFn({
         data: {
           imageId: photoId,
-          albumId : albumId,
+          albumId: albumId,
         },
       });
       photoGalleryStore.setState((prev) => {
@@ -167,14 +173,13 @@ export default function PhotoGallery({
           isOpen: false,
         };
       });
-      toast.dismiss("action")
+      toast.dismiss("action");
       toast.success("Photo remove from album successfully");
       void router.invalidate();
-    }    
-    else if (action === "delete") {
-        toast.loading("Updating...", {
-        id : "action"
-      })
+    } else if (action === "delete") {
+      toast.loading("Updating...", {
+        id: "action",
+      });
       await deleteImageFn({
         data: {
           imageId: photoId,
@@ -186,7 +191,7 @@ export default function PhotoGallery({
           isOpen: false,
         };
       });
-      toast.dismiss("action")
+      toast.dismiss("action");
       toast.success("Photo deleted successfully");
       void router.invalidate();
     }
@@ -222,6 +227,7 @@ export default function PhotoGallery({
                 src={photo.url}
                 alt={photo.id}
                 className="w-full h-auto display:block transition-transform duration-500 group-hover:scale-105 animate-in fade-in slide-in-from-bottom-4"
+                loading="lazy"
               />
               {(photo.title || photo.description) && (
                 <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
@@ -247,31 +253,38 @@ export default function PhotoGallery({
         <DialogContent className="sm:max-w-md z-[9999]!">
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
-            {albumId ?  (<DialogDescription>
-              This action cannot be undone. This will permanently remove the image from album: <span className="text-emerald-500 font-bold">{album?.name}</span>
-            </DialogDescription>) : (
+            {albumId ? (
               <DialogDescription>
-              This action cannot be undone. This will permanently delete the image and remove
-              it from our servers.
-            </DialogDescription>
-            ) }
+                This action cannot be undone. This will permanently remove the image from album:{" "}
+                <span className="text-emerald-500 font-bold">{album?.name}</span>
+              </DialogDescription>
+            ) : (
+              <DialogDescription>
+                This action cannot be undone. This will permanently delete the image and remove it
+                from our servers.
+              </DialogDescription>
+            )}
           </DialogHeader>
           <DialogFooter className="sm:justify-center">
-            {albumId ? (<Button
-              type="button"
-              variant={"destructive"}
-              className="cursor-pointer"
-              onClick={() => handleAction("remove-image", photos[index].id)}
-            >
-              Remove Image
-            </Button>) : (<Button
-              type="button"
-              variant={"destructive"}
-              className="cursor-pointer"
-              onClick={() => handleAction("delete", photos[index].id)}
-            >
-              Delete Image
-            </Button>)}
+            {albumId ? (
+              <Button
+                type="button"
+                variant={"destructive"}
+                className="cursor-pointer"
+                onClick={() => handleAction("remove-image", photos[index].id)}
+              >
+                Remove Image
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant={"destructive"}
+                className="cursor-pointer"
+                onClick={() => handleAction("delete", photos[index].id)}
+              >
+                Delete Image
+              </Button>
+            )}
             <DialogClose asChild>
               <Button type="button" className="cursor-pointer">
                 Close
@@ -341,7 +354,7 @@ export default function PhotoGallery({
                           title: photos[index].title ?? "",
                           description: photos[index].description ?? "",
                           published: photos[index].published ?? "",
-                          albumId : albumId ?? "",
+                          albumId: albumId ?? "",
                         });
                       }}
                       className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
@@ -364,24 +377,24 @@ export default function PhotoGallery({
                       <span>Set Private</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-white/10" />
-                     {albumId && (
+                    {albumId && (
                       <DropdownMenuItem
-                      onClick={(e) => {
-                        e.preventDefault();
-                        photoGalleryStore.setState(() => {
-                          return {
-                            photoId: photos[index].id,
-                            isOpen: true,
-                            albumId,
-                          };
-                        });
-                      }}
-                      className="focus:bg-red-500/20 text-red-400 focus:text-red-400 cursor-pointer"
-                    >
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      <span>Remove from album</span>
-                    </DropdownMenuItem>
-                     )}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          photoGalleryStore.setState(() => {
+                            return {
+                              photoId: photos[index].id,
+                              isOpen: true,
+                              albumId,
+                            };
+                          });
+                        }}
+                        className="focus:bg-red-500/20 text-red-400 focus:text-red-400 cursor-pointer"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>Remove from album</span>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem
                       onClick={(e) => {
                         e.preventDefault();
@@ -405,7 +418,14 @@ export default function PhotoGallery({
             "close",
           ],
         }}
-        on={{ view: ({ index: currentIndex }) => setIndex(currentIndex) }}
+        on={{
+          view: ({ index: currentIndex }) => setIndex(currentIndex),
+          zoom({ zoom }) {
+            if (zoom > 1) {
+              setIsZoom(true);
+            } else if (zoom === 1) setIsZoom(false);
+          },
+        }}
         close={() => setOpen(false)}
         plugins={[Fullscreen, Share, Thumbnails, Zoom, Counter, Captions]}
         fullscreen={{ ref: fullscreenRef }}
@@ -417,7 +437,7 @@ export default function PhotoGallery({
           vignette: false,
           borderColor: "transparent",
         }}
-        zoom={{ ref: zoomRef }}
+        zoom={{ ref: zoomRef, maxZoomPixelRatio: 10, scrollToZoom: true }}
         counter={{
           container: {
             style: {
@@ -426,7 +446,7 @@ export default function PhotoGallery({
               left: "50%",
               transform: "translate(-50%, -50%)",
               color: "oklch(69.6% 0.17 162.48)",
-              display: isCounterVisible ? "flex" : "none",
+              display: isZoom ? "none" : isCounterVisible ? "" : "none",
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
@@ -460,14 +480,14 @@ export default function PhotoGallery({
             backgroundColor: "transparent",
           },
           captionsTitle: {
-            display: isCaptionVisible ? "flex" : "none",
+            display: isZoom ? "none" : isCaptionVisible ? "" : "none",
             color: "oklch(69.6% 0.17 162.48)",
             fontWeight: 700,
             fontSize: "1.125rem",
             textShadow: "0px 1px 4px rgba(0, 0, 0, 0.8)",
           },
           captionsDescription: {
-            display: isCaptionVisible ? "flex" : "none",
+            display: isZoom ? "none" : isCaptionVisible ? "" : "none",
             color: "white",
             fontSize: "1rem",
             textShadow: "0px 1px 3px rgba(0, 0, 0, 0.8)",
@@ -477,6 +497,15 @@ export default function PhotoGallery({
           },
           captionsDescriptionContainer: {
             backgroundColor: "transparent",
+          },
+          toolbar: {
+            display: isZoom ? "none" : "",
+          },
+          navigationNext: {
+            display: isZoom ? "none" : "",
+          },
+          navigationPrev: {
+            display: isZoom ? "none" : "",
           },
         }}
         slides={photos.map((photo) => {

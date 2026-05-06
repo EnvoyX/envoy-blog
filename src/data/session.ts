@@ -1,12 +1,12 @@
-import { ReturnType } from '@sinclair/typebox';
-import { redirect } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
-import { getRequestHeaders } from '@tanstack/react-start/server';
+import { ReturnType } from "@sinclair/typebox";
+// import { redirect } from '@tanstack/react-router';
+import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeaders } from "@tanstack/react-start/server";
 
-import { auth } from '@/lib/auth';
-import { db } from '@/lib/db';
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
 
-export const getSession = createServerFn({ method: 'GET' }).handler(async () => {
+export const getSession = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
   // if (!session) {
@@ -15,7 +15,7 @@ export const getSession = createServerFn({ method: 'GET' }).handler(async () => 
   return session;
 });
 
-export const getUser = createServerFn({ method: 'GET' }).handler(async () => {
+export const getUser = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
   // if (!session) {
@@ -28,7 +28,7 @@ export const getUser = createServerFn({ method: 'GET' }).handler(async () => {
 
 export type GetUserType = Awaited<ReturnType<typeof getUser>>;
 
-export const getProfileData = createServerFn({ method: 'GET' }).handler(async () => {
+export const getProfileData = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
   // if (!session) {
@@ -51,7 +51,7 @@ export const getProfileData = createServerFn({ method: 'GET' }).handler(async ()
 
 export type UserSession = Awaited<ReturnType<typeof getUser>>;
 
-export const getUserData = createServerFn({ method: 'GET' }).handler(async () => {
+export const getUserData = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
   return {

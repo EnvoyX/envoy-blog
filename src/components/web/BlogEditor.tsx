@@ -1,5 +1,5 @@
-import { useForm } from '@tanstack/react-form';
-import { Link } from '@tanstack/react-router';
+import { useForm } from "@tanstack/react-form";
+import { Link } from "@tanstack/react-router";
 import {
   Pencil,
   Eye,
@@ -7,39 +7,40 @@ import {
   Loader2,
   ChevronLeft,
   PencilIcon,
-  PencilRulerIcon,
   CopyCheck,
   Copy,
-} from 'lucide-react';
-import { useDeferredValue, useState } from 'react';
-import { toast } from 'sonner';
+  EyeOff,
+} from "lucide-react";
+import { useDeferredValue, useState } from "react";
+import { toast } from "sonner";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldError,
   FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
-import { MarkdownRenderer } from '@/components/web/markdown/Markdown';
-import { createPostFn, updatePostFn } from '@/data/blog';
-import { Post } from '@/generated/prisma/client';
-import { cn } from '@/lib/utils';
-import { postSchema } from '@/schemas/blog';
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { MarkdownRenderer } from "@/components/web/markdown/Markdown";
+import { createPostFn, updatePostFn } from "@/data/blog";
+import { Post } from "@/generated/prisma/client";
+import { cn } from "@/lib/utils";
+import { postSchema } from "@/schemas/blog";
 
 export function BlogEditor({ initialData }: { initialData?: Post }) {
-  const [activeTab, setActiveTab] = useState('edit-blog');
-  const [markdown, setMarkdown] = useState(initialData?.content ?? '');
+  const [activeTab, setActiveTab] = useState("edit-blog");
+  const [markdown, setMarkdown] = useState(() => initialData?.content ?? "");
+  const [showPreview, setShowPreview] = useState(true);
   const [copied, setCopied] = useState(false);
 
-  const deferredMarkdown = useDeferredValue(markdown, initialData?.content ?? '');
+  const deferredMarkdown = useDeferredValue(markdown, initialData?.content ?? "");
 
   const handleCopy = async (markdown: string) => {
     await navigator.clipboard.writeText(markdown);
@@ -50,10 +51,10 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
 
   const form = useForm({
     defaultValues: {
-      title: initialData?.title || '',
-      content: initialData?.content || '',
-      description: initialData?.description || '',
-      image: initialData?.image || 'https://tanstack.com/assets/og-C0HGjoLl.png',
+      title: initialData?.title || "",
+      content: initialData?.content || "",
+      description: initialData?.description || "",
+      image: initialData?.image || "https://tanstack.com/assets/og-C0HGjoLl.png",
       published: initialData?.published || false,
     },
     validators: {
@@ -68,11 +69,11 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
             ...value,
           },
         });
-        toast.success('Blog updated succesfully!');
+        toast.success("Blog updated succesfully!");
       } else {
         console.log(value);
         await createPostFn({ data: value });
-        toast.success('Blog published succesfully!');
+        toast.success("Blog published succesfully!");
       }
     },
   });
@@ -154,7 +155,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
               <Field orientation="horizontal" data-invalid={isInvalid}>
                 <FieldContent>
                   <FieldLabel htmlFor="form-tanstack-switch-visibility">
-                    Visibility ({field.state.value === true ? 'Public' : 'Private'})
+                    Visibility ({field.state.value === true ? "Public" : "Private"})
                   </FieldLabel>
                   <FieldDescription>
                     Enable whether this blog published to public or keep in private.
@@ -182,34 +183,23 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
             return (
               <>
                 <Label htmlFor={`${field.name}-input`}>Content (Markdown)</Label>
-                <div className="flex items-center gap-2 max-sm:flex-col max-sm:mt-4 max-sm:mb-4">
-                  <Button size={'sm'} variant={'default'} asChild>
-                    <Link
-                      to={initialData ? '/blog/$slug/edit/md-editor' : '/blog/md-editor'}
-                      params={{
-                        slug: initialData?.slug,
-                      }}
-                    >
-                      <PencilIcon className="size-4" />
-                      Edit in MD Editor
-                    </Link>
-                  </Button>
+                <div className="flex items-center gap-2 max-sm:flex-col max-sm:mt-4 max-sm:mb-4 overflow-auto max-sm:hidden">
                   <Button
-                    size={'sm'}
-                    variant={'default'}
-                    onClick={() => handleCopy(field.state.value)}
+                    size={"sm"}
+                    variant={"default"}
+                    onClick={() => setShowPreview((prev) => !prev)}
                     className="cursor-pointer"
                   >
-                    {copied ? (
-                      <span className="flex gap-1">
-                        <CopyCheck className="size-4" />
-                        Copied!
-                      </span>
+                    {showPreview ? (
+                      <p className="flex gap-1 items-center">
+                        <EyeOff className="size-4" />
+                        <span>Hide Preview</span>
+                      </p>
                     ) : (
-                      <span className="flex gap-1">
-                        <Copy className="size-4" />
-                        Copy Markdown
-                      </span>
+                      <p className="flex gap-1 items-center">
+                        <Eye className="size-4" />
+                        <span>Show Preview</span>
+                      </p>
                     )}
                   </Button>
                 </div>
@@ -255,9 +245,9 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
 
         <div className="hidden md:block">
           <div className="flex gap-2 items-center">
-            <Button variant={'outline'} asChild>
+            <Button variant={"outline"} asChild>
               <Link
-                to={initialData ? '/blog/$slug/edit/md-editor' : '/blog/md-editor'}
+                to={initialData ? "/blog/$slug/edit/md-editor" : "/blog/md-editor"}
                 params={{
                   slug: initialData?.slug,
                 }}
@@ -269,7 +259,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
             <Button
               onClick={() => handleCopy(markdown)}
               className="cursor-pointer"
-              variant={'outline'}
+              variant={"outline"}
             >
               {copied ? (
                 <span className="flex gap-1">
@@ -289,9 +279,9 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                 <Button
                   onClick={() => form.handleSubmit()}
                   disabled={isSubmitting}
-                  className={cn('gap-2', {
-                    'cursor-pointer': !isSubmitting,
-                    'cursor-not-allowed': isSubmitting,
+                  className={cn("gap-2", {
+                    "cursor-pointer": !isSubmitting,
+                    "cursor-not-allowed": isSubmitting,
                   })}
                 >
                   {isSubmitting ? (
@@ -299,7 +289,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
                   ) : (
                     <Save className="size-4" />
                   )}
-                  {initialData ? 'Update Blog' : 'Publish Blog'}
+                  {initialData ? "Update Blog" : "Publish Blog"}
                 </Button>
               )}
             />
@@ -311,10 +301,14 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
       <main className="md:hidden">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="edit-blog" className="gap-2">
+            <TabsTrigger value="edit-blog" className="gap-2" onClick={() => setShowPreview(false)}>
               <Pencil className="size-4" /> Write
             </TabsTrigger>
-            <TabsTrigger value="preview-blog" className="gap-2">
+            <TabsTrigger
+              value="preview-blog"
+              className="gap-2"
+              onClick={() => setShowPreview(true)}
+            >
               <Eye className="size-4" /> Preview
             </TabsTrigger>
           </TabsList>
@@ -324,7 +318,7 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
               <CardContent className="pt-6 ">
                 {EditorFields}
                 <Button onClick={() => form.handleSubmit()} className="w-full mt-6 gap-2">
-                  <Save className="size-4" /> {initialData ? 'Update' : 'Publish'}
+                  <Save className="size-4" /> {initialData ? "Update" : "Publish"}
                 </Button>
               </CardContent>
             </Card>
@@ -333,26 +327,30 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
           <TabsContent value="preview-blog">
             <Card>
               <CardContent className="pt-6 prose dark:prose-invert max-w-none">
-                <form.Subscribe
-                  selector={(state) => [state.values]}
-                  children={([values]) => (
-                    <>
-                      <h1 className="text-2xl font-bold mb-4">{values.title || 'Untitled'}</h1>
-                      <h3>
-                        {values.description || 'Some description that makes you flabbergasted...'}
-                      </h3>
-                      <div className="aspect-video w-full overflow-hidden">
-                        <h4>Image Preview</h4>
-                        <img
-                          src={values.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
-                          alt={values.title ?? 'Blog Thumbnail'}
-                          className="h-full w-full object-cover group-hover:scale-105 transition-transform "
+                {showPreview && (
+                  <form.Subscribe
+                    selector={(state) => [state.values]}
+                    children={([values]) => (
+                      <>
+                        <h1 className="text-2xl font-bold mb-4">{values.title || "Untitled"}</h1>
+                        <h3>
+                          {values.description || "Some description that makes you flabbergasted..."}
+                        </h3>
+                        <div className="aspect-video w-full overflow-hidden">
+                          <h4>Image Preview</h4>
+                          <img
+                            src={values.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
+                            alt={values.title ?? "Blog Thumbnail"}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform "
+                          />
+                        </div>
+                        <MarkdownRenderer
+                          markdown={deferredMarkdown || "*Nothing to preview...*"}
                         />
-                      </div>
-                      <MarkdownRenderer markdown={deferredMarkdown || '*Nothing to preview...*'} />
-                    </>
-                  )}
-                />
+                      </>
+                    )}
+                  />
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -377,28 +375,30 @@ export function BlogEditor({ initialData }: { initialData?: Post }) {
             </CardTitle>
           </CardHeader>
           <CardContent className="prose dark:prose-invert max-w-none">
-            <form.Subscribe
-              selector={(state) => [state.values]}
-              children={([values]) => (
-                <main>
-                  <h1 className="mt-0">{values.title || 'Untitled Blog'}</h1>
-                  <h3>
-                    {values.description || 'Some description that makes you flabbergasted...'}
-                  </h3>
-                  <div className="aspect-video w-full overflow-hidden">
-                    <h4>Image Preview</h4>
-                    <img
-                      src={values.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
-                      alt={values.title ?? 'Blog Thumbnail'}
-                      className="h-full w-full object-cover group-hover:scale-105 transition-transform"
+            {showPreview && (
+              <form.Subscribe
+                selector={(state) => [state.values]}
+                children={([values]) => (
+                  <main>
+                    <h1 className="mt-0">{values.title || "Untitled Blog"}</h1>
+                    <h3>
+                      {values.description || "Some description that makes you flabbergasted..."}
+                    </h3>
+                    <div className="aspect-video w-full overflow-hidden">
+                      <h4>Image Preview</h4>
+                      <img
+                        src={values.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
+                        alt={values.title ?? "Blog Thumbnail"}
+                        className="h-full w-full object-cover group-hover:scale-105 transition-transform"
+                      />
+                    </div>
+                    <MarkdownRenderer
+                      markdown={deferredMarkdown || "Start typing to see the preview..."}
                     />
-                  </div>
-                  <MarkdownRenderer
-                    markdown={deferredMarkdown || 'Start typing to see the preview...'}
-                  />
-                </main>
-              )}
-            />
+                  </main>
+                )}
+              />
+            )}
           </CardContent>
         </Card>
       </main>

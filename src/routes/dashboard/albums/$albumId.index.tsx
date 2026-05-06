@@ -6,6 +6,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -101,6 +102,7 @@ function AlbumPage() {
                   published: album?.published as boolean,
                   coverImageUrl: album?.coverImageUrl || "",
                   type: "edit",
+                  addPhotos: true,
                 });
                 toggleDialog("bulk", albumId);
               }}
@@ -139,6 +141,7 @@ function AlbumPage() {
                       published: album?.published as boolean,
                       coverImageUrl: album?.coverImageUrl || "",
                       type: "edit",
+                      addPhotos: true,
                     });
                     toggleDialog("bulk", albumId);
                   }}
@@ -148,6 +151,23 @@ function AlbumPage() {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
                   <Pencil className="mr-2 size-4" /> Edit details
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => {
+                    setInitialValues({
+                      name: album?.name ?? "",
+                      description: album?.description || "",
+                      published: album?.published as boolean,
+                      coverImageUrl: album?.coverImageUrl || "",
+                      type: "edit",
+                      addPhotos: false,
+                    });
+                    toggleDialog("bulk", albumId);
+                  }}
+                  className="text-red-400 focus:text-red-400 cursor-pointer"
+                >
+                  <Trash2 className="mr-2 size-4" /> Remove photos
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => toggleDialog("delete", album?.id)}
@@ -170,7 +190,7 @@ function AlbumPage() {
         {album?.description && (
           <p className="mb-8 text-lg text-slate-400 px-4">{album.description}</p>
         )}
-        <PhotoGallery images={album?.images as Image[]} type="private" albumId={albumId}  />
+        <PhotoGallery images={album?.images as Image[]} type="private" albumId={albumId} />
       </main>
     </div>
   );
