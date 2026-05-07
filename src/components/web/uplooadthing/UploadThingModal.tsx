@@ -6,7 +6,6 @@ import {
   DialogTitle,
   DialogFooter,
   DialogDescription,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -17,17 +16,18 @@ import { imageUploadModalStore } from "@/store/imageUploadStore";
 import { useUploadThing } from "@/utils/uploadthing";
 import { toast } from "sonner";
 import { useRouter } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   CropperRef,
   CircleStencil,
   Cropper,
   Coordinates,
   CropperPreviewRef,
+  ImageRestriction,
 } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "usehooks-ts";
+import { FlipHorizontal, FlipVertical } from "lucide-react";
 
 function applyEditToCanvas(
   source: HTMLImageElement,
@@ -61,7 +61,6 @@ export function UploadThingModal() {
   const isMobile = useMediaQuery("(max-width: 640px)");
   const isDialogOpen = useSelector(imageUploadModalStore, (state) => state.isDialogOpen);
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const [file, setFile] = useState<File | null>(null);
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
@@ -129,6 +128,18 @@ export function UploadThingModal() {
     setIsCropping(false);
   }
 
+  // rotate & flip while cropping
+  function flipWhileCrop(horizontal: boolean, vertical: boolean) {
+    if (cropperRef.current) {
+      cropperRef.current.flipImage(horizontal, vertical);
+    }
+  }
+  function rotateWhileCrop(angle: number) {
+    if (cropperRef.current) {
+      cropperRef.current.rotateImage(angle);
+    }
+  }
+
   // UploadThing
   const { startUpload } = useUploadThing("updateProfilePicture", {
     onBeforeUploadBegin(files) {
@@ -178,9 +189,6 @@ export function UploadThingModal() {
       setEditedFile(null);
       setUploading(false);
       setTimeout(() => setProgress(0), 800);
-      void queryClient.invalidateQueries({
-        queryKey: ["user-profile"],
-      });
       void router.invalidate();
     },
     onUploadError: (e) => {
@@ -250,7 +258,7 @@ export function UploadThingModal() {
       }}
     >
       <DialogContent
-        className="max-w-2xl bg-slate-900 border-emerald-900 text-slate-100 p-0 overflow-auto
+        className="max-w-2xl max-sm:max-w-sm bg-slate-900 border-emerald-900 text-slate-100 p-0 overflow-auto
                      shadow-[0_0_60px_rgba(52,211,153,0.15)] "
       >
         <DialogHeader className="px-6 pt-6 pb-0">
@@ -411,6 +419,17 @@ export function UploadThingModal() {
 
               <Separator orientation="vertical" className="h-8 bg-slate-700" />
 
+              <Button
+                size="sm"
+                className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                onClick={() => {
+                  setFile(null);
+                  resetEdits();
+                }}
+              >
+                Reset Image
+              </Button>
+
               {!isCropping ? (
                 <Button
                   size="sm"
@@ -485,11 +504,141 @@ export function UploadThingModal() {
             stencilProps={{
               aspectRatio: 1 / 1,
               movable: isMobile ? false : true,
-              resizable: isMobile ? false : true,
-              handlers: isMobile ? false : true,
-              lines: isMobile ? false : true,
+              resizable: true,
+              lines: true,
+              handlers: false,
             }}
+            imageRestriction={isMobile ? ImageRestriction.stencil : undefined}
           />
+        )}
+        {error && (
+          <div className="bg-red-950/40 border border-red-800 text-red-300 rounded-xl px-4 py-3 text-sm flex items-center gap-2">
+            <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z"
+              />
+            </svg>
+            {error}
+          </div>
+        )}
+
+        {isCropping && (
+          <div className="flex flex-wrap w-full items-center justify-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              onClick={() => rotateWhileCrop(-90)}
+            >
+              <svg
+                className="w-4 h-4 mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                />
+              </svg>
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              onClick={() => rotateWhileCrop(90)}
+            >
+              <svg
+                className="w-4 h-4 mr-1 scale-x-[-1]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                />
+              </svg>
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              onClick={() => flipWhileCrop(true, false)}
+            >
+              <FlipHorizontal />
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              onClick={() => flipWhileCrop(false, true)}
+            >
+              <FlipVertical />
+            </Button>
+            <Separator orientation="vertical" className="h-8 bg-slate-700" />
+
+            {!isCropping ? (
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+                onClick={() => setIsCropping(true)}
+              >
+                <svg
+                  className="w-4 h-4 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M7.5 3v4.5m0 0H3m4.5 0H21M3 16.5h13.5m0 0V21m0-4.5H21"
+                  />
+                </svg>
+                Crop
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="default"
+                  className="text-white"
+                  disabled={uploading}
+                  onClick={onCrop}
+                >
+                  Apply Crop
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-slate-400 hover:text-slate-200"
+                  onClick={() => setIsCropping(false)}
+                >
+                  Cancel
+                </Button>
+              </>
+            )}
+
+            {(editedSrc || rotation !== 0) && (
+              <Button
+                size="sm"
+                variant="ghost"
+                className="text-slate-500 hover:text-red-400 ml-auto"
+                onClick={resetEdits}
+              >
+                Reset
+              </Button>
+            )}
+          </div>
         )}
 
         <DialogFooter className="px-6 pb-6 gap-2">
@@ -524,23 +673,6 @@ export function UploadThingModal() {
               )}
             </Button>
           )}
-          {isCropping && (
-            <Button variant="default" className="text-white" disabled={uploading} onClick={onCrop}>
-              Crop
-            </Button>
-          )}
-          <DialogClose asChild>
-            <Button
-              variant="ghost"
-              className="text-slate-400 hover:text-slate-200"
-              disabled={uploading}
-              onClick={() =>
-                imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: false }))
-              }
-            >
-              Cancel
-            </Button>
-          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
