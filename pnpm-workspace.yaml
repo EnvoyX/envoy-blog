@@ -1,0 +1,10 @@
+allowBuilds:
+  "@google/genai": true
+  "@openrouter/sdk": true
+  "@prisma/engines": true
+  esbuild: true
+  msgpackr-extract: true
+  msw: true
+  prisma: true
+  protobufjs: true
+  unrs-resolver: true
