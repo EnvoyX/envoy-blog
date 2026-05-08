@@ -7,24 +7,42 @@ import { editImageSchema, imageSchema } from "@/schemas/image";
 
 export const saveImageUrl = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator((data: unknown) => {
-    if (typeof data !== "object" || data === null) throw new Error("Invalid payload");
-    const d = data as Record<string, unknown>;
-    if (typeof d.url !== "string") throw new Error("url required");
-    return d as { url: string; filename: string; size: string; imgbbId: string; type?: string };
-  })
+  .inputValidator(
+    z.object({
+      url: z.string(),
+      filename: z.string(),
+      size: z.string(),
+      imgbbId: z.string(),
+      type: z.string().optional(),
+      albumId: z.string().optional(),
+    }),
+  )
   .handler(async ({ data, context }) => {
     console.log("[server] Saving image URL to DB:", data);
-    await db.image.create({
+    const newImage = await db.image.create({
       data: {
         id: data.imgbbId,
         url: data.url,
         title: data.filename,
         userId: context.user.id as string,
         source: "IMGBB",
-        size: String(data.size),
+        size: data.size,
       },
     });
+    if (data.albumId) {
+      await db.album.update({
+        where: {
+          id: data.albumId,
+        },
+        data: {
+          images: {
+            connect: {
+              id: newImage.id,
+            },
+          },
+        },
+      });
+    }
     return {
       ok: true,
       savedAt: new Date().toISOString(),

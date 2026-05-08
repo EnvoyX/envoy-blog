@@ -133,11 +133,14 @@ export function ImportImageModal() {
                 )}
               </header>
               <DialogTitle className="text-2xl font-bold text-zinc-100">Image Import</DialogTitle>
-              <h1 className="text-xl font-bold text-zinc-100">
-                {currentAlbumId && ` Album | ${album?.name}`}
-              </h1>
-              <DialogDescription className="text-zinc-400">
+
+              <DialogDescription className="flex flex-col  text-zinc-400">
                 Configure your batch upload and visibility settings.
+                {currentAlbumId && (
+                  <p>
+                    Import to <span className="font-bold text-emerald-500">{album?.name}</span>
+                  </p>
+                )}
               </DialogDescription>
             </DialogHeader>
 
@@ -256,7 +259,7 @@ export function ImportImageModal() {
                           });
                         }}
                       >
-                        <Plus className="mr-2 size-4" /> Add Another URL
+                        <Plus className="mr-2 size-4" /> Add URL
                       </Button>
                     </div>
                   )}

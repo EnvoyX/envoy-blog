@@ -4,7 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { getImagesFn } from "@/data/image";
 import PhotoGallery from "@/components/web/PhotoGallery";
 import { imageUploadModalStore } from "@/store/imageUploadStore";
-import { ImageUploader } from "@/components/web/ImageUploader";
 
 export const Route = createFileRoute("/dashboard/image-upload/")({
   component: PageUpload,
@@ -81,7 +80,6 @@ function PageUpload() {
           </div>
         )}
       </div>
-      <ImageUploader />
     </div>
   );
 }

@@ -59,7 +59,10 @@ function applyEditToCanvas(
 
 export function UploadThingModal() {
   const isMobile = useMediaQuery("(max-width: 640px)");
-  const isDialogOpen = useSelector(imageUploadModalStore, (state) => state.isDialogOpen);
+  const isUploadThingDialogOpen = useSelector(
+    imageUploadModalStore,
+    (state) => state.isUploadThingDialogOpen,
+  );
   const router = useRouter();
 
   const [file, setFile] = useState<File | null>(null);
@@ -96,7 +99,10 @@ export function UploadThingModal() {
     const reader = new FileReader();
     reader.onload = (e) => {
       setPreviewSrc(e.target?.result as string);
-      imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: true }));
+      imageUploadModalStore.setState((prev) => ({
+        ...prev,
+        isUploadThingDialogOpen: true,
+      }));
     };
     reader.readAsDataURL(f);
   }
@@ -182,7 +188,7 @@ export function UploadThingModal() {
     onClientUploadComplete: () => {
       toast.dismiss("upload-profile-image");
       toast.success(`Profile image uploaded successfully!`);
-      imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: false }));
+      imageUploadModalStore.setState((prev) => ({ ...prev, isUploadThingDialogOpen: false }));
       setFile(null);
       setPreviewSrc(null);
       setEditedSrc(null);
@@ -251,9 +257,11 @@ export function UploadThingModal() {
 
   return (
     <Dialog
-      open={isDialogOpen}
+      open={isUploadThingDialogOpen}
       onOpenChange={(open) => {
-        if (!uploading) imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: open }));
+        if (!uploading)
+          imageUploadModalStore.setState((prev) => ({ ...prev, isUploadThingDialogOpen: open }));
+
         resetEdits();
       }}
     >

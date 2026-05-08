@@ -6,6 +6,7 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { ImportImageModal } from "@/components/web/image/ImportImageModal";
 import { ImportToAlbumModal } from "@/components/web/image/ImportToAlbumModal";
 import { ImageDialog } from "@/components/web/image/ImageDialog";
+import { ImageUploader } from "@/components/web/ImageUploader";
 
 export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
@@ -37,6 +38,7 @@ function RouteComponent() {
           <Outlet />
         </div>
       </SidebarInset>
+      <ImageUploader />
       <ImportImageModal />
       <ImportToAlbumModal />
       <ImageDialog />

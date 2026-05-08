@@ -181,7 +181,11 @@ function RouteComponent() {
         <Button
           variant={"outline"}
           onClick={() =>
-            imageUploadModalStore.setState(() => ({ type: "profile-picture", isDialogOpen: true }))
+            imageUploadModalStore.setState((prev) => ({
+              ...prev,
+              type: "profile-picture",
+              isUploadThingDialogOpen: true,
+            }))
           }
           className="px-5 py-2.5 bg-background border border-border font-medium rounded-lg hover:bg-muted transition-colors text-emerald-500 cursor-pointer"
         >

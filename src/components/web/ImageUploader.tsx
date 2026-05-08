@@ -26,6 +26,8 @@ import {
 } from "react-advanced-cropper";
 import { cn } from "@/lib/utils";
 import { FlipHorizontal, FlipVertical } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getAlbumByIdFn } from "@/data/album";
 
 interface ImgBBResponse {
   data: {
@@ -44,13 +46,6 @@ interface ImgBBResponse {
   };
   success: boolean;
   status: number;
-}
-
-interface CropRect {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
 }
 
 function applyEditToCanvas(
@@ -85,6 +80,7 @@ function applyEditToCanvas(
 export function ImageUploader() {
   const isMobile = useMediaQuery("(max-width: 640px)");
   const isDialogOpen = useSelector(imageUploadModalStore, (state) => state.isDialogOpen);
+  const albumId = useSelector(imageUploadModalStore, (state) => state.albumId);
   const router = useRouter();
 
   const [file, setFile] = useState<File | null>(null);
@@ -94,7 +90,6 @@ export function ImageUploader() {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
 
   const [rotation, setRotation] = useState(0);
-  const [crop, setCrop] = useState<CropRect>({ x: 5, y: 5, w: 90, h: 90 });
   const [isCropping, setIsCropping] = useState(false);
 
   const [uploading, setUploading] = useState(false);
@@ -108,6 +103,19 @@ export function ImageUploader() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
 
+  const { data: album } = useQuery({
+    queryKey: ["album", albumId],
+    queryFn: async () => {
+      const album = await getAlbumByIdFn({
+        data: {
+          albumId: albumId ?? "",
+        },
+      });
+      return album;
+    },
+    enabled: albumId ? true : false,
+  });
+
   const handleFile = (f: File) => {
     if (!f.type.startsWith("image/")) {
       setError("Only image files are supported.");
@@ -116,7 +124,6 @@ export function ImageUploader() {
     setFile(f);
     setError(null);
     setRotation(0);
-    setCrop({ x: 5, y: 5, w: 90, h: 90 });
     setIsCropping(false);
     setEditedSrc(null);
     const reader = new FileReader();
@@ -139,7 +146,7 @@ export function ImageUploader() {
     const result = applyEditToCanvas(img, rotation, img.naturalWidth, img.naturalHeight);
     setEditedSrc(result);
     setIsCropping(false);
-  }, [rotation, crop, previewSrc]);
+  }, [rotation, previewSrc]);
 
   const rotate = (deg: number) => {
     setRotation((r) => (r + deg + 360) % 360);
@@ -148,9 +155,9 @@ export function ImageUploader() {
 
   const resetEdits = () => {
     setRotation(0);
-    setCrop({ x: 5, y: 5, w: 90, h: 90 });
     setEditedSrc(null);
     setIsCropping(false);
+    setError(null);
   };
 
   // rotate & flip while cropping
@@ -202,14 +209,15 @@ export function ImageUploader() {
         data: {
           url: json.data.url,
           filename: json.data.image.filename,
-          size: json.data.size,
+          size: String(json.data.size),
           imgbbId: json.data.id,
+          albumId,
         },
       });
 
       setProgress(100);
 
-      imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: false }));
+      imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: false, albumId: "" }));
       setFile(null);
       setPreviewSrc(null);
       setEditedSrc(null);
@@ -259,7 +267,8 @@ export function ImageUploader() {
     <Dialog
       open={isDialogOpen}
       onOpenChange={(open) => {
-        if (!uploading) imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: open }));
+        if (!uploading)
+          imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: open, albumId: "" }));
         resetEdits();
       }}
     >
@@ -268,11 +277,14 @@ export function ImageUploader() {
                      shadow-[0_0_60px_rgba(52,211,153,0.15)]"
       >
         <DialogHeader className="px-6 pt-6 pb-0">
-          <DialogTitle className="text-emerald-400 text-lg font-semibold">
-            Edit &amp; Upload
-          </DialogTitle>
-          <DialogDescription className="text-slate-500 text-sm">
-            Crop or rotate your image before uploading.
+          <DialogTitle className="text-emerald-400 text-lg font-semibold">Upload</DialogTitle>
+          <DialogDescription className="text-slate-500 text-sm flex flex-col">
+            <p>Crop or edit your image before uploading.</p>
+            {albumId && (
+              <p>
+                Uploading to <span className="font-bold text-emerald-500">{album?.name}</span>
+              </p>
+            )}
           </DialogDescription>
         </DialogHeader>
 

@@ -1,5 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, MoreVertical, Share2, Plus, Pencil, Trash2, FileDown } from "lucide-react";
+import {
+  ArrowLeft,
+  MoreVertical,
+  Share2,
+  Plus,
+  Pencil,
+  Trash2,
+  FileDown,
+  Upload,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +23,7 @@ import PhotoGallery from "@/components/web/PhotoGallery";
 import { getAlbumByIdFn } from "@/data/album";
 import { useAlbumStore } from "@/store/album";
 import { Image } from "@/generated/prisma/client";
+import { imageUploadModalStore } from "@/store/imageUploadStore";
 
 export const Route = createFileRoute("/dashboard/albums/$albumId/")({
   component: AlbumPage,
@@ -109,6 +119,16 @@ function AlbumPage() {
             >
               <Plus className="size-4" /> Add Photos
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="hidden sm:flex gap-2 rounded-full hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer"
+              onClick={() =>
+                imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: true, albumId }))
+              }
+            >
+              <Upload className="size-4" /> Upload Photo
+            </Button>
             <Button variant="ghost" size="icon" className="rounded-full hover:bg-white/10">
               <Share2 className="size-4" />
             </Button>
@@ -148,6 +168,18 @@ function AlbumPage() {
                   className="cursor-pointer sm:hidden"
                 >
                   <Plus className="mr-2 size-4" /> Add Photos
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    imageUploadModalStore.setState((prev) => ({
+                      ...prev,
+                      isDialogOpen: true,
+                      albumId,
+                    }))
+                  }
+                  className="cursor-pointer sm:hidden"
+                >
+                  <Upload className="mr-2 size-4" /> Upload Photo
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
                   <Pencil className="mr-2 size-4" /> Edit details
