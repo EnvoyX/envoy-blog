@@ -62,6 +62,7 @@ export const ModelName = {
   Task: 'Task',
   Chat: 'Chat',
   Message: 'Message',
+  Follow: 'Follow',
   Like: 'Like',
   Comment: 'Comment',
   User: 'User',
@@ -252,6 +253,16 @@ export const MessageScalarFieldEnum = {
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
+export const FollowScalarFieldEnum = {
+  id: 'id',
+  followerId: 'followerId',
+  followingId: 'followingId',
+  createdAt: 'createdAt'
+} as const
+
+export type FollowScalarFieldEnum = (typeof FollowScalarFieldEnum)[keyof typeof FollowScalarFieldEnum]
+
+
 export const LikeScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -289,6 +300,7 @@ export const UserScalarFieldEnum = {
   imageKey: 'imageKey',
   defaultImage: 'defaultImage',
   biodata: 'biodata',
+  showFollowStats: 'showFollowStats',
   role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

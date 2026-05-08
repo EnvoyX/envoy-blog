@@ -28,6 +28,8 @@ import { cn } from "@/lib/utils";
 import { FlipHorizontal, FlipVertical } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getAlbumByIdFn } from "@/data/album";
+import { useSettingStore } from "@/store/settings";
+import { toast } from "sonner";
 
 interface ImgBBResponse {
   data: {
@@ -81,6 +83,7 @@ export function ImageUploader() {
   const isMobile = useMediaQuery("(max-width: 640px)");
   const isDialogOpen = useSelector(imageUploadModalStore, (state) => state.isDialogOpen);
   const albumId = useSelector(imageUploadModalStore, (state) => state.albumId);
+  const { ImgbbAPIKey } = useSettingStore();
   const router = useRouter();
 
   const [file, setFile] = useState<File | null>(null);
@@ -176,6 +179,11 @@ export function ImageUploader() {
   async function onUpload() {
     const src = editedSrc ?? previewSrc;
     if (!src || !file) return;
+    if (!ImgbbAPIKey) {
+      toast.error("API Key not exist", {
+        description: "Please set your API Key in settings",
+      });
+    }
 
     setUploading(true);
     setProgress(10);
@@ -191,7 +199,8 @@ export function ImageUploader() {
 
       setProgress(30);
 
-      const apiKey = import.meta.env.VITE_IMGBB_API_KEY;
+      // const apiKey = import.meta.env.VITE_IMGBB_API_KEY;
+      const apiKey = ImgbbAPIKey;
       const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
         method: "POST",
         body: formData,

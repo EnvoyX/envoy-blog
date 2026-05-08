@@ -52,7 +52,7 @@ function App() {
               Now in RC: TanStack Start
             </div>
             <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight mb-6 bg-linear-to-b from-white to-slate-400 bg-clip-text text-transparent">
-              Envoy <br /> Mindpalace.
+              Envoy <br /> Mindpalace
             </h1>
             <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto">
               This is my own TanStack Start playground to learn and experiment with. Powered by

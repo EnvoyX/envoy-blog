@@ -248,7 +248,7 @@ export function PostDialog() {
                           e.preventDefault();
                           e.stopPropagation();
 
-                          field.pushValue(imageUrl);
+                          field.pushValue("");
                           setImageUrl("");
                         }}
                       >
@@ -269,7 +269,7 @@ export function PostDialog() {
                       className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 rounded-xl transition-all shadow-lg shadow-emerald-900/20 cursor-pointer"
                     >
                       {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
-                      Edit
+                      {initialValues.mode === "edit" ? "Edit" : "Create"}
                     </Button>
                   )}
                 />

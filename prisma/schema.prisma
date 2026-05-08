@@ -244,6 +244,21 @@ model Message {
   @@map("messages")
 }
 
+model Follow {
+  id      String @id @default(cuid())
+
+  follower    User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId  String
+
+  following   User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId String
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+  createdAt DateTime @default(now())  
+}
+
 model Like {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -292,6 +307,7 @@ model User {
   imageKey      String?
   defaultImage  String?
   biodata       String?
+  showFollowStats Boolean @default(true)     
   role          UserRole    @default(USER)
   createdAt     DateTime
   updatedAt     DateTime
@@ -301,8 +317,10 @@ model User {
   posts         Post[]
   tasks         Task[]
   taskLists     TaskList[]
-  quranTrack    QuranTrack?
+  quranTrack    QuranTrack? 
   chats         Chat[]
+  following     Follow[] @relation("UserFollowing") 
+  followers     Follow[] @relation("UserFollowers")
   likes         Like[]
   comments      Comment[]
   shortPosts    ShortPost[]

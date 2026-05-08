@@ -12,6 +12,7 @@ import {
   ImagesIcon,
   AlbumIcon,
   UploadIcon,
+  Settings2,
 } from "lucide-react";
 
 import { NavPrimaryProps, NavProps } from "@/lib/types";
@@ -142,6 +143,16 @@ export const navItemsDashboard: NavPrimaryProps["items"] = linkOptions([
     to: "/dashboard/discover",
     activeOptions: {
       exact: false,
+    },
+  },
+]);
+export const navSecondayItems: NavPrimaryProps["items"] = linkOptions([
+  {
+    title: "Settings",
+    to: "/dashboard/settings",
+    icon: Settings2,
+    activeOptions: {
+      exact: true,
     },
   },
 ]);

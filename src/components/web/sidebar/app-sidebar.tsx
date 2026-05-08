@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/sidebar";
 import { UserSession } from "@/data/session";
 
-import { navItemsDashboard } from "../NavItems";
+import { navItemsDashboard, navSecondayItems } from "../NavItems";
 import { NavPrimary } from "./nav-primary";
 import { NavUser } from "./nav-user";
+import { NavSecondary } from "./nav-secondary";
 
 export function AppSidebar({ user }: UserSession) {
   return (
@@ -38,6 +39,7 @@ export function AppSidebar({ user }: UserSession) {
       </SidebarHeader>
       <SidebarContent className="bg-emerald-950/50!">
         <NavPrimary items={navItemsDashboard} user={user} />
+        <NavSecondary items={navSecondayItems} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter className="bg-emerald-950/50!">
         <NavUser user={user} />
