@@ -12,10 +12,8 @@ import { QueryProvider } from "@/components/web/query-provider";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { LenisRef, ReactLenis } from "lenis/react";
 import { useRef } from "react";
-
 import appCss from "../styles.css?url";
 import "lenis/dist/lenis.css";
-
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -45,10 +43,8 @@ export const Route = createRootRoute({
       },
     ],
   }),
-
   shellComponent: RootDocument,
 });
-
 function RootDocument({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const lenisRef = useRef<LenisRef>(null);
@@ -137,7 +133,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       },
     },
   );
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -151,8 +146,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <QueryProvider>
           <HotkeysProvider
             defaultOptions={{
-              hotkey: { preventDefault: true },
-              hotkeySequence: { timeout: 1500 },
+              hotkey: {
+                preventDefault: true,
+              },
+              hotkeySequence: {
+                timeout: 1500,
+              },
               hotkeyRecorder: {
                 onCancel: () => console.warn("Recording cancelled"),
               },

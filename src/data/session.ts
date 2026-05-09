@@ -5,6 +5,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import z from "zod";
 
 export const getSession = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
@@ -27,6 +28,24 @@ export const getUser = createServerFn({ method: "GET" }).handler(async () => {
 });
 
 export type UserSession = Awaited<ReturnType<typeof getUser>>;
+
+export const getUserSessionDataFn = createServerFn({ method: "GET" })
+  .inputValidator(
+    z.object({
+      userId: z.string(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    return await db.user.findUnique({
+      where: { id: data.userId },
+      include: {
+        followers: true,
+        following: true,
+        likes: true,
+        comments: true,
+      },
+    });
+  });
 
 export const getProfileData = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();

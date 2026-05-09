@@ -1,16 +1,22 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { ImageIcon, Loader2, UserIcon } from 'lucide-react';
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ImageIcon, Loader2, UserIcon } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { buttonVariants } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BlogCard } from '@/components/web/BlogCard';
-import PhotoGallery from '@/components/web/PhotoGallery';
-import { ShortPostCard } from '@/components/web/post/ShortPostCard';
-import { getUser } from '@/data/session';
-import { getPublicProfileFn } from '@/data/user';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BlogCard } from "@/components/web/BlogCard";
+import PhotoGallery from "@/components/web/PhotoGallery";
+import { ShortPostCard } from "@/components/web/post/ShortPostCard";
+import { getUser } from "@/data/session";
+import { getPublicProfileFn } from "@/data/user";
+import { useLiveQuery } from "@tanstack/react-db";
+import { followColection } from "@/collections/follow";
+import { createId } from "@paralleldrive/cuid2";
+import { UserFollowDialog } from "@/components/web/UserFollowDialog";
+import { followDialogStore } from "@/store/profile";
+import { useQueryClient } from "@tanstack/react-query";
 
-export const Route = createFileRoute('/_general/user/$userId')({
+export const Route = createFileRoute("/_general/user/$userId")({
   component: PublicProfileComponent,
   pendingComponent: PendingPublicProfileComponent,
   loader: async ({ params }) => {
@@ -21,7 +27,6 @@ export const Route = createFileRoute('/_general/user/$userId')({
     });
 
     const session = await getUser();
-
     return {
       user,
       session,
@@ -31,22 +36,22 @@ export const Route = createFileRoute('/_general/user/$userId')({
     meta: [
       { title: `${loaderData?.user?.name} | Profile | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
       {
-        property: 'og:title',
+        property: "og:title",
         content: `${loaderData?.user?.name} | Profile | Envoy Mindpalace`,
       },
       {
-        property: 'og:description',
+        property: "og:description",
         content: `${loaderData?.user?.biodata}`,
       },
       {
-        property: 'og:image',
+        property: "og:image",
         content: `${loaderData?.user?.image}`,
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
@@ -64,10 +69,41 @@ function PendingPublicProfileComponent() {
 function PublicProfileComponent() {
   const { userId } = Route.useParams();
   const { user, session } = Route.useLoaderData();
+  const { data: follows } = useLiveQuery((q) => q.from({ follow: followColection }));
+  const queryClient = useQueryClient();
+
+  const hasFollowed = follows.find(
+    (follow) => follow.followerId === session?.user?.id && follow.followingId === userId,
+  );
+
+  function handleToggleFollow() {
+    if (!session.user) return;
+    const existingFollow = follows.find(
+      (follow) => follow.followerId === session?.user?.id && follow.followingId === userId,
+    );
+    if (!existingFollow) {
+      // optimistic Insert follow
+      followColection.insert({
+        id: createId(),
+        createdAt: new Date(),
+        followingId: userId,
+        followerId: session?.user.id as string,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-following-followers"],
+      });
+    } else {
+      // optimistic delete follow
+      followColection.delete(existingFollow.id);
+      queryClient.invalidateQueries({
+        queryKey: ["user-following-followers"],
+      });
+    }
+  }
 
   return (
     <main className="max-w-5xl mx-auto py-12 px-6 min-h-screen text-slate-200">
-      <header className="mb-12 flex flex-col md:flex-row items-center gap-8 border-b border-slate-800 pb-12">
+      <header className="mb-12 flex flex-col md:flex-row items-center gap-8 border-b border-slate-800 pb-12 ">
         <div className="size-40 rounded-3xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1 shadow-2xl shadow-emerald-500/10">
           <div className="w-full h-full rounded-3xl bg-slate-950 flex items-center justify-center overflow-hidden">
             {user?.image || user?.defaultImage ? (
@@ -76,20 +112,20 @@ function PublicProfileComponent() {
                   src={(user?.image as string) ?? (user?.defaultImage as string)}
                   alt={user?.name}
                   onError={(e) => {
-                    e.currentTarget.src = '';
-                    e.currentTarget.className = 'hidden';
+                    e.currentTarget.src = "";
+                    e.currentTarget.className = "hidden";
                   }}
                   className="w-full h-full object-cover object-center rounded-lg"
                 />
 
                 <AvatarFallback className="w-full h-full object-cover object-center rounded-lg text-3xl">
-                  {' '}
+                  {" "}
                   {(user?.name as string)
                     ? user?.name
-                        .split(' ')
+                        .split(" ")
                         .map((n) => n[0])
-                        .join('')
-                    : ''}
+                        .join("")
+                    : ""}
                 </AvatarFallback>
               </Avatar>
             ) : (
@@ -101,6 +137,41 @@ function PublicProfileComponent() {
         <div className="text-center md:text-left space-y-3">
           <h1 className="text-4xl font-extrabold tracking-tighter text-white">{user?.name}</h1>
           <p className="text-slate-400 max-w-md italic">{user?.biodata}</p>
+          {(user?.showFollowStats || session?.user?.id === userId) && (
+            <div className="text-slate-400 max-w-md flex max-sm:justify-center items-center gap-2">
+              <p
+                className="flex items-center gap-1 cursor-pointer"
+                onClick={() => {
+                  followDialogStore.setState(() => ({
+                    isOpen: true,
+                    currentUserId: userId,
+                    initialTab: "followers",
+                  }));
+                }}
+              >
+                <span className="font-bold text-primary">
+                  {follows.filter((follow) => follow.followingId === userId).length}
+                </span>
+                Followers
+              </p>
+              <p
+                className="flex items-center gap-1 cursor-pointer"
+                onClick={() => {
+                  followDialogStore.setState(() => ({
+                    isOpen: true,
+                    currentUserId: userId,
+                    initialTab: "following",
+                  }));
+                }}
+              >
+                <span className="font-bold text-primary">
+                  {follows.filter((follow) => follow.followerId === userId).length}
+                </span>
+                Following
+              </p>
+              {!user?.showFollowStats && <span className="text-slate-400">(Hidden)</span>}
+            </div>
+          )}
           <div className="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
             <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium">
               {user?.posts.length} Blogs
@@ -118,30 +189,46 @@ function PublicProfileComponent() {
           </div>
         </div>
         {userId === session?.user?.id && (
-          <div className="flex justify-end">
-            <Link to="/dashboard/profile" className={buttonVariants({ variant: 'default' })}>
+          <div className="flex sm:justify-end sm:ml-auto sm:mb-auto">
+            <Link to="/dashboard/profile" className={buttonVariants({ variant: "default" })}>
               Edit Profile
             </Link>
           </div>
         )}
+        {session && userId !== session?.user?.id && (
+          <div className="flex sm:justify-end sm:ml-auto sm:mb-auto">
+            {hasFollowed ? (
+              <Button className="cursor-pointer" onClick={handleToggleFollow}>
+                Unfollow
+              </Button>
+            ) : (
+              <Button className="cursor-pointer" onClick={handleToggleFollow}>
+                Follow
+              </Button>
+            )}
+          </div>
+        )}
       </header>
 
-      <Tabs defaultValue="blogs" className="w-full">
-        <TabsList className="bg-transparent border border-slate-800 p-1 mb-8 mx-auto flex items-center justify-center">
-          <TabsTrigger value="blogs" className="data-[state=active]:bg-slate-800 px-8">
+      <Tabs defaultValue="blogs" className="w-full" orientation="horizontal">
+        <TabsList className="bg-transparent border border-slate-800 mb-8 mx-auto flex items-center justify-start sm:justify-center max-sm:w-full overflow-x-auto scrollbar-hide whitespace-nowrap">
+          <TabsTrigger value="blogs" className="data-[state=active]:bg-slate-800 px-8 shrink-0">
             Blogs
           </TabsTrigger>
-          <TabsTrigger value="posts" className="data-[state=active]:bg-slate-800 px-8">
+          <TabsTrigger value="posts" className="data-[state=active]:bg-slate-800 px-8 shrink-0">
             Posts
           </TabsTrigger>
-          <TabsTrigger value="images" className="data-[state=active]:bg-slate-800 px-8">
+          <TabsTrigger value="images" className="data-[state=active]:bg-slate-800 px-8 shrink-0">
             Images
+          </TabsTrigger>
+          <TabsTrigger value="albums" className="data-[state=active]:bg-slate-800 px-8 shrink-0">
+            Albums
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="blogs">
+        <TabsContent value="blogs" className="mx-auto">
           {user && user?.posts?.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {user.posts.map((post) => {
                 return <BlogCard key={post.id} post={post} session={session} />;
               })}
@@ -179,6 +266,7 @@ function PublicProfileComponent() {
           )}
         </TabsContent>
       </Tabs>
+      <UserFollowDialog follows={follows} session={session} />
     </main>
   );
 }
