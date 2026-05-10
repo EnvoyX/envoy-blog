@@ -86,6 +86,7 @@ function AlbumPage() {
       published: album?.published as boolean,
       coverImageUrl: album?.coverImageUrl || "",
       type: "edit",
+      showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
     });
     toggleDialog("open", album?.id);
   };
@@ -134,6 +135,7 @@ function AlbumPage() {
                   coverImageUrl: album?.coverImageUrl || "",
                   type: "edit",
                   addPhotos: true,
+                  showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
                 });
                 toggleDialog("bulk", albumId);
               }}
@@ -183,6 +185,7 @@ function AlbumPage() {
                       coverImageUrl: album?.coverImageUrl || "",
                       type: "edit",
                       addPhotos: true,
+                      showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
                     });
                     toggleDialog("bulk", albumId);
                   }}
@@ -211,6 +214,7 @@ function AlbumPage() {
                       published: album?.published as boolean,
                       coverImageUrl: album?.coverImageUrl || "",
                       type: "edit",
+                      showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
                     });
                     toggleDialog("albumCover", albumId);
                   }}
@@ -233,6 +237,7 @@ function AlbumPage() {
                       coverImageUrl: album?.coverImageUrl || "",
                       type: "edit",
                       addPhotos: false,
+                      showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
                     });
                     toggleDialog("bulk", albumId);
                   }}

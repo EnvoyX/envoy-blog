@@ -19,6 +19,7 @@ export const useAlbumStore = create(
           coverImageUrl: string;
           type: "create" | "edit";
           addPhotos?: boolean | undefined;
+          showPrivateToFollowers: boolean;
         } | null,
       },
       (set) => ({
@@ -127,6 +128,7 @@ export const useAlbumStore = create(
             coverImageUrl: string;
             type: "create" | "edit";
             addPhotos?: boolean | undefined;
+            showPrivateToFollowers: boolean;
           } | null,
         ) => {
           set({
@@ -137,6 +139,7 @@ export const useAlbumStore = create(
               coverImageUrl: initialValues ? initialValues.coverImageUrl : "",
               type: initialValues ? initialValues.type : "create",
               addPhotos: initialValues ? initialValues.addPhotos : undefined,
+              showPrivateToFollowers: initialValues ? initialValues.showPrivateToFollowers : false,
             },
           });
         },

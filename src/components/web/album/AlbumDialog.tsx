@@ -37,6 +37,7 @@ export function AlbumDialog() {
       description: initialValues ? initialValues.description : "",
       published: initialValues ? initialValues.published : false,
       coverImageUrl: initialValues ? initialValues.coverImageUrl : "",
+      showPrivateToFollowers: initialValues ? initialValues.showPrivateToFollowers : false,
     },
     validators: {
       onSubmit: albumSchema,
@@ -54,6 +55,7 @@ export function AlbumDialog() {
             description: value.description,
             published: value.published,
             coverImageUrl: value.coverImageUrl,
+            showPrivateToFollowers: value.showPrivateToFollowers,
           },
         });
         toast.success("Album edited successfully");
@@ -68,6 +70,7 @@ export function AlbumDialog() {
             description: value.description,
             published: value.published,
             coverImageUrl: value.coverImageUrl,
+            showPrivateToFollowers: value.showPrivateToFollowers,
           },
         });
         toast.success("Album created successfully");
@@ -86,9 +89,9 @@ export function AlbumDialog() {
         setInitialValues(null);
       }}
     >
-      <DialogContent className="sm:max-w-6xl p-0 overflow-y-auto border-zinc-800 bg-zinc-950">
+      <DialogContent className="sm:max-w-6xl p-0  border-zinc-800 bg-zinc-950">
         <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
-          <div className="w-full md:w-2/5 p-8 border-r border-zinc-800/50 bg-zinc-900/20">
+          <div className="w-full md:w-2/5 p-8 border-r border-zinc-800/50 bg-zinc-900/20 overflow-y-auto">
             <DialogHeader className="mb-8">
               <div className="bg-emerald-500/10 w-fit p-2 rounded-lg">
                 <MailboxIcon className="text-emerald-500 size-6" />
@@ -108,7 +111,7 @@ export function AlbumDialog() {
                 e.stopPropagation();
                 void form.handleSubmit();
               }}
-              className="space-y-8"
+              className="space-y-8 "
             >
               <form.Field
                 name="published"
@@ -130,6 +133,41 @@ export function AlbumDialog() {
                     />
                   </div>
                 )}
+              />
+              <form.Subscribe
+                selector={(state) => state.values}
+                children={({ published }) => {
+                  if (!published)
+                    return (
+                      <form.Field
+                        name="showPrivateToFollowers"
+                        children={(field) => (
+                          <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="space-y-0.5">
+                              <Label className="text-sm font-medium text-zinc-200">
+                                Show Private:{" "}
+                                <span
+                                  className={
+                                    field.state.value ? "text-emerald-400" : "text-zinc-400"
+                                  }
+                                >
+                                  {field.state.value ? "Show" : ` Hidden`}
+                                </span>
+                              </Label>
+                              <p className="text-xs text-zinc-500">
+                                Show this post to follower even if private
+                              </p>
+                            </div>
+                            <Switch
+                              checked={field.state.value}
+                              onCheckedChange={field.handleChange}
+                              className="data-[state=checked]:bg-emerald-500"
+                            />
+                          </div>
+                        )}
+                      />
+                    );
+                }}
               />
               <Field>
                 <Label className="text-sm font-semibold uppercase tracking-wider text-zinc-500">

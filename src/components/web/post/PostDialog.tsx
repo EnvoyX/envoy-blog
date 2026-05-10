@@ -36,7 +36,6 @@ export function PostDialog() {
   const initialValues = useSelector(postModalStore, (state) => state.initialValues);
   const router = useRouter();
   const { currentPostId } = initialValues;
-  const [imageUrl, setImageUrl] = useState("");
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const form = useForm({
@@ -261,7 +260,6 @@ export function PostDialog() {
                                   value={subField.state.value}
                                   onChange={(e) => {
                                     subField.handleChange(e.target.value);
-                                    setImageUrl(e.target.value);
                                   }}
                                 />
                               </div>
@@ -290,7 +288,6 @@ export function PostDialog() {
                           e.stopPropagation();
 
                           field.pushValue("");
-                          setImageUrl("");
                         }}
                       >
                         <Plus className="mr-2 size-4" /> Add Another URL

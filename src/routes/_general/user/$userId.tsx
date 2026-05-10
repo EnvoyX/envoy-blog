@@ -63,6 +63,9 @@ function PublicProfileComponent() {
   const { viewPrivate, toggleViewPrivate, lastViewedTab, setLastViewedTab } = useProfileStore();
   const queryClient = useQueryClient();
   const isOwnProfile = userId === session?.user?.id;
+  const followerUserIds = new Set(
+    user?.followers.map((follow) => follow.follower).map((follower) => follower.id),
+  );
 
   // filter datas
   const userBlogs = user?.posts.filter((post) => {
@@ -73,9 +76,6 @@ function PublicProfileComponent() {
     return isPublic;
   });
   const userPosts = user?.shortPosts.filter((post) => {
-    const followerUserIds = new Set(
-      user.followers.map((follow) => follow.follower).map((follower) => follower.id),
-    );
     if (isOwnProfile && viewPrivate) return post;
     else if (isOwnProfile && !viewPrivate) return post.published;
     const isPublic = post.published;
@@ -92,16 +92,26 @@ function PublicProfileComponent() {
     if (isOwnProfile && viewPrivate) return image;
     else if (isOwnProfile && !viewPrivate) return image.published;
     const isPublic = image.published;
+    const isPrivateShownToFollower =
+      session &&
+      followerUserIds.has(session?.user?.id as string) &&
+      image.showPrivateToFollowers &&
+      !image.published;
 
-    return isPublic;
+    return isPublic || isPrivateShownToFollower;
   });
 
   const userAlbums = user?.albums.filter((album) => {
     if (isOwnProfile && viewPrivate) return album;
     else if (isOwnProfile && !viewPrivate) return album.published;
     const isPublic = album.published;
+    const isPrivateShownToFollower =
+      session &&
+      followerUserIds.has(session?.user?.id as string) &&
+      album.showPrivateToFollowers &&
+      !album.published;
 
-    return isPublic;
+    return isPublic || isPrivateShownToFollower;
   });
 
   const hasFollowed = follows.find(

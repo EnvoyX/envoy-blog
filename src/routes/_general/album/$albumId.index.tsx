@@ -20,7 +20,14 @@ export const Route = createFileRoute("/_general/album/$albumId/")({
     const album = await getAlbumByIdFn({ data: { albumId: params.albumId } });
     const session = await getUser();
     const isOwner = session?.user?.id === album?.authorId;
-    if (!album?.published && !isOwner) throw redirect({ to: "/dashboard/albums" });
+    const isPrivateShownToFollower =
+      session &&
+      album?.author.followers.some((follow) => follow.follower.id === session?.user?.id) &&
+      album.showPrivateToFollowers &&
+      !album.published;
+    if (!album?.published && !isOwner && !isPrivateShownToFollower) {
+      throw redirect({ to: "/dashboard/albums" });
+    }
     return album;
   },
   head: ({ loaderData }) => ({

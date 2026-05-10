@@ -16,6 +16,7 @@ export const useImageStore = create(
           description: string;
           published: boolean;
           albumId?: string;
+          showPrivateToFollowers?: boolean;
         } | null,
       },
       (set) => ({
@@ -77,6 +78,7 @@ export const useImageStore = create(
             description: string;
             albumId: string;
             published: boolean;
+            showPrivateToFollowers: boolean;
           } | null,
         ) => {
           set({
@@ -84,7 +86,8 @@ export const useImageStore = create(
               title: initialValues ? initialValues.title : "",
               description: initialValues ? initialValues.description : "",
               published: initialValues ? initialValues.published : false,
-              albumId: initialValues? initialValues.albumId : "",
+              albumId: initialValues ? initialValues.albumId : "",
+              showPrivateToFollowers: initialValues ? initialValues.showPrivateToFollowers : false,
             },
           });
         },

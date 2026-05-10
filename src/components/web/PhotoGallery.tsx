@@ -126,7 +126,7 @@ export default function PhotoGallery({
     },
     enabled: albumId ? true : false,
   });
-  const photos = images.map((photo, index) => ({
+  const photos = images?.map((photo, index) => ({
     ...photo,
     globalIndex: index,
   }));
@@ -353,8 +353,9 @@ export default function PhotoGallery({
                         setInitialValues({
                           title: photos[index].title ?? "",
                           description: photos[index].description ?? "",
-                          published: photos[index].published ?? "",
+                          published: photos[index].published ?? false,
                           albumId: albumId ?? "",
+                          showPrivateToFollowers: photos[index].showPrivateToFollowers ?? false,
                         });
                       }}
                       className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"

@@ -66,14 +66,15 @@ export function AlbumCard({ album, inDashboard }: { album: AlbumPrisma; inDashbo
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
-                  toggleDialog("open", album.id);
                   setInitialValues({
-                    name: album.name,
-                    description: album.description ?? "",
-                    published: album.published,
-                    coverImageUrl: coverImage ?? "",
+                    name: album?.name ?? "",
+                    description: album?.description || "",
+                    published: album?.published as boolean,
+                    coverImageUrl: album?.coverImageUrl || "",
                     type: "edit",
+                    showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
                   });
+                  toggleDialog("open", album?.id);
                 }}
               >
                 <Pencil className="mr-2 h-4 w-4" />

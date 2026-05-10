@@ -18,6 +18,7 @@ export const editImageSchema = z.object({
   description: z.string().optional(),
   imageUrl: z.url("Invalid URL"),
   published: z.boolean(),
+  showPrivateToFollowers: z.boolean(),
 });
 
 export const imageSearchSchema = z.object({

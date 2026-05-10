@@ -25,12 +25,19 @@ export const getAlbumByIdFn = createServerFn({ method: "GET" })
       albumId: z.string(),
     }),
   )
-  .middleware([authMiddleware])
-  .handler(async ({ context, data }) => {
+  .handler(async ({ data }) => {
     return await db.album.findUnique({
-      where: { id: data.albumId, authorId: context.user.id },
+      where: { id: data.albumId },
       include: {
-        author: true,
+        author: {
+          include: {
+            followers: {
+              include: {
+                follower: true,
+              },
+            },
+          },
+        },
         images: true,
         _count: { select: { images: true } },
       },
@@ -123,6 +130,7 @@ export const createAlbumFn = createServerFn({ method: "POST" })
       description: z.string(),
       coverImageUrl: z.string(),
       published: z.boolean(),
+      showPrivateToFollowers: z.boolean(),
     }),
   )
   .middleware([authMiddleware])
@@ -134,6 +142,7 @@ export const createAlbumFn = createServerFn({ method: "POST" })
         coverImageUrl: data.coverImageUrl,
         published: data.published,
         authorId: context.user.id as string,
+        showPrivateToFollowers: data.showPrivateToFollowers,
       },
     });
   });
@@ -146,6 +155,7 @@ export const editAlbumFn = createServerFn({ method: "POST" })
       description: z.string(),
       coverImageUrl: z.string(),
       published: z.boolean(),
+      showPrivateToFollowers: z.boolean(),
     }),
   )
   .middleware([authMiddleware])
@@ -158,6 +168,7 @@ export const editAlbumFn = createServerFn({ method: "POST" })
         coverImageUrl: data.coverImageUrl,
         published: data.published,
         authorId: context.user.id as string,
+        showPrivateToFollowers: data.showPrivateToFollowers,
       },
     });
   });

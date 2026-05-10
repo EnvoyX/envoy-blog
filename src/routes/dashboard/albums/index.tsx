@@ -54,6 +54,7 @@ function RouteComponent() {
                 name: "",
                 published: false,
                 type: "create",
+                showPrivateToFollowers: false,
               });
             }}
           >
@@ -77,6 +78,7 @@ function RouteComponent() {
                 name: "",
                 published: false,
                 type: "create",
+                showPrivateToFollowers: false,
               });
             }}
           >

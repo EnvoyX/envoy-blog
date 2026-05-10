@@ -11,4 +11,7 @@ export const albumSchema = z.object({
   published: z.boolean({
     error: "Published status is required",
   }),
+  showPrivateToFollowers: z.boolean({
+    error: "Show private to followers status is required",
+  }),
 });

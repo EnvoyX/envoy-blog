@@ -193,6 +193,7 @@ export const editImageFn = createServerFn({ method: "POST" })
           description: data.description,
           url: data.imageUrl,
           published: data.published,
+          showPrivateToFollowers: data.showPrivateToFollowers,
         },
       });
     });

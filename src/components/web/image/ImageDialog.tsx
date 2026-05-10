@@ -35,23 +35,24 @@ export function ImageDialog() {
     toggleDialog,
   } = useImageStore();
   const { data: album } = useQuery({
-      queryKey: ["album", initialValues?.albumId],
-      queryFn: async () => {
-        const album = await getAlbumByIdFn({
-          data: {
-            albumId: initialValues?.albumId ?? "",
-          },
-        });
-        return album;
-      },
-      enabled: initialValues?.albumId ? true : false,
-    });
+    queryKey: ["album", initialValues?.albumId],
+    queryFn: async () => {
+      const album = await getAlbumByIdFn({
+        data: {
+          albumId: initialValues?.albumId ?? "",
+        },
+      });
+      return album;
+    },
+    enabled: initialValues?.albumId ? true : false,
+  });
   const form = useForm({
     defaultValues: {
       title: initialValues ? initialValues.title : "",
       description: initialValues ? initialValues.description : "",
       published: initialValues ? initialValues.published : false,
       imageUrl: initialValues ? imageUrl : "",
+      showPrivateToFollowers: initialValues ? initialValues.showPrivateToFollowers : false,
     },
     validators: {
       onSubmit: editImageSchema,
@@ -67,6 +68,7 @@ export function ImageDialog() {
           description: value.description,
           imageUrl: value.imageUrl,
           published: value.published,
+          showPrivateToFollowers: value.showPrivateToFollowers as boolean,
         },
       });
       toast.success("Image edited successfully!");
@@ -84,9 +86,9 @@ export function ImageDialog() {
         setInitialValues(null);
       }}
     >
-      <DialogContent className="sm:max-w-6xl p-0 overflow-y-auto border-zinc-800 bg-zinc-950">
+      <DialogContent className="sm:max-w-6xl p-0  border-zinc-800 bg-zinc-950">
         <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
-          <div className="w-full md:w-2/5 p-8 border-r border-zinc-800/50 bg-zinc-900/20">
+          <div className="w-full md:w-2/5 p-8 border-r border-zinc-800/50 bg-zinc-900/20 overflow-y-auto">
             <DialogHeader className="mb-8">
               <div className="bg-emerald-500/10 w-fit p-2 rounded-lg">
                 <MailboxIcon className="text-emerald-500 size-6" />
@@ -97,8 +99,8 @@ export function ImageDialog() {
               </DialogDescription>
               {album && (
                 <DialogDescription className="text-zinc-400">
-                From album: <span className="text-emerald-500 font-bold">{album?.name}</span>.
-              </DialogDescription>
+                  From album: <span className="text-emerald-500 font-bold">{album?.name}</span>.
+                </DialogDescription>
               )}
             </DialogHeader>
 
@@ -130,6 +132,41 @@ export function ImageDialog() {
                     />
                   </div>
                 )}
+              />
+              <form.Subscribe
+                selector={(state) => state.values}
+                children={({ published }) => {
+                  if (!published)
+                    return (
+                      <form.Field
+                        name="showPrivateToFollowers"
+                        children={(field) => (
+                          <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="space-y-0.5">
+                              <Label className="text-sm font-medium text-zinc-200">
+                                Show Private:{" "}
+                                <span
+                                  className={
+                                    field.state.value ? "text-emerald-400" : "text-zinc-400"
+                                  }
+                                >
+                                  {field.state.value ? "Show" : ` Hidden`}
+                                </span>
+                              </Label>
+                              <p className="text-xs text-zinc-500">
+                                Show this post to follower even if private
+                              </p>
+                            </div>
+                            <Switch
+                              checked={field.state.value}
+                              onCheckedChange={field.handleChange}
+                              className="data-[state=checked]:bg-emerald-500"
+                            />
+                          </div>
+                        )}
+                      />
+                    );
+                }}
               />
               <Field>
                 <Label className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
@@ -274,7 +311,7 @@ export function ImageDialog() {
                   )}
                 />
               </div>
-            </form>          
+            </form>
           </div>
 
           <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-[#09090b] relative overflow-hidden">
