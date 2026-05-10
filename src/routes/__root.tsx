@@ -170,7 +170,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 }}
                 ref={lenisRef}
               />
-              {children}
+              <main className="min-h-screen bg-linear-to-b from-slate-900 to-emerald-500/40 selection:bg-emerald-500/30 bg-fixed">
+                {children}
+              </main>
               <Toaster closeButton position="top-center" />
             </ThemeProvider>
             <TanStackDevtools

@@ -259,33 +259,36 @@ function PublicProfileComponent() {
         )}
       </header>
 
-      <Tabs defaultValue={lastViewedTab ?? "posts"} className="w-full" orientation="horizontal">
+      <Tabs
+        defaultValue={lastViewedTab ?? "posts"}
+        onValueChange={(value) =>
+          setLastViewedTab(value as "blogs" | "posts" | "images" | "albums")
+        }
+        className="w-full"
+        orientation="horizontal"
+      >
         <TabsList className="bg-transparent border border-slate-800 mb-8 mx-auto flex items-center justify-start sm:justify-center max-sm:w-full overflow-x-auto scrollbar-hide whitespace-nowrap">
           <TabsTrigger
             value="blogs"
             className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
-            onClick={() => setLastViewedTab("blogs")}
           >
             Blogs
           </TabsTrigger>
           <TabsTrigger
             value="posts"
             className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
-            onClick={() => setLastViewedTab("posts")}
           >
             Posts
           </TabsTrigger>
           <TabsTrigger
             value="images"
             className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
-            onClick={() => setLastViewedTab("images")}
           >
             Images
           </TabsTrigger>
           <TabsTrigger
             value="albums"
             className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
-            onClick={() => setLastViewedTab("albums")}
           >
             Albums
           </TabsTrigger>

@@ -9,7 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
+} from "@/components/ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,36 +17,37 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { ChevronLeft, ChevronRight, Plus, Search, Sparkles } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
-import { ChatItem } from '@/components/ai-elements/ChatItem'
-import { Chat } from '@/generated/prisma/client'
-import { useState } from 'react'
-import { useDebouncedCallback } from '@tanstack/react-pacer'
-import { MODEL_CONFIG } from '@/lib/constants'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/dropdown-menu";
+import { ChevronLeft, ChevronRight, Plus, Search, Sparkles } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { ChatItem } from "@/components/ai-elements/ChatItem";
+import { Chat } from "@/generated/prisma/client";
+import { useState } from "react";
+import { useDebouncedCallback } from "@tanstack/react-pacer";
+import { MODEL_CONFIG } from "@/lib/constants";
+import { buttonVariants } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
 
 export function ChatAppSidebar({
   chats,
   ...props
 }: { chats: Chat[] } & React.ComponentProps<typeof Sidebar>) {
-  const navigate = useNavigate()
-  const [query, setQuery] = useState<string>('')
+  const navigate = useNavigate();
+  const [query, setQuery] = useState<string>("");
   const debouncedSearch = useDebouncedCallback(
     (searchTerm: string) => {
-      setQuery(searchTerm)
+      setQuery(searchTerm);
     },
     {
       wait: 500, // Wait 500ms after last keystroke
     },
-  )
+  );
 
   const filteredChats = chats.filter((chat) => {
-    const matchedQuery = chat.title?.toLowerCase().includes(query.toLowerCase())
+    const matchedQuery = chat.title?.toLowerCase().includes(query.toLowerCase());
 
-    return matchedQuery
-  })
+    return matchedQuery;
+  });
 
   return (
     <Sidebar
@@ -62,7 +63,7 @@ export function ChatAppSidebar({
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="bg-zinc-100 text-zinc-950 hover:bg-zinc-200 transition-colors cursor-pointer "
+                  className="bg-emerald-500  hover:bg-emerald-600 transition-colors cursor-pointer "
                 >
                   <Plus className="size-4 " />
                   <span className="font-semibold ">New Chat</span>
@@ -91,14 +92,14 @@ export function ChatAppSidebar({
                         className="cursor-pointer focus:bg-zinc-900 focus:text-white hover:bg-white/20!"
                         onClick={() => {
                           navigate({
-                            to: '/chat/$adapter',
+                            to: "/chat/$adapter",
                             params: {
                               adapter: provider,
                             },
                             search: {
                               model: m.value,
                             },
-                          })
+                          });
                         }}
                       >
                         <span className="truncate text-xs">{m.label}</span>
@@ -111,18 +112,16 @@ export function ChatAppSidebar({
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
-        <Button
-          variant={'outline'}
-          onClick={() =>
-            navigate({
-              to: '/',
-            })
-          }
-          className="w-full mt-1 flex items-center cursor-pointer"
+        <Link
+          to="/"
+          className={buttonVariants({
+            variant: "outline",
+            className: "w-full mt-1 flex items-center cursor-pointer text-primary",
+          })}
         >
           <ChevronLeft className=" size-4" />
           Back to Home
-        </Button>
+        </Link>
         <div className="relative mt-4">
           <Search className="absolute left-2 top-2.5 size-4 text-zinc-500" />
           <input
@@ -161,5 +160,5 @@ export function ChatAppSidebar({
         </div>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

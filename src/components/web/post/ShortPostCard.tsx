@@ -72,9 +72,9 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
               </span>
             </div>
           </div>
-          <button className="p-2 text-slate-600 hover:text-white transition-colors">
+          {/* <button className="p-2 text-slate-600 hover:text-white transition-colors">
             <MoreHorizontal className="size-4" />
-          </button>
+          </button> */}
         </div>
       </div>
       {post.content && (

@@ -13,6 +13,25 @@ export const Route = createFileRoute("/dashboard/image-upload/")({
       images,
     };
   },
+  head: () => ({
+    meta: [
+      { title: `Image Upload | Envoy Mindpalace` },
+      {
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
+      },
+      { property: "og:title", content: "Image Upload | Envoy Mindpalace" },
+      {
+        property: "og:description",
+        content: "Create your own blog and write your thoughts!",
+      },
+      {
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+      },
+      { property: "og:type", content: "website" },
+    ],
+  }),
 });
 
 function PageUpload() {

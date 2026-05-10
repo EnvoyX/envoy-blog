@@ -24,7 +24,7 @@ function RouteComponent() {
   return (
     <SidebarProvider>
       <AppSidebar user={user} />
-      <SidebarInset className="bg-linear-to-b from-slate-950 to-emerald-500/30 linear text-slate-50 selection:bg-emerald-500/30">
+      <SidebarInset className="bg-linear-to-b from-slate-950 to-emerald-500/40 selection:bg-emerald-500/30 bg-fixed">
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 ">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
@@ -34,7 +34,7 @@ function RouteComponent() {
             />*/}
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 bg-linear-to-b from-slate-950 to-emerald-500/30 linear text-slate-50 selection:bg-emerald-500/30">
+        <div className="flex flex-1 flex-col gap-4 bg-linear-to-b from-slate-950 to-emerald-500/40 selection:bg-emerald-500/30 bg-fixed">
           <Outlet />
         </div>
       </SidebarInset>

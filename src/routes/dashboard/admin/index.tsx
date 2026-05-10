@@ -1,21 +1,40 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { UsersDataTable } from '@/components/web/admin/UsersDataTable'
-import AccountsDataTable from '@/components/web/admin/AccountsDataTable'
-import SessionsDataTable from '@/components/web/admin/SessionsDataTable'
-import { getUser } from '@/data/session'
-import { allowedRoles } from '@/lib/constants'
-export const Route = createFileRoute('/dashboard/admin/')({
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UsersDataTable } from "@/components/web/admin/UsersDataTable";
+import AccountsDataTable from "@/components/web/admin/AccountsDataTable";
+import SessionsDataTable from "@/components/web/admin/SessionsDataTable";
+import { getUser } from "@/data/session";
+import { allowedRoles } from "@/lib/constants";
+export const Route = createFileRoute("/dashboard/admin/")({
   component: RouteComponent,
   loader: async () => {
-    const session = await getUser()
-    if (!allowedRoles.includes(session.user.role as string)) {
+    const session = await getUser();
+    if (!allowedRoles.includes(session?.user?.role as string)) {
       throw redirect({
-        to: '/dashboard',
-      })
+        to: "/dashboard",
+      });
     }
   },
-})
+  head: () => ({
+    meta: [
+      { title: `Admin Panel | Envoy Mindpalace` },
+      {
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
+      },
+      { property: "og:title", content: "Admin Panel | Envoy Mindpalace" },
+      {
+        property: "og:description",
+        content: "Create your own blog and write your thoughts!",
+      },
+      {
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+      },
+      { property: "og:type", content: "website" },
+    ],
+  }),
+});
 
 function RouteComponent() {
   return (
@@ -52,5 +71,5 @@ function RouteComponent() {
         </TabsContent>
       </Tabs>
     </section>
-  )
+  );
 }

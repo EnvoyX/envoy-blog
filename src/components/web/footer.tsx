@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight, Command, ShieldCheck, Zap } from "lucide-react";
+import { ArrowUpRight, Command, Zap } from "lucide-react";
 
 import { navItemsMain } from "./NavItems";
 
@@ -19,8 +19,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-              A digital sanctuary for your thoughts, tasks, organize your mind, track your progress,
-              and have fun!.
+              Just my own personal web app in TanStack Start to play with and have fun!.
             </p>
             <div className="flex items-center gap-4">
               <a
@@ -112,11 +111,7 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Zap className="size-4 text-yellow-500/80" />
-                <span>Powered by TanStack</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <ShieldCheck className="size-4 text-emerald-500/80" />
-                <span>Secure Auth Ready</span>
+                <span>Powered by TanStack Libraries</span>
               </div>
             </div>
           </div>

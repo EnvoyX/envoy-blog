@@ -25,7 +25,7 @@ import { getUser } from "@/data/session";
 import { User } from "@/generated/prisma/client";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/_general/post/$postId/")({
+export const Route = createFileRoute("/_general-without-layout/post/$postId/")({
   component: RouteComponent,
   loader: async ({ params }) => {
     const post = await getShortPostByIdFn({
@@ -110,7 +110,7 @@ function RouteComponent() {
   return (
     <section
       className={cn(
-        "w-full p-0 overflow-hidden bg-slate-950 border-slate-800 h-[90vh] flex flex-col sm:flex-row",
+        "w-full p-0 overflow-hidden bg-slate-950 border-slate-800 h-[90vh] flex flex-col sm:flex-row min-h-screen",
         {
           "max-sm:h-full": firstImage,
         },

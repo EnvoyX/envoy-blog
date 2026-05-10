@@ -1,16 +1,18 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { useSelector } from "@tanstack/react-store";
-import { followDialogStore } from "@/store/profile";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getFollowsByUserIdFn } from "@/data/follow";
-import { VirtualOrigin } from "@tanstack/react-db";
-import { UserRole } from "@/generated/prisma/enums";
-import { followColection } from "@/collections/follow";
-import { createId } from "@paralleldrive/cuid2";
-import { Link } from "@tanstack/react-router";
+import { createId } from '@paralleldrive/cuid2';
+import { VirtualOrigin } from '@tanstack/react-db';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
+import { useSelector } from '@tanstack/react-store';
+import { Loader2 } from 'lucide-react';
+
+import { followColection } from '@/collections/follow';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getFollowsByUserIdFn } from '@/data/follow';
+import { UserRole } from '@/generated/prisma/enums';
+import { followDialogStore } from '@/store/profile';
 
 type FollowDialogProps = {
   follows: {
@@ -54,13 +56,13 @@ export function UserFollowDialog({ follows, session }: FollowDialogProps) {
         followDialogStore.setState((prev) => ({
           ...prev,
           isOpen: open,
-          currentUserId: "",
+          currentUserId: '',
         }));
       }}
     >
-      <DialogContent className="sm:max-w-106.25 p-0 gap-0 overflow-hidden bg-slate-950 border-slate-800">
+      <DialogContent className="sm:max-w-lg p-0 gap-0 overflow-hidden bg-slate-950 border-slate-800">
         <DialogHeader className="p-4 border-b border-slate-900">
-          <DialogTitle className="text-center text-sm font-bold uppercase tracking-widest text-slate-400">
+          <DialogTitle className="text-center text-sm font-bold uppercase tracking-widest text-emerald-400">
             Connections
           </DialogTitle>
         </DialogHeader>
@@ -110,12 +112,12 @@ function UserList({
   follows,
   session,
 }: {
-  type: "followers" | "following";
+  type: 'followers' | 'following';
   currentUserId: string;
 } & FollowDialogProps) {
   const queryClient = useQueryClient();
-  const { data } = useQuery({
-    queryKey: ["user-following-followers", currentUserId],
+  const { data, isLoading } = useQuery({
+    queryKey: ['user-following-followers', currentUserId],
     queryFn: async () => {
       const user = await getFollowsByUserIdFn({ data: { userId: currentUserId } });
       return {
@@ -140,19 +142,19 @@ function UserList({
         followerId: session?.user.id as string,
       });
       queryClient.invalidateQueries({
-        queryKey: ["user-following-followers", currentUserId],
+        queryKey: ['user-following-followers', currentUserId],
       });
     } else {
       // optimistic delete follow
       followColection.delete(existingFollow.id);
       queryClient.invalidateQueries({
-        queryKey: ["user-following-followers", currentUserId],
+        queryKey: ['user-following-followers', currentUserId],
       });
     }
   }
 
-  function getUsersByType(type: "followers" | "following") {
-    if (type === "followers") {
+  function getUsersByType(type: 'followers' | 'following') {
+    if (type === 'followers') {
       const users = data?.followers;
       return users;
     } else {
@@ -171,6 +173,14 @@ function UserList({
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full w-full py-12">
+        <Loader2 className="size-8 text-emerald-500 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col">
       {users?.map((user) => {
@@ -179,14 +189,14 @@ function UserList({
         );
         return (
           <Link
-            to={"/user/$userId"}
+            to={'/user/$userId'}
             params={{
               userId: user.id,
             }}
             key={user.id}
             className="flex items-center justify-between p-4 hover:bg-slate-900/50 transition-all animate-in fade-in slide-in-from-bottom-4 duration-500 cursor-pointer"
             onClick={() =>
-              followDialogStore.setState((prev) => ({ ...prev, isOpen: false, currentUserId: "" }))
+              followDialogStore.setState((prev) => ({ ...prev, isOpen: false, currentUserId: '' }))
             }
           >
             <div className="flex items-center gap-3">
@@ -194,14 +204,14 @@ function UserList({
                 <AvatarImage src={user.image as string} />
                 <AvatarFallback>
                   {(user.name as string)
-                    .split(" ")
+                    .split(' ')
                     .map((n) => n[0])
-                    .join("")}
+                    .join('')}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
                 <span className="text-sm font-bold text-white">{user.name}</span>
-                <span className="text-xs text-slate-500 max-w-xs">{user.biodata || ""}</span>
+                <span className="text-xs text-slate-500 max-w-xs">{user.biodata || ''}</span>
               </div>
             </div>
             {session.user && session.user?.id !== user.id && (
@@ -214,7 +224,7 @@ function UserList({
                   <Button className="cursor-pointer" onClick={() => handleToggleFollow(user.id)}>
                     Follow
                   </Button>
-                )}{" "}
+                )}{' '}
               </>
             )}
           </Link>

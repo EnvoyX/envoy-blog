@@ -1,4 +1,6 @@
 import { createStore } from "@tanstack/react-store";
+import { create } from "zustand";
+import { combine, persist } from "zustand/middleware";
 
 export const postModalStore = createStore({
   dialogId: "",
@@ -15,3 +17,20 @@ export const postModalStore = createStore({
     mode: "",
   },
 });
+
+export const usePostStore = create(
+  persist(
+    combine(
+      {
+        lastViewedTab: "",
+      },
+      (set) => ({
+        setLastViewedTab: (value: "latest-post" | "for-you" | "following-post") =>
+          set(() => ({ lastViewedTab: value })),
+      }),
+    ),
+    {
+      name: "post-storage",
+    },
+  ),
+);
