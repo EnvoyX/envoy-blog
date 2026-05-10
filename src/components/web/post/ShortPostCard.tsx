@@ -117,12 +117,16 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
           <span className="text-xs font-semibold tabular-nums">{likes.length}</span>
         </button>
 
-        <button className="flex items-center gap-2 text-slate-500 hover:text-blue-500 transition-colors group/stat cursor-pointer">
+        <Link
+          to="/post/$postId"
+          params={{ postId: post.id }}
+          className="flex items-center gap-2 text-slate-500 hover:text-blue-500 transition-colors group/stat cursor-pointer"
+        >
           <div className="p-1.5 rounded-full group-hover/stat:bg-blue-500/10">
             <MessageSquare className="size-4" />
           </div>
           <span className="text-xs font-semibold tabular-nums">{comments.length}</span>
-        </button>
+        </Link>
       </div>
     </div>
   );

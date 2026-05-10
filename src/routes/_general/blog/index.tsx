@@ -76,13 +76,15 @@ export const Route = createFileRoute("/_general/blog/")({
 
 function BlogPageComponent() {
   const { allPosts, session } = Route.useLoaderData();
+  const posts = allPosts.filter((post) => post.author.email === "muhamadhanifhafizhan@gmail.com");
+
   const { query } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const router = useRouter();
   const isOpen = useSelector(modalStore, (state) => state.isOpen);
   const isLoading = useSelector(modalStore, (state) => state.isLoading);
 
-  const filteredPosts = allPosts.filter((post) => {
+  const filteredPosts = posts.filter((post) => {
     const matchedQuery =
       post.title?.toLowerCase().includes(query.toLowerCase()) ||
       post.description?.toLowerCase().includes(query.toLowerCase()) ||
@@ -120,7 +122,7 @@ function BlogPageComponent() {
               size="lg"
               className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 shadow-lg shadow-emerald-500/20 cursor-pointer"
             >
-              <Link to="/blog/create-blog" className="gap-2">
+              <Link to="/dashboard/blog/create-blog" className="gap-2">
                 <Plus className="size-5" />
                 Create New Blog
               </Link>

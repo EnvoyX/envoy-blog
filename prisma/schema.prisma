@@ -71,6 +71,8 @@ model SavedItem {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model QuranTrack {
@@ -84,6 +86,8 @@ model QuranTrack {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model ShortPost {
@@ -96,6 +100,7 @@ model ShortPost {
   comments Comment[]
 
   published Boolean @default(false)
+  showPrivateToFollowers Boolean @default(false)
 
   authorId  String
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -114,6 +119,7 @@ model Album {
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   published Boolean @default(false)
+  showPrivateToFollowers Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -138,6 +144,7 @@ model Image {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   published Boolean @default(false)
+  showPrivateToFollowers Boolean @default(false)
 
   size    String?
   source  SourceImage?
@@ -158,6 +165,7 @@ model Post {
   excerpt     String?
   content     String    @db.Text
   published   Boolean   @default(false) // Public or private
+  showPrivateToFollowers Boolean @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -247,10 +255,10 @@ model Message {
 model Follow {
   id      String @id @default(cuid())
 
-  follower    User @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  follower    User @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade) 
   followerId  String
 
-  following   User @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+  following   User @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade) 
   followingId String
 
   @@unique([followerId, followingId])
@@ -271,8 +279,8 @@ model Like {
   shortPost   ShortPost? @relation(fields: [shortPostId], references: [id], onDelete: Cascade)
   shortPostId String?
 
-  @@unique([userId, postId])
-  @@index([userId, postId, shortPostId])
+  @@unique([userId, postId]) // prevents same user liking post twice
+  @@index([userId, postId, shortPostId]) // composite index for faster queries
 }
 
 model Comment {

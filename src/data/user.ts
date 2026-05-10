@@ -15,7 +15,6 @@ export const getPublicProfileFn = createServerFn({ method: "GET" })
       where: { id: data.userId },
       include: {
         posts: {
-          where: { published: true },
           include: {
             author: true,
             likes: true,
@@ -29,7 +28,6 @@ export const getPublicProfileFn = createServerFn({ method: "GET" })
           orderBy: { createdAt: "desc" },
         },
         shortPosts: {
-          where: { published: true },
           include: {
             _count: { select: { likes: true, comments: true } },
             likes: {
@@ -47,9 +45,27 @@ export const getPublicProfileFn = createServerFn({ method: "GET" })
           },
           orderBy: { createdAt: "desc" },
         },
-        images: { where: { published: true } },
-        followers: true,
-        following: true,
+        images: {
+          orderBy: { createdAt: "desc" },
+        },
+        albums: {
+          include: {
+            author: true,
+            images: true,
+            _count: { select: { images: true } },
+          },
+          orderBy: { createdAt: "desc" },
+        },
+        followers: {
+          include: {
+            follower: true,
+          },
+        },
+        following: {
+          include: {
+            following: true,
+          },
+        },
       },
     });
     return profile;

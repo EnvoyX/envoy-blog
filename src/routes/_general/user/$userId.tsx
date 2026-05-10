@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ImageIcon, Loader2, UserIcon } from "lucide-react";
+import { ImageIcon, ImagesIcon, UserIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -13,12 +13,12 @@ import { useLiveQuery } from "@tanstack/react-db";
 import { followColection } from "@/collections/follow";
 import { createId } from "@paralleldrive/cuid2";
 import { UserFollowDialog } from "@/components/web/UserFollowDialog";
-import { followDialogStore } from "@/store/profile";
+import { followDialogStore, useProfileStore } from "@/store/profile";
 import { useQueryClient } from "@tanstack/react-query";
+import { AlbumCard } from "@/components/web/album/AlbumCard";
 
 export const Route = createFileRoute("/_general/user/$userId")({
   component: PublicProfileComponent,
-  pendingComponent: PendingPublicProfileComponent,
   loader: async ({ params }) => {
     const user = await getPublicProfileFn({
       data: {
@@ -56,21 +56,53 @@ export const Route = createFileRoute("/_general/user/$userId")({
   }),
 });
 
-function PendingPublicProfileComponent() {
-  return (
-    <main className="max-w-5xl mx-auto py-12 px-6 min-h-screen text-slate-200">
-      <div className="flex items-center justify-center">
-        <Loader2 className="size-10 animate-spin text-emerald-500" />
-      </div>
-    </main>
-  );
-}
-
 function PublicProfileComponent() {
   const { userId } = Route.useParams();
   const { user, session } = Route.useLoaderData();
   const { data: follows } = useLiveQuery((q) => q.from({ follow: followColection }));
+  const { viewPrivate, toggleViewPrivate, lastViewedTab, setLastViewedTab } = useProfileStore();
   const queryClient = useQueryClient();
+  const isOwnProfile = userId === session?.user?.id;
+
+  // filter datas
+  const userBlogs = user?.posts.filter((post) => {
+    if (isOwnProfile && viewPrivate) return post;
+    else if (isOwnProfile && !viewPrivate) return post.published;
+    const isPublic = post.published;
+
+    return isPublic;
+  });
+  const userPosts = user?.shortPosts.filter((post) => {
+    const followerUserIds = new Set(
+      user.followers.map((follow) => follow.follower).map((follower) => follower.id),
+    );
+    if (isOwnProfile && viewPrivate) return post;
+    else if (isOwnProfile && !viewPrivate) return post.published;
+    const isPublic = post.published;
+    const isPrivateShownToFollower =
+      session &&
+      followerUserIds.has(session?.user?.id as string) &&
+      post.showPrivateToFollowers &&
+      !post.published;
+
+    return isPublic || isPrivateShownToFollower;
+  });
+
+  const userImages = user?.images.filter((image) => {
+    if (isOwnProfile && viewPrivate) return image;
+    else if (isOwnProfile && !viewPrivate) return image.published;
+    const isPublic = image.published;
+
+    return isPublic;
+  });
+
+  const userAlbums = user?.albums.filter((album) => {
+    if (isOwnProfile && viewPrivate) return album;
+    else if (isOwnProfile && !viewPrivate) return album.published;
+    const isPublic = album.published;
+
+    return isPublic;
+  });
 
   const hasFollowed = follows.find(
     (follow) => follow.followerId === session?.user?.id && follow.followingId === userId,
@@ -90,13 +122,13 @@ function PublicProfileComponent() {
         followerId: session?.user.id as string,
       });
       queryClient.invalidateQueries({
-        queryKey: ["user-following-followers"],
+        queryKey: ["user-following-followers", userId],
       });
     } else {
       // optimistic delete follow
       followColection.delete(existingFollow.id);
       queryClient.invalidateQueries({
-        queryKey: ["user-following-followers"],
+        queryKey: ["user-following-followers", userId],
       });
     }
   }
@@ -104,7 +136,7 @@ function PublicProfileComponent() {
   return (
     <main className="max-w-5xl mx-auto py-12 px-6 min-h-screen text-slate-200">
       <header className="mb-12 flex flex-col md:flex-row items-center gap-8 border-b border-slate-800 pb-12 ">
-        <div className="size-40 rounded-3xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1 shadow-2xl shadow-emerald-500/10">
+        <div className="size-40 rounded-3xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1 shadow-2xl shadow-emerald-500/10 shrink-0">
           <div className="w-full h-full rounded-3xl bg-slate-950 flex items-center justify-center overflow-hidden">
             {user?.image || user?.defaultImage ? (
               <Avatar className="size-40 shrink-0 after:border-none!">
@@ -174,14 +206,18 @@ function PublicProfileComponent() {
           )}
           <div className="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
             <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium">
-              {user?.posts.length} Blogs
+              {userBlogs?.length} Blogs
             </span>
             <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium">
-              {user?.shortPosts.length} Posts
+              {userPosts?.length} Posts
+            </span>
+            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium flex items-center gap-1">
+              <ImagesIcon className="size-4" />
+              <p>{userImages?.length} Images</p>
             </span>
             <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium flex items-center gap-1">
               <ImageIcon className="size-4" />
-              <p>{user?.images.length} Images</p>
+              <p>{userAlbums?.length} Albums</p>
             </span>
             <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium">
               Verified
@@ -189,13 +225,16 @@ function PublicProfileComponent() {
           </div>
         </div>
         {userId === session?.user?.id && (
-          <div className="flex sm:justify-end sm:ml-auto sm:mb-auto">
+          <div className="flex items-center gap-2 sm:justify-end sm:ml-auto sm:mb-auto max-md:mx-auto">
             <Link to="/dashboard/profile" className={buttonVariants({ variant: "default" })}>
               Edit Profile
             </Link>
+            <Button className="cursor-pointer" onClick={toggleViewPrivate}>
+              {viewPrivate ? "View Public Only" : "View All"}
+            </Button>
           </div>
         )}
-        {session && userId !== session?.user?.id && (
+        {session.user && userId !== session?.user?.id && (
           <div className="flex sm:justify-end sm:ml-auto sm:mb-auto">
             {hasFollowed ? (
               <Button className="cursor-pointer" onClick={handleToggleFollow}>
@@ -210,26 +249,42 @@ function PublicProfileComponent() {
         )}
       </header>
 
-      <Tabs defaultValue="blogs" className="w-full" orientation="horizontal">
+      <Tabs defaultValue={lastViewedTab ?? "posts"} className="w-full" orientation="horizontal">
         <TabsList className="bg-transparent border border-slate-800 mb-8 mx-auto flex items-center justify-start sm:justify-center max-sm:w-full overflow-x-auto scrollbar-hide whitespace-nowrap">
-          <TabsTrigger value="blogs" className="data-[state=active]:bg-slate-800 px-8 shrink-0">
+          <TabsTrigger
+            value="blogs"
+            className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
+            onClick={() => setLastViewedTab("blogs")}
+          >
             Blogs
           </TabsTrigger>
-          <TabsTrigger value="posts" className="data-[state=active]:bg-slate-800 px-8 shrink-0">
+          <TabsTrigger
+            value="posts"
+            className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
+            onClick={() => setLastViewedTab("posts")}
+          >
             Posts
           </TabsTrigger>
-          <TabsTrigger value="images" className="data-[state=active]:bg-slate-800 px-8 shrink-0">
+          <TabsTrigger
+            value="images"
+            className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
+            onClick={() => setLastViewedTab("images")}
+          >
             Images
           </TabsTrigger>
-          <TabsTrigger value="albums" className="data-[state=active]:bg-slate-800 px-8 shrink-0">
+          <TabsTrigger
+            value="albums"
+            className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
+            onClick={() => setLastViewedTab("albums")}
+          >
             Albums
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="blogs" className="mx-auto">
-          {user && user?.posts?.length > 0 ? (
+          {userBlogs && userBlogs?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {user.posts.map((post) => {
+              {userBlogs?.map((post) => {
                 return <BlogCard key={post.id} post={post} session={session} />;
               })}
             </div>
@@ -242,26 +297,39 @@ function PublicProfileComponent() {
 
         <TabsContent value="posts">
           <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {user?.shortPosts.length ? (
-              user?.shortPosts.map((post) => {
+            {userPosts?.length ? (
+              userPosts?.map((post) => {
                 return <ShortPostCard key={post.id} post={post} session={session} />;
               })
             ) : (
               <div className="py-20 text-center border border-dashed border-slate-800 rounded-3xl">
-                <p className="text-slate-500 italic text-sm">No short posts shared yet.</p>
+                <p className="text-slate-500 italic text-sm">No posts shared yet.</p>
               </div>
             )}
           </div>
         </TabsContent>
 
         <TabsContent value="images">
-          {user?.images.length ? (
+          {userImages?.length ? (
             <div className="container mx-auto p-4">
-              <PhotoGallery images={user?.images} type="public" />
+              <PhotoGallery images={userImages} type="public" />
             </div>
           ) : (
             <div className="p-12 rounded-3xl border border-dashed border-slate-800 text-center">
               <p className="text-slate-500">No images posted yet.</p>
+            </div>
+          )}
+        </TabsContent>
+        <TabsContent value="albums" className="mx-auto">
+          {userAlbums && userAlbums?.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8">
+              {userAlbums?.map((album) => (
+                <AlbumCard key={album.id} album={album} inDashboard={false} />
+              ))}
+            </div>
+          ) : (
+            <div className="p-12 rounded-3xl border border-dashed border-slate-800 text-center">
+              <p className="text-slate-500">This user hasn't published any albums yet.</p>
             </div>
           )}
         </TabsContent>

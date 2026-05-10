@@ -31,6 +31,7 @@ export type AlbumMinAggregateOutputType = {
   coverImageUrl: string | null
   authorId: string | null
   published: boolean | null
+  showPrivateToFollowers: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +43,7 @@ export type AlbumMaxAggregateOutputType = {
   coverImageUrl: string | null
   authorId: string | null
   published: boolean | null
+  showPrivateToFollowers: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,6 +55,7 @@ export type AlbumCountAggregateOutputType = {
   coverImageUrl: number
   authorId: number
   published: number
+  showPrivateToFollowers: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -66,6 +69,7 @@ export type AlbumMinAggregateInputType = {
   coverImageUrl?: true
   authorId?: true
   published?: true
+  showPrivateToFollowers?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -77,6 +81,7 @@ export type AlbumMaxAggregateInputType = {
   coverImageUrl?: true
   authorId?: true
   published?: true
+  showPrivateToFollowers?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +93,7 @@ export type AlbumCountAggregateInputType = {
   coverImageUrl?: true
   authorId?: true
   published?: true
+  showPrivateToFollowers?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -172,6 +178,7 @@ export type AlbumGroupByOutputType = {
   coverImageUrl: string | null
   authorId: string
   published: boolean
+  showPrivateToFollowers: boolean
   createdAt: Date
   updatedAt: Date
   _count: AlbumCountAggregateOutputType | null
@@ -204,6 +211,7 @@ export type AlbumWhereInput = {
   coverImageUrl?: Prisma.StringNullableFilter<"Album"> | string | null
   authorId?: Prisma.StringFilter<"Album"> | string
   published?: Prisma.BoolFilter<"Album"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"Album"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Album"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Album"> | Date | string
   images?: Prisma.ImageListRelationFilter
@@ -217,6 +225,7 @@ export type AlbumOrderByWithRelationInput = {
   coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   authorId?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   images?: Prisma.ImageOrderByRelationAggregateInput
@@ -233,6 +242,7 @@ export type AlbumWhereUniqueInput = Prisma.AtLeast<{
   coverImageUrl?: Prisma.StringNullableFilter<"Album"> | string | null
   authorId?: Prisma.StringFilter<"Album"> | string
   published?: Prisma.BoolFilter<"Album"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"Album"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Album"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Album"> | Date | string
   images?: Prisma.ImageListRelationFilter
@@ -246,6 +256,7 @@ export type AlbumOrderByWithAggregationInput = {
   coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   authorId?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AlbumCountOrderByAggregateInput
@@ -263,6 +274,7 @@ export type AlbumScalarWhereWithAggregatesInput = {
   coverImageUrl?: Prisma.StringNullableWithAggregatesFilter<"Album"> | string | null
   authorId?: Prisma.StringWithAggregatesFilter<"Album"> | string
   published?: Prisma.BoolWithAggregatesFilter<"Album"> | boolean
+  showPrivateToFollowers?: Prisma.BoolWithAggregatesFilter<"Album"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Album"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Album"> | Date | string
 }
@@ -273,6 +285,7 @@ export type AlbumCreateInput = {
   description?: string | null
   coverImageUrl?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.ImageCreateNestedManyWithoutAlbumsInput
@@ -286,6 +299,7 @@ export type AlbumUncheckedCreateInput = {
   coverImageUrl?: string | null
   authorId: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutAlbumsInput
@@ -297,6 +311,7 @@ export type AlbumUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.ImageUpdateManyWithoutAlbumsNestedInput
@@ -310,6 +325,7 @@ export type AlbumUncheckedUpdateInput = {
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.ImageUncheckedUpdateManyWithoutAlbumsNestedInput
@@ -322,6 +338,7 @@ export type AlbumCreateManyInput = {
   coverImageUrl?: string | null
   authorId: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -332,6 +349,7 @@ export type AlbumUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -343,6 +361,7 @@ export type AlbumUncheckedUpdateManyInput = {
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -354,6 +373,7 @@ export type AlbumCountOrderByAggregateInput = {
   coverImageUrl?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -365,6 +385,7 @@ export type AlbumMaxOrderByAggregateInput = {
   coverImageUrl?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -376,6 +397,7 @@ export type AlbumMinOrderByAggregateInput = {
   coverImageUrl?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -476,6 +498,7 @@ export type AlbumCreateWithoutImagesInput = {
   description?: string | null
   coverImageUrl?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutAlbumsInput
@@ -488,6 +511,7 @@ export type AlbumUncheckedCreateWithoutImagesInput = {
   coverImageUrl?: string | null
   authorId: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -523,6 +547,7 @@ export type AlbumScalarWhereInput = {
   coverImageUrl?: Prisma.StringNullableFilter<"Album"> | string | null
   authorId?: Prisma.StringFilter<"Album"> | string
   published?: Prisma.BoolFilter<"Album"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"Album"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Album"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Album"> | Date | string
 }
@@ -533,6 +558,7 @@ export type AlbumCreateWithoutAuthorInput = {
   description?: string | null
   coverImageUrl?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.ImageCreateNestedManyWithoutAlbumsInput
@@ -544,6 +570,7 @@ export type AlbumUncheckedCreateWithoutAuthorInput = {
   description?: string | null
   coverImageUrl?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutAlbumsInput
@@ -581,6 +608,7 @@ export type AlbumUpdateWithoutImagesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutAlbumsNestedInput
@@ -593,6 +621,7 @@ export type AlbumUncheckedUpdateWithoutImagesInput = {
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -604,6 +633,7 @@ export type AlbumUncheckedUpdateManyWithoutImagesInput = {
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -614,6 +644,7 @@ export type AlbumCreateManyAuthorInput = {
   description?: string | null
   coverImageUrl?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -624,6 +655,7 @@ export type AlbumUpdateWithoutAuthorInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.ImageUpdateManyWithoutAlbumsNestedInput
@@ -635,6 +667,7 @@ export type AlbumUncheckedUpdateWithoutAuthorInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.ImageUncheckedUpdateManyWithoutAlbumsNestedInput
@@ -646,6 +679,7 @@ export type AlbumUncheckedUpdateManyWithoutAuthorInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -688,6 +722,7 @@ export type AlbumSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   coverImageUrl?: boolean
   authorId?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   images?: boolean | Prisma.Album$imagesArgs<ExtArgs>
@@ -702,6 +737,7 @@ export type AlbumSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   coverImageUrl?: boolean
   authorId?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -714,6 +750,7 @@ export type AlbumSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   coverImageUrl?: boolean
   authorId?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -726,11 +763,12 @@ export type AlbumSelectScalar = {
   coverImageUrl?: boolean
   authorId?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AlbumOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "coverImageUrl" | "authorId" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["album"]>
+export type AlbumOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "coverImageUrl" | "authorId" | "published" | "showPrivateToFollowers" | "createdAt" | "updatedAt", ExtArgs["result"]["album"]>
 export type AlbumInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   images?: boolean | Prisma.Album$imagesArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -756,6 +794,7 @@ export type $AlbumPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     coverImageUrl: string | null
     authorId: string
     published: boolean
+    showPrivateToFollowers: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["album"]>
@@ -1189,6 +1228,7 @@ export interface AlbumFieldRefs {
   readonly coverImageUrl: Prisma.FieldRef<"Album", 'String'>
   readonly authorId: Prisma.FieldRef<"Album", 'String'>
   readonly published: Prisma.FieldRef<"Album", 'Boolean'>
+  readonly showPrivateToFollowers: Prisma.FieldRef<"Album", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Album", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Album", 'DateTime'>
 }

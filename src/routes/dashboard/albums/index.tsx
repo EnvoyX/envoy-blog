@@ -65,7 +65,7 @@ function RouteComponent() {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8">
           {albums.map((album) => (
-            <AlbumCard key={album.id} album={album} />
+            <AlbumCard key={album.id} album={album} inDashboard={true} />
           ))}
           <button
             className="group flex flex-col gap-3 items-center justify-start text-left cursor-pointer"

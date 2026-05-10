@@ -21,11 +21,13 @@ export const getFollowsByUserIdFn = createServerFn({ method: "GET" })
       select: {
         followers: {
           include: {
+            follower: true,
             following: true,
           },
         },
         following: {
           include: {
+            following: true,
             follower: true,
           },
         },

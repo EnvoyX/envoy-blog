@@ -10,6 +10,7 @@ export const postModalStore = createStore({
     images: [] as string[],
     content: "",
     published: false,
+    showPrivateToFollowers: false,
     currentPostId: "",
     mode: "",
   },

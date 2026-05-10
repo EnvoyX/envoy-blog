@@ -32,6 +32,7 @@ export type ImageMinAggregateOutputType = {
   shortPostId: string | null
   userId: string | null
   published: boolean | null
+  showPrivateToFollowers: boolean | null
   size: string | null
   source: $Enums.SourceImage | null
   createdAt: Date | null
@@ -46,6 +47,7 @@ export type ImageMaxAggregateOutputType = {
   shortPostId: string | null
   userId: string | null
   published: boolean | null
+  showPrivateToFollowers: boolean | null
   size: string | null
   source: $Enums.SourceImage | null
   createdAt: Date | null
@@ -60,6 +62,7 @@ export type ImageCountAggregateOutputType = {
   shortPostId: number
   userId: number
   published: number
+  showPrivateToFollowers: number
   size: number
   source: number
   createdAt: number
@@ -76,6 +79,7 @@ export type ImageMinAggregateInputType = {
   shortPostId?: true
   userId?: true
   published?: true
+  showPrivateToFollowers?: true
   size?: true
   source?: true
   createdAt?: true
@@ -90,6 +94,7 @@ export type ImageMaxAggregateInputType = {
   shortPostId?: true
   userId?: true
   published?: true
+  showPrivateToFollowers?: true
   size?: true
   source?: true
   createdAt?: true
@@ -104,6 +109,7 @@ export type ImageCountAggregateInputType = {
   shortPostId?: true
   userId?: true
   published?: true
+  showPrivateToFollowers?: true
   size?: true
   source?: true
   createdAt?: true
@@ -191,6 +197,7 @@ export type ImageGroupByOutputType = {
   shortPostId: string | null
   userId: string
   published: boolean
+  showPrivateToFollowers: boolean
   size: string | null
   source: $Enums.SourceImage | null
   createdAt: Date
@@ -226,6 +233,7 @@ export type ImageWhereInput = {
   shortPostId?: Prisma.StringNullableFilter<"Image"> | string | null
   userId?: Prisma.StringFilter<"Image"> | string
   published?: Prisma.BoolFilter<"Image"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"Image"> | boolean
   size?: Prisma.StringNullableFilter<"Image"> | string | null
   source?: Prisma.EnumSourceImageNullableFilter<"Image"> | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFilter<"Image"> | Date | string
@@ -243,6 +251,7 @@ export type ImageOrderByWithRelationInput = {
   shortPostId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   size?: Prisma.SortOrderInput | Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -263,6 +272,7 @@ export type ImageWhereUniqueInput = Prisma.AtLeast<{
   shortPostId?: Prisma.StringNullableFilter<"Image"> | string | null
   userId?: Prisma.StringFilter<"Image"> | string
   published?: Prisma.BoolFilter<"Image"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"Image"> | boolean
   size?: Prisma.StringNullableFilter<"Image"> | string | null
   source?: Prisma.EnumSourceImageNullableFilter<"Image"> | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFilter<"Image"> | Date | string
@@ -280,6 +290,7 @@ export type ImageOrderByWithAggregationInput = {
   shortPostId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   size?: Prisma.SortOrderInput | Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -300,6 +311,7 @@ export type ImageScalarWhereWithAggregatesInput = {
   shortPostId?: Prisma.StringNullableWithAggregatesFilter<"Image"> | string | null
   userId?: Prisma.StringWithAggregatesFilter<"Image"> | string
   published?: Prisma.BoolWithAggregatesFilter<"Image"> | boolean
+  showPrivateToFollowers?: Prisma.BoolWithAggregatesFilter<"Image"> | boolean
   size?: Prisma.StringNullableWithAggregatesFilter<"Image"> | string | null
   source?: Prisma.EnumSourceImageNullableWithAggregatesFilter<"Image"> | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Image"> | Date | string
@@ -312,6 +324,7 @@ export type ImageCreateInput = {
   title?: string | null
   description?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: string | null
   source?: $Enums.SourceImage | null
   createdAt?: Date | string
@@ -329,6 +342,7 @@ export type ImageUncheckedCreateInput = {
   shortPostId?: string | null
   userId: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: string | null
   source?: $Enums.SourceImage | null
   createdAt?: Date | string
@@ -342,6 +356,7 @@ export type ImageUpdateInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -359,6 +374,7 @@ export type ImageUncheckedUpdateInput = {
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -374,6 +390,7 @@ export type ImageCreateManyInput = {
   shortPostId?: string | null
   userId: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: string | null
   source?: $Enums.SourceImage | null
   createdAt?: Date | string
@@ -386,6 +403,7 @@ export type ImageUpdateManyMutationInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -400,6 +418,7 @@ export type ImageUncheckedUpdateManyInput = {
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -424,6 +443,7 @@ export type ImageCountOrderByAggregateInput = {
   shortPostId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   size?: Prisma.SortOrder
   source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -438,6 +458,7 @@ export type ImageMaxOrderByAggregateInput = {
   shortPostId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   size?: Prisma.SortOrder
   source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -452,6 +473,7 @@ export type ImageMinOrderByAggregateInput = {
   shortPostId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   size?: Prisma.SortOrder
   source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -590,6 +612,7 @@ export type ImageCreateWithoutShortPostInput = {
   title?: string | null
   description?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: string | null
   source?: $Enums.SourceImage | null
   createdAt?: Date | string
@@ -605,6 +628,7 @@ export type ImageUncheckedCreateWithoutShortPostInput = {
   description?: string | null
   userId: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: string | null
   source?: $Enums.SourceImage | null
   createdAt?: Date | string
@@ -649,6 +673,7 @@ export type ImageScalarWhereInput = {
   shortPostId?: Prisma.StringNullableFilter<"Image"> | string | null
   userId?: Prisma.StringFilter<"Image"> | string
   published?: Prisma.BoolFilter<"Image"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"Image"> | boolean
   size?: Prisma.StringNullableFilter<"Image"> | string | null
   source?: Prisma.EnumSourceImageNullableFilter<"Image"> | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFilter<"Image"> | Date | string
@@ -661,6 +686,7 @@ export type ImageCreateWithoutAlbumsInput = {
   title?: string | null
   description?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: string | null
   source?: $Enums.SourceImage | null
   createdAt?: Date | string
@@ -677,6 +703,7 @@ export type ImageUncheckedCreateWithoutAlbumsInput = {
   shortPostId?: string | null
   userId: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: string | null
   source?: $Enums.SourceImage | null
   createdAt?: Date | string
@@ -710,6 +737,7 @@ export type ImageCreateWithoutUserInput = {
   title?: string | null
   description?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: string | null
   source?: $Enums.SourceImage | null
   createdAt?: Date | string
@@ -725,6 +753,7 @@ export type ImageUncheckedCreateWithoutUserInput = {
   description?: string | null
   shortPostId?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: string | null
   source?: $Enums.SourceImage | null
   createdAt?: Date | string
@@ -765,6 +794,7 @@ export type ImageCreateManyShortPostInput = {
   description?: string | null
   userId: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: string | null
   source?: $Enums.SourceImage | null
   createdAt?: Date | string
@@ -777,6 +807,7 @@ export type ImageUpdateWithoutShortPostInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -792,6 +823,7 @@ export type ImageUncheckedUpdateWithoutShortPostInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -806,6 +838,7 @@ export type ImageUncheckedUpdateManyWithoutShortPostInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -818,6 +851,7 @@ export type ImageUpdateWithoutAlbumsInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -834,6 +868,7 @@ export type ImageUncheckedUpdateWithoutAlbumsInput = {
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -848,6 +883,7 @@ export type ImageUncheckedUpdateManyWithoutAlbumsInput = {
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -861,6 +897,7 @@ export type ImageCreateManyUserInput = {
   description?: string | null
   shortPostId?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: string | null
   source?: $Enums.SourceImage | null
   createdAt?: Date | string
@@ -873,6 +910,7 @@ export type ImageUpdateWithoutUserInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -888,6 +926,7 @@ export type ImageUncheckedUpdateWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -902,6 +941,7 @@ export type ImageUncheckedUpdateManyWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableEnumSourceImageFieldUpdateOperationsInput | $Enums.SourceImage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -947,6 +987,7 @@ export type ImageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   shortPostId?: boolean
   userId?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: boolean
   source?: boolean
   createdAt?: boolean
@@ -965,6 +1006,7 @@ export type ImageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   shortPostId?: boolean
   userId?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: boolean
   source?: boolean
   createdAt?: boolean
@@ -981,6 +1023,7 @@ export type ImageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   shortPostId?: boolean
   userId?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: boolean
   source?: boolean
   createdAt?: boolean
@@ -997,13 +1040,14 @@ export type ImageSelectScalar = {
   shortPostId?: boolean
   userId?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   size?: boolean
   source?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "url" | "title" | "description" | "shortPostId" | "userId" | "published" | "size" | "source" | "createdAt" | "updatedAt", ExtArgs["result"]["image"]>
+export type ImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "url" | "title" | "description" | "shortPostId" | "userId" | "published" | "showPrivateToFollowers" | "size" | "source" | "createdAt" | "updatedAt", ExtArgs["result"]["image"]>
 export type ImageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   shortPost?: boolean | Prisma.Image$shortPostArgs<ExtArgs>
   albums?: boolean | Prisma.Image$albumsArgs<ExtArgs>
@@ -1034,6 +1078,7 @@ export type $ImagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     shortPostId: string | null
     userId: string
     published: boolean
+    showPrivateToFollowers: boolean
     size: string | null
     source: $Enums.SourceImage | null
     createdAt: Date
@@ -1471,6 +1516,7 @@ export interface ImageFieldRefs {
   readonly shortPostId: Prisma.FieldRef<"Image", 'String'>
   readonly userId: Prisma.FieldRef<"Image", 'String'>
   readonly published: Prisma.FieldRef<"Image", 'Boolean'>
+  readonly showPrivateToFollowers: Prisma.FieldRef<"Image", 'Boolean'>
   readonly size: Prisma.FieldRef<"Image", 'String'>
   readonly source: Prisma.FieldRef<"Image", 'SourceImage'>
   readonly createdAt: Prisma.FieldRef<"Image", 'DateTime'>

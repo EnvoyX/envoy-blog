@@ -13,13 +13,13 @@ import {
 import { AlbumPrisma } from "@/lib/types";
 import { useAlbumStore } from "@/store/album";
 
-export function AlbumCard({ album }: { album: AlbumPrisma }) {
+export function AlbumCard({ album, inDashboard }: { album: AlbumPrisma; inDashboard: boolean }) {
   const coverImage = album.coverImageUrl || album.images?.[0]?.url;
   const { toggleDialog, setInitialValues } = useAlbumStore();
 
   return (
     <Link
-      to="/dashboard/albums/$albumId"
+      to={inDashboard ? "/dashboard/albums/$albumId" : "/album/$albumId"}
       params={{ albumId: album.id }}
       className="group flex flex-col gap-3 outline-none"
     >

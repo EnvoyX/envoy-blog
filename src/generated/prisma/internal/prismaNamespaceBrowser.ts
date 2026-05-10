@@ -131,6 +131,7 @@ export const ShortPostScalarFieldEnum = {
   id: 'id',
   content: 'content',
   published: 'published',
+  showPrivateToFollowers: 'showPrivateToFollowers',
   authorId: 'authorId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -146,6 +147,7 @@ export const AlbumScalarFieldEnum = {
   coverImageUrl: 'coverImageUrl',
   authorId: 'authorId',
   published: 'published',
+  showPrivateToFollowers: 'showPrivateToFollowers',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -161,6 +163,7 @@ export const ImageScalarFieldEnum = {
   shortPostId: 'shortPostId',
   userId: 'userId',
   published: 'published',
+  showPrivateToFollowers: 'showPrivateToFollowers',
   size: 'size',
   source: 'source',
   createdAt: 'createdAt',
@@ -179,6 +182,7 @@ export const PostScalarFieldEnum = {
   excerpt: 'excerpt',
   content: 'content',
   published: 'published',
+  showPrivateToFollowers: 'showPrivateToFollowers',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   authorId: 'authorId'

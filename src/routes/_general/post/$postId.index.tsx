@@ -3,7 +3,7 @@ import { eq, useLiveQuery } from "@tanstack/react-db";
 import { createFileRoute } from "@tanstack/react-router";
 import { useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
-import { Heart, MessageSquare } from "lucide-react";
+import { ArrowLeft, Heart, MessageSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -118,11 +118,23 @@ function RouteComponent() {
     >
       {firstImage && post?.Images?.length === 1 && (
         <div
-          className="w-full sm:w-4/5 bg-transparent flex items-center justify-center border-r border-slate-800"
+          className="relative w-full sm:w-4/5 bg-transparent flex items-center justify-center border-r border-slate-800"
           onClick={(e) => {
             e.preventDefault();
           }}
         >
+          <div className="absolute top-1 left-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="cursor-pointer"
+              onClick={() => {
+                window.history.back();
+              }}
+            >
+              <ArrowLeft className="size-6 text-primary" />
+            </Button>
+          </div>
           <ImageModal
             imageUrl={firstImage}
             className="max-h-full max-w-full object-contain cursor-pointer"
@@ -139,6 +151,18 @@ function RouteComponent() {
           }}
           setApi={setApi}
         >
+          <div className="absolute top-1 left-2 z-10">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="cursor-pointer"
+              onClick={() => {
+                window.history.back();
+              }}
+            >
+              <ArrowLeft className="size-6 text-primary" />
+            </Button>
+          </div>
           <CarouselContent>
             {post?.Images?.map((image, index) => (
               <CarouselItem key={index}>

@@ -354,6 +354,7 @@ function BlogPageComponent() {
                     ...prev,
                     isLoading: false,
                     dialogId: "",
+                    isOpen: false,
                   };
                 });
                 // unsubscribe()

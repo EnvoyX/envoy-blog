@@ -44,6 +44,7 @@ export function PostDialog() {
       image: initialValues?.images ?? ([] as string[]),
       content: initialValues?.content ?? "",
       published: initialValues?.published ?? false,
+      showPrivateToFollowers: initialValues?.showPrivateToFollowers ?? false,
     },
     validators: {
       onSubmit: shortPostSchema,
@@ -59,6 +60,7 @@ export function PostDialog() {
             content: value.content,
             published: value.published,
             images: value.image,
+            showPrivateToFollowers: value.showPrivateToFollowers,
           },
         });
         toast.success("Post edited successfully");
@@ -70,6 +72,7 @@ export function PostDialog() {
             content: value.content,
             published: value.published,
             images: value.image,
+            showPrivateToFollowers: value.showPrivateToFollowers,
           },
         });
         toast.success("Post created successfully");
@@ -137,11 +140,49 @@ export function PostDialog() {
                     </div>
                     <Switch
                       checked={field.state.value}
-                      onCheckedChange={field.handleChange}
+                      onCheckedChange={(checked) => {
+                        field.handleChange(checked);
+                        if (checked === true) form.setFieldValue("showPrivateToFollowers", false);
+                      }}
                       className="data-[state=checked]:bg-emerald-500"
                     />
                   </div>
                 )}
+              />
+              <form.Subscribe
+                selector={(state) => state.values}
+                children={({ published }) => {
+                  if (!published)
+                    return (
+                      <form.Field
+                        name="showPrivateToFollowers"
+                        children={(field) => (
+                          <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="space-y-0.5">
+                              <Label className="text-sm font-medium text-zinc-200">
+                                Show Private:{" "}
+                                <span
+                                  className={
+                                    field.state.value ? "text-emerald-400" : "text-zinc-400"
+                                  }
+                                >
+                                  {field.state.value ? "Show" : ` Hidden`}
+                                </span>
+                              </Label>
+                              <p className="text-xs text-zinc-500">
+                                Show this post to follower even if private
+                              </p>
+                            </div>
+                            <Switch
+                              checked={field.state.value}
+                              onCheckedChange={field.handleChange}
+                              className="data-[state=checked]:bg-emerald-500"
+                            />
+                          </div>
+                        )}
+                      />
+                    );
+                }}
               />
               <Field className="space-y-3">
                 <form.Field

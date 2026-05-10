@@ -28,6 +28,7 @@ export type ShortPostMinAggregateOutputType = {
   id: string | null
   content: string | null
   published: boolean | null
+  showPrivateToFollowers: boolean | null
   authorId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -37,6 +38,7 @@ export type ShortPostMaxAggregateOutputType = {
   id: string | null
   content: string | null
   published: boolean | null
+  showPrivateToFollowers: boolean | null
   authorId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -46,6 +48,7 @@ export type ShortPostCountAggregateOutputType = {
   id: number
   content: number
   published: number
+  showPrivateToFollowers: number
   authorId: number
   createdAt: number
   updatedAt: number
@@ -57,6 +60,7 @@ export type ShortPostMinAggregateInputType = {
   id?: true
   content?: true
   published?: true
+  showPrivateToFollowers?: true
   authorId?: true
   createdAt?: true
   updatedAt?: true
@@ -66,6 +70,7 @@ export type ShortPostMaxAggregateInputType = {
   id?: true
   content?: true
   published?: true
+  showPrivateToFollowers?: true
   authorId?: true
   createdAt?: true
   updatedAt?: true
@@ -75,6 +80,7 @@ export type ShortPostCountAggregateInputType = {
   id?: true
   content?: true
   published?: true
+  showPrivateToFollowers?: true
   authorId?: true
   createdAt?: true
   updatedAt?: true
@@ -157,6 +163,7 @@ export type ShortPostGroupByOutputType = {
   id: string
   content: string | null
   published: boolean
+  showPrivateToFollowers: boolean
   authorId: string
   createdAt: Date
   updatedAt: Date
@@ -187,6 +194,7 @@ export type ShortPostWhereInput = {
   id?: Prisma.StringFilter<"ShortPost"> | string
   content?: Prisma.StringNullableFilter<"ShortPost"> | string | null
   published?: Prisma.BoolFilter<"ShortPost"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"ShortPost"> | boolean
   authorId?: Prisma.StringFilter<"ShortPost"> | string
   createdAt?: Prisma.DateTimeFilter<"ShortPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ShortPost"> | Date | string
@@ -200,6 +208,7 @@ export type ShortPostOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -216,6 +225,7 @@ export type ShortPostWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ShortPostWhereInput | Prisma.ShortPostWhereInput[]
   content?: Prisma.StringNullableFilter<"ShortPost"> | string | null
   published?: Prisma.BoolFilter<"ShortPost"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"ShortPost"> | boolean
   authorId?: Prisma.StringFilter<"ShortPost"> | string
   createdAt?: Prisma.DateTimeFilter<"ShortPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ShortPost"> | Date | string
@@ -229,6 +239,7 @@ export type ShortPostOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -244,6 +255,7 @@ export type ShortPostScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"ShortPost"> | string
   content?: Prisma.StringNullableWithAggregatesFilter<"ShortPost"> | string | null
   published?: Prisma.BoolWithAggregatesFilter<"ShortPost"> | boolean
+  showPrivateToFollowers?: Prisma.BoolWithAggregatesFilter<"ShortPost"> | boolean
   authorId?: Prisma.StringWithAggregatesFilter<"ShortPost"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ShortPost"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ShortPost"> | Date | string
@@ -253,6 +265,7 @@ export type ShortPostCreateInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   Images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
@@ -265,6 +278,7 @@ export type ShortPostUncheckedCreateInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   authorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -277,6 +291,7 @@ export type ShortPostUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
@@ -289,6 +304,7 @@ export type ShortPostUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -301,6 +317,7 @@ export type ShortPostCreateManyInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   authorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -310,6 +327,7 @@ export type ShortPostUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -318,6 +336,7 @@ export type ShortPostUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -327,6 +346,7 @@ export type ShortPostCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -336,6 +356,7 @@ export type ShortPostMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -345,6 +366,7 @@ export type ShortPostMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -463,6 +485,7 @@ export type ShortPostCreateWithoutImagesInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   likes?: Prisma.LikeCreateNestedManyWithoutShortPostInput
@@ -474,6 +497,7 @@ export type ShortPostUncheckedCreateWithoutImagesInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   authorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -501,6 +525,7 @@ export type ShortPostUpdateWithoutImagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   likes?: Prisma.LikeUpdateManyWithoutShortPostNestedInput
@@ -512,6 +537,7 @@ export type ShortPostUncheckedUpdateWithoutImagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -523,6 +549,7 @@ export type ShortPostCreateWithoutLikesInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   Images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
@@ -534,6 +561,7 @@ export type ShortPostUncheckedCreateWithoutLikesInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   authorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -561,6 +589,7 @@ export type ShortPostUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
@@ -572,6 +601,7 @@ export type ShortPostUncheckedUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -583,6 +613,7 @@ export type ShortPostCreateWithoutCommentsInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   Images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
@@ -594,6 +625,7 @@ export type ShortPostUncheckedCreateWithoutCommentsInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   authorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -621,6 +653,7 @@ export type ShortPostUpdateWithoutCommentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
@@ -632,6 +665,7 @@ export type ShortPostUncheckedUpdateWithoutCommentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -643,6 +677,7 @@ export type ShortPostCreateWithoutAuthorInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   Images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
@@ -654,6 +689,7 @@ export type ShortPostUncheckedCreateWithoutAuthorInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   Images?: Prisma.ImageUncheckedCreateNestedManyWithoutShortPostInput
@@ -694,6 +730,7 @@ export type ShortPostScalarWhereInput = {
   id?: Prisma.StringFilter<"ShortPost"> | string
   content?: Prisma.StringNullableFilter<"ShortPost"> | string | null
   published?: Prisma.BoolFilter<"ShortPost"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"ShortPost"> | boolean
   authorId?: Prisma.StringFilter<"ShortPost"> | string
   createdAt?: Prisma.DateTimeFilter<"ShortPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ShortPost"> | Date | string
@@ -703,6 +740,7 @@ export type ShortPostCreateManyAuthorInput = {
   id?: string
   content?: string | null
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -711,6 +749,7 @@ export type ShortPostUpdateWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
@@ -722,6 +761,7 @@ export type ShortPostUncheckedUpdateWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Images?: Prisma.ImageUncheckedUpdateManyWithoutShortPostNestedInput
@@ -733,6 +773,7 @@ export type ShortPostUncheckedUpdateManyWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -790,6 +831,7 @@ export type ShortPostSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   id?: boolean
   content?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   authorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -804,6 +846,7 @@ export type ShortPostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   content?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   authorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -814,6 +857,7 @@ export type ShortPostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   content?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   authorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -824,12 +868,13 @@ export type ShortPostSelectScalar = {
   id?: boolean
   content?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   authorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ShortPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "published" | "authorId" | "createdAt" | "updatedAt", ExtArgs["result"]["shortPost"]>
+export type ShortPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "published" | "showPrivateToFollowers" | "authorId" | "createdAt" | "updatedAt", ExtArgs["result"]["shortPost"]>
 export type ShortPostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Images?: boolean | Prisma.ShortPost$ImagesArgs<ExtArgs>
   likes?: boolean | Prisma.ShortPost$likesArgs<ExtArgs>
@@ -856,6 +901,7 @@ export type $ShortPostPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     id: string
     content: string | null
     published: boolean
+    showPrivateToFollowers: boolean
     authorId: string
     createdAt: Date
     updatedAt: Date
@@ -1289,6 +1335,7 @@ export interface ShortPostFieldRefs {
   readonly id: Prisma.FieldRef<"ShortPost", 'String'>
   readonly content: Prisma.FieldRef<"ShortPost", 'String'>
   readonly published: Prisma.FieldRef<"ShortPost", 'Boolean'>
+  readonly showPrivateToFollowers: Prisma.FieldRef<"ShortPost", 'Boolean'>
   readonly authorId: Prisma.FieldRef<"ShortPost", 'String'>
   readonly createdAt: Prisma.FieldRef<"ShortPost", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ShortPost", 'DateTime'>

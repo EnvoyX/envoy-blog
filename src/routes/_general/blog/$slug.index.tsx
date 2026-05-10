@@ -1,14 +1,14 @@
-import { createId } from '@paralleldrive/cuid2';
-import { useLiveQuery, eq } from '@tanstack/react-db';
-import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router';
-import { intlFormat, intlFormatDistance } from 'date-fns';
-import { ChevronDown, ChevronLeft, Heart, ListIcon, MessagesSquareIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { createId } from "@paralleldrive/cuid2";
+import { useLiveQuery, eq } from "@tanstack/react-db";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
+import { intlFormat, intlFormatDistance } from "date-fns";
+import { ChevronDown, ChevronLeft, Heart, ListIcon, MessagesSquareIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-import { commentCollection, likeCollection } from '@/collections/blog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { commentCollection, likeCollection } from "@/collections/blog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,24 +17,24 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import CommentInput from '@/components/web/CommentInput';
-import { CommentItem } from '@/components/web/CommentItem';
-import { MarkdownRenderer } from '@/components/web/markdown/Markdown';
-import { UserAvatar } from '@/components/web/user-profile';
-import { getPostFn } from '@/data/blog';
-import { getUser } from '@/data/session';
-import { User } from '@/generated/prisma/browser';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/dropdown-menu";
+import CommentInput from "@/components/web/CommentInput";
+import { CommentItem } from "@/components/web/CommentItem";
+import { MarkdownRenderer } from "@/components/web/markdown/Markdown";
+import { UserAvatar } from "@/components/web/user-profile";
+import { getPostFn } from "@/data/blog";
+import { getUser } from "@/data/session";
+import { User } from "@/generated/prisma/browser";
+import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute('/_general/blog/$slug/')({
+export const Route = createFileRoute("/_general/blog/$slug/")({
   component: PostComponent,
   loader: async ({ params }) => {
     const post = await getPostFn({ data: params.slug });
     const session = await getUser();
     if (!post?.published && session?.user?.id !== post?.authorId) {
       throw redirect({
-        to: '/blog',
+        to: "/blog",
       });
     }
     return {
@@ -46,22 +46,22 @@ export const Route = createFileRoute('/_general/blog/$slug/')({
     meta: [
       { title: `${loaderData?.post?.title} | Blog | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
       {
-        property: 'og:title',
+        property: "og:title",
         content: `${loaderData?.post?.title} | Envoy Blog`,
       },
       {
-        property: 'og:description',
+        property: "og:description",
         content: `${loaderData?.post?.description}`,
       },
       {
-        property: 'og:image',
+        property: "og:image",
         content: `${loaderData?.post?.image}`,
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
@@ -69,10 +69,10 @@ export const Route = createFileRoute('/_general/blog/$slug/')({
 function extractHeadings(markdown: string) {
   // use a regex to find everything between ``` and ``` and replace it with an empty string before looking for headings.
   const cleanMarkdown = markdown
-    .replace(/```[\s\S]*?```/g, '') // remove code blocks within ```
-    .replace(/`.*?`/g, ''); // remove inline code (i.e. comments)
+    .replace(/```[\s\S]*?```/g, "") // remove code blocks within ```
+    .replace(/`.*?`/g, ""); // remove inline code (i.e. comments)
 
-  const lines = cleanMarkdown.split('\n');
+  const lines = cleanMarkdown.split("\n");
   const headings: { text: string; id: string; level: number }[] = [];
 
   lines.forEach((line) => {
@@ -83,8 +83,8 @@ function extractHeadings(markdown: string) {
       const text = match[2];
       const id = text
         .toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w-]/g, '');
+        .replace(/\s+/g, "-")
+        .replace(/[^\w-]/g, "");
 
       headings.push({ text, id, level });
     }
@@ -106,7 +106,7 @@ function PostComponent() {
     q
       .from({ comment: commentCollection })
       .where(({ comment }) => eq(comment.postId, post?.id))
-      .orderBy(({ comment }) => comment.createdAt, 'desc'),
+      .orderBy(({ comment }) => comment.createdAt, "desc"),
   );
 
   const hasLiked = likes.find((like) => like.userId === session?.user?.id);
@@ -171,10 +171,10 @@ function PostComponent() {
         });
       },
       // rootMargin: -top -right -bottom -left
-      { rootMargin: '-80px 0px 0px 0px', threshold: 0 }, // adjusts when the link triggers
+      { rootMargin: "-80px 0px 0px 0px", threshold: 0 }, // adjusts when the link triggers
     );
 
-    document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((h) => observer.observe(h));
+    document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((h) => observer.observe(h));
     return () => observer.disconnect();
   }, []);
 
@@ -241,13 +241,13 @@ function PostComponent() {
             <DropdownMenuTrigger asChild>
               <div className="text-sm font-medium text-slate-500 truncate md:max-w-none flex gap-1 items-center group">
                 <ChevronDown
-                  className={cn('size-4 group-hover:text-emerald-500 shrink-0', {
-                    'rotate-180 transition-all text-emerald-500': dropdownOpen,
+                  className={cn("size-4 group-hover:text-emerald-500 shrink-0", {
+                    "rotate-180 transition-all text-emerald-500": dropdownOpen,
                   })}
                 />
                 <span
-                  className={cn('group-hover:text-emerald-500', {
-                    'text-emerald-500': dropdownOpen,
+                  className={cn("group-hover:text-emerald-500", {
+                    "text-emerald-500": dropdownOpen,
                   })}
                 >
                   {post.title}
@@ -266,13 +266,13 @@ function PostComponent() {
                         key={heading.id}
                         href={`#${heading.id}`}
                         className={`block text-xs transition-all hover:text-white
-                          ${isActive ? 'text-emerald-500 border-emerald-500 font-medium border-l-2' : 'text-slate-400 '}
-                          ${heading.level === 1 && 'pl-2'}
-                          ${heading.level === 2 && 'pl-4'}
-                          ${heading.level === 3 && 'pl-6'}
-                          ${heading.level === 4 && 'pl-8'}
-                          ${heading.level === 5 && 'pl-10'}
-                          ${heading.level === 6 && 'pl-12'}
+                          ${isActive ? "text-emerald-500 border-emerald-500 font-medium border-l-2" : "text-slate-400 "}
+                          ${heading.level === 1 && "pl-2"}
+                          ${heading.level === 2 && "pl-4"}
+                          ${heading.level === 3 && "pl-6"}
+                          ${heading.level === 4 && "pl-8"}
+                          ${heading.level === 5 && "pl-10"}
+                          ${heading.level === 6 && "pl-12"}
 
                            hover:bg-slate-500/5`}
                       >
@@ -293,8 +293,8 @@ function PostComponent() {
             <header className="mb-8">
               <div className="aspect-video w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 mb-8">
                 <img
-                  src={post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
-                  alt={post.title ?? 'Blog Thumbnail'}
+                  src={post.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
+                  alt={post.title ?? "Blog Thumbnail"}
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -323,9 +323,9 @@ function PostComponent() {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-slate-400">
                   <p className="flex items-center">
                     {intlFormat(new Date(post.createdAt), {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
                     })}
                   </p>
                   <span className="hidden sm:inline text-slate-700">•</span>
@@ -349,7 +349,7 @@ function PostComponent() {
               prose-pre:bg-slate-900
               prose-pre:border prose-pre:border-slate-800 mb-25"
             >
-              <MarkdownRenderer markdown={post.content || '*Nothing to preview...*'} />
+              <MarkdownRenderer markdown={post.content || "*Nothing to preview...*"} />
 
               <div className="mt-16 pt-8 border-t border-slate-800 space-y-12">
                 <section className="flex items-center justify-between max-sm:flex-col max-sm:justify-center bg-slate-900/40 p-6 rounded-2xl border border-slate-800">
@@ -365,13 +365,13 @@ function PostComponent() {
                     <span className="text-sm font-medium text-slate-300">{likes.length} likes</span>
                     <button
                       onClick={() => handleToggleLike()}
-                      className={`p-3 rounded-full transition-all border ${session.user ? 'cursor-pointer' : 'cursor-not-allowed'}  ${
+                      className={`p-3 rounded-full transition-all border ${session.user ? "cursor-pointer" : "cursor-not-allowed"}  ${
                         hasLiked
-                          ? 'bg-emerald-500/10 border-emerald-500 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
-                          : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
+                          ? "bg-emerald-500/10 border-emerald-500 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                          : "bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white"
                       }`}
                     >
-                      <Heart className={`size-6 ${hasLiked && 'fill-current'}`} />
+                      <Heart className={`size-6 ${hasLiked && "fill-current"}`} />
                     </button>
                   </div>
                 </section>
@@ -398,13 +398,13 @@ function PostComponent() {
                         <Avatar className="h-10 w-10 shrink-0 items-center justify-center">
                           <AvatarImage src={session.user.image as string} />
                           <AvatarFallback>
-                            {' '}
+                            {" "}
                             {(session.user.name as string)
                               ? (session.user.name as string)
-                                  .split(' ')
+                                  .split(" ")
                                   .map((n) => n[0])
-                                  .join('')
-                              : ''}
+                                  .join("")
+                              : ""}
                           </AvatarFallback>
                         </Avatar>
                       </Link>
@@ -419,7 +419,7 @@ function PostComponent() {
                           className="cursor-pointer"
                           onClick={() =>
                             navigate({
-                              to: '/login',
+                              to: "/login",
                             })
                           }
                         >
@@ -460,13 +460,13 @@ function PostComponent() {
                       key={heading.id}
                       href={`#${heading.id}`}
                       className={`block py-1.5 pr-4 text-sm transition-all border-l-3 -ml-0.5 hover:text-white
-                      ${isActive ? ' bg-emerald-500/10 text-emerald-500 border-emerald-500 font-medium' : 'text-slate-400'}
-                      ${heading.level === 1 && 'pl-2'}
-                      ${heading.level === 2 && 'pl-4'}
-                      ${heading.level === 3 && 'pl-6'}
-                      ${heading.level === 4 && 'pl-8'}
-                      ${heading.level === 5 && 'pl-10'}
-                      ${heading.level === 6 && 'pl-12'}
+                      ${isActive ? " bg-emerald-500/10 text-emerald-500 border-emerald-500 font-medium" : "text-slate-400"}
+                      ${heading.level === 1 && "pl-2"}
+                      ${heading.level === 2 && "pl-4"}
+                      ${heading.level === 3 && "pl-6"}
+                      ${heading.level === 4 && "pl-8"}
+                      ${heading.level === 5 && "pl-10"}
+                      ${heading.level === 6 && "pl-12"}
 
                        hover:bg-slate-500/5`}
                     >
@@ -477,7 +477,7 @@ function PostComponent() {
               </nav>
 
               <button
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 className="mt-8 text-xs text-slate-500 hover:text-primary transition-colors flex items-center gap-1 cursor-pointer"
               >
                 Back to top ↑
@@ -486,7 +486,7 @@ function PostComponent() {
                 <button
                   onClick={() =>
                     navigate({
-                      to: '/blog/$slug/edit',
+                      to: "/dashboard/blog/$slug/edit",
                       params: {
                         slug,
                       },

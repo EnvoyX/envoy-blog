@@ -10,6 +10,7 @@ import { VirtualOrigin } from "@tanstack/react-db";
 import { UserRole } from "@/generated/prisma/enums";
 import { followColection } from "@/collections/follow";
 import { createId } from "@paralleldrive/cuid2";
+import { Link } from "@tanstack/react-router";
 
 type FollowDialogProps = {
   follows: {
@@ -65,16 +66,16 @@ export function UserFollowDialog({ follows, session }: FollowDialogProps) {
         </DialogHeader>
 
         <Tabs defaultValue={initialTab} className="w-full">
-          <TabsList className="w-full justify-start rounded-none bg-transparent border-b border-slate-900 p-0 h-12">
+          <TabsList className="w-full justify-start rounded-none bg-transparent border-b border-slate-900 px-2 h-12">
             <TabsTrigger
               value="followers"
-              className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-emerald-500 text-xs font-bold"
+              className="flex-1 h-full data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-emerald-500 text-xs font-bold cursor-pointer rounded-lg"
             >
               {follows.filter((follow) => follow.followingId === currentUserId).length} Followers
             </TabsTrigger>
             <TabsTrigger
               value="following"
-              className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-emerald-500 text-xs font-bold"
+              className="flex-1 h-full data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-emerald-500 text-xs font-bold cursor-pointer rounded-lg"
             >
               {follows.filter((follow) => follow.followerId === currentUserId).length} Following
             </TabsTrigger>
@@ -114,14 +115,15 @@ function UserList({
 } & FollowDialogProps) {
   const queryClient = useQueryClient();
   const { data } = useQuery({
-    queryKey: ["user-following-followers"],
+    queryKey: ["user-following-followers", currentUserId],
     queryFn: async () => {
-      const data = await getFollowsByUserIdFn({ data: { userId: currentUserId } });
+      const user = await getFollowsByUserIdFn({ data: { userId: currentUserId } });
       return {
-        followers: data.followers?.map((follower) => follower.following),
-        following: data.following?.map((following) => following.follower),
+        followers: user.followers?.map((user) => user.follower),
+        following: user.following?.map((user) => user.following),
       };
     },
+    enabled: currentUserId ? true : false,
   });
 
   function handleToggleFollow(targetUserId: string) {
@@ -138,23 +140,23 @@ function UserList({
         followerId: session?.user.id as string,
       });
       queryClient.invalidateQueries({
-        queryKey: ["user-following-followers"],
+        queryKey: ["user-following-followers", currentUserId],
       });
     } else {
       // optimistic delete follow
       followColection.delete(existingFollow.id);
       queryClient.invalidateQueries({
-        queryKey: ["user-following-followers"],
+        queryKey: ["user-following-followers", currentUserId],
       });
     }
   }
 
   function getUsersByType(type: "followers" | "following") {
     if (type === "followers") {
-      const users = data?.following;
+      const users = data?.followers;
       return users;
     } else {
-      const users = data?.followers;
+      const users = data?.following;
       return users;
     }
   }
@@ -176,9 +178,16 @@ function UserList({
           (follow) => follow.followerId === session?.user?.id && follow.followingId === user.id,
         );
         return (
-          <div
+          <Link
+            to={"/user/$userId"}
+            params={{
+              userId: user.id,
+            }}
             key={user.id}
-            className="flex items-center justify-between p-4 hover:bg-slate-900/50 transition-colors"
+            className="flex items-center justify-between p-4 hover:bg-slate-900/50 transition-all animate-in fade-in slide-in-from-bottom-4 duration-500 cursor-pointer"
+            onClick={() =>
+              followDialogStore.setState((prev) => ({ ...prev, isOpen: false, currentUserId: "" }))
+            }
           >
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10 border border-slate-800">
@@ -192,19 +201,23 @@ function UserList({
               </Avatar>
               <div className="flex flex-col">
                 <span className="text-sm font-bold text-white">{user.name}</span>
-                <span className="text-xs text-slate-500 max-w-xs">{user.biodata || "user"}</span>
+                <span className="text-xs text-slate-500 max-w-xs">{user.biodata || ""}</span>
               </div>
             </div>
-            {hasFollowed ? (
-              <Button className="cursor-pointer" onClick={() => handleToggleFollow(user.id)}>
-                Unfollow
-              </Button>
-            ) : (
-              <Button className="cursor-pointer" onClick={() => handleToggleFollow(user.id)}>
-                Follow
-              </Button>
+            {session.user && session.user?.id !== user.id && (
+              <>
+                {hasFollowed ? (
+                  <Button className="cursor-pointer" onClick={() => handleToggleFollow(user.id)}>
+                    Unfollow
+                  </Button>
+                ) : (
+                  <Button className="cursor-pointer" onClick={() => handleToggleFollow(user.id)}>
+                    Follow
+                  </Button>
+                )}{" "}
+              </>
             )}
-          </div>
+          </Link>
         );
       })}
     </div>

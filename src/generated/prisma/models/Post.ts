@@ -33,6 +33,7 @@ export type PostMinAggregateOutputType = {
   excerpt: string | null
   content: string | null
   published: boolean | null
+  showPrivateToFollowers: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   authorId: string | null
@@ -47,6 +48,7 @@ export type PostMaxAggregateOutputType = {
   excerpt: string | null
   content: string | null
   published: boolean | null
+  showPrivateToFollowers: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   authorId: string | null
@@ -61,6 +63,7 @@ export type PostCountAggregateOutputType = {
   excerpt: number
   content: number
   published: number
+  showPrivateToFollowers: number
   createdAt: number
   updatedAt: number
   authorId: number
@@ -77,6 +80,7 @@ export type PostMinAggregateInputType = {
   excerpt?: true
   content?: true
   published?: true
+  showPrivateToFollowers?: true
   createdAt?: true
   updatedAt?: true
   authorId?: true
@@ -91,6 +95,7 @@ export type PostMaxAggregateInputType = {
   excerpt?: true
   content?: true
   published?: true
+  showPrivateToFollowers?: true
   createdAt?: true
   updatedAt?: true
   authorId?: true
@@ -105,6 +110,7 @@ export type PostCountAggregateInputType = {
   excerpt?: true
   content?: true
   published?: true
+  showPrivateToFollowers?: true
   createdAt?: true
   updatedAt?: true
   authorId?: true
@@ -192,6 +198,7 @@ export type PostGroupByOutputType = {
   excerpt: string | null
   content: string
   published: boolean
+  showPrivateToFollowers: boolean
   createdAt: Date
   updatedAt: Date
   authorId: string
@@ -227,6 +234,7 @@ export type PostWhereInput = {
   excerpt?: Prisma.StringNullableFilter<"Post"> | string | null
   content?: Prisma.StringFilter<"Post"> | string
   published?: Prisma.BoolFilter<"Post"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   authorId?: Prisma.StringFilter<"Post"> | string
@@ -245,6 +253,7 @@ export type PostOrderByWithRelationInput = {
   excerpt?: Prisma.SortOrderInput | Prisma.SortOrder
   content?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
@@ -267,6 +276,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   excerpt?: Prisma.StringNullableFilter<"Post"> | string | null
   content?: Prisma.StringFilter<"Post"> | string
   published?: Prisma.BoolFilter<"Post"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   authorId?: Prisma.StringFilter<"Post"> | string
@@ -285,6 +295,7 @@ export type PostOrderByWithAggregationInput = {
   excerpt?: Prisma.SortOrderInput | Prisma.SortOrder
   content?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
@@ -305,6 +316,7 @@ export type PostScalarWhereWithAggregatesInput = {
   excerpt?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
   content?: Prisma.StringWithAggregatesFilter<"Post"> | string
   published?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
+  showPrivateToFollowers?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   authorId?: Prisma.StringWithAggregatesFilter<"Post"> | string
@@ -319,6 +331,7 @@ export type PostCreateInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutPostsInput
@@ -336,6 +349,7 @@ export type PostUncheckedCreateInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -353,6 +367,7 @@ export type PostUpdateInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
@@ -370,6 +385,7 @@ export type PostUncheckedUpdateInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -387,6 +403,7 @@ export type PostCreateManyInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -401,6 +418,7 @@ export type PostUpdateManyMutationInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -414,6 +432,7 @@ export type PostUncheckedUpdateManyInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -433,6 +452,7 @@ export type PostCountOrderByAggregateInput = {
   excerpt?: Prisma.SortOrder
   content?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
@@ -447,6 +467,7 @@ export type PostMaxOrderByAggregateInput = {
   excerpt?: Prisma.SortOrder
   content?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
@@ -461,6 +482,7 @@ export type PostMinOrderByAggregateInput = {
   excerpt?: Prisma.SortOrder
   content?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  showPrivateToFollowers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
@@ -602,6 +624,7 @@ export type PostCreateWithoutTagsInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutPostsInput
@@ -618,6 +641,7 @@ export type PostUncheckedCreateWithoutTagsInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -658,6 +682,7 @@ export type PostScalarWhereInput = {
   excerpt?: Prisma.StringNullableFilter<"Post"> | string | null
   content?: Prisma.StringFilter<"Post"> | string
   published?: Prisma.BoolFilter<"Post"> | boolean
+  showPrivateToFollowers?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   authorId?: Prisma.StringFilter<"Post"> | string
@@ -672,6 +697,7 @@ export type PostCreateWithoutLikesInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutPostsInput
@@ -688,6 +714,7 @@ export type PostUncheckedCreateWithoutLikesInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -720,6 +747,7 @@ export type PostUpdateWithoutLikesInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
@@ -736,6 +764,7 @@ export type PostUncheckedUpdateWithoutLikesInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -752,6 +781,7 @@ export type PostCreateWithoutCommentsInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutPostsInput
@@ -768,6 +798,7 @@ export type PostUncheckedCreateWithoutCommentsInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -800,6 +831,7 @@ export type PostUpdateWithoutCommentsInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
@@ -816,6 +848,7 @@ export type PostUncheckedUpdateWithoutCommentsInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -832,6 +865,7 @@ export type PostCreateWithoutAuthorInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   tags?: Prisma.TagCreateNestedManyWithoutPostsInput
@@ -848,6 +882,7 @@ export type PostUncheckedCreateWithoutAuthorInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutPostsInput
@@ -890,6 +925,7 @@ export type PostUpdateWithoutTagsInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
@@ -906,6 +942,7 @@ export type PostUncheckedUpdateWithoutTagsInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -922,6 +959,7 @@ export type PostUncheckedUpdateManyWithoutTagsInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -936,6 +974,7 @@ export type PostCreateManyAuthorInput = {
   excerpt?: string | null
   content: string
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -949,6 +988,7 @@ export type PostUpdateWithoutAuthorInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tags?: Prisma.TagUpdateManyWithoutPostsNestedInput
@@ -965,6 +1005,7 @@ export type PostUncheckedUpdateWithoutAuthorInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tags?: Prisma.TagUncheckedUpdateManyWithoutPostsNestedInput
@@ -981,6 +1022,7 @@ export type PostUncheckedUpdateManyWithoutAuthorInput = {
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.StringFieldUpdateOperationsInput | string
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1043,6 +1085,7 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   excerpt?: boolean
   content?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   authorId?: boolean
@@ -1062,6 +1105,7 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   excerpt?: boolean
   content?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   authorId?: boolean
@@ -1077,6 +1121,7 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   excerpt?: boolean
   content?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   authorId?: boolean
@@ -1092,12 +1137,13 @@ export type PostSelectScalar = {
   excerpt?: boolean
   content?: boolean
   published?: boolean
+  showPrivateToFollowers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   authorId?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "image" | "slug" | "excerpt" | "content" | "published" | "createdAt" | "updatedAt" | "authorId", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "image" | "slug" | "excerpt" | "content" | "published" | "showPrivateToFollowers" | "createdAt" | "updatedAt" | "authorId", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tags?: boolean | Prisma.Post$tagsArgs<ExtArgs>
@@ -1129,6 +1175,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     excerpt: string | null
     content: string
     published: boolean
+    showPrivateToFollowers: boolean
     createdAt: Date
     updatedAt: Date
     authorId: string
@@ -1567,6 +1614,7 @@ export interface PostFieldRefs {
   readonly excerpt: Prisma.FieldRef<"Post", 'String'>
   readonly content: Prisma.FieldRef<"Post", 'String'>
   readonly published: Prisma.FieldRef<"Post", 'Boolean'>
+  readonly showPrivateToFollowers: Prisma.FieldRef<"Post", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Post", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Post", 'DateTime'>
   readonly authorId: Prisma.FieldRef<"Post", 'String'>

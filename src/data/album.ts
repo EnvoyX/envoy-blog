@@ -174,3 +174,20 @@ export const deleteAlbumFn = createServerFn({ method: "POST" })
       where: { id: data.albumId, authorId: context.user.id },
     });
   });
+
+export const changeAlbumCoverFn = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      albumId: z.string(),
+      imageUrl: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ context, data }) => {
+    await db.album.update({
+      where: { id: data.albumId, authorId: context.user.id },
+      data: {
+        coverImageUrl: data.imageUrl,
+      },
+    });
+  });

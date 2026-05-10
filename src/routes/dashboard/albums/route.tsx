@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { AlbumCoverDialog } from "@/components/web/album/AlbumCoverDialog";
 import { AlbumDialog } from "@/components/web/album/AlbumDialog";
 import { BulkImportDialog } from "@/components/web/album/BulkImportDialog";
 import { deleteAlbumFn } from "@/data/album";
@@ -39,6 +40,7 @@ function RouteComponent() {
       <Outlet />
       <AlbumDialog />
       <BulkImportDialog />
+      <AlbumCoverDialog />
       <Dialog
         open={isDeleteDialogOpen}
         onOpenChange={(open) => {

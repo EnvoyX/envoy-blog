@@ -6,7 +6,6 @@ import { authMiddleware } from "@/middlewares/auth";
 
 export const getGlobalFeedFn = createServerFn({ method: "GET" }).handler(async () => {
   return await db.shortPost.findMany({
-    where: { published: true },
     include: {
       author: true,
       Images: true,
@@ -75,6 +74,7 @@ export const createShortPostFn = createServerFn({ method: "POST" })
       content: z.string(),
       published: z.boolean(),
       images: z.array(z.string()).optional(),
+      showPrivateToFollowers: z.boolean(),
     }),
   )
   .middleware([authMiddleware])
@@ -109,6 +109,7 @@ export const editShortPostFn = createServerFn({ method: "POST" })
       content: z.string(),
       published: z.boolean(),
       images: z.array(z.string()).optional(),
+      showPrivateToFollowers: z.boolean(),
     }),
   )
   .middleware([authMiddleware])

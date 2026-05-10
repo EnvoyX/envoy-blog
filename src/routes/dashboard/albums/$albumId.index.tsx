@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
 import {
   ArrowLeft,
   MoreVertical,
@@ -8,6 +8,8 @@ import {
   Trash2,
   FileDown,
   Upload,
+  Download,
+  ImageIcon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -24,11 +26,17 @@ import { getAlbumByIdFn } from "@/data/album";
 import { useAlbumStore } from "@/store/album";
 import { Image } from "@/generated/prisma/client";
 import { imageUploadModalStore } from "@/store/imageUploadStore";
+import { getUser } from "@/data/session";
+import { toast } from "sonner";
+import { downloadAlbumClientSide } from "@/utils/utils";
 
 export const Route = createFileRoute("/dashboard/albums/$albumId/")({
   component: AlbumPage,
   loader: async ({ params }) => {
     const album = await getAlbumByIdFn({ data: { albumId: params.albumId } });
+    const session = await getUser();
+    if (!album?.published && album?.authorId !== session.user?.id)
+      throw redirect({ to: "/dashboard/albums" });
     return album;
   },
   head: ({ loaderData }) => ({
@@ -57,6 +65,19 @@ function AlbumPage() {
   const { albumId } = Route.useParams();
   const navigate = useNavigate();
   const { toggleDialog, setInitialValues } = useAlbumStore();
+
+  const handleDownload = async () => {
+    if (!album) {
+      toast.error("Album are not found");
+      return;
+    }
+    toast.loading("Downloading album as ZIP...", {
+      id: "download-zip",
+    });
+    await downloadAlbumClientSide(album?.name, album?.images);
+    toast.dismiss("download-zip");
+    toast.success("Album sucessfully downloaded!");
+  };
 
   const handleEdit = () => {
     setInitialValues({
@@ -180,6 +201,24 @@ function AlbumPage() {
                   className="cursor-pointer sm:hidden"
                 >
                   <Upload className="mr-2 size-4" /> Upload Photo
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setInitialValues({
+                      name: album?.name ?? "",
+                      description: album?.description || "",
+                      published: album?.published as boolean,
+                      coverImageUrl: album?.coverImageUrl || "",
+                      type: "edit",
+                    });
+                    toggleDialog("albumCover", albumId);
+                  }}
+                >
+                  <ImageIcon className="mr-2 size-4" /> Set album cover
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" onClick={handleDownload}>
+                  <Download className="mr-2 size-4" /> Download as ZIP
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
                   <Pencil className="mr-2 size-4" /> Edit details

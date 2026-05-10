@@ -1,26 +1,26 @@
-import { createFileRoute, Link, redirect } from '@tanstack/react-router'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { ChevronLeft, Copy, CopyCheck } from 'lucide-react'
-import { useState } from 'react'
-import Editor from '@uiw/react-md-editor'
-import { getPostFn } from '@/data/blog'
-import { getUser } from '@/data/session'
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, Copy, CopyCheck } from "lucide-react";
+import { useState } from "react";
+import Editor from "@uiw/react-md-editor";
+import { getPostFn } from "@/data/blog";
+import { getUser } from "@/data/session";
 
-export const Route = createFileRoute('/dashboard/blog/$slug/edit/md-editor')({
+export const Route = createFileRoute("/dashboard/blog/$slug/edit/md-editor")({
   component: RouteComponent,
   loader: async ({ params }) => {
-    const post = await getPostFn({ data: params.slug })
-    const session = await getUser()
-    if (session.user.id !== post?.authorId) {
+    const post = await getPostFn({ data: params.slug });
+    const session = await getUser();
+    if (session?.user?.id !== post?.authorId) {
       throw redirect({
-        to: '/dashboard/blog',
-      })
+        to: "/dashboard/blog",
+      });
     }
     return {
       post,
       session,
-    }
+    };
   },
   head: ({ loaderData }) => ({
     meta: [
@@ -28,40 +28,40 @@ export const Route = createFileRoute('/dashboard/blog/$slug/edit/md-editor')({
         title: `Markdown Editor | ${loaderData?.post?.slug} | Envoy Mindpalace`,
       },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
       {
-        property: 'og:title',
+        property: "og:title",
         content: `${loaderData?.post?.title} | Envoy Blog`,
       },
       {
-        property: 'og:description',
+        property: "og:description",
         content: `${loaderData?.post?.description}`,
       },
       {
-        property: 'og:image',
+        property: "og:image",
         content: `${loaderData?.post?.image}`,
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
-})
+});
 
 function RouteComponent() {
-  const { post } = Route.useLoaderData()
-  const [markdown, setMarkdown] = useState(post?.content ?? '')
-  const [copied, setCopied] = useState(false)
+  const { post } = Route.useLoaderData();
+  const [markdown, setMarkdown] = useState(post?.content ?? "");
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(markdown)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1800)
-  }
+    await navigator.clipboard.writeText(markdown);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
 
   const handleReset = () => {
-    setMarkdown('# Markdown editor')
-  }
+    setMarkdown("# Markdown editor");
+  };
 
   return (
     <div className="p-6 md:p-10 min-h-screen text-slate-50">
@@ -75,10 +75,7 @@ function RouteComponent() {
           </div>
           <div className="flex gap-3 max-sm:flex-col">
             <Button variant="default" className="gap-2" asChild>
-              <Link
-                to="/dashboard/blog/$slug/edit"
-                params={{ slug: post?.slug ?? '' }}
-              >
+              <Link to="/dashboard/blog/$slug/edit" params={{ slug: post?.slug ?? "" }}>
                 <ChevronLeft className="size-4" /> Edit Blog
               </Link>
             </Button>
@@ -95,11 +92,7 @@ function RouteComponent() {
                 </span>
               )}
             </Button>
-            <Button
-              variant={'outline'}
-              className="cursor-pointer"
-              onClick={handleReset}
-            >
+            <Button variant={"outline"} className="cursor-pointer" onClick={handleReset}>
               Reset
             </Button>
           </div>
@@ -109,12 +102,12 @@ function RouteComponent() {
           <Editor
             value={markdown}
             onChange={(value) => {
-              setMarkdown(value as string)
+              setMarkdown(value as string);
             }}
             height={600}
           />
         </Card>
       </div>
     </div>
-  )
+  );
 }
