@@ -1,10 +1,11 @@
-import { useForm } from "@tanstack/react-form";
-import { useRouter } from "@tanstack/react-router";
-import { ImageIcon, Loader2, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useForm } from '@tanstack/react-form';
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from '@tanstack/react-router';
+import { ImageIcon, Loader2, Plus, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselContent,
@@ -12,7 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
   type CarouselApi,
-} from "@/components/ui/carousel";
+} from '@/components/ui/carousel';
 import {
   Dialog,
   DialogClose,
@@ -22,22 +23,21 @@ import {
   DialogHeader,
   DialogTitle,
   // DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { ImportImagesFn } from "@/data/image";
-import { imageSchema } from "@/schemas/image";
-import { useAlbumStore } from "@/store/album";
-import { useQuery } from "@tanstack/react-query";
-import { getAlbumByIdFn, ImportImagesToAlbumFn } from "@/data/album";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { getAlbumByIdFn, ImportImagesToAlbumFn } from '@/data/album';
+import { ImportImagesFn } from '@/data/image';
+import { imageSchema } from '@/schemas/image';
+import { useAlbumStore } from '@/store/album';
 
 export function ImportImageModal() {
   const router = useRouter();
   const { isImageImportDialogOpen, onOpenDialogChange, toggleDialog, currentAlbumId } =
     useAlbumStore();
   const { data: album } = useQuery({
-    queryKey: ["album", currentAlbumId],
+    queryKey: ['album', currentAlbumId],
     queryFn: async () => {
       const album = await getAlbumByIdFn({
         data: {
@@ -56,7 +56,7 @@ export function ImportImageModal() {
     }
     // setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
-    api.on("select", () => {
+    api.on('select', () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
@@ -64,6 +64,7 @@ export function ImportImageModal() {
     defaultValues: {
       image: [] as { url: string; title: string; description: string }[],
       published: false,
+      showPrivateToFollowers: false,
     },
     validators: {
       onSubmit: imageSchema,
@@ -78,25 +79,27 @@ export function ImportImageModal() {
             albumId: currentAlbumId,
             image: value.image,
             published: value.published,
+            showPrivateToFollowers: value.showPrivateToFollowers,
           },
         });
-        toast.success("Images imported successfully", {
+        toast.success('Images imported successfully', {
           description: `Album | ${album?.name}`,
         });
         form.reset();
         void router.invalidate();
-        toggleDialog("close", "");
+        toggleDialog('close', '');
       } else if (!currentAlbumId) {
         await ImportImagesFn({
           data: {
             image: value.image,
             published: value.published,
+            showPrivateToFollowers: value.showPrivateToFollowers,
           },
         });
-        toast.success("Images imported successfully");
+        toast.success('Images imported successfully');
         form.reset();
         void router.invalidate();
-        toggleDialog("close", "");
+        toggleDialog('close', '');
       }
     },
   });
@@ -105,7 +108,7 @@ export function ImportImageModal() {
     <Dialog
       open={isImageImportDialogOpen}
       onOpenChange={(open) => {
-        onOpenDialogChange("import", open);
+        onOpenDialogChange('import', open);
       }}
     >
       <DialogContent className="sm:max-w-6xl p-0 overflow-hidden border-zinc-800 bg-zinc-950">
@@ -120,13 +123,13 @@ export function ImportImageModal() {
                   <div className="max-sm:hidden size-16 relative group aspect-square overflow-hidden rounded-2xl border shadow-2xl">
                     <img
                       src={
-                        album?.coverImageUrl ?? "https://placehold.co/600x800?text=Invalid+Image"
+                        album?.coverImageUrl ?? 'https://placehold.co/600x800?text=Invalid+Image'
                       }
                       alt={album?.name}
                       className="object-cover transition-transform duration-500 group-hover:scale-105 "
                       onError={(e) => {
                         (e.target as HTMLImageElement).src =
-                          "https://placehold.co/600x800?text=Invalid+Image";
+                          'https://placehold.co/600x800?text=Invalid+Image';
                       }}
                     />
                   </div>
@@ -158,9 +161,9 @@ export function ImportImageModal() {
                   <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30">
                     <div className="space-y-0.5">
                       <Label className="text-sm font-medium text-zinc-200">
-                        Visibility:{" "}
-                        <span className={field.state.value ? "text-emerald-400" : "text-zinc-400"}>
-                          {field.state.value ? "Public" : "Private"}
+                        Visibility:{' '}
+                        <span className={field.state.value ? 'text-emerald-400' : 'text-zinc-400'}>
+                          {field.state.value ? 'Public' : 'Private'}
                         </span>
                       </Label>
                       <p className="text-xs text-zinc-500">Visible to all users in the gallery</p>
@@ -173,7 +176,41 @@ export function ImportImageModal() {
                   </div>
                 )}
               />
-
+              <form.Subscribe
+                selector={(state) => state.values}
+                children={({ published }) => {
+                  if (!published)
+                    return (
+                      <form.Field
+                        name="showPrivateToFollowers"
+                        children={(field) => (
+                          <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="space-y-0.5">
+                              <Label className="text-sm font-medium text-zinc-200">
+                                Show Private:{' '}
+                                <span
+                                  className={
+                                    field.state.value ? 'text-emerald-400' : 'text-zinc-400'
+                                  }
+                                >
+                                  {field.state.value ? 'Show' : ` Hidden`}
+                                </span>
+                              </Label>
+                              <p className="text-xs text-zinc-500">
+                                Show this post to follower even if private
+                              </p>
+                            </div>
+                            <Switch
+                              checked={field.state.value}
+                              onCheckedChange={field.handleChange}
+                              className="data-[state=checked]:bg-emerald-500"
+                            />
+                          </div>
+                        )}
+                      />
+                    );
+                }}
+              />
               <div className="space-y-4">
                 <Label className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
                   Image Sources
@@ -253,9 +290,9 @@ export function ImportImageModal() {
                           e.stopPropagation();
 
                           field.pushValue({
-                            url: "",
-                            title: "",
-                            description: "",
+                            url: '',
+                            title: '',
+                            description: '',
                           });
                         }}
                       >
@@ -298,7 +335,7 @@ export function ImportImageModal() {
             <form.Subscribe
               selector={(state) => state.values.image}
               children={(images) => {
-                const validImages = images?.filter((img) => img.url && img.url.trim() !== "") || [];
+                const validImages = images?.filter((img) => img.url && img.url.trim() !== '') || [];
 
                 if (validImages.length === 0) {
                   return (
@@ -327,7 +364,7 @@ export function ImportImageModal() {
                                 className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 "
                                 onError={(e) => {
                                   (e.target as HTMLImageElement).src =
-                                    "https://placehold.co/600x800?text=Invalid+Image";
+                                    'https://placehold.co/600x800?text=Invalid+Image';
                                 }}
                               />
                               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

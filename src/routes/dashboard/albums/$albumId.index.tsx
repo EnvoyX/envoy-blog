@@ -256,15 +256,9 @@ function AlbumPage() {
           </div>
         </div>
       </header>
-
-      {album?.images.length === 0 && (
-        <main className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
-          <p className="text-slate-500">No images found on this album. import your first image!</p>
-        </main>
-      )}
       <main className="container mx-auto p-4">
         {album?.description && (
-          <p className="mb-1 text-lg text-emerald-500 px-4">{album.description}</p>
+          <p className="mb-1 text-base text-emerald-500 px-4">{album.description}</p>
         )}
         <div className="flex flex-wrap items-center gap-4 mb-8 text-sm px-4">
           <div className="flex flex-row items-center gap-2 sm:gap-4 text-slate-400 ">
@@ -281,6 +275,13 @@ function AlbumPage() {
             </span>
           </div>
         </div>
+        {album?.images.length === 0 && (
+          <main className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
+            <p className="text-slate-500">
+              No images found on this album. import your first image!
+            </p>
+          </main>
+        )}
         <PhotoGallery images={album?.images as Image[]} type="private" albumId={albumId} />
       </main>
     </div>
