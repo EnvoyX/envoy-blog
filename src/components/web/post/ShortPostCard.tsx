@@ -1,16 +1,16 @@
-import { createId } from "@paralleldrive/cuid2";
-import { eq, useLiveQuery } from "@tanstack/react-db";
-import { Link } from "@tanstack/react-router";
-import { formatDistanceToNow } from "date-fns";
-import { Heart, MessageSquare, MoreHorizontal, Image as ImageIcon } from "lucide-react";
-import { v4 as uuidv4 } from "uuid";
+import { createId } from '@paralleldrive/cuid2';
+import { eq, useLiveQuery } from '@tanstack/react-db';
+import { Link } from '@tanstack/react-router';
+import { formatDistanceToNow } from 'date-fns';
+import { Heart, MessageSquare, MoreHorizontal, Image as ImageIcon } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
 
-import { commentCollection, likeCollection } from "@/collections/post";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserSession } from "@/data/session";
-import { ShortPostPublic } from "@/lib/types";
+import { commentCollection, likeCollection } from '@/collections/post';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserSession } from '@/data/session';
+import { ShortPostPublic } from '@/lib/types';
 
-import { ImageModal } from "../ImageModal";
+import { ImageModal } from '../ImageModal';
 
 export function ShortPostCard({ post, session }: { post: ShortPostPublic; session: UserSession }) {
   const firstImage = post.Images?.[0]?.url;
@@ -23,7 +23,7 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
     q
       .from({ comment: commentCollection })
       .where(({ comment }) => eq(comment.shortPostId, post?.id))
-      .orderBy(({ comment }) => comment.createdAt, "desc"),
+      .orderBy(({ comment }) => comment.createdAt, 'desc'),
   );
   function handleToggleLike() {
     if (!session.user) return;
@@ -53,25 +53,29 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
       />
       <div className="relative z-10 pointer-events-none">
         <div className="flex items-center justify-between pointer-events-auto">
-          <div className="flex items-center gap-3">
-            <Link to="/user/$userId" params={{ userId: post.author.id }}>
+          <Link
+            to="/user/$userId"
+            params={{ userId: post.author.id }}
+            className="flex items-center gap-3"
+          >
+            <figure className="cursor-pointer">
               <Avatar className="h-10 w-10 border border-slate-800">
-                <AvatarImage src={post.author.image ?? ""} />
+                <AvatarImage src={post.author.image ?? ''} />
                 <AvatarFallback>
                   {post.author.name
-                    .split(" ")
+                    .split(' ')
                     .map((n) => n[0])
-                    .join("")}
+                    .join('')}
                 </AvatarFallback>
               </Avatar>
-            </Link>
+            </figure>
             <div className="flex flex-col">
               <span className="text-sm font-bold text-white leading-none">{post.author.name}</span>
               <span className="text-[11px] text-slate-500 tracking-tighter mt-1">
                 {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
               </span>
             </div>
-          </div>
+          </Link>
           {/* <button className="p-2 text-slate-600 hover:text-white transition-colors">
             <MoreHorizontal className="size-4" />
           </button> */}
@@ -105,14 +109,14 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
 
       <div className="relative z-20 flex items-center gap-6 pt-2 border-t border-slate-900">
         <button
-          className={`flex items-center gap-2 text-slate-500 hover:text-emerald-500 transition-colors group/stat ${session.user ? "cursor-pointer" : "cursor-not-allowed"}`}
+          className={`flex items-center gap-2 text-slate-500 hover:text-emerald-500 transition-colors group/stat ${session.user ? 'cursor-pointer' : 'cursor-not-allowed'}`}
           onClick={(e) => {
             handleToggleLike();
             e.stopPropagation();
           }}
         >
           <div className="p-1.5 rounded-full group-hover/stat:bg-emerald-500/10">
-            <Heart className={`size-4 ${hasLiked && "fill-current text-emerald-500"}`} />
+            <Heart className={`size-4 ${hasLiked && 'fill-current text-emerald-500'}`} />
           </div>
           <span className="text-xs font-semibold tabular-nums">{likes.length}</span>
         </button>

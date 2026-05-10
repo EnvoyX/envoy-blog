@@ -1,15 +1,15 @@
-import { createId } from "@paralleldrive/cuid2";
-import { eq, useLiveQuery } from "@tanstack/react-db";
-import { createFileRoute } from "@tanstack/react-router";
-import { useNavigate } from "@tanstack/react-router";
-import { formatDistanceToNow } from "date-fns";
-import { ArrowLeft, Heart, MessageSquare } from "lucide-react";
-import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { createId } from '@paralleldrive/cuid2';
+import { eq, useLiveQuery } from '@tanstack/react-db';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
+import { formatDistanceToNow } from 'date-fns';
+import { ArrowLeft, Heart, MessageSquare } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
-import { commentCollection, likeCollection } from "@/collections/post";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { commentCollection, likeCollection } from '@/collections/post';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselApi,
@@ -17,15 +17,15 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
-import { ImageModal } from "@/components/web/ImageModal";
-import CommentInput from "@/components/web/post/CommentInput";
-import { getShortPostByIdFn } from "@/data/post";
-import { getUser } from "@/data/session";
-import { User } from "@/generated/prisma/client";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/carousel';
+import { ImageModal } from '@/components/web/ImageModal';
+import CommentInput from '@/components/web/post/CommentInput';
+import { getShortPostByIdFn } from '@/data/post';
+import { getUser } from '@/data/session';
+import { User } from '@/generated/prisma/client';
+import { cn } from '@/lib/utils';
 
-export const Route = createFileRoute("/_general-without-layout/post/$postId/")({
+export const Route = createFileRoute('/_general-without-layout/post/$postId/')({
   component: RouteComponent,
   loader: async ({ params }) => {
     const post = await getShortPostByIdFn({
@@ -39,6 +39,28 @@ export const Route = createFileRoute("/_general-without-layout/post/$postId/")({
       session,
     };
   },
+  head: ({ loaderData }) => ({
+    meta: [
+      { title: `${loaderData?.post?.author.name} | Post | Envoy Mindpalace` },
+      {
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
+      },
+      {
+        property: 'og:title',
+        content: `${loaderData?.post?.author.name} | Post | Envoy Mindpalace`,
+      },
+      {
+        property: 'og:description',
+        content: `${loaderData?.post?.content}`,
+      },
+      {
+        property: 'og:image',
+        content: `${loaderData?.post?.author.image}`,
+      },
+      { property: 'og:type', content: 'website' },
+    ],
+  }),
 });
 
 function RouteComponent() {
@@ -53,7 +75,7 @@ function RouteComponent() {
     }
     // setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
-    api.on("select", () => {
+    api.on('select', () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
@@ -64,7 +86,7 @@ function RouteComponent() {
     q
       .from({ comment: commentCollection })
       .where(({ comment }) => eq(comment.shortPostId, post?.id))
-      .orderBy(({ comment }) => comment.createdAt, "desc"),
+      .orderBy(({ comment }) => comment.createdAt, 'desc'),
   );
   const hasLiked = likes.find((like) => like.userId === session?.user?.id);
 
@@ -110,9 +132,9 @@ function RouteComponent() {
   return (
     <section
       className={cn(
-        "w-full p-0 overflow-hidden bg-slate-950 border-slate-800 h-[90vh] flex flex-col sm:flex-row min-h-screen",
+        'w-full p-0 overflow-hidden bg-slate-950 border-slate-800 h-[90vh] flex flex-col sm:flex-row min-h-screen',
         {
-          "max-sm:h-full": firstImage,
+          'max-sm:h-full': firstImage,
         },
       )}
     >
@@ -185,8 +207,8 @@ function RouteComponent() {
               return (
                 <span
                   key={index}
-                  className={cn("rounded-full w-2 h-2 bg-emerald-500/50", {
-                    "bg-emerald-500": index + 1 === current,
+                  className={cn('rounded-full w-2 h-2 bg-emerald-500/50', {
+                    'bg-emerald-500': index + 1 === current,
                   })}
                 />
               );
@@ -196,11 +218,15 @@ function RouteComponent() {
       )}
 
       <div
-        className={`flex flex-col flex-1 h-full ${!firstImage && "max-w-3xl mx-auto w-full shadow-2xl"}`}
+        className={`flex flex-col flex-1 h-full ${!firstImage && 'max-w-3xl mx-auto w-full shadow-2xl'}`}
       >
         <div className="p-4 border-b border-slate-900">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <Link
+              to="/user/$userId"
+              params={{ userId: post?.author.id as string }}
+              className="flex items-center gap-3"
+            >
               <Avatar className="h-9 w-9 border border-slate-800">
                 <AvatarImage src={post?.author.image as string} />
                 <AvatarFallback>{post?.author.name?.[0]}</AvatarFallback>
@@ -213,7 +239,7 @@ function RouteComponent() {
                   {formatDistanceToNow(new Date(post?.createdAt as Date), { addSuffix: true })}
                 </span>
               </div>
-            </div>
+            </Link>
             {/* <button className="text-slate-500 hover:text-white">
                 <MoreHorizontal className="size-4" />
               </button> */}
@@ -231,12 +257,12 @@ function RouteComponent() {
             comments.map((comment) => (
               <div key={comment.id} className="flex gap-3">
                 <Avatar className="h-8 w-8 border border-slate-900">
-                  <AvatarImage src={comment.user?.image ?? ""} />
+                  <AvatarImage src={comment.user?.image ?? ''} />
                   <AvatarFallback>
                     {comment.user?.name
-                      .split(" ")
+                      .split(' ')
                       .map((n) => n[0])
-                      .join("")}
+                      .join('')}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col gap-1">
@@ -263,9 +289,9 @@ function RouteComponent() {
             <div className="flex items-center gap-4">
               <button
                 onClick={handleToggleLike}
-                className={`flex items-center gap-1.5 transition-colors ${session.user ? "cursor-pointer" : "cursor-not-allowed"} ${hasLiked ? "text-emerald-500" : "text-slate-400 hover:text-white"}`}
+                className={`flex items-center gap-1.5 transition-colors ${session.user ? 'cursor-pointer' : 'cursor-not-allowed'} ${hasLiked ? 'text-emerald-500' : 'text-slate-400 hover:text-white'}`}
               >
-                <Heart className={`size-5 ${hasLiked && "fill-current"}`} />
+                <Heart className={`size-5 ${hasLiked && 'fill-current'}`} />
                 <span className="text-xs font-bold">{likes.length}</span>
               </button>
               <div className="flex items-center gap-1.5 text-slate-400">
@@ -284,7 +310,7 @@ function RouteComponent() {
                   className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 cursor-pointer font-bold text-xs"
                   onClick={() => {
                     void navigate({
-                      to: "/login",
+                      to: '/login',
                     });
                   }}
                 >
