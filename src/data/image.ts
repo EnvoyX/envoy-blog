@@ -260,6 +260,44 @@ export const setPrivateImageFn = createServerFn({ method: 'POST' })
     return true;
   });
 
+export const setShowPrivateImageToFollowersFn = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({
+      imageId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data }) => {
+    await db.$transaction(async (ctx) => {
+      await ctx.image.update({
+        where: { id: data.imageId },
+        data: {
+          showPrivateToFollowers: true,
+        },
+      });
+    });
+    return true;
+  });
+
+export const setHidePrivateImageToFollowersFn = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({
+      imageId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data }) => {
+    await db.$transaction(async (ctx) => {
+      await ctx.image.update({
+        where: { id: data.imageId },
+        data: {
+          showPrivateToFollowers: false,
+        },
+      });
+    });
+    return true;
+  });
+
 export const setPublicImageFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({

@@ -1,9 +1,11 @@
-import JSZip from "jszip";
-import { saveAs } from "file-saver";
-import { Image } from "@/generated/prisma/browser";
+import pkg from 'file-saver';
+import JSZip from 'jszip';
+
+import { Image } from '@/generated/prisma/browser';
 
 export const downloadAlbumClientSide = async (albumName: string, images: Image[]) => {
   const zip = new JSZip();
+  const { saveAs } = pkg;
   const folder = zip.folder(albumName);
 
   if (!folder) return;
@@ -12,7 +14,7 @@ export const downloadAlbumClientSide = async (albumName: string, images: Image[]
     try {
       const response = await fetch(`/api/proxy-image?url=${image.url}`);
 
-      if (!response.ok) throw new Error("Network response was not ok");
+      if (!response.ok) throw new Error('Network response was not ok');
 
       const blob = await response.blob();
       folder.file(`${image.id}.jpg`, blob);
@@ -23,6 +25,6 @@ export const downloadAlbumClientSide = async (albumName: string, images: Image[]
 
   await Promise.all(downloadPromises);
 
-  const content = await zip.generateAsync({ type: "blob" });
-  saveAs(content, `${albumName.replace(/\s+/g, "_")}.zip`);
+  const content = await zip.generateAsync({ type: 'blob' });
+  saveAs(content, `${albumName.replace(/\s+/g, '_')}.zip`);
 };

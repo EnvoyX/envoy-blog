@@ -1,10 +1,11 @@
-import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
+import { createServerFn } from '@tanstack/react-start';
+import { z } from 'zod';
 
-import { db } from "@/lib/db";
-import { authMiddleware } from "@/middlewares/auth";
+import { db } from '@/lib/db';
+import { authMiddleware } from '@/middlewares/auth';
+import { shortPostSchema } from '@/schemas/post';
 
-export const getGlobalFeedFn = createServerFn({ method: "GET" }).handler(async () => {
+export const getGlobalFeedFn = createServerFn({ method: 'GET' }).handler(async () => {
   return await db.shortPost.findMany({
     include: {
       author: true,
@@ -19,23 +20,23 @@ export const getGlobalFeedFn = createServerFn({ method: "GET" }).handler(async (
         select: { likes: true, comments: true },
       },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: 'desc' },
   });
 });
 
-console.log("Is authMiddleware defined?", !!authMiddleware);
+console.log('Is authMiddleware defined?', !!authMiddleware);
 
-export const getShortPostsFn = createServerFn({ method: "GET" })
+export const getShortPostsFn = createServerFn({ method: 'GET' })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     return await db.shortPost.findMany({
       where: { authorId: context.user.id },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
       include: { author: true, likes: true, comments: true, _count: true, Images: true },
     });
   });
 
-export const getShortPostByIdFn = createServerFn({ method: "GET" })
+export const getShortPostByIdFn = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ shortPostId: z.string() }))
   .handler(async ({ data }) => {
     return await db.shortPost.findUnique({
@@ -58,7 +59,7 @@ export const getShortPostByIdFn = createServerFn({ method: "GET" })
     });
   });
 
-export const deleteShortPostFn = createServerFn({ method: "POST" })
+export const deleteShortPostFn = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ shortPostId: z.string() }))
   .middleware([authMiddleware])
   .handler(async ({ context, data }) => {
@@ -68,15 +69,8 @@ export const deleteShortPostFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const createShortPostFn = createServerFn({ method: "POST" })
-  .inputValidator(
-    z.object({
-      content: z.string(),
-      published: z.boolean(),
-      images: z.array(z.string()).optional(),
-      showPrivateToFollowers: z.boolean(),
-    }),
-  )
+export const createShortPostFn = createServerFn({ method: 'POST' })
+  .inputValidator(shortPostSchema)
   .middleware([authMiddleware])
   .handler(async ({ context, data }) => {
     await db.$transaction(async (ctx) => {
@@ -85,6 +79,7 @@ export const createShortPostFn = createServerFn({ method: "POST" })
           authorId: context.user.id as string,
           content: data.content,
           published: data.published,
+          showPrivateToFollowers: data.showPrivateToFollowers,
         },
       });
       if (!data.images?.length) return;
@@ -93,8 +88,11 @@ export const createShortPostFn = createServerFn({ method: "POST" })
           data: data.images.map((image) => ({
             shortPostId: shortPost.id,
             userId: context.user.id as string,
-            url: image,
+            url: image.url,
+            title: image.title ?? '',
+            description: image.description ?? '',
             published: data.published,
+            showPrivateToFollowers: data.showPrivateToFollowers,
           })),
         });
       }
@@ -102,14 +100,10 @@ export const createShortPostFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const editShortPostFn = createServerFn({ method: "POST" })
+export const editShortPostFn = createServerFn({ method: 'POST' })
   .inputValidator(
-    z.object({
+    shortPostSchema.extend({
       postId: z.string(),
-      content: z.string(),
-      published: z.boolean(),
-      images: z.array(z.string()).optional(),
-      showPrivateToFollowers: z.boolean(),
     }),
   )
   .middleware([authMiddleware])
@@ -120,14 +114,17 @@ export const editShortPostFn = createServerFn({ method: "POST" })
         data: {
           content: data.content,
           published: data.published,
+          showPrivateToFollowers: data.showPrivateToFollowers,
         },
       });
       const existingImages = await ctx.image.findMany({
         where: { shortPostId: shortPost.id },
       });
       const existingImageUrls = existingImages?.map((image) => image.url);
-
-      const removedImages = existingImages?.filter((image) => !data.images?.includes(image.url));
+      const inputtedImageUrls = data.images?.map((image) => image.url);
+      const removedImages = existingImages?.filter(
+        (image) => !inputtedImageUrls?.includes(image.url),
+      );
 
       if (removedImages && removedImages.length > 0) {
         await ctx.image.updateMany({
@@ -135,20 +132,24 @@ export const editShortPostFn = createServerFn({ method: "POST" })
           data: removedImages.map((image) => ({
             shortPostId: null,
             published: data.published,
+            showPrivateToFollowers: data.showPrivateToFollowers,
             url: image.url,
           })),
         });
       }
       if (!data.images?.length) return;
       if (data.images) {
-        const newImages = data.images.filter((image) => !existingImageUrls?.includes(image));
+        const newImages = data.images.filter((image) => !existingImageUrls?.includes(image.url));
         if (newImages && newImages.length > 0) {
           await ctx.image.createMany({
             data: newImages.map((image) => ({
               shortPostId: shortPost.id,
               userId: context.user.id as string,
-              url: image,
+              url: image.url,
+              title: image.title ?? '',
+              description: image.description ?? '',
               published: data.published,
+              showPrivateToFollowers: data.showPrivateToFollowers,
             })),
           });
         }
@@ -157,11 +158,11 @@ export const editShortPostFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const getAllLikes = createServerFn({ method: "GET" }).handler(async () => {
+export const getAllLikes = createServerFn({ method: 'GET' }).handler(async () => {
   return await db.like.findMany();
 });
 
-export const getAllComments = createServerFn({ method: "GET" }).handler(async () => {
+export const getAllComments = createServerFn({ method: 'GET' }).handler(async () => {
   return await db.comment.findMany({
     include: {
       user: true,
@@ -169,7 +170,7 @@ export const getAllComments = createServerFn({ method: "GET" }).handler(async ()
   });
 });
 
-export const getShortPostLikesFn = createServerFn({ method: "GET" })
+export const getShortPostLikesFn = createServerFn({ method: 'GET' })
   .inputValidator(
     z.object({
       shortPostId: z.string(),
@@ -183,7 +184,7 @@ export const getShortPostLikesFn = createServerFn({ method: "GET" })
     });
   });
 
-export const getPostCommentsFn = createServerFn({ method: "GET" })
+export const getPostCommentsFn = createServerFn({ method: 'GET' })
   .inputValidator(
     z.object({
       shortPostId: z.string(),
@@ -200,7 +201,7 @@ export const getPostCommentsFn = createServerFn({ method: "GET" })
     });
   });
 
-export const toggleLikeFn = createServerFn({ method: "POST" })
+export const toggleLikeFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(z.object({ id: z.string(), shortPostId: z.string() }))
   .handler(async ({ data, context }) => {
@@ -231,7 +232,7 @@ export const toggleLikeFn = createServerFn({ method: "POST" })
     return { liked: true };
   });
 
-export const createCommentFn = createServerFn({ method: "POST" })
+export const createCommentFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(
     z.object({
@@ -253,7 +254,7 @@ export const createCommentFn = createServerFn({ method: "POST" })
     });
   });
 
-export const updateCommentFn = createServerFn({ method: "POST" })
+export const updateCommentFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(z.object({ commentId: z.string(), content: z.string().min(1) }))
   .handler(async ({ data, context }) => {
@@ -263,7 +264,7 @@ export const updateCommentFn = createServerFn({ method: "POST" })
     });
   });
 
-export const deleteCommentFn = createServerFn({ method: "POST" })
+export const deleteCommentFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(z.object({ commentId: z.string() }))
   .handler(async ({ data }) => {

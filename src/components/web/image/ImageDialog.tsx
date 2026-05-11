@@ -1,9 +1,10 @@
-import { useForm } from "@tanstack/react-form";
-import { useRouter } from "@tanstack/react-router";
-import { ImageIcon, Loader2, MailboxIcon } from "lucide-react";
-import { toast } from "sonner";
+import { useForm } from '@tanstack/react-form';
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from '@tanstack/react-router';
+import { ImageIcon, Loader2, MailboxIcon } from 'lucide-react';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,17 +12,16 @@ import {
   DialogHeader,
   DialogTitle,
   // DialogTrigger,
-} from "@/components/ui/dialog";
-import { Field, FieldError } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { useImageStore } from "@/store/image";
-import { editImageSchema } from "@/schemas/image";
-import { editImageFn } from "@/data/image";
-import { useQuery } from "@tanstack/react-query";
-import { getAlbumByIdFn } from "@/data/album";
+} from '@/components/ui/dialog';
+import { Field, FieldError } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { getAlbumByIdFn } from '@/data/album';
+import { editImageFn } from '@/data/image';
+import { editImageSchema } from '@/schemas/image';
+import { useImageStore } from '@/store/image';
 
 export function ImageDialog() {
   const router = useRouter();
@@ -35,11 +35,11 @@ export function ImageDialog() {
     toggleDialog,
   } = useImageStore();
   const { data: album } = useQuery({
-    queryKey: ["album", initialValues?.albumId],
+    queryKey: ['album', initialValues?.albumId],
     queryFn: async () => {
       const album = await getAlbumByIdFn({
         data: {
-          albumId: initialValues?.albumId ?? "",
+          albumId: initialValues?.albumId ?? '',
         },
       });
       return album;
@@ -48,10 +48,10 @@ export function ImageDialog() {
   });
   const form = useForm({
     defaultValues: {
-      title: initialValues ? initialValues.title : "",
-      description: initialValues ? initialValues.description : "",
+      title: initialValues ? initialValues.title : '',
+      description: initialValues ? initialValues.description : '',
       published: initialValues ? initialValues.published : false,
-      imageUrl: initialValues ? imageUrl : "",
+      imageUrl: initialValues ? imageUrl : '',
       showPrivateToFollowers: initialValues ? initialValues.showPrivateToFollowers : false,
     },
     validators: {
@@ -71,10 +71,10 @@ export function ImageDialog() {
           showPrivateToFollowers: value.showPrivateToFollowers as boolean,
         },
       });
-      toast.success("Image edited successfully!");
+      toast.success('Image edited successfully!');
       form.reset();
       void router.invalidate();
-      toggleDialog("close", "", "");
+      toggleDialog('close', '', '');
     },
   });
 
@@ -82,7 +82,7 @@ export function ImageDialog() {
     <Dialog
       open={isEditDialogOpen}
       onOpenChange={(open) => {
-        onOpenChangeDialog("edit", open);
+        onOpenChangeDialog('edit', open);
         setInitialValues(null);
       }}
     >
@@ -119,8 +119,8 @@ export function ImageDialog() {
                     <div className="space-y-0.5">
                       <Label className="text-sm font-medium text-zinc-200">
                         Visibility:
-                        <span className={field.state.value ? "text-emerald-400" : "text-zinc-400"}>
-                          {field.state.value ? "Public" : "Private"}
+                        <span className={field.state.value ? 'text-emerald-400' : 'text-zinc-400'}>
+                          {field.state.value ? 'Public' : 'Private'}
                         </span>
                       </Label>
                       <p className="text-xs text-zinc-500">Visible to all users in the app</p>
@@ -144,17 +144,17 @@ export function ImageDialog() {
                           <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="space-y-0.5">
                               <Label className="text-sm font-medium text-zinc-200">
-                                Show Private:{" "}
+                                Show Private:{' '}
                                 <span
                                   className={
-                                    field.state.value ? "text-emerald-400" : "text-zinc-400"
+                                    field.state.value ? 'text-emerald-400' : 'text-zinc-400'
                                   }
                                 >
-                                  {field.state.value ? "Show" : ` Hidden`}
+                                  {field.state.value ? 'Show' : ` Hidden`}
                                 </span>
                               </Label>
                               <p className="text-xs text-zinc-500">
-                                Show this post to follower even if private
+                                Show this image to follower even if private
                               </p>
                             </div>
                             <Switch
@@ -220,8 +220,8 @@ export function ImageDialog() {
                           <span
                             className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
                               charCount > 0
-                                ? "text-emerald-400 border-emerald-500/20 bg-emerald-500/5"
-                                : "text-zinc-600 border-zinc-800"
+                                ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/5'
+                                : 'text-zinc-600 border-zinc-800'
                             }`}
                           >
                             {charCount} CHARS
@@ -238,7 +238,7 @@ export function ImageDialog() {
                               placeholder:text-zinc-600 text-zinc-200
                               focus-visible:ring-emerald-500/40 focus-visible:border-emerald-500/50
                               transition-all duration-300 rounded-xl
-                              ${isInvalid ? "border-red-500/50 focus-visible:ring-red-500/20" : "hover:border-zinc-700"}
+                              ${isInvalid ? 'border-red-500/50 focus-visible:ring-red-500/20' : 'hover:border-zinc-700'}
                             `}
                             value={field.state.value}
                             onBlur={field.handleBlur}
@@ -320,7 +320,7 @@ export function ImageDialog() {
             <form.Subscribe
               selector={(state) => state.values.imageUrl}
               children={(image) => {
-                if (!image || image.trim() === "") {
+                if (!image || image.trim() === '') {
                   return (
                     <div className="relative z-10 text-center space-y-4">
                       <div className="mx-auto size-20 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
@@ -344,7 +344,7 @@ export function ImageDialog() {
                           className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 "
                           onError={(e) => {
                             (e.target as HTMLImageElement).src =
-                              "https://placehold.co/600x800?text=Invalid+Image";
+                              'https://placehold.co/600x800?text=Invalid+Image';
                           }}
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

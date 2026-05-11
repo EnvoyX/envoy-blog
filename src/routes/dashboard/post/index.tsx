@@ -1,13 +1,13 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useRouter } from "@tanstack/react-router";
-import { useSelector } from "@tanstack/react-store";
-import { zodValidator } from "@tanstack/zod-adapter";
-import { compareAsc, compareDesc } from "date-fns";
-import { MoreVertical, Pencil, Plus, Trash2 } from "lucide-react";
-import { toast } from "sonner";
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { useRouter } from '@tanstack/react-router';
+import { useSelector } from '@tanstack/react-store';
+import { zodValidator } from '@tanstack/zod-adapter';
+import { compareAsc, compareDesc } from 'date-fns';
+import { MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Dialog,
   DialogClose,
@@ -16,28 +16,28 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { deleteShortPostFn, getShortPostsFn } from "@/data/post";
-import { getUser } from "@/data/session";
-import { SortedByStatus } from "@/lib/constants";
-import { shortPostSearchSchema } from "@/schemas/post";
-import { postModalStore } from "@/store/post";
-import { PostDialog } from "@/components/web/post/PostDialog";
+} from '@/components/ui/select';
+import { PostDialog } from '@/components/web/post/PostDialog';
+import { deleteShortPostFn, getShortPostsFn } from '@/data/post';
+import { getUser } from '@/data/session';
+import { SortedByStatus } from '@/lib/constants';
+import { shortPostSearchSchema } from '@/schemas/post';
+import { postModalStore } from '@/store/post';
 
-export const Route = createFileRoute("/dashboard/post/")({
+export const Route = createFileRoute('/dashboard/post/')({
   loader: async () => {
     const allPosts = await getShortPostsFn();
     const session = await getUser();
@@ -52,19 +52,19 @@ export const Route = createFileRoute("/dashboard/post/")({
     meta: [
       { title: `My Posts | Envoy Mindpalace` },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
-      { property: "og:title", content: "My Posts | Envoy Mindpalace" },
+      { property: 'og:title', content: 'My Posts | Envoy Mindpalace' },
       {
-        property: "og:description",
-        content: "Create your own blog and write your thoughts!",
+        property: 'og:description',
+        content: 'Create your own blog and write your thoughts!',
       },
       {
-        property: "og:image",
-        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+        property: 'og:image',
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
 });
@@ -78,7 +78,7 @@ function PostPageComponent() {
     const dateA = new Date(a.createdAt);
     const dateB = new Date(b.createdAt);
 
-    if (sortDateBy === "ASC") {
+    if (sortDateBy === 'ASC') {
       return compareAsc(dateA, dateB);
     } else {
       return compareDesc(dateA, dateB);
@@ -100,7 +100,7 @@ function PostPageComponent() {
       isOpen: false,
       isDeletePostDialog: false,
     }));
-    toast.success("Post deleted successfully");
+    toast.success('Post deleted successfully');
     void router.invalidate();
   }
 
@@ -120,12 +120,12 @@ function PostPageComponent() {
                 ...prev,
                 isOpen: true,
                 initialValues: {
-                  images: [] as string[],
-                  content: "",
+                  images: [] as { url: string; title: string; description: string }[],
+                  content: '',
                   published: false,
                   showPrivateToFollowers: false,
-                  currentPostId: "",
-                  mode: "create",
+                  currentPostId: '',
+                  mode: 'create',
                 },
               }));
             }}
@@ -185,7 +185,7 @@ function PostPageComponent() {
                     src={
                       firstImageUrl
                         ? firstImageUrl
-                        : "https://tanstack.com/images/logos/logo-color-600.png"
+                        : 'https://tanstack.com/images/logos/logo-color-600.png'
                     }
                     alt={post.id}
                     className="object-cover w-full h-full transition-transform duration-500"
@@ -220,12 +220,18 @@ function PostPageComponent() {
                                   ...prev,
                                   isOpen: true,
                                   initialValues: {
-                                    images: post.Images.map((image) => image.url),
-                                    content: post.content ?? "",
+                                    images: post.Images.map((image) => {
+                                      return {
+                                        url: image.url,
+                                        title: image.title ?? '',
+                                        description: image.description ?? '',
+                                      };
+                                    }),
+                                    content: post.content ?? '',
                                     published: post.published,
                                     showPrivateToFollowers: post.showPrivateToFollowers,
                                     currentPostId: post.id,
-                                    mode: "edit",
+                                    mode: 'edit',
                                   },
                                 }));
                               }}
@@ -283,7 +289,7 @@ function PostPageComponent() {
           <DialogFooter className="sm:justify-center">
             <Button
               type="button"
-              variant={"destructive"}
+              variant={'destructive'}
               className="cursor-pointer"
               onClick={handleDeletePost}
             >

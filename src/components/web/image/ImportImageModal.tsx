@@ -2,7 +2,7 @@ import { useForm } from '@tanstack/react-form';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { ImageIcon, Loader2, Plus, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,7 @@ export function ImportImageModal() {
   const router = useRouter();
   const { isImageImportDialogOpen, onOpenDialogChange, toggleDialog, currentAlbumId } =
     useAlbumStore();
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const { data: album } = useQuery({
     queryKey: ['album', currentAlbumId],
     queryFn: async () => {
@@ -197,7 +198,7 @@ export function ImportImageModal() {
                                 </span>
                               </Label>
                               <p className="text-xs text-zinc-500">
-                                Show this post to follower even if private
+                                Show this images to follower even if private
                               </p>
                             </div>
                             <Switch
@@ -241,6 +242,13 @@ export function ImportImageModal() {
 
                               <div className="space-y-1">
                                 <Input
+                                  ref={(el) => {
+                                    if (el) {
+                                      inputRefs.current[i] = el;
+                                    } else {
+                                      delete inputRefs.current[i];
+                                    }
+                                  }}
                                   placeholder="Image URL (https://...)"
                                   className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
                                   value={subField.state.value.url}
@@ -288,12 +296,22 @@ export function ImportImageModal() {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-
                           field.pushValue({
                             url: '',
                             title: '',
                             description: '',
                           });
+                          setTimeout(() => {
+                            const lastIndex = field.state.value.length - 1;
+                            const targetInput = inputRefs.current[lastIndex];
+                            if (targetInput) {
+                              targetInput.focus();
+                              targetInput.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'nearest',
+                              });
+                            }
+                          }, 100);
                         }}
                       >
                         <Plus className="mr-2 size-4" /> Add URL
@@ -372,8 +390,8 @@ export function ImportImageModal() {
                           </CarouselItem>
                         ))}
                       </CarouselContent>
-                      <CarouselPrevious className="-left-4 bg-zinc-900/80 border-zinc-700 text-white hover:bg-emerald-600 transition-colors" />
-                      <CarouselNext className="-right-4 bg-zinc-900/80 border-zinc-700 text-white hover:bg-emerald-600 transition-colors" />
+                      <CarouselPrevious className="-left-10  border-emerald-600! text-emerald-500 hover:text-emerald-400 transition-colors cursor-pointer" />
+                      <CarouselNext className="-right-10  border-emerald-600! text-emerald-500 hover:text-emerald-400 transition-colors cursor-pointer" />
                       <div className="absolute -bottom-10 left-0 right-0 flex justify-center gap-2">
                         <span className="text-xs font-mono text-zinc-500 tracking-widest">
                           IMAGE {current} // {images.length}

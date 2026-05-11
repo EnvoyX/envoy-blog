@@ -1,11 +1,11 @@
-import { useForm } from "@tanstack/react-form";
-import { useRouter } from "@tanstack/react-router";
-import { useSelector } from "@tanstack/react-store";
-import { ImageIcon, Loader2, MailboxIcon, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useForm } from '@tanstack/react-form';
+import { useRouter } from '@tanstack/react-router';
+import { useSelector } from '@tanstack/react-store';
+import { ImageIcon, Loader2, MailboxIcon, Plus, Trash2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselContent,
@@ -13,7 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
   type CarouselApi,
-} from "@/components/ui/carousel";
+} from '@/components/ui/carousel';
 import {
   Dialog,
   DialogClose,
@@ -21,15 +21,15 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Field, FieldError } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { createShortPostFn, editShortPostFn } from "@/data/post";
-import { shortPostSchema } from "@/schemas/post";
-import { postModalStore } from "@/store/post";
+} from '@/components/ui/dialog';
+import { Field, FieldError } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { createShortPostFn, editShortPostFn } from '@/data/post';
+import { shortPostSchema } from '@/schemas/post';
+import { postModalStore } from '@/store/post';
 
 export function PostDialog() {
   const isOpen = useSelector(postModalStore, (state) => state.isOpen);
@@ -38,10 +38,12 @@ export function PostDialog() {
   const { currentPostId } = initialValues;
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const form = useForm({
     defaultValues: {
-      image: initialValues?.images ?? ([] as string[]),
-      content: initialValues?.content ?? "",
+      images:
+        initialValues?.images ?? ([] as { url: string; title: string; description: string }[]),
+      content: initialValues?.content ?? '',
       published: initialValues?.published ?? false,
       showPrivateToFollowers: initialValues?.showPrivateToFollowers ?? false,
     },
@@ -52,17 +54,27 @@ export function PostDialog() {
     },
     onSubmit: async ({ value }) => {
       console.log(value);
-      if (initialValues.mode === "edit") {
+      if (initialValues.mode === 'edit') {
         await editShortPostFn({
           data: {
             postId: currentPostId,
             content: value.content,
             published: value.published,
-            images: value.image,
+            images: value.images,
             showPrivateToFollowers: value.showPrivateToFollowers,
           },
         });
-        toast.success("Post edited successfully");
+        toast.success('Post edited successfully');
+        postModalStore.setState((prev) => ({
+          ...prev,
+          initialValues: {
+            ...prev.initialValues,
+            images: value.images,
+            content: value.content,
+            published: value.published,
+            showPrivateToFollowers: value.showPrivateToFollowers,
+          },
+        }));
         form.reset();
         void router.invalidate();
       } else {
@@ -70,11 +82,15 @@ export function PostDialog() {
           data: {
             content: value.content,
             published: value.published,
-            images: value.image,
+            images: value.images,
             showPrivateToFollowers: value.showPrivateToFollowers,
           },
         });
-        toast.success("Post created successfully");
+        toast.success('Post created successfully');
+        postModalStore.setState((prev) => ({
+          ...prev,
+          isOpen: false,
+        }));
         form.reset();
         void router.invalidate();
       }
@@ -86,7 +102,7 @@ export function PostDialog() {
     }
     // setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
-    api.on("select", () => {
+    api.on('select', () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
@@ -109,7 +125,7 @@ export function PostDialog() {
                 <MailboxIcon className="text-emerald-500 size-6" />
               </div>
               <DialogTitle className="text-2xl font-bold text-zinc-100">
-                {initialValues.mode === "create" ? "Create Post" : "Edit Post"}
+                {initialValues.mode === 'create' ? 'Create Post' : 'Edit Post'}
               </DialogTitle>
               <DialogDescription className="text-zinc-400">
                 Configure your post and visibility settings.
@@ -130,9 +146,9 @@ export function PostDialog() {
                   <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30">
                     <div className="space-y-0.5">
                       <Label className="text-sm font-medium text-zinc-200">
-                        Visibility:{" "}
-                        <span className={field.state.value ? "text-emerald-400" : "text-zinc-400"}>
-                          {field.state.value ? "Public" : "Private"}
+                        Visibility:{' '}
+                        <span className={field.state.value ? 'text-emerald-400' : 'text-zinc-400'}>
+                          {field.state.value ? 'Public' : 'Private'}
                         </span>
                       </Label>
                       <p className="text-xs text-zinc-500">Visible to all users in the app</p>
@@ -141,7 +157,7 @@ export function PostDialog() {
                       checked={field.state.value}
                       onCheckedChange={(checked) => {
                         field.handleChange(checked);
-                        if (checked === true) form.setFieldValue("showPrivateToFollowers", false);
+                        if (checked === true) form.setFieldValue('showPrivateToFollowers', false);
                       }}
                       className="data-[state=checked]:bg-emerald-500"
                     />
@@ -159,13 +175,13 @@ export function PostDialog() {
                           <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="space-y-0.5">
                               <Label className="text-sm font-medium text-zinc-200">
-                                Show Private:{" "}
+                                Show Private:{' '}
                                 <span
                                   className={
-                                    field.state.value ? "text-emerald-400" : "text-zinc-400"
+                                    field.state.value ? 'text-emerald-400' : 'text-zinc-400'
                                   }
                                 >
-                                  {field.state.value ? "Show" : ` Hidden`}
+                                  {field.state.value ? 'Show' : ` Hidden`}
                                 </span>
                               </Label>
                               <p className="text-xs text-zinc-500">
@@ -201,8 +217,8 @@ export function PostDialog() {
                           <span
                             className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
                               charCount > 0
-                                ? "text-emerald-400 border-emerald-500/20 bg-emerald-500/5"
-                                : "text-zinc-600 border-zinc-800"
+                                ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/5'
+                                : 'text-zinc-600 border-zinc-800'
                             }`}
                           >
                             {charCount} CHARS
@@ -219,7 +235,7 @@ export function PostDialog() {
                                     placeholder:text-zinc-600 text-zinc-200
                                     focus-visible:ring-emerald-500/40 focus-visible:border-emerald-500/50
                                     transition-all duration-300 rounded-xl
-                                    ${isInvalid ? "border-red-500/50 focus-visible:ring-red-500/20" : "hover:border-zinc-700"}
+                                    ${isInvalid ? 'border-red-500/50 focus-visible:ring-red-500/20' : 'hover:border-zinc-700'}
                                   `}
                             value={field.state.value}
                             onBlur={field.handleBlur}
@@ -246,35 +262,75 @@ export function PostDialog() {
                 <Label className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
                   Image Sources
                 </Label>
-                <form.Field name="image" mode="array">
+                <form.Field name="images" mode="array">
                   {(field) => (
                     <div className="space-y-3 max-h-75 pr-2 overflow-y-auto custom-scrollbar pl-2 py-2">
                       {field.state.value.map((_, i) => (
-                        <form.Field key={i} name={`image[${i}]`}>
+                        <form.Field key={i} name={`images[${i}]`}>
                           {(subField) => (
-                            <div className="group flex items-center gap-2 animate-in fade-in slide-in-from-left-2 duration-300">
-                              <div className="relative flex-1">
-                                <Input
-                                  placeholder="https://..."
-                                  className="bg-zinc-900! border-zinc-800 focus-visible:ring-emerald-500/50 rounded-lg h-10 transition-all"
-                                  value={subField.state.value}
-                                  onChange={(e) => {
-                                    subField.handleChange(e.target.value);
+                            <div className="flex flex-col gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900/30 animate-in fade-in slide-in-from-left-2">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">
+                                  Image {i + 1}
+                                </span>
+                                <Button
+                                  onClick={(e) => {
+                                    field.removeValue(i);
+                                    e.preventDefault();
                                   }}
+                                  variant="ghost"
+                                  size="icon"
+                                  className="text-zinc-500 hover:text-red-400 hover:bg-red-400/10 h-6 w-6"
+                                >
+                                  <Trash2 className="size-3" />
+                                </Button>
+                              </div>
+
+                              <div className="space-y-1">
+                                <Input
+                                  ref={(el) => {
+                                    if (el) {
+                                      inputRefs.current[i] = el;
+                                    } else {
+                                      delete inputRefs.current[i];
+                                    }
+                                  }}
+                                  placeholder="Image URL (https://...)"
+                                  className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
+                                  value={subField.state.value.url}
+                                  onChange={(e) =>
+                                    subField.handleChange({
+                                      ...subField.state.value,
+                                      url: e.target.value,
+                                    })
+                                  }
                                 />
                               </div>
-                              <Button
-                                onClick={(e) => {
-                                  field.removeValue(i);
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                }}
-                                variant="ghost"
-                                size="icon"
-                                className="text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-colors cursor-pointer"
-                              >
-                                <Trash2 className="size-4" />
-                              </Button>
+
+                              <div className="grid grid-cols-2 gap-2">
+                                <Input
+                                  placeholder="Title"
+                                  className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
+                                  value={subField.state.value.title}
+                                  onChange={(e) =>
+                                    subField.handleChange({
+                                      ...subField.state.value,
+                                      title: e.target.value,
+                                    })
+                                  }
+                                />
+                                <Input
+                                  placeholder="Description"
+                                  className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
+                                  value={subField.state.value.description}
+                                  onChange={(e) =>
+                                    subField.handleChange({
+                                      ...subField.state.value,
+                                      description: e.target.value,
+                                    })
+                                  }
+                                />
+                              </div>
                             </div>
                           )}
                         </form.Field>
@@ -286,11 +342,25 @@ export function PostDialog() {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-
-                          field.pushValue("");
+                          field.pushValue({
+                            url: '',
+                            title: '',
+                            description: '',
+                          });
+                          setTimeout(() => {
+                            const lastIndex = field.state.value.length - 1;
+                            const targetInput = inputRefs.current[lastIndex];
+                            if (targetInput) {
+                              targetInput.focus();
+                              targetInput.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'nearest',
+                              });
+                            }
+                          }, 100);
                         }}
                       >
-                        <Plus className="mr-2 size-4" /> Add Another URL
+                        <Plus className="mr-2 size-4" /> Add URL
                       </Button>
                     </div>
                   )}
@@ -307,7 +377,7 @@ export function PostDialog() {
                       className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 rounded-xl transition-all shadow-lg shadow-emerald-900/20 cursor-pointer"
                     >
                       {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
-                      {initialValues.mode === "edit" ? "Edit" : "Create"}
+                      {initialValues.mode === 'edit' ? 'Edit' : 'Create'}
                     </Button>
                   )}
                 />
@@ -327,9 +397,9 @@ export function PostDialog() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 blur-[120px] rounded-full" />
 
             <form.Subscribe
-              selector={(state) => state.values.image}
+              selector={(state) => state.values.images}
               children={(images) => {
-                const validImages = images?.filter((img) => img && img.trim() !== "") || [];
+                const validImages = images?.filter((img) => img.url && img.url.trim() !== '') || [];
 
                 if (validImages.length === 0) {
                   return (
@@ -353,12 +423,12 @@ export function PostDialog() {
                           <CarouselItem key={index}>
                             <div className="relative group aspect-4/5 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl">
                               <img
-                                src={src}
+                                src={src.url}
                                 alt={`Preview ${index + 1}`}
                                 className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 "
                                 onError={(e) => {
                                   (e.target as HTMLImageElement).src =
-                                    "https://placehold.co/600x800?text=Invalid+Image";
+                                    'https://placehold.co/600x800?text=Invalid+Image';
                                 }}
                               />
                               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -366,8 +436,8 @@ export function PostDialog() {
                           </CarouselItem>
                         ))}
                       </CarouselContent>
-                      <CarouselPrevious className="-left-4 bg-zinc-900/80 border-zinc-700 text-white hover:bg-emerald-600 transition-colors" />
-                      <CarouselNext className="-right-4 bg-zinc-900/80 border-zinc-700 text-white hover:bg-emerald-600 transition-colors" />
+                      <CarouselPrevious className="-left-10  border-emerald-600! text-emerald-500 hover:text-emerald-400 transition-colors cursor-pointer" />
+                      <CarouselNext className="-right-10  border-emerald-600! text-emerald-500 hover:text-emerald-400 transition-colors cursor-pointer" />
                       <div className="absolute -bottom-10 left-0 right-0 flex justify-center gap-2">
                         <span className="text-xs font-mono text-zinc-500 tracking-widest">
                           IMAGE {current} // {images.length}
