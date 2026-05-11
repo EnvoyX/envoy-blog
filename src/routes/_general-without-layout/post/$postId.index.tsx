@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2';
 import { eq, useLiveQuery } from '@tanstack/react-db';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, redirect } from '@tanstack/react-router';
 import { useNavigate } from '@tanstack/react-router';
 import { formatDistanceToNow } from 'date-fns';
 import { ArrowLeft, Heart, MessageSquare } from 'lucide-react';
@@ -34,6 +34,16 @@ export const Route = createFileRoute('/_general-without-layout/post/$postId/')({
       },
     });
     const session = await getUser();
+    const isOwner = session?.user?.id === post?.authorId;
+    const isPrivateShownToFollower =
+      session &&
+      post?.author.followers.some((follow) => follow.follower.id === session?.user?.id) &&
+      post.showPrivateToFollowers &&
+      !post.published;
+
+    if (!post?.published && !isOwner && !isPrivateShownToFollower) {
+      throw redirect({ to: '/dashboard/albums' });
+    }
     return {
       post,
       session,

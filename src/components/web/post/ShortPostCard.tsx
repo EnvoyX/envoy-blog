@@ -2,7 +2,9 @@ import { createId } from '@paralleldrive/cuid2';
 import { eq, useLiveQuery } from '@tanstack/react-db';
 import { Link } from '@tanstack/react-router';
 import { formatDistanceToNow } from 'date-fns';
-import { Heart, MessageSquare, MoreHorizontal, Image as ImageIcon } from 'lucide-react';
+import { Heart, MessageSquare, MoreHorizontal, Image as ImageIcon, Maximize2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useState } from 'react';
 import { Masonry } from 'react-plock';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -17,11 +19,11 @@ import { ImageModal } from '../ImageModal';
 
 function MasonryCollage({ images, post }: { images: Image[]; post: ShortPostPublic }) {
   return (
-    <div className="relative z-20 w-full rounded-xl overflow-hidden border border-slate-800 bg-slate-950/40 p-1">
+    <div className="relative z-20 w-full rounded-xl overflow-hidden p-1">
       <Masonry
         items={images}
         config={{
-          columns: [1, 2, 2],
+          columns: [2, 2, 2],
           gap: [4, 4, 4],
           media: [640, 768, 1024],
         }}
@@ -44,11 +46,19 @@ function MasonryCollage({ images, post }: { images: Image[]; post: ShortPostPubl
   );
 }
 
-function PostCollage({ images, post }: { images: Image[]; post: ShortPostPublic }) {
+function PostCollage({
+  images,
+  post,
+  onExpand,
+}: {
+  images: Image[];
+  post: ShortPostPublic;
+  onExpand: () => void;
+}) {
   const count = images.length;
 
   const gridClassName = cn(
-    'grid gap-1 relative z-20 w-full overflow-hidden rounded-xl border border-slate-800 bg-slate-900',
+    'grid gap-1 relative z-20 w-full overflow-hidden rounded-xl bg-slate-950/40',
     {
       'grid-cols-1': count === 1,
       'grid-cols-2': count === 2,
@@ -65,7 +75,7 @@ function PostCollage({ images, post }: { images: Image[]; post: ShortPostPublic 
             key={image.id}
             className={cn('relative overflow-hidden cursor-pointer', {
               'row-span-2 h-75': isLarge,
-              'aspect-square sm:aspect-video': count === 1,
+              'aspect-video': count === 1,
               'aspect-4/5 sm:aspect-square': count === 2,
               'h-full': count >= 3,
             })}
@@ -86,11 +96,24 @@ function PostCollage({ images, post }: { images: Image[]; post: ShortPostPublic 
           </div>
         );
       })}
+      {count > 1 && (
+        <button
+          className="absolute bottom-2 right-2 p-1.5 bg-black/50 rounded-xl transition-opacity cursor-pointer z-9999"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onExpand();
+          }}
+        >
+          <Maximize2 className="size-4 text-white" />
+        </button>
+      )}
     </div>
   );
 }
 
 export function ShortPostCard({ post, session }: { post: ShortPostPublic; session: UserSession }) {
+  const [expanded, setExpanded] = useState(false);
   const { data: likes } = useLiveQuery((q) =>
     q.from({ like: likeCollection }).where(({ like }) => eq(like.shortPostId, post?.id)),
   );
@@ -121,7 +144,11 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
     }
   }
   return (
-    <div className="group relative p-5 rounded-2xl bg-slate-950/40 border border-slate-800 hover:border-slate-700 transition-all space-y-4">
+    <div
+      className={cn(
+        'group relative p-5 rounded-2xl bg-slate-950/40 border border-slate-800 hover:border-slate-700 transition-all space-y-4',
+      )}
+    >
       <Link
         to="/post/$postId"
         params={{ postId: post.id }}
@@ -162,30 +189,51 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
           {post.content}
         </div>
       )}
-      {/*{firstImage && (
-        <div
-          className="relative z-20 aspect-square sm:aspect-video w-full overflow-hidden rounded-xl border border-slate-800 bg-slate-950/40 cursor-pointer"
-          onClick={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <ImageModal
-            imageUrl={firstImage}
-            images={post.Images}
-            className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
-          />
-          {post.Images.length > 1 && (
-            <div className="absolute top-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded-md border border-white/10 text-[10px] font-bold text-white flex items-center gap-1.5">
-              <ImageIcon className="size-3" />+{post.Images.length - 1}
-            </div>
+      <div className="relative">
+        <AnimatePresence mode="wait">
+          {!expanded ? (
+            <motion.div
+              key="grid"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <PostCollage images={post.Images} post={post} onExpand={() => setExpanded(true)} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="masonry"
+              initial={{ opacity: 0, height: 'auto' }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0 }}
+              className="relative"
+            >
+              <div className="flex justify-end items-center mb-2 px-1">
+                {/*<span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
+                  Full Gallery View
+                </span>*/}
+                <button
+                  onClick={() => setExpanded(false)}
+                  className="text-[10px] font-bold text-emerald-500  hover:text-slate-500 transition-colors uppercase tracking-widest cursor-pointer"
+                >
+                  Collapse ↑
+                </button>
+              </div>
+              <MasonryCollage images={post.Images} post={post} />
+              <div className="flex justify-end items-center mt-2 px-1">
+                <button
+                  onClick={() => setExpanded(false)}
+                  className="text-[10px] font-bold text-emerald-500  hover:text-slate-500 transition-colors uppercase tracking-widest cursor-pointer"
+                >
+                  Collapse ↑
+                </button>
+              </div>
+            </motion.div>
           )}
-        </div>
-      )}*/}
+        </AnimatePresence>
+      </div>
 
-      {post.Images && post.Images.length > 0 && <PostCollage images={post.Images} post={post} />}
-      {/*{post.Images && post.Images.length > 1 && <MasonryCollage images={post.Images} post={post} />}*/}
-
-      <div className="relative z-20 flex items-center gap-6 pt-2 border-t border-slate-900">
+      <div className="relative z-20 flex items-center gap-6 pt-2">
         <button
           className={`flex items-center gap-2 text-slate-500 hover:text-emerald-500 transition-colors group/stat ${session.user ? 'cursor-pointer' : 'cursor-not-allowed'}`}
           onClick={(e) => {

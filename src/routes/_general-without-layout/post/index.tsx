@@ -1,21 +1,21 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from '@tanstack/react-router';
 
-import { ShortPostCard } from "@/components/web/post/ShortPostCard";
-import { getGlobalFeedFn } from "@/data/post";
-import { getUser } from "@/data/session";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getFollowsByUserIdFn } from "@/data/follow";
-import { usePostStore } from "@/store/post";
-import { Footer } from "@/components/web/footer";
-import { Navbar } from "@/components/web/navbar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Footer } from '@/components/web/footer';
+import { Navbar } from '@/components/web/navbar';
+import { ShortPostCard } from '@/components/web/post/ShortPostCard';
+import { getFollowsByUserIdFn } from '@/data/follow';
+import { getGlobalFeedFn } from '@/data/post';
+import { getUser } from '@/data/session';
+import { usePostStore } from '@/store/post';
 
-export const Route = createFileRoute("/_general-without-layout/post/")({
+export const Route = createFileRoute('/_general-without-layout/post/')({
   component: RouteComponent,
   loader: async () => {
     const session = await getUser();
     const allPosts = await getGlobalFeedFn();
     const latestPosts = allPosts.filter(
-      (post) => post.author.email === "muhamadhanifhafizhan@gmail.com" && post.published,
+      (post) => post.author.email === 'muhamadhanifhafizhan@gmail.com' && post.published,
     );
     const publicPost = allPosts.filter((post) => post.published);
     if (session.user) {
@@ -49,19 +49,19 @@ export const Route = createFileRoute("/_general-without-layout/post/")({
     meta: [
       { title: `Posts | Envoy Mindpalace` },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
-      { property: "og:title", content: "Posts | Envoy Mindpalace" },
+      { property: 'og:title', content: 'Posts | Envoy Mindpalace' },
       {
-        property: "og:description",
-        content: "Create your own blog and write your thoughts!",
+        property: 'og:description',
+        content: 'Create your own blog and write your thoughts!',
       },
       {
-        property: "og:image",
-        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+        property: 'og:image',
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
 });
@@ -75,9 +75,9 @@ function RouteComponent() {
       <Navbar />
       <section className="min-h-screen">
         <Tabs
-          defaultValue={lastViewedTab ?? "latest-post"}
+          defaultValue={lastViewedTab ?? 'latest-post'}
           onValueChange={(value) =>
-            setLastViewedTab(value as "latest-post" | "for-you" | "following-post")
+            setLastViewedTab(value as 'latest-post' | 'for-you' | 'following-post')
           }
           orientation="horizontal"
         >

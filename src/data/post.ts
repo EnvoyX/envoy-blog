@@ -42,7 +42,15 @@ export const getShortPostByIdFn = createServerFn({ method: 'GET' })
     return await db.shortPost.findUnique({
       where: { id: data.shortPostId },
       include: {
-        author: true,
+        author: {
+          include: {
+            followers: {
+              include: {
+                follower: true,
+              },
+            },
+          },
+        },
         likes: {
           include: {
             user: true,
