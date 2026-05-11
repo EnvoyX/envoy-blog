@@ -3,18 +3,94 @@ import { eq, useLiveQuery } from '@tanstack/react-db';
 import { Link } from '@tanstack/react-router';
 import { formatDistanceToNow } from 'date-fns';
 import { Heart, MessageSquare, MoreHorizontal, Image as ImageIcon } from 'lucide-react';
+import { Masonry } from 'react-plock';
 import { v4 as uuidv4 } from 'uuid';
 
 import { commentCollection, likeCollection } from '@/collections/post';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { UserSession } from '@/data/session';
+import { Image } from '@/generated/prisma/client';
 import { ShortPostPublic } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 import { ImageModal } from '../ImageModal';
 
-export function ShortPostCard({ post, session }: { post: ShortPostPublic; session: UserSession }) {
-  const firstImage = post.Images?.[0]?.url;
+function MasonryCollage({ images, post }: { images: Image[]; post: ShortPostPublic }) {
+  return (
+    <div className="relative z-20 w-full rounded-xl overflow-hidden border border-slate-800 bg-slate-950/40 p-1">
+      <Masonry
+        items={images}
+        config={{
+          columns: [1, 2, 2],
+          gap: [4, 4, 4],
+          media: [640, 768, 1024],
+        }}
+        render={(image, index) => (
+          <div
+            key={image.id}
+            className="relative overflow-hidden rounded-lg cursor-pointer group/img"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ImageModal
+              imageUrl={image.url}
+              images={images}
+              imageOrder={index + 1}
+              className="w-full h-auto object-cover transition-transform duration-500 group-hover/img:scale-[1.03]"
+            />
+          </div>
+        )}
+      />
+    </div>
+  );
+}
 
+function PostCollage({ images, post }: { images: Image[]; post: ShortPostPublic }) {
+  const count = images.length;
+
+  const gridClassName = cn(
+    'grid gap-1 relative z-20 w-full overflow-hidden rounded-xl border border-slate-800 bg-slate-900',
+    {
+      'grid-cols-1': count === 1,
+      'grid-cols-2': count === 2,
+      'grid-cols-2 grid-rows-2 h-[300px]': count >= 3,
+    },
+  );
+
+  return (
+    <div className={gridClassName}>
+      {images.slice(0, 4).map((image, index) => {
+        const isLarge = count === 3 && index === 0;
+        return (
+          <div
+            key={image.id}
+            className={cn('relative overflow-hidden cursor-pointer', {
+              'row-span-2 h-75': isLarge,
+              'aspect-square sm:aspect-video': count === 1,
+              'aspect-4/5 sm:aspect-square': count === 2,
+              'h-full': count >= 3,
+            })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ImageModal
+              imageUrl={image.url}
+              images={images}
+              imageOrder={index}
+              className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+            />
+            {index === 3 && count > 4 && (
+              <div className="absolute inset-0 bg-black/25 gap-1 flex items-center justify-center pointer-events-none">
+                <ImageIcon className="size-5" />
+                <span className="text-xl font-bold text-white">+{count - 4}</span>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export function ShortPostCard({ post, session }: { post: ShortPostPublic; session: UserSession }) {
   const { data: likes } = useLiveQuery((q) =>
     q.from({ like: likeCollection }).where(({ like }) => eq(like.shortPostId, post?.id)),
   );
@@ -45,7 +121,7 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
     }
   }
   return (
-    <div className="group relative p-5  rounded-2xl bg-slate-950/40 border border-slate-800 hover:border-slate-700 transition-all space-y-4">
+    <div className="group relative p-5 rounded-2xl bg-slate-950/40 border border-slate-800 hover:border-slate-700 transition-all space-y-4">
       <Link
         to="/post/$postId"
         params={{ postId: post.id }}
@@ -86,10 +162,9 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
           {post.content}
         </div>
       )}
-
-      {firstImage && (
+      {/*{firstImage && (
         <div
-          className="relative z-20 aspect-square sm:aspect-video w-full overflow-hidden rounded-xl border border-slate-800 bg-slate-900 cursor-pointer"
+          className="relative z-20 aspect-square sm:aspect-video w-full overflow-hidden rounded-xl border border-slate-800 bg-slate-950/40 cursor-pointer"
           onClick={(e) => {
             e.preventDefault();
           }}
@@ -97,7 +172,7 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
           <ImageModal
             imageUrl={firstImage}
             images={post.Images}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
           />
           {post.Images.length > 1 && (
             <div className="absolute top-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded-md border border-white/10 text-[10px] font-bold text-white flex items-center gap-1.5">
@@ -105,7 +180,10 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
             </div>
           )}
         </div>
-      )}
+      )}*/}
+
+      {post.Images && post.Images.length > 0 && <PostCollage images={post.Images} post={post} />}
+      {/*{post.Images && post.Images.length > 1 && <MasonryCollage images={post.Images} post={post} />}*/}
 
       <div className="relative z-20 flex items-center gap-6 pt-2 border-t border-slate-900">
         <button
