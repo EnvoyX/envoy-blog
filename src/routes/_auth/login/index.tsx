@@ -54,7 +54,7 @@ function RouteComponent() {
   const [isPending, startTransition] = useTransition();
   const [isRedirecting, setIsRedirecting] = useState(false);
   const hasInitialized = useRef(false);
-  function handleLogin(provider: 'github' | 'google') {
+  function handleLogin(provider: 'github' | 'google' | 'discord') {
     startTransition(async () => {
       await authClient.signIn.social({
         provider: provider,
@@ -205,7 +205,21 @@ function RouteComponent() {
                 >
                   <p className="flex items-center gap-1">
                     <span className="icon-[mdi--github] size-6" />
-                    <span>{isPending ? 'Logging in...' : 'Continue with Github'}</span>
+                    <span>{isPending ? 'Logging in...' : 'Continue with Discord'}</span>
+                  </p>
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleLogin('discord');
+                  }}
+                  variant="outline"
+                  type="button"
+                  className="cursor-pointer"
+                  disabled={isPending}
+                >
+                  <p className="flex items-center gap-1">
+                    <span className="icon-[ic--baseline-discord] size-6" />
+                    <span>{isPending ? 'Logging in...' : 'Continue with Discord'}</span>
                   </p>
                 </Button>
               </>

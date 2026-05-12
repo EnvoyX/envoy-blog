@@ -1,17 +1,19 @@
-import { createEnv } from "@t3-oss/env-core";
-import { z } from "zod";
+import { createEnv } from '@t3-oss/env-core';
+import { z } from 'zod';
 
 export const env = createEnv({
   server: {
-    NODE_ENV: z.enum(["development", "production"]).default("development"),
-    DATABASE_URL: z.string().url(),
-    DIRECT_URL: z.string().url(),
+    NODE_ENV: z.enum(['development', 'production']).default('development'),
+    DATABASE_URL: z.url(),
+    DIRECT_URL: z.url(),
     BETTER_AUTH_SECRET: z.string().min(1),
-    BETTER_AUTH_URL: z.string().url(),
+    BETTER_AUTH_URL: z.url(),
     GOOGLE_CLIENT_ID: z.string().min(1),
     GOOGLE_CLIENT_SECRET: z.string().min(1),
     GITHUB_CLIENT_ID: z.string().min(1),
     GITHUB_CLIENT_SECRET: z.string().min(1),
+    DISCORD_CLIENT_ID: z.string().min(1),
+    DISCORD_CLIENT_SECRET: z.string().min(1),
     FIRECRAWL_API_KEY: z.string().min(1),
     OPENROUTER_API_KEY: z.string().min(1),
     GEMINI_API_KEY: z.string().min(1),
@@ -23,18 +25,18 @@ export const env = createEnv({
   },
 
   /**
-   * The prefix that client-side variables must have. This is enforced both at
-   * a type-level and at runtime.
+   * The prefix that client-side variables must have. This is enforced both at a type-level and at
+   * runtime.
    */
-  clientPrefix: "VITE_",
+  clientPrefix: 'VITE_',
 
   client: {
     VITE_BASE_URL: z.string().min(1),
   },
 
   /**
-   * What object holds the environment variables at runtime. This is usually
-   * `process.env` or `import.meta.env`.
+   * What object holds the environment variables at runtime. This is usually `process.env` or
+   * `import.meta.env`.
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
@@ -46,6 +48,8 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
+    DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
     VITE_BASE_URL: import.meta.env.VITE_BASE_URL,
     FIRECRAWL_API_KEY: process.env.FIRECRAWL_API_KEY,
     OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
@@ -58,17 +62,15 @@ export const env = createEnv({
   },
 
   /**
-   * By default, this library will feed the environment variables directly to
-   * the Zod validator.
+   * By default, this library will feed the environment variables directly to the Zod validator.
    *
-   * This means that if you have an empty string for a value that is supposed
-   * to be a number (e.g. `PORT=` in a ".env" file), Zod will incorrectly flag
-   * it as a type mismatch violation. Additionally, if you have an empty string
-   * for a value that is supposed to be a string with a default value (e.g.
-   * `DOMAIN=` in an ".env" file), the default value will never be applied.
+   * This means that if you have an empty string for a value that is supposed to be a number (e.g.
+   * `PORT=` in a ".env" file), Zod will incorrectly flag it as a type mismatch violation.
+   * Additionally, if you have an empty string for a value that is supposed to be a string with a
+   * default value (e.g. `DOMAIN=` in an ".env" file), the default value will never be applied.
    *
-   * In order to solve these issues, we recommend that all new projects
-   * explicitly specify this option as true.
+   * In order to solve these issues, we recommend that all new projects explicitly specify this
+   * option as true.
    */
   emptyStringAsUndefined: true,
 });
