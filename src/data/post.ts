@@ -136,12 +136,16 @@ export const editShortPostFn = createServerFn({ method: 'POST' })
 
       if (removedImages && removedImages.length > 0) {
         await ctx.image.updateMany({
-          where: { shortPostId: shortPost.id },
+          where: {
+            shortPostId: shortPost.id,
+          },
           data: removedImages.map((image) => ({
             shortPostId: null,
             published: data.published,
             showPrivateToFollowers: data.showPrivateToFollowers,
             url: image.url,
+            title: image.title ?? '',
+            description: image.description ?? '',
           })),
         });
       }

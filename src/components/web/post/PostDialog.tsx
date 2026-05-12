@@ -263,107 +263,111 @@ export function PostDialog() {
                   Image Sources
                 </Label>
                 <form.Field name="images" mode="array">
-                  {(field) => (
-                    <div className="space-y-3 max-h-75 pr-2 overflow-y-auto custom-scrollbar pl-2 py-2">
-                      {field.state.value.map((_, i) => (
-                        <form.Field key={i} name={`images[${i}]`}>
-                          {(subField) => (
-                            <div className="flex flex-col gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900/30 animate-in fade-in slide-in-from-left-2">
-                              <div className="flex items-center justify-between">
-                                <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">
-                                  Image {i + 1}
-                                </span>
-                                <Button
-                                  onClick={(e) => {
-                                    field.removeValue(i);
-                                    e.preventDefault();
-                                  }}
-                                  variant="ghost"
-                                  size="icon"
-                                  className="text-zinc-500 hover:text-red-400 hover:bg-red-400/10 h-6 w-6"
-                                >
-                                  <Trash2 className="size-3" />
-                                </Button>
-                              </div>
+                  {(field) => {
+                    return (
+                      <>
+                        <div className="space-y-3 max-h-75 pr-2 overflow-y-auto scrollbar-hide pl-2 py-2">
+                          {field.state.value.map((_, i) => (
+                            <form.Field key={i} name={`images[${i}]`}>
+                              {(subField) => (
+                                <div className="flex flex-col gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900/30 animate-in fade-in slide-in-from-left-2">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">
+                                      Image {i + 1}
+                                    </span>
+                                    <Button
+                                      onClick={(e) => {
+                                        field.removeValue(i);
+                                        e.preventDefault();
+                                      }}
+                                      variant="ghost"
+                                      size="icon"
+                                      className="text-zinc-500 hover:text-red-400 hover:bg-red-400/10 h-6 w-6"
+                                    >
+                                      <Trash2 className="size-3" />
+                                    </Button>
+                                  </div>
 
-                              <div className="space-y-1">
-                                <Input
-                                  ref={(el) => {
-                                    if (el) {
-                                      inputRefs.current[i] = el;
-                                    } else {
-                                      delete inputRefs.current[i];
-                                    }
-                                  }}
-                                  placeholder="Image URL (https://...)"
-                                  className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
-                                  value={subField.state.value.url}
-                                  onChange={(e) =>
-                                    subField.handleChange({
-                                      ...subField.state.value,
-                                      url: e.target.value,
-                                    })
-                                  }
-                                />
-                              </div>
+                                  <div className="space-y-1">
+                                    <Input
+                                      ref={(el) => {
+                                        if (el) {
+                                          inputRefs.current[i] = el;
+                                        } else {
+                                          delete inputRefs.current[i];
+                                        }
+                                      }}
+                                      placeholder="Image URL (https://...)"
+                                      className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
+                                      value={subField.state.value.url}
+                                      onChange={(e) =>
+                                        subField.handleChange({
+                                          ...subField.state.value,
+                                          url: e.target.value,
+                                        })
+                                      }
+                                    />
+                                  </div>
 
-                              <div className="grid grid-cols-2 gap-2">
-                                <Input
-                                  placeholder="Title"
-                                  className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
-                                  value={subField.state.value.title}
-                                  onChange={(e) =>
-                                    subField.handleChange({
-                                      ...subField.state.value,
-                                      title: e.target.value,
-                                    })
-                                  }
-                                />
-                                <Input
-                                  placeholder="Description"
-                                  className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
-                                  value={subField.state.value.description}
-                                  onChange={(e) =>
-                                    subField.handleChange({
-                                      ...subField.state.value,
-                                      description: e.target.value,
-                                    })
-                                  }
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </form.Field>
-                      ))}
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full border-dashed border-zinc-700 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all text-zinc-400 hover:text-emerald-400 py-6 cursor-pointer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          field.pushValue({
-                            url: '',
-                            title: '',
-                            description: '',
-                          });
-                          setTimeout(() => {
-                            const lastIndex = field.state.value.length - 1;
-                            const targetInput = inputRefs.current[lastIndex];
-                            if (targetInput) {
-                              targetInput.focus();
-                              targetInput.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'nearest',
-                              });
-                            }
-                          }, 100);
-                        }}
-                      >
-                        <Plus className="mr-2 size-4" /> Add URL
-                      </Button>
-                    </div>
-                  )}
+                                  <div className="grid grid-cols-2 gap-2">
+                                    <Input
+                                      placeholder="Title"
+                                      className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
+                                      value={subField.state.value.title}
+                                      onChange={(e) =>
+                                        subField.handleChange({
+                                          ...subField.state.value,
+                                          title: e.target.value,
+                                        })
+                                      }
+                                    />
+                                    <Input
+                                      placeholder="Description"
+                                      className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
+                                      value={subField.state.value.description}
+                                      onChange={(e) =>
+                                        subField.handleChange({
+                                          ...subField.state.value,
+                                          description: e.target.value,
+                                        })
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            </form.Field>
+                          ))}
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full border-dashed border-zinc-700 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all text-zinc-400 hover:text-emerald-400 py-6 cursor-pointer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            field.pushValue({
+                              url: '',
+                              title: '',
+                              description: '',
+                            });
+                            setTimeout(() => {
+                              const lastIndex = field.state.value.length - 1;
+                              const targetInput = inputRefs.current[lastIndex];
+                              if (targetInput) {
+                                targetInput.focus();
+                                targetInput.scrollIntoView({
+                                  behavior: 'smooth',
+                                  block: 'nearest',
+                                });
+                              }
+                            }, 100);
+                          }}
+                        >
+                          <Plus className="mr-2 size-4" /> Add URL
+                        </Button>
+                      </>
+                    );
+                  }}
                 </form.Field>
               </div>
 
