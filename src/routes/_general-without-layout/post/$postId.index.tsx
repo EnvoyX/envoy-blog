@@ -18,7 +18,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { ImageModal } from '@/components/web/ImageModal';
+// import { ImageModal } from '@/components/web/ImageModal';
 import CommentInput from '@/components/web/post/CommentInput';
 import { getShortPostByIdFn } from '@/data/post';
 import { getUser } from '@/data/session';
@@ -167,10 +167,11 @@ function RouteComponent() {
               <ArrowLeft className="size-6 text-primary" />
             </Button>
           </div>
-          <ImageModal
-            imageUrl={firstImage}
+          <img
+            src={firstImage}
+            alt={`Post Image by ${post?.author?.name}`}
             className="max-h-full max-w-full object-contain cursor-pointer"
-            images={post.Images}
+            loading="lazy"
           />
         </div>
       )}
@@ -199,12 +200,18 @@ function RouteComponent() {
             {post?.Images?.map((image, index) => (
               <CarouselItem key={index}>
                 <div className="relative aspect-square overflow-hidden rounded-md border flex items-center justify-center">
-                  <ImageModal
+                  {/*<ImageModal
                     imageUrl={image.url}
                     className="max-h-[90vh] max-w-full object-contain object-center cursor-pointer rounded-lg shadow-2xl animate-in zoom-in-95 duration-200"
                     alt={`Preview ${index + 1}`}
                     images={post.Images}
                     imageOrder={index}
+                        />*/}
+                  <img
+                    src={image.url}
+                    alt={`Preview ${index + 1}`}
+                    className="max-h-[90vh] max-w-full object-contain object-center cursor-pointer rounded-lg shadow-2xl animate-in zoom-in-95 duration-200"
+                    loading="lazy"
                   />
                 </div>
               </CarouselItem>

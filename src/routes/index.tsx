@@ -1,11 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Navbar } from "@/components/web/navbar";
-import { Footer } from "@/components/web/footer";
-import { Link } from "@tanstack/react-router";
-import { ShieldCheck, Zap, Globe, ArrowRight, Code2 } from "lucide-react";
-import { getUser } from "@/data/session";
+import { createFileRoute } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
+import { ArrowRight, Code2 } from 'lucide-react';
 
-export const Route = createFileRoute("/")({
+import { Footer } from '@/components/web/footer';
+import { Navbar } from '@/components/web/navbar';
+import { getUser } from '@/data/session';
+
+export const Route = createFileRoute('/')({
   loader: async () => {
     const data = await getUser();
     return {
@@ -14,21 +15,21 @@ export const Route = createFileRoute("/")({
   },
   head: () => ({
     meta: [
-      { title: "Home | Envoy Blog" },
+      { title: 'Home | Envoy Mindpalace' },
       {
-        name: "Envoy Blog",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
-      { property: "og:title", content: "Home | Envoy Blog" },
+      { property: 'og:title', content: 'Home | Envoy Mindpalace' },
       {
-        property: "og:description",
-        content: "Welcome to my TanStack Start playground",
+        property: 'og:description',
+        content: 'Welcome to my TanStack Start playground',
       },
       {
-        property: "og:image",
-        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+        property: 'og:image',
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
   component: App,
@@ -58,10 +59,10 @@ function App() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to={data?.user ? "/dashboard" : "/login"}
+              to={data?.user ? '/dashboard' : '/login'}
               className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105"
             >
-              {data?.user ? "Dashboard" : "Login"} <ArrowRight size={18} />
+              {data?.user ? 'Dashboard' : 'Login'} <ArrowRight size={18} />
             </Link>
             <a
               href="https://github.com/EnvoyX/envoy-blog"

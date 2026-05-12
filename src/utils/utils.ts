@@ -28,3 +28,30 @@ export const downloadAlbumClientSide = async (albumName: string, images: Image[]
   const content = await zip.generateAsync({ type: 'blob' });
   saveAs(content, `${albumName.replace(/\s+/g, '_')}.zip`);
 };
+
+export async function downloadExternalFile(externalUrl: string, fileName: string) {
+  try {
+    const response = await fetch(externalUrl, {
+      method: 'GET',
+      mode: 'cors',
+    });
+
+    if (!response.ok) throw new Error('Network response was not ok');
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('External download failed:', error);
+    window.open(externalUrl, '_blank');
+  }
+}

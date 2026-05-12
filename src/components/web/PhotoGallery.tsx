@@ -59,33 +59,7 @@ import {
 import { Image } from '@/generated/prisma/client';
 import { useImageStore } from '@/store/image';
 import { photoGalleryStore } from '@/store/photoGallery';
-
-async function downloadExternalFile(externalUrl: string, fileName: string) {
-  try {
-    const response = await fetch(externalUrl, {
-      method: 'GET',
-      mode: 'cors',
-    });
-
-    if (!response.ok) throw new Error('Network response was not ok');
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-
-    document.body.appendChild(link);
-    link.click();
-
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error('External download failed:', error);
-    window.open(externalUrl, '_blank');
-  }
-}
+import { downloadExternalFile } from '@/utils/utils';
 
 export default function PhotoGallery({
   images,
@@ -230,7 +204,7 @@ export default function PhotoGallery({
           media: [640, 768, 1024], // tailwind's default breakpoints
           // useBalancedLayout: true,
         }}
-        render={(photo, idx) => {
+        render={(photo) => {
           return (
             <div
               key={photo.id}
@@ -318,6 +292,7 @@ export default function PhotoGallery({
       </Dialog>
       <Lightbox
         open={open}
+        close={() => setOpen(false)}
         index={index}
         className="z-50!"
         toolbar={{
@@ -471,7 +446,6 @@ export default function PhotoGallery({
             } else if (zoom === 1) setIsZoom(false);
           },
         }}
-        close={() => setOpen(false)}
         plugins={[Fullscreen, Share, Thumbnails, Zoom, Counter, Captions]}
         fullscreen={{ ref: fullscreenRef }}
         // slideshow={{ ref: slideshowRef }}

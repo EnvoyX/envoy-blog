@@ -1,16 +1,17 @@
-import { create } from "zustand";
-import { persist, combine } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist, combine } from 'zustand/middleware';
 
 export const useImageStore = create(
   persist(
     combine(
       {
+        postId: '',
         isImportToAlbumModalOpen: false,
         isEditDialogOpen: false,
         isCounterVisible: true,
         isCaptionVisible: false,
-        imageId: "",
-        imageUrl: "",
+        imageId: '',
+        imageUrl: '',
         initialValues: null as {
           title: string;
           description: string;
@@ -20,9 +21,9 @@ export const useImageStore = create(
         } | null,
       },
       (set) => ({
-        toggleDialog: (dialog: "open" | "edit" | "close", imageId?: string, imageUrl?: string) =>
+        toggleDialog: (dialog: 'open' | 'edit' | 'close', imageId?: string, imageUrl?: string) =>
           set(() => {
-            if (dialog === "open") {
+            if (dialog === 'open') {
               return {
                 isImportToAlbumModalOpen: true,
                 isEditDialogOpen: false,
@@ -30,34 +31,34 @@ export const useImageStore = create(
                 imageUrl: imageUrl,
               };
             }
-            if (dialog === "edit") {
+            if (dialog === 'edit') {
               return {
                 isImportToAlbumModalOpen: false,
                 isEditDialogOpen: true,
                 imageId: imageId,
                 imageUrl: imageUrl,
               };
-            } else if (dialog === "close") {
+            } else if (dialog === 'close') {
               return {
                 isImportToAlbumModalOpen: false,
                 isEditDialogOpen: false,
-                imageId: "",
-                imageUrl: "",
+                imageId: '',
+                imageUrl: '',
               };
             }
             return {
-              imageId: "",
+              imageId: '',
               isImportToAlbumModalOpen: false,
               isEditDialogOpen: false,
-              imageUrl: "",
+              imageUrl: '',
             };
           }),
-        onOpenChangeDialog: (dialog: "open" | "edit", open: boolean) =>
+        onOpenChangeDialog: (dialog: 'open' | 'edit', open: boolean) =>
           set(() => {
-            if (dialog === "open") {
+            if (dialog === 'open') {
               return { isImportToAlbumModalOpen: open };
             }
-            if (dialog === "edit") {
+            if (dialog === 'edit') {
               return { isEditDialogOpen: open };
             }
             return {
@@ -83,18 +84,19 @@ export const useImageStore = create(
         ) => {
           set({
             initialValues: {
-              title: initialValues ? initialValues.title : "",
-              description: initialValues ? initialValues.description : "",
+              title: initialValues ? initialValues.title : '',
+              description: initialValues ? initialValues.description : '',
               published: initialValues ? initialValues.published : false,
-              albumId: initialValues ? initialValues.albumId : "",
+              albumId: initialValues ? initialValues.albumId : '',
               showPrivateToFollowers: initialValues ? initialValues.showPrivateToFollowers : false,
             },
           });
         },
+        setPostId: (postId: string) => set(() => ({ postId })),
       }),
     ),
     {
-      name: "image-store-storage",
+      name: 'image-store-storage',
     },
   ),
 );
