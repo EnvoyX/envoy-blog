@@ -1,23 +1,32 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ImageIcon, ImagesIcon, UserIcon } from "lucide-react";
+import { createId } from '@paralleldrive/cuid2';
+import { useLiveQuery } from '@tanstack/react-db';
+import { useQueryClient } from '@tanstack/react-query';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { CheckCheck, Eye, ImageIcon, ImagesIcon, UserIcon, Users } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BlogCard } from "@/components/web/BlogCard";
-import PhotoGallery from "@/components/web/PhotoGallery";
-import { ShortPostCard } from "@/components/web/post/ShortPostCard";
-import { getUser } from "@/data/session";
-import { getPublicProfileFn } from "@/data/user";
-import { useLiveQuery } from "@tanstack/react-db";
-import { followColection } from "@/collections/follow";
-import { createId } from "@paralleldrive/cuid2";
-import { UserFollowDialog } from "@/components/web/UserFollowDialog";
-import { followDialogStore, useProfileStore } from "@/store/profile";
-import { useQueryClient } from "@tanstack/react-query";
-import { AlbumCard } from "@/components/web/album/AlbumCard";
+import { followColection } from '@/collections/follow';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button, buttonVariants } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AlbumCard } from '@/components/web/album/AlbumCard';
+import { BlogCard } from '@/components/web/BlogCard';
+import PhotoGallery from '@/components/web/PhotoGallery';
+import { ShortPostCard } from '@/components/web/post/ShortPostCard';
+import { UserFollowDialog } from '@/components/web/UserFollowDialog';
+import { getUser } from '@/data/session';
+import { getPublicProfileFn } from '@/data/user';
+import { followDialogStore, useProfileStore } from '@/store/profile';
 
-export const Route = createFileRoute("/_general/user/$userId")({
+export const Route = createFileRoute('/_general/user/$userId')({
   component: PublicProfileComponent,
   loader: async ({ params }) => {
     const user = await getPublicProfileFn({
@@ -36,22 +45,22 @@ export const Route = createFileRoute("/_general/user/$userId")({
     meta: [
       { title: `${loaderData?.user?.name} | Profile | Envoy Mindpalace` },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
       {
-        property: "og:title",
+        property: 'og:title',
         content: `${loaderData?.user?.name} | Profile | Envoy Mindpalace`,
       },
       {
-        property: "og:description",
+        property: 'og:description',
         content: `${loaderData?.user?.biodata}`,
       },
       {
-        property: "og:image",
+        property: 'og:image',
         content: `${loaderData?.user?.image}`,
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
 });
@@ -60,60 +69,69 @@ function PublicProfileComponent() {
   const { userId } = Route.useParams();
   const { user, session } = Route.useLoaderData();
   const { data: follows } = useLiveQuery((q) => q.from({ follow: followColection }));
-  const { viewPrivate, toggleViewPrivate, lastViewedTab, setLastViewedTab } = useProfileStore();
+  const { viewMode, toggleViewMode, lastViewedTab, setLastViewedTab } = useProfileStore();
   const queryClient = useQueryClient();
+  const viewAll = viewMode === 'all';
+  const viewPublic = viewMode === 'public';
+  const viewOnlyFollowers = viewMode === 'showToFollowers';
   const isOwnProfile = userId === session?.user?.id;
   const followerUserIds = new Set(
     user?.followers.map((follow) => follow.follower).map((follower) => follower.id),
   );
 
   // filter datas
-  const userBlogs = user?.posts.filter((post) => {
-    if (isOwnProfile && viewPrivate) return post;
-    else if (isOwnProfile && !viewPrivate) return post.published;
-    const isPublic = post.published;
-
+  const userBlogs = user?.posts.filter((blog) => {
+    const isPublic = blog.published;
+    if (isOwnProfile && viewAll) return blog;
+    else if (isOwnProfile && viewPublic) return blog.published;
+    else if (isOwnProfile && viewOnlyFollowers) {
+      return isPublic || blog.showPrivateToFollowers;
+    }
     return isPublic;
   });
   const userPosts = user?.shortPosts.filter((post) => {
-    if (isOwnProfile && viewPrivate) return post;
-    else if (isOwnProfile && !viewPrivate) return post.published;
     const isPublic = post.published;
     const isPrivateShownToFollower =
       session &&
       followerUserIds.has(session?.user?.id as string) &&
       post.showPrivateToFollowers &&
       !post.published;
+    if (isOwnProfile && viewAll) return post;
+    else if (isOwnProfile && viewPublic) return post.published;
+    else if (isOwnProfile && viewOnlyFollowers) {
+      return isPublic || post.showPrivateToFollowers;
+    }
 
     return isPublic || isPrivateShownToFollower;
   });
-
   const userImages = user?.images.filter((image) => {
-    if (isOwnProfile && viewPrivate) return image;
-    else if (isOwnProfile && !viewPrivate) return image.published;
     const isPublic = image.published;
     const isPrivateShownToFollower =
       session &&
       followerUserIds.has(session?.user?.id as string) &&
       image.showPrivateToFollowers &&
       !image.published;
-
+    if (isOwnProfile && viewAll) return image;
+    else if (isOwnProfile && viewPublic) return image.published;
+    else if (isOwnProfile && viewOnlyFollowers) {
+      return isPublic || image.showPrivateToFollowers;
+    }
     return isPublic || isPrivateShownToFollower;
   });
-
   const userAlbums = user?.albums.filter((album) => {
-    if (isOwnProfile && viewPrivate) return album;
-    else if (isOwnProfile && !viewPrivate) return album.published;
     const isPublic = album.published;
     const isPrivateShownToFollower =
       session &&
       followerUserIds.has(session?.user?.id as string) &&
       album.showPrivateToFollowers &&
       !album.published;
-
+    if (isOwnProfile && viewAll) return album;
+    else if (isOwnProfile && viewPublic) return album.published;
+    else if (isOwnProfile && viewOnlyFollowers) {
+      return isPublic || album.showPrivateToFollowers;
+    }
     return isPublic || isPrivateShownToFollower;
   });
-
   const hasFollowed = follows.find(
     (follow) => follow.followerId === session?.user?.id && follow.followingId === userId,
   );
@@ -132,13 +150,13 @@ function PublicProfileComponent() {
         followerId: session?.user.id as string,
       });
       queryClient.invalidateQueries({
-        queryKey: ["user-following-followers", userId],
+        queryKey: ['user-following-followers', userId],
       });
     } else {
       // optimistic delete follow
       followColection.delete(existingFollow.id);
       queryClient.invalidateQueries({
-        queryKey: ["user-following-followers", userId],
+        queryKey: ['user-following-followers', userId],
       });
     }
   }
@@ -154,20 +172,20 @@ function PublicProfileComponent() {
                   src={(user?.image as string) ?? (user?.defaultImage as string)}
                   alt={user?.name}
                   onError={(e) => {
-                    e.currentTarget.src = "";
-                    e.currentTarget.className = "hidden";
+                    e.currentTarget.src = '';
+                    e.currentTarget.className = 'hidden';
                   }}
                   className="w-full h-full object-cover object-center rounded-lg"
                 />
 
                 <AvatarFallback className="w-full h-full object-cover object-center rounded-lg text-3xl">
-                  {" "}
+                  {' '}
                   {(user?.name as string)
                     ? user?.name
-                        .split(" ")
+                        .split(' ')
                         .map((n) => n[0])
-                        .join("")
-                    : ""}
+                        .join('')
+                    : ''}
                 </AvatarFallback>
               </Avatar>
             ) : (
@@ -187,7 +205,7 @@ function PublicProfileComponent() {
                   followDialogStore.setState(() => ({
                     isOpen: true,
                     currentUserId: userId,
-                    initialTab: "followers",
+                    initialTab: 'followers',
                   }));
                 }}
               >
@@ -202,7 +220,7 @@ function PublicProfileComponent() {
                   followDialogStore.setState(() => ({
                     isOpen: true,
                     currentUserId: userId,
-                    initialTab: "following",
+                    initialTab: 'following',
                   }));
                 }}
               >
@@ -236,12 +254,45 @@ function PublicProfileComponent() {
         </div>
         {userId === session?.user?.id && (
           <div className="flex items-center gap-2 sm:justify-end sm:ml-auto sm:mb-auto max-md:mx-auto">
-            <Link to="/dashboard/profile" className={buttonVariants({ variant: "default" })}>
+            <Link to="/dashboard/profile" className={buttonVariants({ variant: 'default' })}>
               Edit Profile
             </Link>
-            <Button className="cursor-pointer" onClick={toggleViewPrivate}>
-              {viewPrivate ? "View Public Only" : "View All"}
-            </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="cursor-pointer flex items-center">
+                  {viewPublic ? 'View Public Only' : viewAll ? 'View All' : 'Followers Only'}
+                  {viewPublic ? (
+                    <Eye className="size-4" />
+                  ) : viewAll ? (
+                    <CheckCheck className="size-4" />
+                  ) : (
+                    <Users className="size-4" />
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-32 bg-transparent! backdrop-blur-lg!">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
+                  <DropdownMenuRadioGroup
+                    value={viewMode}
+                    onValueChange={(value) => {
+                      toggleViewMode(value as 'all' | 'public' | 'showToFollowers');
+                    }}
+                  >
+                    <DropdownMenuRadioItem value="all" className="cursor-pointer">
+                      View All
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="public" className="cursor-pointer">
+                      Public Only
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="showToFollowers" className="cursor-pointer">
+                      Followers Only
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         )}
         {session.user && userId !== session?.user?.id && (
@@ -260,9 +311,9 @@ function PublicProfileComponent() {
       </header>
 
       <Tabs
-        defaultValue={lastViewedTab ?? "posts"}
+        defaultValue={lastViewedTab ?? 'posts'}
         onValueChange={(value) =>
-          setLastViewedTab(value as "blogs" | "posts" | "images" | "albums")
+          setLastViewedTab(value as 'blogs' | 'posts' | 'images' | 'albums')
         }
         className="w-full"
         orientation="horizontal"
