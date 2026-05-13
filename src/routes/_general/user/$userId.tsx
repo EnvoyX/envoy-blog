@@ -2,7 +2,7 @@ import { createId } from '@paralleldrive/cuid2';
 import { useLiveQuery } from '@tanstack/react-db';
 import { useQueryClient } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { CheckCheck, Eye, ImageIcon, ImagesIcon, UserIcon, Users } from 'lucide-react';
+import { CheckCheck, Eye, ImageIcon, ImagesIcon, Mail, UserIcon, Users } from 'lucide-react';
 
 import { followColection } from '@/collections/follow';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -167,8 +167,8 @@ function PublicProfileComponent() {
   }
 
   return (
-    <main className="max-w-5xl mx-auto py-12 px-6 min-h-screen text-slate-200">
-      <header className="mb-12 flex flex-col md:flex-row items-center gap-8 border-b border-slate-800 pb-12 ">
+    <main className="max-w-7xl mx-auto py-12 px-6 min-h-screen text-slate-200">
+      <header className="mb-12 flex flex-col md:flex-row items-center gap-8 pb-12 ">
         <div className="size-40 rounded-3xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1 shadow-2xl shadow-emerald-500/10 shrink-0">
           <div className="w-full h-full rounded-3xl bg-slate-950 flex items-center justify-center overflow-hidden">
             {user?.image || user?.defaultImage ? (
@@ -201,6 +201,9 @@ function PublicProfileComponent() {
 
         <div className="text-center md:text-left space-y-3">
           <h1 className="text-4xl font-extrabold tracking-tighter text-white">{user?.name}</h1>
+          <p className="text-muted-foreground flex items-center justify-center md:justify-start gap-2">
+            <Mail className="size-4" /> {user?.email}
+          </p>
           <p className="text-slate-400 max-w-md italic">{user?.biodata}</p>
           {(user?.showFollowStats || session?.user?.id === userId) && (
             <div className="text-slate-400 max-w-md flex max-sm:justify-center items-center gap-2">
@@ -278,7 +281,7 @@ function PublicProfileComponent() {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-32 bg-transparent! backdrop-blur-lg!">
                 <DropdownMenuGroup>
-                  <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
+                  <DropdownMenuLabel>View Mode</DropdownMenuLabel>
                   <DropdownMenuRadioGroup
                     value={viewMode}
                     onValueChange={(value) => {
@@ -323,7 +326,7 @@ function PublicProfileComponent() {
         className="w-full"
         orientation="horizontal"
       >
-        <TabsList className="bg-transparent border border-slate-800 mb-8 mx-auto flex items-center justify-start sm:justify-center max-sm:w-full overflow-x-auto scrollbar-hide whitespace-nowrap">
+        <TabsList className="bg-transparent  mb-8 mx-auto flex items-center justify-start sm:justify-center max-sm:w-full overflow-x-auto scrollbar-hide whitespace-nowrap">
           <TabsTrigger
             value="blogs"
             className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
@@ -358,7 +361,7 @@ function PublicProfileComponent() {
               })}
             </div>
           ) : (
-            <div className="p-12 rounded-3xl border border-dashed border-slate-800 text-center">
+            <div className="p-12 rounded-3xl text-center">
               <p className="text-slate-500">This user hasn't published any blogs yet.</p>
             </div>
           )}
@@ -371,7 +374,7 @@ function PublicProfileComponent() {
                 return <ShortPostCard key={post.id} post={post} session={session} />;
               })
             ) : (
-              <div className="py-20 text-center border border-dashed border-slate-800 rounded-3xl">
+              <div className="py-20 text-center rounded-3xl">
                 <p className="text-slate-500 italic text-sm">No posts shared yet.</p>
               </div>
             )}
@@ -384,7 +387,7 @@ function PublicProfileComponent() {
               <PhotoGallery images={userImages} type="public" />
             </div>
           ) : (
-            <div className="p-12 rounded-3xl border border-dashed border-slate-800 text-center">
+            <div className="p-12 rounded-3xl text-center">
               <p className="text-slate-500">No images posted yet.</p>
             </div>
           )}
@@ -397,7 +400,7 @@ function PublicProfileComponent() {
               ))}
             </div>
           ) : (
-            <div className="p-12 rounded-3xl border border-dashed border-slate-800 text-center">
+            <div className="p-12 rounded-3xl text-center">
               <p className="text-slate-500">This user hasn't published any albums yet.</p>
             </div>
           )}

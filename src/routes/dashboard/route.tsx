@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 
 // import { Separator } from '@/components/ui/separator'
-import { SidebarInset, SidebarProvider, SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { ImageDialog } from '@/components/web/image/ImageDialog';
 import { ImportImageModal } from '@/components/web/image/ImportImageModal';
 import { ImportToAlbumModal } from '@/components/web/image/ImportToAlbumModal';

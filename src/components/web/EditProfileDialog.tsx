@@ -1,7 +1,11 @@
-import { useState } from "react";
-import { useForm } from "@tanstack/react-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { z } from "zod";
+import { useForm } from '@tanstack/react-form';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { PencilIcon, Loader2, Copy, Check, UserIcon } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,17 +13,15 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { PencilIcon, Loader2, Copy, Check, UserIcon } from "lucide-react";
-import { toast } from "sonner";
-import { updateProfile } from "@/data/user";
-import { UserAvatar } from "./user-profile";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { FieldError } from "../ui/field";
-import { Textarea } from "../ui/textarea";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { updateProfile } from '@/data/user';
+
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { FieldError } from '../ui/field';
+import { Textarea } from '../ui/textarea';
+import { UserAvatar } from './user-profile';
 
 export function EditProfileDialog({ user }: { user: any }) {
   const [open, setOpen] = useState(false);
@@ -29,21 +31,21 @@ export function EditProfileDialog({ user }: { user: any }) {
   const mutation = useMutation({
     mutationFn: updateProfile,
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["user-profile"] });
-      toast.success("Profile updated successfully");
+      void queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      toast.success('Profile updated successfully');
       setOpen(false);
     },
     onError: (error) =>
-      toast.error("Failed to update profile", {
+      toast.error('Failed to update profile', {
         description: error.message,
       }),
   });
 
   const form = useForm({
     defaultValues: {
-      name: user.name ?? "",
-      biodata: user.biodata ?? "",
-      image: user.image ?? "",
+      name: user.name ?? '',
+      biodata: user.biodata ?? '',
+      image: user.image ?? '',
     },
     validators: {
       onSubmit: z.object({
@@ -75,7 +77,7 @@ export function EditProfileDialog({ user }: { user: any }) {
       <DialogTrigger asChild>
         <Button
           variant="default"
-          className="px-5 py-2.5 bg-foreground text-background font-medium rounded-lg cursor-pointer"
+          className="px-5 py-2.5 text-background font-medium rounded-lg cursor-pointer"
         >
           <PencilIcon className="mr-2 size-4" />
           Edit Profile
@@ -96,7 +98,7 @@ export function EditProfileDialog({ user }: { user: any }) {
           >
             <form.Field
               name="name"
-              validators={{ onChange: z.string().min(2, "Name is too short") }}
+              validators={{ onChange: z.string().min(2, 'Name is too short') }}
               children={(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
@@ -117,7 +119,7 @@ export function EditProfileDialog({ user }: { user: any }) {
             <form.Field
               name="biodata"
               validators={{
-                onChange: z.string().or(z.literal("")).nullable(),
+                onChange: z.string().or(z.literal('')).nullable(),
               }}
               children={(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
@@ -140,7 +142,7 @@ export function EditProfileDialog({ user }: { user: any }) {
             <form.Field
               name="image"
               validators={{
-                onChange: z.url().or(z.literal("")).nullable(),
+                onChange: z.url().or(z.literal('')).nullable(),
               }}
               children={(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
@@ -152,7 +154,7 @@ export function EditProfileDialog({ user }: { user: any }) {
                         <Input
                           id={field.name}
                           placeholder="https://example.com/avatar.png"
-                          value={field.state.value ?? ""}
+                          value={field.state.value ?? ''}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
                           className="w-full"
@@ -162,33 +164,33 @@ export function EditProfileDialog({ user }: { user: any }) {
                       <div className=" overflow-hidden flex flex-col gap-2 items-center justify-center">
                         {field.state.value ? (
                           <>
-                            <Avatar className="size-24 shrink-0 border border-slate-700">
+                            <Avatar className="size-24 shrink-0 after:border-none!">
                               <AvatarImage
                                 src={field.state.value as string}
                                 alt={user.name}
                                 onError={(e) => {
-                                  e.currentTarget.src = "";
-                                  e.currentTarget.className = "hidden";
+                                  e.currentTarget.src = '';
+                                  e.currentTarget.className = 'hidden';
                                 }}
                                 className="w-full h-full object-cover object-center rounded-lg"
                               />
 
                               <AvatarFallback>
-                                {" "}
+                                {' '}
                                 {(user.name as string)
                                   ? (user.name as string)
-                                      .split(" ")
+                                      .split(' ')
                                       .map((n) => n[0])
-                                      .join("")
-                                  : ""}
+                                      .join('')
+                                  : ''}
                               </AvatarFallback>
                             </Avatar>
-                            <span className="text-xs text-muted-foreground italic text-center">
+                            <span className="text-xs text-slate-50 italic text-center">
                               An aspect square ratio image is recommended for best result.
                             </span>
                           </>
                         ) : (
-                          <UserIcon className="size-6 text-muted-foreground/50" />
+                          <UserIcon className="size-6 text-slate-50/50" />
                         )}
                       </div>
                     </div>
@@ -198,17 +200,17 @@ export function EditProfileDialog({ user }: { user: any }) {
             />
 
             <div className="space-y-2 opacity-70 w-full flex flex-col items-center">
-              <Label className="text-muted-foreground">Original Provider Image</Label>
+              <Label className="text-slate-50">Original Provider Image</Label>
               <div className="flex items-center gap-3 p-2 rounded-md bg-transparent border border-dashed w-full">
                 <UserAvatar src={user.defaultImage ?? user.image} alt={user.name} />
                 <div className="flex items-center justify-center gap-3 w-full max-w-xs">
-                  <p className="text-xs truncate text-muted-foreground ">
+                  <p className="text-xs truncate text-slate-50 ">
                     <span>{user.defaultImage ?? user.image}</span>
                   </p>
                 </div>
               </div>
               <Button
-                variant={"outline"}
+                variant={'outline'}
                 onClick={(e) => {
                   e.preventDefault();
                   void handleCopy(user.defaultImage ?? user.image);
@@ -226,11 +228,11 @@ export function EditProfileDialog({ user }: { user: any }) {
                   </span>
                 )}
               </Button>
-              <span className="text-xs truncate text-muted-foreground">
-                Default image is from:{" "}
-                <span className="uppercase">{user.accounts?.[0]?.providerId || "Provider"}</span>
+              <span className="text-xs truncate text-slate-50">
+                Default image is from:{' '}
+                <span className="uppercase">{user.accounts?.[0]?.providerId || 'Provider'}</span>
               </span>
-              <p className="text-[10px] text-muted-foreground italic">
+              <p className="text-[10px] text-slate-50 italic">
                 Note: This is your default SSO image and cannot be modified directly. but you can
                 still use the default image.
               </p>
@@ -243,7 +245,7 @@ export function EditProfileDialog({ user }: { user: any }) {
                   <Button
                     type="submit"
                     disabled={!canSubmit || mutation.isPending}
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
                   >
                     {mutation.isPending ||
                       (isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />)}

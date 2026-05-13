@@ -1,23 +1,53 @@
 import { IconLogout2 } from '@tabler/icons-react';
+import { useLiveQuery } from '@tanstack/react-db';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { Calendar, Mail, ShieldCheck, User, UserIcon } from 'lucide-react';
+import {
+  Calendar,
+  CheckCheck,
+  Eye,
+  ImageIcon,
+  ImagesIcon,
+  Mail,
+  ShieldCheck,
+  User,
+  UserIcon,
+  Users,
+} from 'lucide-react';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
+import { followColection } from '@/collections/follow';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button, buttonVariants } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AlbumCard } from '@/components/web/album/AlbumCard';
+import { BlogCard } from '@/components/web/BlogCard';
 import { EditProfileDialog } from '@/components/web/EditProfileDialog';
+import PhotoGallery from '@/components/web/PhotoGallery';
+import { ShortPostCard } from '@/components/web/post/ShortPostCard';
 import { UploadThingModal } from '@/components/web/uplooadthing/UploadThingModal';
-import { getProfileData } from '@/data/session';
+import { UserFollowDialog } from '@/components/web/UserFollowDialog';
+import { getProfileData, getUser } from '@/data/session';
 import { authClient } from '@/lib/auth-client';
 import { imageUploadModalStore } from '@/store/imageUploadStore';
+import { followDialogStore, useProfileStore } from '@/store/profile';
 
 export const Route = createFileRoute('/dashboard/profile')({
   loader: async () => {
-    const session = await getProfileData();
-
+    const data = await getProfileData();
+    const session = await getUser();
     return {
-      user: session.user,
+      user: data.user,
+      session,
     };
   },
   head: () => ({
@@ -43,9 +73,58 @@ export const Route = createFileRoute('/dashboard/profile')({
 });
 
 function RouteComponent() {
-  const { user } = Route.useLoaderData();
+  const { user, session } = Route.useLoaderData();
   const navigate = useNavigate();
   const [isTransition, startTransition] = useTransition();
+  const { data: follows } = useLiveQuery((q) => q.from({ follow: followColection }));
+  const { viewMode, toggleViewMode, lastViewedTab, setLastViewedTab } = useProfileStore();
+  const viewAll = viewMode === 'all';
+  const viewPublic = viewMode === 'public';
+  const viewOnlyFollowers = viewMode === 'showToFollowers';
+
+  // filter datas
+  const userBlogs = user?.posts.filter((blog) => {
+    const isPublic = blog.published;
+    const isPrivateShownToFollower = blog.showPrivateToFollowers && !blog.published;
+    if (viewAll) return blog;
+    else if (viewPublic) return blog.published;
+    else if (viewOnlyFollowers) {
+      return isPublic || blog.showPrivateToFollowers;
+    }
+    return isPublic || isPrivateShownToFollower;
+  });
+  const userPosts = user?.shortPosts.filter((post) => {
+    const isPublic = post.published;
+    const isPrivateShownToFollower = post.showPrivateToFollowers && !post.published;
+    if (viewAll) return post;
+    else if (viewPublic) return post.published;
+    else if (viewOnlyFollowers) {
+      return isPublic || post.showPrivateToFollowers;
+    }
+
+    return isPublic || isPrivateShownToFollower;
+  });
+  const userImages = user?.images.filter((image) => {
+    const isPublic = image.published;
+    const isPrivateShownToFollower = image.showPrivateToFollowers && !image.published;
+    if (viewAll) return image;
+    else if (viewPublic) return image.published;
+    else if (viewOnlyFollowers) {
+      return isPublic || image.showPrivateToFollowers;
+    }
+    return isPublic || isPrivateShownToFollower;
+  });
+  const userAlbums = user?.albums.filter((album) => {
+    const isPublic = album.published;
+    const isPrivateShownToFollower = album.showPrivateToFollowers && !album.published;
+    if (viewAll) return album;
+    else if (viewPublic) return album.published;
+    else if (viewOnlyFollowers) {
+      return isPublic || album.showPrivateToFollowers;
+    }
+    return isPublic || isPrivateShownToFollower;
+  });
+
   const handleLogout = () => {
     startTransition(async () => {
       await authClient.signOut({
@@ -74,7 +153,7 @@ function RouteComponent() {
   };
 
   return (
-    <main className="w-full max-w-4xl mx-auto py-12 px-6">
+    <main className="w-full max-w-7xl mx-auto py-12 px-6">
       <header className="mb-10 flex flex-col md:flex-row items-center gap-6">
         <div className="relative group">
           <div className="size-40 rounded-2xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1">
@@ -117,59 +196,141 @@ function RouteComponent() {
             <Mail className="size-4" /> {user?.email}
           </p>
           <p className="text-slate-400 italic">{user?.biodata}</p>
+          <div className="text-slate-400 max-w-md flex max-sm:justify-center items-center gap-2">
+            <p
+              className="flex items-center gap-1 cursor-pointer"
+              onClick={() => {
+                followDialogStore.setState(() => ({
+                  isOpen: true,
+                  currentUserId: user?.id as string,
+                  initialTab: 'followers',
+                }));
+              }}
+            >
+              <span className="font-bold text-primary">
+                {follows.filter((follow) => follow.followingId === user?.id).length}
+              </span>
+              Followers
+            </p>
+            <p
+              className="flex items-center gap-1 cursor-pointer"
+              onClick={() => {
+                followDialogStore.setState(() => ({
+                  isOpen: true,
+                  currentUserId: user?.id as string,
+                  initialTab: 'following',
+                }));
+              }}
+            >
+              <span className="font-bold text-primary">
+                {follows.filter((follow) => follow.followerId === user?.id).length}
+              </span>
+              Following
+            </p>
+            {!user?.showFollowStats && <span className="text-slate-400">(Hidden)</span>}
+          </div>
+          <div className="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
+            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium">
+              {userBlogs?.length} Blogs
+            </span>
+            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium">
+              {userPosts?.length} Posts
+            </span>
+            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium flex items-center gap-1">
+              <ImagesIcon className="size-4" />
+              <p>{userImages?.length} Images</p>
+            </span>
+            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium flex items-center gap-1">
+              <ImageIcon className="size-4" />
+              <p>{userAlbums?.length} Albums</p>
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 sm:justify-end sm:ml-auto max-md:mx-auto">
+          <div className="grid grid-cols-1 gap-6">
+            <div className="p-6 rounded-xl border border-border bg-card/50 backdrop-blur-sm">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-600 mb-4">
+                Account Details
+              </h2>
+              <div className="space-y-4 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground flex items-center gap-2 text-sm">
+                    <ShieldCheck className="size-4" /> Status
+                  </span>
+                  <span
+                    className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${user?.emailVerified ? 'bg-emerald-500/10 text-emerald-500' : 'bg-emerald-500/10 text-emerald-500'}`}
+                  >
+                    {user?.emailVerified ? 'Verified' : 'Pending Verification'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground flex items-center gap-2 text-sm">
+                    <Calendar className="size-4" /> Joined
+                  </span>
+                  <span className="text-sm font-medium">
+                    {user?.createdAt ? new Date(user?.createdAt).toLocaleDateString() : 'N/A'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground flex items-center gap-2 text-sm">
+                    <User className="size-4" />
+                  </span>
+                  <span className="text-muted-foreground">User ID</span>
+                  <code className="text-xs truncate">{user?.id}</code>
+                </div>
+                <div className="flex items-center justify-between">
+                  <p className="flex items-center gap-2 text-sm">
+                    <span className="text-muted-foreground flex items-center gap-2 text-sm">
+                      <Users className="size-4" />
+                    </span>
+                    <span className="text-muted-foreground">Linked Accounts</span>
+                  </p>
+                  <span className="font-medium truncate">
+                    {user?.accounts.map((account) => account.providerId.toUpperCase()).join(' | ')}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="p-6 rounded-xl border border-border bg-card/50 backdrop-blur-sm">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-600 mb-4">
-            Account Details
-          </h2>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground flex items-center gap-2 text-sm">
-                <ShieldCheck className="size-4" /> Status
-              </span>
-              <span
-                className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${user?.emailVerified ? 'bg-emerald-500/10 text-emerald-500' : 'bg-emerald-500/10 text-emerald-500'}`}
+      <div className="mt-6 mb-12 pb-6 border-b border-border flex max-sm:flex-col gap-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="cursor-pointer flex items-center">
+              {viewPublic ? 'View Public Only' : viewAll ? 'View All' : 'Followers Only'}
+              {viewPublic ? (
+                <Eye className="size-4" />
+              ) : viewAll ? (
+                <CheckCheck className="size-4" />
+              ) : (
+                <Users className="size-4" />
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-32 bg-transparent! backdrop-blur-lg!">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>View Mode</DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                value={viewMode}
+                onValueChange={(value) => {
+                  toggleViewMode(value as 'all' | 'public' | 'showToFollowers');
+                }}
               >
-                {user?.emailVerified ? 'Verified' : 'Pending Verification'}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground flex items-center gap-2 text-sm">
-                <Calendar className="size-4" /> Joined
-              </span>
-              <span className="text-sm font-medium">
-                {user?.createdAt ? new Date(user?.createdAt).toLocaleDateString() : 'N/A'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-6 rounded-xl border border-border bg-card/50 backdrop-blur-sm">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-600 mb-4">
-            System Info
-          </h2>
-          <div className="space-y-4 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">User ID</span>
-              <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
-                {user?.id?.slice(0, 8)}...
-              </code>
-            </div>
-            <div className="flex items-center gap-5">
-              <span className="text-muted-foreground">Linked Accounts</span>
-              <span className="font-medium truncate">
-                {user?.accounts.map((account) => account.providerId.toUpperCase()).join(' | ')}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <footer className="mt-12 pt-6 border-t border-border flex max-sm:flex-col gap-4">
-        <EditProfileDialog user={user} />
+                <DropdownMenuRadioItem value="all" className="cursor-pointer">
+                  View All
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="public" className="cursor-pointer">
+                  Public Only
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="showToFollowers" className="cursor-pointer">
+                  Followers Only
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <Link
           to="/user/$userId"
           className={buttonVariants({ variant: 'default' })}
@@ -179,6 +340,7 @@ function RouteComponent() {
         >
           View on Public
         </Link>
+        <EditProfileDialog user={user} />
         <Button
           variant={'outline'}
           onClick={() =>
@@ -202,7 +364,96 @@ function RouteComponent() {
           <IconLogout2 />
           Logout
         </Button>
-      </footer>
+      </div>
+      <Tabs
+        defaultValue={lastViewedTab ?? 'posts'}
+        onValueChange={(value) =>
+          setLastViewedTab(value as 'blogs' | 'posts' | 'images' | 'albums')
+        }
+        className="w-full"
+        orientation="horizontal"
+      >
+        <TabsList className="bg-transparent mb-8 mx-auto flex items-center justify-start sm:justify-center max-sm:w-full overflow-x-auto scrollbar-hide whitespace-nowrap">
+          <TabsTrigger
+            value="blogs"
+            className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
+          >
+            Blogs
+          </TabsTrigger>
+          <TabsTrigger
+            value="posts"
+            className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
+          >
+            Posts
+          </TabsTrigger>
+          <TabsTrigger
+            value="images"
+            className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
+          >
+            Images
+          </TabsTrigger>
+          <TabsTrigger
+            value="albums"
+            className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"
+          >
+            Albums
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="blogs" className="mx-auto">
+          {userBlogs && userBlogs?.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {userBlogs?.map((post) => {
+                return <BlogCard key={post.id} post={post} session={session} />;
+              })}
+            </div>
+          ) : (
+            <div className="p-12 rounded-3xl text-center">
+              <p className="text-slate-500">This user hasn't published any blogs yet.</p>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="posts">
+          <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {userPosts?.length ? (
+              userPosts?.map((post) => {
+                return <ShortPostCard key={post.id} post={post} session={session} />;
+              })
+            ) : (
+              <div className="py-20 text-center rounded-3xl">
+                <p className="text-slate-500 italic text-sm">No posts shared yet.</p>
+              </div>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="images">
+          {userImages?.length ? (
+            <div className="container mx-auto p-4">
+              <PhotoGallery images={userImages} type="public" />
+            </div>
+          ) : (
+            <div className="p-12 rounded-3xl text-center">
+              <p className="text-slate-500">No images posted yet.</p>
+            </div>
+          )}
+        </TabsContent>
+        <TabsContent value="albums" className="mx-auto">
+          {userAlbums && userAlbums?.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8">
+              {userAlbums?.map((album) => (
+                <AlbumCard key={album.id} album={album} inDashboard={false} />
+              ))}
+            </div>
+          ) : (
+            <div className="p-12 rounded-3xl text-center">
+              <p className="text-slate-500">This user hasn't published any albums yet.</p>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+      <UserFollowDialog follows={follows} session={session} />
       <UploadThingModal />
     </main>
   );
