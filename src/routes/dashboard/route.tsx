@@ -1,14 +1,16 @@
-import { getUser } from "@/data/session";
-// import { Separator } from '@/components/ui/separator'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/web/sidebar/app-sidebar";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { ImportImageModal } from "@/components/web/image/ImportImageModal";
-import { ImportToAlbumModal } from "@/components/web/image/ImportToAlbumModal";
-import { ImageDialog } from "@/components/web/image/ImageDialog";
-import { ImageUploader } from "@/components/web/ImageUploader";
+import { createFileRoute, Outlet } from '@tanstack/react-router';
 
-export const Route = createFileRoute("/dashboard")({
+// import { Separator } from '@/components/ui/separator'
+import { SidebarInset, SidebarProvider, SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
+import { ImageDialog } from '@/components/web/image/ImageDialog';
+import { ImportImageModal } from '@/components/web/image/ImportImageModal';
+import { ImportToAlbumModal } from '@/components/web/image/ImportToAlbumModal';
+import { ImageUploader } from '@/components/web/ImageUploader';
+import { AppSidebar } from '@/components/web/sidebar/app-sidebar';
+import { getUser } from '@/data/session';
+import { useSidebarStore } from '@/store/sidebar';
+
+export const Route = createFileRoute('/dashboard')({
   component: RouteComponent,
   loader: async () => {
     const session = await getUser();
@@ -21,8 +23,9 @@ export const Route = createFileRoute("/dashboard")({
 
 function RouteComponent() {
   const { user } = Route.useLoaderData();
+  const { isSidebarOpen, toggleSidebar } = useSidebarStore();
   return (
-    <SidebarProvider>
+    <SidebarProvider open={isSidebarOpen} onOpenChange={(open) => toggleSidebar(open)}>
       <AppSidebar user={user} />
       <SidebarInset className="bg-linear-to-b from-slate-950 to-emerald-500/40 selection:bg-emerald-500/30 bg-fixed">
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 ">

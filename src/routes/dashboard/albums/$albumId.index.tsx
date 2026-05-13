@@ -109,20 +109,12 @@ function AlbumPage() {
               <ArrowLeft className="size-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight">{album?.name}</h1>
+              <h1 className="text-2xl font-semibold tracking-tight line-clamp-1">{album?.name}</h1>
               <p className="text-xs text-emerald-400">{album?._count?.images || 0} photos</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hidden sm:flex gap-2 rounded-full hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer"
-              onClick={() => toggleDialog('import', albumId)}
-            >
-              <FileDown className="size-4" /> Import Photos
-            </Button>
             <Button
               variant="ghost"
               size="sm"
@@ -141,16 +133,6 @@ function AlbumPage() {
               }}
             >
               <Plus className="size-4" /> Add Photos
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hidden sm:flex gap-2 rounded-full hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer"
-              onClick={() =>
-                imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: true, albumId }))
-              }
-            >
-              <Upload className="size-4" /> Upload Photo
             </Button>
             <Button variant="ghost" size="icon" className="rounded-full hover:bg-white/10">
               <Share2 className="size-4" />
@@ -172,7 +154,7 @@ function AlbumPage() {
               >
                 <DropdownMenuItem
                   onClick={() => toggleDialog('import', albumId)}
-                  className="cursor-pointer sm:hidden"
+                  className="cursor-pointer"
                 >
                   <FileDown className="mr-2 size-4" /> Import Photos
                 </DropdownMenuItem>
@@ -189,7 +171,7 @@ function AlbumPage() {
                     });
                     toggleDialog('bulk', albumId);
                   }}
-                  className="cursor-pointer sm:hidden"
+                  className="cursor-pointer"
                 >
                   <Plus className="mr-2 size-4" /> Add Photos
                 </DropdownMenuItem>
@@ -201,7 +183,7 @@ function AlbumPage() {
                       albumId,
                     }))
                   }
-                  className="cursor-pointer sm:hidden"
+                  className="cursor-pointer"
                 >
                   <Upload className="mr-2 size-4" /> Upload Photo
                 </DropdownMenuItem>
@@ -225,7 +207,7 @@ function AlbumPage() {
                   <Download className="mr-2 size-4" /> Download as ZIP
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
-                  <Pencil className="mr-2 size-4" /> Edit details
+                  <Pencil className="mr-2 size-4" /> Edit Album
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -256,7 +238,7 @@ function AlbumPage() {
           </div>
         </div>
       </header>
-      <main className="container mx-auto p-4">
+      <main className="w-full p-4">
         {album?.description && (
           <p className="mb-1 text-base text-emerald-500 px-4">{album.description}</p>
         )}

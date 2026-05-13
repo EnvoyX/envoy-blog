@@ -18,7 +18,11 @@ import { NavUser } from './nav-user';
 
 export function AppSidebar({ user }: UserSession) {
   return (
-    <Sidebar collapsible="icon" variant="sidebar" className="bg-emerald-950/50! h-full!">
+    <Sidebar
+      collapsible="icon"
+      variant="sidebar"
+      className="bg-emerald-950/50! h-full! transition-transform!"
+    >
       <SidebarHeader className="bg-emerald-950/50!">
         <SidebarMenu className="bg-emerald-950/50! rounded-lg">
           <SidebarMenuButton size="lg" asChild className="">

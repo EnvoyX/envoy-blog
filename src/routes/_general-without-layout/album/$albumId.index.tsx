@@ -89,7 +89,9 @@ function AlbumPage() {
                 <ArrowLeft className="size-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-semibold tracking-tight">{album?.name}</h1>
+                <h1 className="text-2xl font-semibold tracking-tight line-clamp-1">
+                  {album?.name}
+                </h1>
                 <p className="text-xs text-emerald-400">{album?._count?.images || 0} photos</p>
               </div>
             </div>
@@ -108,7 +110,7 @@ function AlbumPage() {
                     className="h-9 w-9"
                   />
                 </Link>
-                <div className="flex flex-col">
+                <div className="flex flex-col max-sm:hidden">
                   <span className="font-medium text-slate-200">{album?.author.name}</span>
                   <span className="text-xs text-emerald-500 uppercase tracking-wider">Author</span>
                 </div>

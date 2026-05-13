@@ -199,9 +199,9 @@ export default function PhotoGallery({
       <Masonry
         items={photos}
         config={{
-          columns: [1, 2, 3, 4], // 1 col on mobile, 2 on sm, 3 on md, 4 on lg
-          gap: [16, 20, 24], // gap sizes in pixels corresponding to breakpoints
-          media: [640, 768, 1024], // tailwind's default breakpoints
+          columns: [2, 3, 4], // default: 1 col on mobile, 2 on sm, 3 on md, 4 on lg [1,2,3,4]
+          gap: [16, 20, 24], // gap sizes in pixels corresponding to breakpoints [16, 20, 24, 28]
+          media: [640, 768, 1024], // tailwind's default breakpoints [640, 768, 1024, 1280]
           // useBalancedLayout: true,
         }}
         render={(photo) => {

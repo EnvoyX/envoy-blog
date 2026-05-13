@@ -1,27 +1,20 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-
-interface SidebarState {
-  isSidebarOpen: boolean
-  toggleSidebar: () => void
-}
+import { create } from 'zustand';
+import { combine, persist } from 'zustand/middleware';
 
 interface SidebarMobileState {
-  isSidebarMobileOpen: boolean
-  toggleMobileSidebar: () => void
-  toggleSheet: (open: boolean) => void
+  isSidebarMobileOpen: boolean;
+  toggleMobileSidebar: () => void;
+  toggleSheet: (open: boolean) => void;
 }
 
-export const useSidebarStore = create<SidebarState>()(
+export const useSidebarStore = create(
   persist(
-    (set) => ({
-      isSidebarOpen: false,
-      toggleSidebar: () =>
-        set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
-    }),
+    combine({ isSidebarOpen: false }, (set) => ({
+      toggleSidebar: (open: boolean) => set(() => ({ isSidebarOpen: open })),
+    })),
     { name: 'sidebar-chat-storage' }, // this remembers if the user left it open/closed
   ),
-)
+);
 
 export const useSidebarMobileStore = create<SidebarMobileState>()(
   persist(
@@ -29,9 +22,8 @@ export const useSidebarMobileStore = create<SidebarMobileState>()(
       isSidebarMobileOpen: false,
       toggleMobileSidebar: () =>
         set((state) => ({ isSidebarMobileOpen: !state.isSidebarMobileOpen })),
-      toggleSheet: (open: boolean) =>
-        set(() => ({ isSidebarMobileOpen: !open })),
+      toggleSheet: (open: boolean) => set(() => ({ isSidebarMobileOpen: !open })),
     }),
     { name: 'sidebar-mobile-chat-storage' }, // this remembers if the user left it open/closed
   ),
-)
+);
