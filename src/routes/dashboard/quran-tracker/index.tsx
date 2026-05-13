@@ -1,33 +1,34 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { fetchCurrentQuranProgressFn, savedQuranProgressFn } from "@/data/quran-tracker";
-import { quranTrackSchema } from "@/schemas/quran-tracker";
-import { useForm } from "@tanstack/react-form";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import { intlFormat } from "date-fns";
-import { Loader2, Pencil, Save } from "lucide-react";
-import { useEffect, useRef, useTransition } from "react";
-import { toast } from "sonner";
+import { useForm } from '@tanstack/react-form';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { createFileRoute } from '@tanstack/react-router';
+import { intlFormat } from 'date-fns';
+import { Loader2, Pencil, Save } from 'lucide-react';
+import { useEffect, useRef, useTransition } from 'react';
+import { toast } from 'sonner';
 
-export const Route = createFileRoute("/dashboard/quran-tracker/")({
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { fetchCurrentQuranProgressFn, savedQuranProgressFn } from '@/data/quran-tracker';
+import { quranTrackSchema } from '@/schemas/quran-tracker';
+
+export const Route = createFileRoute('/dashboard/quran-tracker/')({
   head: () => ({
     meta: [
-      { title: `Qur'an Tracker | Envoy Blog` },
+      { title: `Qur'an Tracker | Envoy Mindpalace` },
       {
-        name: "Envoy Blog",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
-      { property: "og:title", content: "Qur'an Tracker | Envoy Blog" },
-      { property: "og:description", content: "Track your tilawah progress!" },
+      { property: 'og:title', content: "Qur'an Tracker | Envoy Mindpalace" },
+      { property: 'og:description', content: 'Track your tilawah progress!' },
       {
-        property: "og:image",
-        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+        property: 'og:image',
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
   component: RouteComponent,
@@ -44,9 +45,9 @@ function RouteComponent() {
   const [isPending, startTransition] = useTransition();
   const form = useForm({
     defaultValues: {
-      currentSurah: "",
-      currentJuz: "",
-      currentAyat: "",
+      currentSurah: '',
+      currentJuz: '',
+      currentAyat: '',
     },
     validators: {
       onSubmit: quranTrackSchema,
@@ -54,12 +55,12 @@ function RouteComponent() {
     onSubmit: ({ value }) => {
       console.log(value);
       startTransition(async () => {
-        console.log("Form values: ", value);
+        console.log('Form values: ', value);
         await savedQuranProgressFn({ data: value });
         void queryClient.invalidateQueries({
-          queryKey: ["quran-track"],
+          queryKey: ['quran-track'],
         });
-        toast.success("Progress saved successfully!");
+        toast.success('Progress saved successfully!');
       });
     },
   });
@@ -69,7 +70,7 @@ function RouteComponent() {
     isPending: isPendingQuery,
     isError,
   } = useQuery({
-    queryKey: ["quran-track"],
+    queryKey: ['quran-track'],
     queryFn: async () => {
       const data = await fetchCurrentQuranProgressFn();
 
@@ -130,7 +131,7 @@ function RouteComponent() {
                           <div>
                             <p className="text-sm font-medium text-emerald-500 mb-1">STREAK</p>
                             <h3 className="text-5xl font-black text-white leading-none">
-                              {progress?.currentStreak ?? "0"}{" "}
+                              {progress?.currentStreak ?? '0'}{' '}
                               <span className="text-2xl text-emerald-500/80">days</span>
                             </h3>
                           </div>
@@ -145,14 +146,14 @@ function RouteComponent() {
                         <p className="text-white font-semibold">
                           {progress?.updatedAt
                             ? intlFormat(new Date(progress.updatedAt), {
-                                month: "long",
-                                day: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                weekday: "short",
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                weekday: 'short',
                                 hour12: false,
                               })
-                            : "No data"}
+                            : 'No data'}
                         </p>
                       </div>
                     </div>
@@ -160,19 +161,19 @@ function RouteComponent() {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {[
                         {
-                          label: "Surah",
+                          label: 'Surah',
                           value: progress?.currentSurah,
-                          icon: "📖",
+                          icon: '📖',
                         },
                         {
-                          label: "Ayat",
+                          label: 'Ayat',
                           value: progress?.currentAyat,
-                          icon: "🔢",
+                          icon: '🔢',
                         },
                         {
-                          label: "Juz",
+                          label: 'Juz',
                           value: progress?.currentJuz,
-                          icon: "🔖",
+                          icon: '🔖',
                         },
                       ].map((item) => (
                         <div
@@ -183,7 +184,7 @@ function RouteComponent() {
                             {item.label}
                           </p>
                           <p className="text-sm md:text-base lg:text-lg font-bold text-zinc-200">
-                            {item.value || "-"}
+                            {item.value || '-'}
                           </p>
                         </div>
                       ))}

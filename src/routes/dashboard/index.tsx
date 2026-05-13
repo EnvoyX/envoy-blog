@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { intlFormatDistance } from 'date-fns';
 import {
   Activity,
   BookOpen,
@@ -9,28 +10,25 @@ import {
   LayoutGrid,
   ListTodo,
   Zap,
-} from 'lucide-react'
-import { fetchDashboardData, fetchDashboardTasksData } from '@/data/dashboard'
-import { Separator } from '@/components/ui/separator'
-import {
-  QuranSkeleton,
-  TaskListSkeleton,
-} from '@/components/web/skeleton/dashboard-skeletons'
-import { EmptyState } from '@/components/web/skeleton/dashboard-empty'
-import { intlFormatDistance } from 'date-fns'
+} from 'lucide-react';
+
+import { Separator } from '@/components/ui/separator';
+import { EmptyState } from '@/components/web/skeleton/dashboard-empty';
+import { QuranSkeleton, TaskListSkeleton } from '@/components/web/skeleton/dashboard-skeletons';
+import { fetchDashboardData, fetchDashboardTasksData } from '@/data/dashboard';
 
 export const Route = createFileRoute('/dashboard/')({
   head: () => ({
     meta: [
-      { title: 'Dashboard | Envoy Blog' },
+      { title: 'Dashboard | Envoy Mindpalace' },
       {
-        name: 'Envoy Blog',
+        name: 'Envoy Mindpalace',
         content: 'Welcome to TanStack Start playground!',
       },
-      { property: 'og:title', content: 'Dashboard | Envoy Blog' },
+      { property: 'og:title', content: 'Dashboard | Envoy Mindpalace' },
       {
         property: 'og:description',
-        content: 'Dashboard Overview | Envoy Blog',
+        content: 'Dashboard Overview | Envoy Mindpalace',
       },
       {
         property: 'og:image',
@@ -40,17 +38,17 @@ export const Route = createFileRoute('/dashboard/')({
     ],
   }),
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   const { data, isLoading: isLoadingDashboardData } = useQuery({
     queryKey: ['dashboard-summary'],
     queryFn: fetchDashboardData,
-  })
+  });
   const { data: tasksData, isLoading: isLoadingTasksData } = useQuery({
     queryKey: ['dashboard-summary-tasks'],
     queryFn: fetchDashboardTasksData,
-  })
+  });
 
   return (
     <div className="p-6 space-y-8  min-h-screen text-zinc-100">
@@ -65,9 +63,7 @@ function RouteComponent() {
               </div>
               <div>
                 <h3 className="font-bold">No Quran Progress</h3>
-                <p className="text-zinc-500 text-sm">
-                  Start your tilawah journey today.
-                </p>
+                <p className="text-zinc-500 text-sm">Start your tilawah journey today.</p>
               </div>
             </div>
             <Link to="/dashboard/quran-tracker">
@@ -104,16 +100,12 @@ function RouteComponent() {
                 </span>
               </div>
               <p className="text-zinc-500 text-sm italic">
-                Keep the streak alive:{' '}
-                {data?.quranTrack?.currentStreak ?? 'N/A'} days
+                Keep the streak alive: {data?.quranTrack?.currentStreak ?? 'N/A'} days
               </p>
             </div>
 
             <div className="flex gap-4">
-              <StatMini
-                label="Juz"
-                value={(data?.quranTrack?.currentJuz as string) ?? 'N/A'}
-              />
+              <StatMini label="Juz" value={(data?.quranTrack?.currentJuz as string) ?? 'N/A'} />
               {/* <StatMini label="Progress" value="84%" color="text-emerald-400" /> */}
             </div>
           </div>
@@ -130,16 +122,11 @@ function RouteComponent() {
             {isLoadingTasksData ? (
               <div className="space-y-6">
                 {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="h-3 w-full bg-zinc-800 rounded animate-pulse"
-                  />
+                  <div key={i} className="h-3 w-full bg-zinc-800 rounded animate-pulse" />
                 ))}
               </div>
             ) : tasksData?.tasks?.length === 0 ? (
-              <p className="text-zinc-500 text-sm py-4">
-                No active task data available yet.
-              </p>
+              <p className="text-zinc-500 text-sm py-4">No active task data available yet.</p>
             ) : (
               <div className="space-y-4">
                 <ProgressRow
@@ -238,19 +225,14 @@ function RouteComponent() {
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                       </span>
                     </div>
-                    <p className="text-sm text-zinc-500 line-clamp-1 mb-4">
-                      {list.description}
-                    </p>
+                    <p className="text-sm text-zinc-500 line-clamp-1 mb-4">{list.description}</p>
                     <div className="flex items-center gap-3 text-xs text-zinc-400">
                       <span className="flex items-center gap-1">
                         <ListTodo size={12} /> {list.tasks.length} tasks
                       </span>
                       <span className="flex items-center gap-1">
                         <Clock size={12} /> Updated{' '}
-                        {intlFormatDistance(
-                          new Date(list.updatedAt),
-                          new Date(),
-                        )}
+                        {intlFormatDistance(new Date(list.updatedAt), new Date())}
                       </span>
                     </div>
                   </div>
@@ -261,7 +243,7 @@ function RouteComponent() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function StatMini({
@@ -269,18 +251,16 @@ function StatMini({
   value,
   color = 'text-white',
 }: {
-  label: string
-  value: string
-  color?: string
+  label: string;
+  value: string;
+  color?: string;
 }) {
   return (
     <div className="px-4 py-2 rounded-xl bg-zinc-800/50 border border-zinc-700/50">
-      <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">
-        {label}
-      </p>
+      <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">{label}</p>
       <p className={`text-lg font-bold text-center ${color}`}>{value}</p>
     </div>
-  )
+  );
 }
 
 function ProgressRow({
@@ -289,12 +269,12 @@ function ProgressRow({
   total,
   color,
 }: {
-  label: string
-  current: number
-  total: number
-  color: string
+  label: string;
+  current: number;
+  total: number;
+  color: string;
 }) {
-  const percentage = (current / total) * 100
+  const percentage = (current / total) * 100;
   return (
     <div className="space-y-1.5">
       <div className="flex justify-between text-xs font-medium">
@@ -310,5 +290,5 @@ function ProgressRow({
         />
       </div>
     </div>
-  )
+  );
 }

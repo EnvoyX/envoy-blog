@@ -82,12 +82,17 @@ function PublicProfileComponent() {
   // filter datas
   const userBlogs = user?.posts.filter((blog) => {
     const isPublic = blog.published;
+    const isPrivateShownToFollower =
+      session &&
+      followerUserIds.has(session?.user?.id as string) &&
+      blog.showPrivateToFollowers &&
+      !blog.published;
     if (isOwnProfile && viewAll) return blog;
     else if (isOwnProfile && viewPublic) return blog.published;
     else if (isOwnProfile && viewOnlyFollowers) {
       return isPublic || blog.showPrivateToFollowers;
     }
-    return isPublic;
+    return isPublic || isPrivateShownToFollower;
   });
   const userPosts = user?.shortPosts.filter((post) => {
     const isPublic = post.published;

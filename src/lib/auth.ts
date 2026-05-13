@@ -8,7 +8,7 @@ import { env } from '@/env';
 import { db } from './db';
 
 const options = {
-  appName: 'Envoy Blog',
+  appName: 'Envoy Mindpalace',
   basePath: '/api/auth',
   database: prismaAdapter(db, {
     provider: 'postgresql', // or "mysql", "postgresql", ...etc
@@ -36,7 +36,7 @@ const options = {
     updateAge: 60 * 60 * 24, // 1 day
     cookieCache: {
       enabled: true,
-      maxAge: 5 * 60, // Cache duration in seconds (5 minutes)
+      maxAge: 5 * 60, // cache duration in seconds (5 minutes)
       //   strategy: "compact"  // compact is the default stratergy in better-auth
     },
   },

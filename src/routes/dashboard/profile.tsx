@@ -1,17 +1,18 @@
-import { Button, buttonVariants } from "@/components/ui/button";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Calendar, Mail, ShieldCheck, User, UserIcon } from "lucide-react";
-import { useTransition } from "react";
-import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
-import { IconLogout2 } from "@tabler/icons-react";
-import { EditProfileDialog } from "@/components/web/EditProfileDialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { imageUploadModalStore } from "@/store/imageUploadStore";
-import { UploadThingModal } from "@/components/web/uplooadthing/UploadThingModal";
-import { getProfileData } from "@/data/session";
+import { IconLogout2 } from '@tabler/icons-react';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { Calendar, Mail, ShieldCheck, User, UserIcon } from 'lucide-react';
+import { useTransition } from 'react';
+import { toast } from 'sonner';
 
-export const Route = createFileRoute("/dashboard/profile")({
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { EditProfileDialog } from '@/components/web/EditProfileDialog';
+import { UploadThingModal } from '@/components/web/uplooadthing/UploadThingModal';
+import { getProfileData } from '@/data/session';
+import { authClient } from '@/lib/auth-client';
+import { imageUploadModalStore } from '@/store/imageUploadStore';
+
+export const Route = createFileRoute('/dashboard/profile')({
   loader: async () => {
     const session = await getProfileData();
 
@@ -21,21 +22,21 @@ export const Route = createFileRoute("/dashboard/profile")({
   },
   head: () => ({
     meta: [
-      { title: "Profile | Envoy Blog" },
+      { title: 'Profile | Envoy Mindpalace' },
       {
-        name: "Envoy Blog",
-        content: "Welcome to TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to TanStack Start playground!',
       },
-      { property: "og:title", content: "Profile | Envoy Blog" },
+      { property: 'og:title', content: 'Profile | Envoy Mindpalace' },
       {
-        property: "og:description",
-        content: "View your profile information and settings",
+        property: 'og:description',
+        content: 'View your profile information and settings',
       },
       {
-        property: "og:image",
-        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+        property: 'og:image',
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
   component: RouteComponent,
@@ -50,21 +51,21 @@ function RouteComponent() {
       await authClient.signOut({
         fetchOptions: {
           onRequest: () => {
-            toast.loading("Logging out...", {
-              id: "logout",
+            toast.loading('Logging out...', {
+              id: 'logout',
             });
           },
           onError: ({ error }) => {
-            toast.dismiss("logout");
-            toast.error("Failed to log out", {
+            toast.dismiss('logout');
+            toast.error('Failed to log out', {
               description: error.message,
             });
           },
           onSuccess: () => {
-            toast.dismiss("logout");
-            toast.success("Logged out successfully");
+            toast.dismiss('logout');
+            toast.success('Logged out successfully');
             void navigate({
-              to: "/login",
+              to: '/login',
             });
           },
         },
@@ -84,20 +85,20 @@ function RouteComponent() {
                     src={(user?.image as string) ?? (user?.defaultImage as string)}
                     alt={user?.name}
                     onError={(e) => {
-                      e.currentTarget.src = "";
-                      e.currentTarget.className = "hidden";
+                      e.currentTarget.src = '';
+                      e.currentTarget.className = 'hidden';
                     }}
                     className="w-full h-full object-cover object-center rounded-lg"
                   />
 
                   <AvatarFallback className="w-full h-full object-cover object-center rounded-lg text-3xl">
-                    {" "}
+                    {' '}
                     {(user?.name as string)
                       ? user.name
-                          .split(" ")
+                          .split(' ')
                           .map((n) => n[0])
-                          .join("")
-                      : ""}
+                          .join('')
+                      : ''}
                   </AvatarFallback>
                 </Avatar>
               ) : (
@@ -111,7 +112,7 @@ function RouteComponent() {
         </div>
 
         <div className="text-center md:text-left space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight">{user?.name || "Anonymous User"}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{user?.name || 'Anonymous User'}</h1>
           <p className="text-muted-foreground flex items-center justify-center md:justify-start gap-2">
             <Mail className="size-4" /> {user?.email}
           </p>
@@ -130,9 +131,9 @@ function RouteComponent() {
                 <ShieldCheck className="size-4" /> Status
               </span>
               <span
-                className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${user?.emailVerified ? "bg-emerald-500/10 text-emerald-500" : "bg-emerald-500/10 text-emerald-500"}`}
+                className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${user?.emailVerified ? 'bg-emerald-500/10 text-emerald-500' : 'bg-emerald-500/10 text-emerald-500'}`}
               >
-                {user?.emailVerified ? "Verified" : "Pending Verification"}
+                {user?.emailVerified ? 'Verified' : 'Pending Verification'}
               </span>
             </div>
             <div className="flex items-center justify-between">
@@ -140,7 +141,7 @@ function RouteComponent() {
                 <Calendar className="size-4" /> Joined
               </span>
               <span className="text-sm font-medium">
-                {user?.createdAt ? new Date(user?.createdAt).toLocaleDateString() : "N/A"}
+                {user?.createdAt ? new Date(user?.createdAt).toLocaleDateString() : 'N/A'}
               </span>
             </div>
           </div>
@@ -160,7 +161,7 @@ function RouteComponent() {
             <div className="flex items-center gap-5">
               <span className="text-muted-foreground">Linked Accounts</span>
               <span className="font-medium truncate">
-                {user?.accounts.map((account) => account.providerId.toUpperCase()).join(" | ")}
+                {user?.accounts.map((account) => account.providerId.toUpperCase()).join(' | ')}
               </span>
             </div>
           </div>
@@ -171,7 +172,7 @@ function RouteComponent() {
         <EditProfileDialog user={user} />
         <Link
           to="/user/$userId"
-          className={buttonVariants({ variant: "default" })}
+          className={buttonVariants({ variant: 'default' })}
           params={{
             userId: user?.id as string,
           }}
@@ -179,11 +180,11 @@ function RouteComponent() {
           View on Public
         </Link>
         <Button
-          variant={"outline"}
+          variant={'outline'}
           onClick={() =>
             imageUploadModalStore.setState((prev) => ({
               ...prev,
-              type: "profile-picture",
+              type: 'profile-picture',
               isUploadThingDialogOpen: true,
             }))
           }
@@ -193,7 +194,7 @@ function RouteComponent() {
           Upload Profile Image
         </Button>
         <Button
-          variant={"outline"}
+          variant={'outline'}
           onClick={handleLogout}
           disabled={isTransition}
           className="px-5 py-2.5 bg-background border border-border font-medium rounded-lg hover:bg-muted transition-colors text-destructive cursor-pointer"

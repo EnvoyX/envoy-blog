@@ -1,15 +1,5 @@
-import { MessageResponse } from '@/components/ai-elements/message'
-import { Badge } from '@/components/ui/badge'
-import { Button, buttonVariants } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
-import { getItemById, saveSummaryAndGenerateTags } from '@/data/items'
-import { cn } from '@/lib/utils'
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
+import { useCompletion } from '@ai-sdk/react';
+import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import {
   ArrowLeft,
   Calendar,
@@ -19,17 +9,24 @@ import {
   Loader2,
   Sparkles,
   User,
-} from 'lucide-react'
-import { useState } from 'react'
-import { useCompletion } from '@ai-sdk/react'
-import { toast } from 'sonner'
+} from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+
+import { MessageResponse } from '@/components/ai-elements/message';
+import { Badge } from '@/components/ui/badge';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { getItemById, saveSummaryAndGenerateTags } from '@/data/items';
+import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/dashboard/items/$itemId')({
   component: RouteComponent,
   loader: ({ params }) => getItemById({ data: { itemId: params.itemId } }),
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title ?? 'Untitled Item'} | Envoy Blog` },
+      { title: `${loaderData?.title ?? 'Untitled Item'} | Envoy Mindpalace` },
       {
         name: 'description',
         content: loaderData?.description ?? 'No description available',
@@ -42,17 +39,16 @@ export const Route = createFileRoute('/dashboard/items/$itemId')({
       },
       {
         property: 'og:image',
-        content:
-          loaderData?.ogImage ?? 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        content: loaderData?.ogImage ?? 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
       { property: 'og:type', content: 'article' },
     ],
   }),
-})
+});
 
 function RouteComponent() {
-  const data = Route.useLoaderData()
-  const router = useRouter()
+  const data = Route.useLoaderData();
+  const router = useRouter();
   const { completion, complete, isLoading } = useCompletion({
     api: '/api/ai/summary',
     initialCompletion: data.summary ? data.summary : undefined,
@@ -61,7 +57,7 @@ function RouteComponent() {
       itemId: data.id,
     },
     onError(error) {
-      toast.error(error.message)
+      toast.error(error.message);
     },
     onFinish(_prompt, completionText) {
       saveSummaryAndGenerateTags({
@@ -69,28 +65,25 @@ function RouteComponent() {
           itemId: data.id,
           summary: completionText,
         },
-      })
-      toast.success('Summary generated and saved successfully!')
-      router.invalidate()
+      });
+      toast.success('Summary generated and saved successfully!');
+      router.invalidate();
     },
-  })
-  const [contentOpen, setContentOpen] = useState(false)
+  });
+  const [contentOpen, setContentOpen] = useState(false);
 
   function handleGenerateSummary() {
     if (!data.content) {
-      toast.error('No content to generate summary for.')
-      return
+      toast.error('No content to generate summary for.');
+      return;
     }
-    complete(data.content)
+    complete(data.content);
   }
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 w-full">
       <div className="flex justify-start items-center gap-2">
-        <Link
-          to="/dashboard/items"
-          className={buttonVariants({ variant: 'outline' })}
-        >
+        <Link to="/dashboard/items" className={buttonVariants({ variant: 'outline' })}>
           <ArrowLeft />
           Go Back
         </Link>
@@ -103,17 +96,11 @@ function RouteComponent() {
         ></img>
       </div>
       <div className="space-y-3 flex flex-wrap items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">
-          {data?.title ?? 'Untitled'}
-        </h1>
-        {data?.ogSiteName && (
-          <Badge variant={'default'}>{data.ogSiteName}</Badge>
-        )}
+        <h1 className="text-3xl font-bold tracking-tight">{data?.title ?? 'Untitled'}</h1>
+        {data?.ogSiteName && <Badge variant={'default'}>{data.ogSiteName}</Badge>}
       </div>
       <div className="flex flex-wrap items-center justify-between">
-        <p className="text-lg text-foreground">
-          {data?.description ?? 'No Description found'}
-        </p>
+        <p className="text-lg text-foreground">{data?.description ?? 'No Description found'}</p>
       </div>
       {data?.tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
@@ -174,11 +161,7 @@ function RouteComponent() {
               )}
             </div>
             {data.content && !data.summary && (
-              <Button
-                size="sm"
-                disabled={isLoading}
-                onClick={handleGenerateSummary}
-              >
+              <Button size="sm" disabled={isLoading} onClick={handleGenerateSummary}>
                 {isLoading ? (
                   <>
                     <Loader2 className="size-4 animate-spin" />
@@ -219,5 +202,5 @@ function RouteComponent() {
         </Collapsible>
       )}
     </div>
-  )
+  );
 }

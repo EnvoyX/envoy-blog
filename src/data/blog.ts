@@ -168,6 +168,7 @@ export const createPostFn = createServerFn({ method: 'POST' })
         content: data.content,
         slug: finalSlug,
         authorId: context.user.id as string,
+        showPrivateToFollowers: data.showPrivateToFollowers,
       },
     });
 

@@ -34,13 +34,13 @@ export const Route = createFileRoute('/_auth/login/')({
   ),
   head: () => ({
     meta: [
-      { title: 'Login | Envoy Blog' },
+      { title: 'Login | Envoy Mindpalace' },
       {
-        name: 'Envoy Blog',
+        name: 'Envoy Mindpalace',
         content: 'Welcome to TanStack Start playground!',
       },
-      { property: 'og:title', content: 'Login | Envoy Blog' },
-      { property: 'og:description', content: 'Login to your account in Envoy Blog' },
+      { property: 'og:title', content: 'Login | Envoy Mindpalace' },
+      { property: 'og:description', content: 'Login to your account in Envoy Mindpalace' },
       { property: 'og:image', content: 'https://tanstack.com/assets/og-C0HGjoLl.png' },
       { property: 'og:type', content: 'website' },
     ],
@@ -116,69 +116,9 @@ function RouteComponent() {
         <CardDescription>Sign in to continue</CardDescription>
       </CardHeader>
       <CardContent>
-        <form
-        //   onSubmit={(e) => {
-        //     e.preventDefault()
-        //     form.handleSubmit()
-        //   }}
-        >
+        <form>
           <FieldGroup>
-            {/* <form.Field
-                name="email"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                        placeholder="johndoe@gmail.com"
-                        type="email"
-                        autoComplete="off"
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  )
-                }}
-              />
-              <form.Field
-                name="password"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                        placeholder="Super secret password"
-                        type="password"
-                        autoComplete="off"
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  )
-                }}
-              /> */}
             <Field>
-              {/* <Button disabled={isPending} type="submit">
-                  {isPending ? 'Logging in...' : 'Login'}
-                </Button> */}
               <>
                 <Button
                   onClick={() => {
@@ -205,7 +145,7 @@ function RouteComponent() {
                 >
                   <p className="flex items-center gap-1">
                     <span className="icon-[mdi--github] size-6" />
-                    <span>{isPending ? 'Logging in...' : 'Continue with Discord'}</span>
+                    <span>{isPending ? 'Logging in...' : 'Continue with Github'}</span>
                   </p>
                 </Button>
                 <Button
