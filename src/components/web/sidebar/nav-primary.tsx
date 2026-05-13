@@ -1,4 +1,7 @@
-"use client";
+'use client';
+
+import { Link } from '@tanstack/react-router';
+import { Key, LucideIcon } from 'lucide-react';
 
 import {
   SidebarGroup,
@@ -6,11 +9,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { allowedRoles } from "@/lib/constants";
-import { Link } from "@tanstack/react-router";
-import { Key, LucideIcon } from "lucide-react";
-import { UserSession } from "@/data/session";
+} from '@/components/ui/sidebar';
+import { UserSession } from '@/data/session';
+import { allowedRoles } from '@/lib/constants';
 
 type NavPrimaryProps = {
   items: {
@@ -21,7 +22,7 @@ type NavPrimaryProps = {
       exact: boolean;
     };
   }[];
-  user: UserSession["user"];
+  user: UserSession['user'];
 };
 
 export function NavPrimary({ items, user }: NavPrimaryProps) {
@@ -33,9 +34,9 @@ export function NavPrimary({ items, user }: NavPrimaryProps) {
             <SidebarMenuButton asChild size="sm">
               {allowedRoles.includes(user?.role as string) && (
                 <Link
-                  to={"/dashboard/admin"}
+                  to={'/dashboard/admin'}
                   activeProps={{
-                    className: "bg-primary/10! text-primary! border-r-2! border-primary!",
+                    className: 'bg-primary/10! text-primary! border-r-2! border-primary!',
                   }}
                   className="flex items-center gap-3! px-3! py-3! text-sm! font-medium! rounded-lg! transition-colors! hover:bg-white/5!"
                   activeOptions={{ exact: false }}
@@ -55,7 +56,7 @@ export function NavPrimary({ items, user }: NavPrimaryProps) {
                   <Link
                     to={item.to}
                     activeProps={{
-                      className: "bg-primary/10! text-primary! border-r-2! border-primary!",
+                      className: 'bg-primary/10! text-primary! border-r-2! border-primary!',
                     }}
                     className="flex items-center gap-3! px-3! py-3! text-sm! font-medium! rounded-lg! transition-colors! hover:bg-white/5!"
                     activeOptions={item.activeOptions}
