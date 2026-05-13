@@ -38,7 +38,9 @@ function RouteComponent() {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 bg-linear-to-b from-slate-950 to-emerald-500/40 selection:bg-emerald-500/30 bg-fixed">
-          <Outlet />
+          <div className="min-h-screen bg-linear-to-br from-slate-950 via-emerald-950/30 to-slate-950">
+            <Outlet />
+          </div>
         </div>
       </SidebarInset>
       <ImageUploader />
