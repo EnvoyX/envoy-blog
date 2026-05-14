@@ -53,7 +53,7 @@ export function PostDialog() {
       onBlur: shortPostSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      // console.log(value);
       if (initialValues.mode === 'edit') {
         await editShortPostFn({
           data: {
@@ -425,11 +425,11 @@ export function PostDialog() {
                       <CarouselContent>
                         {validImages.map((src, index) => (
                           <CarouselItem key={index}>
-                            <div className="relative group aspect-4/5 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl">
+                            <div className="relative group h-full overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl">
                               <img
                                 src={src.url}
                                 alt={`Preview ${index + 1}`}
-                                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 "
+                                className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 "
                                 onError={(e) => {
                                   (e.target as HTMLImageElement).src =
                                     'https://placehold.co/600x800?text=Invalid+Image';
@@ -444,7 +444,7 @@ export function PostDialog() {
                       <CarouselNext className="-right-10  border-emerald-600! text-emerald-500 hover:text-emerald-400 transition-colors cursor-pointer" />
                       <div className="absolute -bottom-10 left-0 right-0 flex justify-center gap-2">
                         <span className="text-xs font-mono text-zinc-500 tracking-widest">
-                          IMAGE {current} // {images.length}
+                          IMAGE {current} // {validImages.length}
                         </span>
                       </div>
                     </Carousel>

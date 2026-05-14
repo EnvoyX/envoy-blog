@@ -4,15 +4,8 @@ import { ArrowRight, Code2 } from 'lucide-react';
 
 import { Footer } from '@/components/web/footer';
 import { Navbar } from '@/components/web/navbar';
-import { getUser } from '@/data/session';
 
 export const Route = createFileRoute('/')({
-  loader: async () => {
-    const data = await getUser();
-    return {
-      data,
-    };
-  },
   head: () => ({
     meta: [
       { title: 'Home | Envoy Mindpalace' },
@@ -36,7 +29,6 @@ export const Route = createFileRoute('/')({
 });
 
 function App() {
-  const { data } = Route.useLoaderData();
   return (
     <main>
       <Navbar />
@@ -59,13 +51,13 @@ function App() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to={data?.user ? '/dashboard' : '/login'}
+              to="/about"
               className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105"
             >
-              {data?.user ? 'Dashboard' : 'Login'} <ArrowRight size={18} />
+              About <ArrowRight size={18} />
             </Link>
             <a
-              href="https://github.com/EnvoyX/envoy-blog"
+              href="https://github.com/EnvoyX"
               target="_blank"
               className="flex items-center justify-center gap-2 bg-slate-900 border border-slate-800 hover:border-slate-700 px-8 py-4 rounded-xl font-bold transition-all"
             >

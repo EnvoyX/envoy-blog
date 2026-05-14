@@ -21,7 +21,7 @@ export function AppSidebar({ user }: UserSession) {
     <Sidebar
       collapsible="icon"
       variant="sidebar"
-      className="bg-emerald-950/50! h-full! transition-transform!"
+      className="bg-emerald-950/50! h-full! transition-transform! duration-500"
     >
       <SidebarHeader className="bg-emerald-950/50!">
         <SidebarMenu className="bg-emerald-950/50! rounded-lg">

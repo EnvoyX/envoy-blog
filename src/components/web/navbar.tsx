@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Loader2, LogOut, Menu } from 'lucide-react';
+import { useMotionValueEvent, useScroll, motion } from 'motion/react';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
@@ -28,6 +29,11 @@ import { navItemsDashboard, navItemsMain } from './NavItems';
 import { UserAvatar } from './user-profile';
 
 export function Navbar() {
+  const { scrollY } = useScroll();
+  const [hidden, setHidden] = useState(false);
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTransition, startTransition] = useTransition();
   const session = useQuery({
     queryKey: ['session'],
     queryFn: async () => {
@@ -35,9 +41,6 @@ export function Navbar() {
       return data.data;
     },
   });
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isTransition, startTransition] = useTransition();
   const handleLogout = () => {
     setIsLoading(true);
     startTransition(async () => {
@@ -69,8 +72,23 @@ export function Navbar() {
     });
   };
 
+  useMotionValueEvent(scrollY, 'change', (current) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    if (current > previous && current > 150) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+  });
   return (
-    <nav className="sticky top-0 z-50 border-b bg-transparent backdrop-blur">
+    <motion.nav
+      className="sticky top-0 z-50 border-b bg-transparent backdrop-blur"
+      animate={{
+        y: hidden ? -140 : 0,
+        opacity: hidden ? 0 : 1,
+      }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+    >
       <div className="mx-auto flex h-16 items-center justify-between px-4">
         <Link
           to="/"
@@ -281,6 +299,6 @@ export function Navbar() {
           </SheetContent>
         </Sheet>
       </div>
-    </nav>
+    </motion.nav>
   );
 }

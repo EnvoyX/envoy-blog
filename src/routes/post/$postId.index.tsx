@@ -25,7 +25,7 @@ import { getUser } from '@/data/session';
 import { User } from '@/generated/prisma/client';
 import { cn } from '@/lib/utils';
 
-export const Route = createFileRoute('/_general-without-layout/post/$postId/')({
+export const Route = createFileRoute('/post/$postId/')({
   component: RouteComponent,
   loader: async ({ params }) => {
     const post = await getShortPostByIdFn({

@@ -18,7 +18,7 @@ import { getAlbumByIdFn } from '@/data/album';
 import { getUser } from '@/data/session';
 import { Image } from '@/generated/prisma/client';
 import { downloadAlbumClientSide } from '@/utils/utils';
-export const Route = createFileRoute('/_general-without-layout/album/$albumId/')({
+export const Route = createFileRoute('/album/$albumId/')({
   component: AlbumPage,
   loader: async ({ params }) => {
     const album = await getAlbumByIdFn({ data: { albumId: params.albumId } });

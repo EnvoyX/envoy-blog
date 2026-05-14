@@ -116,45 +116,44 @@ export const editShortPostFn = createServerFn({ method: 'POST' })
   )
   .middleware([authMiddleware])
   .handler(async ({ context, data }) => {
-    await db.$transaction(async (ctx) => {
-      const shortPost = await ctx.shortPost.update({
-        where: { id: data.postId, authorId: context.user.id as string },
-        data: {
-          content: data.content,
-          published: data.published,
-          showPrivateToFollowers: data.showPrivateToFollowers,
-        },
-      });
-      const existingImages = await ctx.image.findMany({
-        where: { shortPostId: shortPost.id },
-      });
-      const existingImageUrls = existingImages?.map((image) => image.url);
-      const inputtedImageUrls = data.images?.map((image) => image.url);
-      const removedImages = existingImages?.filter(
-        (image) => !inputtedImageUrls?.includes(image.url),
-      );
+    const shortPost = await db.shortPost.update({
+      where: { id: data.postId, authorId: context.user.id as string },
+      data: {
+        content: data.content,
+        published: data.published,
+        showPrivateToFollowers: data.showPrivateToFollowers,
+      },
+    });
 
-      if (removedImages && removedImages.length > 0) {
-        await ctx.image.updateMany({
-          where: {
-            shortPostId: shortPost.id,
-          },
-          data: removedImages.map((image) => ({
-            shortPostId: null,
-            published: data.published,
-            showPrivateToFollowers: data.showPrivateToFollowers,
-            url: image.url,
-            title: image.title ?? '',
-            description: image.description ?? '',
-          })),
-        });
-      }
-      if (!data.images?.length) return;
-      if (data.images) {
-        const newImages = data.images.filter((image) => !existingImageUrls?.includes(image.url));
-        if (newImages && newImages.length > 0) {
-          await ctx.image.createMany({
-            data: newImages.map((image) => ({
+    // from form submission
+    const inputtedImages = data.images;
+    const inputtedImageUrls = data.images?.map((image) => image.url);
+
+    // existing images in database
+    const existingImages = await db.image.findMany({
+      where: { shortPostId: shortPost.id },
+    });
+    const existingImageUrls = existingImages?.map((image) => image.url);
+
+    // updated images (in form submission)
+    const updatedImages = existingImages?.filter((image) => inputtedImageUrls?.includes(image.url));
+
+    // removed images (not in form submission)
+    const removedImages = existingImages?.filter(
+      (image) => !inputtedImageUrls?.includes(image.url),
+    );
+    const removedImagesId = removedImages.map((image) => image.id);
+
+    // update existing images
+    if (updatedImages && updatedImages.length > 0) {
+      await Promise.all(
+        updatedImages.map(async (image) => {
+          await db.image.update({
+            where: {
+              id: image.id,
+              shortPostId: shortPost.id,
+            },
+            data: {
               shortPostId: shortPost.id,
               userId: context.user.id as string,
               url: image.url,
@@ -162,11 +161,40 @@ export const editShortPostFn = createServerFn({ method: 'POST' })
               description: image.description ?? '',
               published: data.published,
               showPrivateToFollowers: data.showPrivateToFollowers,
-            })),
+            },
           });
-        }
+        }),
+      );
+    }
+
+    // remove images not in form submission
+    if (removedImages && removedImages.length > 0) {
+      await db.image.updateMany({
+        where: {
+          id: { in: removedImagesId },
+        },
+        data: { shortPostId: null },
+      });
+    }
+
+    // create new images (not in form submission)
+    if (!inputtedImages?.length) return;
+    else if (inputtedImages) {
+      const newImages = inputtedImages.filter((image) => !existingImageUrls?.includes(image.url));
+      if (newImages && newImages.length > 0) {
+        await db.image.createMany({
+          data: newImages.map((image) => ({
+            shortPostId: shortPost.id,
+            userId: context.user.id as string,
+            url: image.url,
+            title: image.title ?? '',
+            description: image.description ?? '',
+            published: data.published,
+            showPrivateToFollowers: data.showPrivateToFollowers,
+          })),
+        });
       }
-    });
+    }
     return true;
   });
 

@@ -67,6 +67,7 @@ function MasonryCollage({
           columns: [2, 2, 2],
           gap: [4, 4, 4],
           media: [640, 768, 1024],
+          // useBalancedLayout: true,
         }}
         render={(photo) => (
           <div
@@ -81,7 +82,7 @@ function MasonryCollage({
               src={photo.url}
               alt={photo.id}
               loading="lazy"
-              className="w-full h-auto object-cover transition-transform duration-500 group-hover/img:scale-[1.03]"
+              className="w-full h-auto object-cover transition-transform duration-500 animate-in fade-in slide-in-from-bottom-4 group-hover/img:scale-[1.05]"
             />
           </div>
         )}

@@ -35,7 +35,7 @@ export const Route = createFileRoute('/dashboard/albums/$albumId/')({
   loader: async ({ params }) => {
     const album = await getAlbumByIdFn({ data: { albumId: params.albumId } });
     const session = await getUser();
-    if (!album?.published && album?.authorId !== session.user?.id)
+    if (album && !album?.published && album?.authorId !== session.user?.id)
       throw redirect({ to: '/dashboard/albums' });
     return album;
   },
@@ -264,7 +264,9 @@ function AlbumPage() {
             </p>
           </main>
         )}
-        <PhotoGallery images={album?.images as Image[]} type="private" albumId={albumId} />
+        {album && album?.images?.length > 0 && (
+          <PhotoGallery images={album?.images as Image[]} type="private" albumId={albumId} />
+        )}
       </main>
     </div>
   );

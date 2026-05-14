@@ -103,10 +103,10 @@ export function AlbumCard({ album, inDashboard }: { album: AlbumPrisma; inDashbo
         <h3 className="truncate text-sm font-bold text-slate-200 transition-colors group-hover:text-emerald-400">
           {album.name}
         </h3>
-        <p className="text-[10px] font-medium text-slate-300 uppercase tracking-widest mt-0.5">
+        <p className="text-[10px] max-sm:text-[9px] font-medium text-slate-300 uppercase tracking-widest mt-0.5">
           {album._count?.images || 0} items
         </p>
-        <p className="text-[11px] font-medium text-slate-300 uppercase tracking-widest mt-0.5">
+        <p className="text-[11px] max-sm:text-[7px] font-medium text-slate-300 uppercase tracking-widest mt-0.5">
           Updated {formatDistanceToNow(new Date(album.updatedAt), { addSuffix: true })}
         </p>
       </div>

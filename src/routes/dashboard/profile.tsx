@@ -89,9 +89,8 @@ function RouteComponent() {
     if (viewAll) return blog;
     else if (viewPublic) return blog.published;
     else if (viewOnlyFollowers) {
-      return isPublic || blog.showPrivateToFollowers;
+      return isPublic || isPrivateShownToFollower;
     }
-    return isPublic || isPrivateShownToFollower;
   });
   const userPosts = user?.shortPosts.filter((post) => {
     const isPublic = post.published;
@@ -99,10 +98,8 @@ function RouteComponent() {
     if (viewAll) return post;
     else if (viewPublic) return post.published;
     else if (viewOnlyFollowers) {
-      return isPublic || post.showPrivateToFollowers;
+      return isPublic || isPrivateShownToFollower;
     }
-
-    return isPublic || isPrivateShownToFollower;
   });
   const userImages = user?.images.filter((image) => {
     const isPublic = image.published;
@@ -110,9 +107,8 @@ function RouteComponent() {
     if (viewAll) return image;
     else if (viewPublic) return image.published;
     else if (viewOnlyFollowers) {
-      return isPublic || image.showPrivateToFollowers;
+      return isPublic || isPrivateShownToFollower;
     }
-    return isPublic || isPrivateShownToFollower;
   });
   const userAlbums = user?.albums.filter((album) => {
     const isPublic = album.published;
@@ -120,9 +116,8 @@ function RouteComponent() {
     if (viewAll) return album;
     else if (viewPublic) return album.published;
     else if (viewOnlyFollowers) {
-      return isPublic || album.showPrivateToFollowers;
+      return isPublic || isPrivateShownToFollower;
     }
-    return isPublic || isPrivateShownToFollower;
   });
 
   const handleLogout = () => {

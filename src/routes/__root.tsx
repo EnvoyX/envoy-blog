@@ -8,7 +8,8 @@ import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import { HeadContent, Scripts, createRootRoute, useRouter } from '@tanstack/react-router';
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import { LenisRef, ReactLenis } from 'lenis/react';
-import { useRef } from 'react';
+import { cancelFrame, frame } from 'motion';
+import { useEffect, useRef } from 'react';
 
 import { Toaster } from '@/components/ui/sonner';
 import { QueryProvider } from '@/components/web/query-provider';
@@ -50,6 +51,16 @@ export const Route = createRootRoute({
 function RootDocument({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const lenisRef = useRef<LenisRef>(null);
+  useEffect(() => {
+    function update(data: { timestamp: number }) {
+      const time = data.timestamp;
+      lenisRef.current?.lenis?.raf(time);
+    }
+
+    frame.update(update, true);
+
+    return () => cancelFrame(update);
+  }, []);
   // Hotkeys
   useHotkey(
     'Alt+H',
@@ -163,7 +174,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               <ReactLenis
                 root
                 options={{
-                  autoRaf: true,
+                  autoRaf: false,
                   autoToggle: true,
                   anchors: true,
                   allowNestedScroll: true,
@@ -173,7 +184,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 ref={lenisRef}
               />
               <main className="min-h-screen bg-linear-to-b from-slate-900 to-emerald-500/40 selection:bg-emerald-500/30 bg-fixed">
-                <div className="min-h-screen bg-linear-to-br from-slate-950 via-emerald-950/30 to-slate-950">
+                <div className="min-h-screen bg-linear-to-br from-slate-950 via-emerald-950/30 to-slate-950 antialiased">
                   {children}
                 </div>
               </main>

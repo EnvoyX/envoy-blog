@@ -12,6 +12,7 @@ import {
   Trash2,
   Unlock,
 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useRef, useState } from 'react';
 import { Masonry } from 'react-plock';
 import { toast } from 'sonner';
@@ -200,13 +201,13 @@ export default function PhotoGallery({
         items={photos}
         config={{
           columns: [2, 3, 4], // default: 1 col on mobile, 2 on sm, 3 on md, 4 on lg [1,2,3,4]
-          gap: [16, 20, 24], // gap sizes in pixels corresponding to breakpoints [16, 20, 24, 28]
+          gap: [8, 8, 8], // gap sizes in pixels corresponding to breakpoints [16, 20, 24, 28]
           media: [640, 768, 1024], // tailwind's default breakpoints [640, 768, 1024, 1280]
           // useBalancedLayout: true,
         }}
         render={(photo) => {
           return (
-            <div
+            <motion.div
               key={photo.id}
               className="group relative overflow-hidden rounded-2xl shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer "
               onClick={() => {
@@ -214,16 +215,21 @@ export default function PhotoGallery({
                 setIndex(photo.globalIndex);
               }}
             >
-              {/*<ImageModal
-                    imageUrl={photo.url}
-                    className="w-full h-auto display:block transition-transform duration-500 group-hover:scale-105"
-                    images={images}
-                    imageOrder={photo.globalIndex}
-                  />*/}
-              <img
+              <motion.img
+                initial={{ opacity: 0, filter: 'blur(16px)' }}
+                whileInView={{ opacity: 1, filter: 'blur(0px)' }}
+                viewport={{ once: true, amount: 0.2 }} // animation only plays the first time an element scrolls into view
+                whileHover={{ scale: 1.05 }}
+                whileTap={{
+                  scale: 0.95,
+                  transition: {
+                    duration: 0.3,
+                  },
+                }}
+                transition={{ ease: 'easeOut', duration: 0.5 }}
                 src={photo.url}
                 alt={photo.id}
-                className="w-full h-auto display:block transition-transform duration-500 group-hover:scale-105 animate-in fade-in slide-in-from-bottom-4"
+                className="w-full h-auto display:block"
                 loading="lazy"
               />
               {(photo.title || photo.description) && (
@@ -232,7 +238,7 @@ export default function PhotoGallery({
                   <p className="text-gray-200 text-xs">{photo.description}</p>
                 </div>
               )}
-            </div>
+            </motion.div>
           );
         }}
       />

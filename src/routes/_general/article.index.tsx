@@ -1,12 +1,14 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { allPosts } from '../../../../.content-collections/generated'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import { Calendar, Search } from 'lucide-react'
-import { intlFormat } from 'date-fns'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useDebouncedCallback } from '@tanstack/react-pacer'
-import { useState } from 'react'
+import { useDebouncedCallback } from '@tanstack/react-pacer';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { intlFormat } from 'date-fns';
+import { Calendar, Search } from 'lucide-react';
+import { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+
+import { allPosts } from '../../../.content-collections/generated';
 
 export const Route = createFileRoute('/_general/article/')({
   component: ArticleIndex,
@@ -29,36 +31,32 @@ export const Route = createFileRoute('/_general/article/')({
       { property: 'og:type', content: 'website' },
     ],
   }),
-})
+});
 
 function ArticleIndex() {
-  const [posts, setPosts] = useState(allPosts)
+  const [posts, setPosts] = useState(allPosts);
 
   function performSearch(searchTerm: string) {
     const searchedPosts = allPosts.filter((post) => {
       const matchedQuery =
-        searchTerm === '' ||
-        post.title?.toLowerCase().includes(searchTerm.toLowerCase())
+        searchTerm === '' || post.title?.toLowerCase().includes(searchTerm.toLowerCase());
 
-      return matchedQuery
-    })
+      return matchedQuery;
+    });
 
-    setPosts(searchedPosts)
+    setPosts(searchedPosts);
   }
 
-  const debouncedSearch = useDebouncedCallback(
-    (searchTerm: string) => performSearch(searchTerm),
-    {
-      wait: 500, // wait 500ms after last keystroke
-    },
-  )
+  const debouncedSearch = useDebouncedCallback((searchTerm: string) => performSearch(searchTerm), {
+    wait: 500, // wait 500ms after last keystroke
+  });
 
   const sortedPosts = posts.sort(
     (a, b) => new Date(b.published).getTime() - new Date(a.published).getTime(),
-  )
+  );
 
   return (
-    <div className="min-h-screen text-slate-50 p-6 md:p-10">
+    <div className="min-h-screen p-6 md:p-10">
       <div className="max-w-7xl mx-auto max-sm:flex-col max-sm:flex max-sm:items-center">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
@@ -66,7 +64,7 @@ function ArticleIndex() {
               Articles
             </h1>
             <p className="text-slate-400 mt-2 max-sm:text-center">
-              The latest news and article posts.
+              The latest news and article posts from TanStack.
             </p>
           </div>
           <div className="relative w-full md:w-80 group">
@@ -78,7 +76,7 @@ function ArticleIndex() {
               placeholder="Search blogs..."
               className="pl-10 bg-emerald-900/40 border-emerald-800 focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
               onChange={(e) => {
-                debouncedSearch(e.target.value)
+                debouncedSearch(e.target.value);
               }}
             />
           </div>
@@ -87,9 +85,7 @@ function ArticleIndex() {
         {/* Empty State */}
         {sortedPosts.length === 0 && (
           <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
-            <p className="text-slate-500">
-              No posts found. Start your journey today!
-            </p>
+            <p className="text-slate-500">No posts found. Start your journey today!</p>
           </div>
         )}
 
@@ -101,10 +97,7 @@ function ArticleIndex() {
             >
               <div className="aspect-video relative overflow-hidden">
                 <img
-                  src={
-                    post.headerImage ??
-                    'https://tanstack.com/assets/og-C0HGjoLl.png'
-                  }
+                  src={post.headerImage ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
                   alt={post.title}
                   className="object-cover w-full h-full transition-transform duration-500"
                 />
@@ -146,5 +139,5 @@ function ArticleIndex() {
         </div>
       </div>
     </div>
-  )
+  );
 }

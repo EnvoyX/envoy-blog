@@ -109,7 +109,7 @@ function BlogPageComponent() {
   //   })
 
   return (
-    <div className="min-h-screen text-slate-50 my-16 p-4">
+    <div className="min-h-screen my-16 p-4">
       <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col ">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
