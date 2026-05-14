@@ -92,7 +92,7 @@ function AlbumPage() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-white">
+    <div className="min-h-screen bg-transparent">
       <header className="sticky top-0 z-30 w-full border-b border-white/5 bg-transparent backdrop-blur-xl">
         <div className="mx-auto flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-4">
@@ -238,7 +238,7 @@ function AlbumPage() {
           </div>
         </div>
       </header>
-      <main className="w-full p-4">
+      <main className="w-full p-1">
         {album?.description && (
           <p className="mb-1 text-base text-emerald-500 px-4">{album.description}</p>
         )}

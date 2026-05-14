@@ -2,6 +2,8 @@ import { IconDownload } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
+// import Slideshow from 'yet-another-react-lightbox/plugins/slideshow';
+// import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import {
   AlbumIcon,
   Eye,
@@ -19,7 +21,6 @@ import { toast } from 'sonner';
 import Lightbox from 'yet-another-react-lightbox';
 import { ZoomRef, ThumbnailsRef, FullscreenRef } from 'yet-another-react-lightbox';
 import Captions from 'yet-another-react-lightbox/plugins/captions';
-// import Slideshow from 'yet-another-react-lightbox/plugins/slideshow';
 
 import 'yet-another-react-lightbox/styles.css';
 import 'yet-another-react-lightbox/plugins/counter.css';
@@ -104,7 +105,6 @@ export default function PhotoGallery({
     ...photo,
     globalIndex: index,
   }));
-
   async function handleAction(action: string, photoId: string) {
     console.log(`Action: ${action} for Photo: ${photoId}`);
     if (action === 'public') {
@@ -194,14 +194,13 @@ export default function PhotoGallery({
       void router.invalidate();
     }
   }
-
   return (
-    <div className="p-4 min-h-screen">
+    <div className="min-h-screen">
       <Masonry
         items={photos}
         config={{
           columns: [2, 3, 4], // default: 1 col on mobile, 2 on sm, 3 on md, 4 on lg [1,2,3,4]
-          gap: [8, 8, 8], // gap sizes in pixels corresponding to breakpoints [16, 20, 24, 28]
+          gap: [4, 4, 4], // gap sizes in pixels corresponding to breakpoints [16, 20, 24, 28]
           media: [640, 768, 1024], // tailwind's default breakpoints [640, 768, 1024, 1280]
           // useBalancedLayout: true,
         }}
@@ -242,6 +241,48 @@ export default function PhotoGallery({
           );
         }}
       />
+      {/*<VirtuosoMasonry
+              columnCount={4}
+              data={photos}
+              style={{ height: '100%' }}
+              initialItemCount={photos.length}
+              ItemContent={({ data: photo }) => {
+                  return (
+                      <motion.div
+                          key={photo.id}
+                          className="group relative overflow-hidden rounded-2xl shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer "
+                          onClick={() => {
+                              setOpen(true);
+                              setIndex(photo.globalIndex);
+                          }}
+                      >
+                          <motion.img
+                              initial={{ opacity: 0, filter: 'blur(16px)' }}
+                              whileInView={{ opacity: 1, filter: 'blur(0px)' }}
+                              viewport={{ once: true, amount: 0.2 }} // animation only plays the first time an element scrolls into view
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{
+                                  scale: 0.95,
+                                  transition: {
+                                      duration: 0.3,
+                                  },
+                              }}
+                              transition={{ ease: 'easeOut', duration: 0.5 }}
+                              src={photo.url}
+                              alt={photo.id}
+                              className="w-full h-auto display:block"
+                              loading="lazy"
+                          />
+                          {(photo.title || photo.description) && (
+                              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                                  <h3 className="text-white font-semibold text-lg">{photo.title}</h3>
+                                  <p className="text-gray-200 text-xs">{photo.description}</p>
+                              </div>
+                          )}
+                      </motion.div>
+                  );
+              }}
+          />*/}
       <Dialog
         open={isOpen}
         onOpenChange={(open) => {
