@@ -1,12 +1,12 @@
-import { createId } from '@paralleldrive/cuid2';
-import { useLiveQuery } from '@tanstack/react-db';
-import { useQueryClient } from '@tanstack/react-query';
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { CheckCheck, Eye, ImageIcon, ImagesIcon, Mail, UserIcon, Users } from 'lucide-react';
+import { createId } from "@paralleldrive/cuid2";
+import { useLiveQuery } from "@tanstack/react-db";
+import { useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { CheckCheck, Eye, ImageIcon, ImagesIcon, Mail, UserIcon, Users } from "lucide-react";
 
-import { followColection } from '@/collections/follow';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { followColection } from "@/collections/follow";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,18 +15,18 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlbumCard } from '@/components/web/album/AlbumCard';
-import { BlogCard } from '@/components/web/BlogCard';
-import PhotoGallery from '@/components/web/PhotoGallery';
-import { ShortPostCard } from '@/components/web/post/ShortPostCard';
-import { UserFollowDialog } from '@/components/web/UserFollowDialog';
-import { getUser } from '@/data/session';
-import { getPublicProfileFn } from '@/data/user';
-import { followDialogStore, useProfileStore } from '@/store/profile';
+} from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AlbumCard } from "@/components/web/album/AlbumCard";
+import { BlogCard } from "@/components/web/BlogCard";
+import PhotoGallery from "@/components/web/PhotoGallery";
+import { ShortPostCard } from "@/components/web/post/ShortPostCard";
+import { UserFollowDialog } from "@/components/web/UserFollowDialog";
+import { getUser } from "@/data/session";
+import { getPublicProfileFn } from "@/data/user";
+import { followDialogStore, useProfileStore } from "@/store/profile";
 
-export const Route = createFileRoute('/_general/user/$userId')({
+export const Route = createFileRoute("/_general/user/$userId")({
   component: PublicProfileComponent,
   loader: async ({ params }) => {
     const user = await getPublicProfileFn({
@@ -45,22 +45,22 @@ export const Route = createFileRoute('/_general/user/$userId')({
     meta: [
       { title: `${loaderData?.user?.name} | Profile | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
       {
-        property: 'og:title',
+        property: "og:title",
         content: `${loaderData?.user?.name} | Profile | Envoy Mindpalace`,
       },
       {
-        property: 'og:description',
+        property: "og:description",
         content: `${loaderData?.user?.biodata}`,
       },
       {
-        property: 'og:image',
+        property: "og:image",
         content: `${loaderData?.user?.image}`,
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
@@ -71,9 +71,9 @@ function PublicProfileComponent() {
   const { data: follows } = useLiveQuery((q) => q.from({ follow: followColection }));
   const { viewMode, toggleViewMode, lastViewedTab, setLastViewedTab } = useProfileStore();
   const queryClient = useQueryClient();
-  const viewAll = viewMode === 'all';
-  const viewPublic = viewMode === 'public';
-  const viewOnlyFollowers = viewMode === 'showToFollowers';
+  const viewAll = viewMode === "all";
+  const viewPublic = viewMode === "public";
+  const viewOnlyFollowers = viewMode === "showToFollowers";
   const isOwnProfile = userId === session?.user?.id;
   const followerUserIds = new Set(
     user?.followers.map((follow) => follow.follower).map((follower) => follower.id),
@@ -155,13 +155,13 @@ function PublicProfileComponent() {
         followerId: session?.user.id as string,
       });
       queryClient.invalidateQueries({
-        queryKey: ['user-following-followers', userId],
+        queryKey: ["user-following-followers", userId],
       });
     } else {
       // optimistic delete follow
       followColection.delete(existingFollow.id);
       queryClient.invalidateQueries({
-        queryKey: ['user-following-followers', userId],
+        queryKey: ["user-following-followers", userId],
       });
     }
   }
@@ -177,20 +177,20 @@ function PublicProfileComponent() {
                   src={(user?.image as string) ?? (user?.defaultImage as string)}
                   alt={user?.name}
                   onError={(e) => {
-                    e.currentTarget.src = '';
-                    e.currentTarget.className = 'hidden';
+                    e.currentTarget.src = "";
+                    e.currentTarget.className = "hidden";
                   }}
                   className="w-full h-full object-cover object-center rounded-lg"
                 />
 
                 <AvatarFallback className="w-full h-full object-cover object-center rounded-lg text-3xl">
-                  {' '}
+                  {" "}
                   {(user?.name as string)
                     ? user?.name
-                        .split(' ')
+                        .split(" ")
                         .map((n) => n[0])
-                        .join('')
-                    : ''}
+                        .join("")
+                    : ""}
                 </AvatarFallback>
               </Avatar>
             ) : (
@@ -213,7 +213,7 @@ function PublicProfileComponent() {
                   followDialogStore.setState(() => ({
                     isOpen: true,
                     currentUserId: userId,
-                    initialTab: 'followers',
+                    initialTab: "followers",
                   }));
                 }}
               >
@@ -228,7 +228,7 @@ function PublicProfileComponent() {
                   followDialogStore.setState(() => ({
                     isOpen: true,
                     currentUserId: userId,
-                    initialTab: 'following',
+                    initialTab: "following",
                   }));
                 }}
               >
@@ -262,14 +262,14 @@ function PublicProfileComponent() {
         </div>
         {userId === session?.user?.id && (
           <div className="flex items-center gap-2 sm:justify-end sm:ml-auto sm:mb-auto max-md:mx-auto">
-            <Link to="/dashboard/profile" className={buttonVariants({ variant: 'default' })}>
+            <Link to="/dashboard/profile" className={buttonVariants({ variant: "default" })}>
               Edit Profile
             </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="cursor-pointer flex items-center">
-                  {viewPublic ? 'View Public Only' : viewAll ? 'View All' : 'Followers Only'}
+                  {viewPublic ? "View Public Only" : viewAll ? "View All" : "Followers Only"}
                   {viewPublic ? (
                     <Eye className="size-4" />
                   ) : viewAll ? (
@@ -285,7 +285,7 @@ function PublicProfileComponent() {
                   <DropdownMenuRadioGroup
                     value={viewMode}
                     onValueChange={(value) => {
-                      toggleViewMode(value as 'all' | 'public' | 'showToFollowers');
+                      toggleViewMode(value as "all" | "public" | "showToFollowers");
                     }}
                   >
                     <DropdownMenuRadioItem value="all" className="cursor-pointer">
@@ -319,14 +319,14 @@ function PublicProfileComponent() {
       </header>
 
       <Tabs
-        defaultValue={lastViewedTab ?? 'posts'}
+        defaultValue={lastViewedTab ?? "posts"}
         onValueChange={(value) =>
-          setLastViewedTab(value as 'blogs' | 'posts' | 'images' | 'albums')
+          setLastViewedTab(value as "blogs" | "posts" | "images" | "albums")
         }
         className="w-full"
         orientation="horizontal"
       >
-        <TabsList className="bg-transparent  mb-8 mx-auto flex items-center justify-start sm:justify-center max-sm:w-full overflow-x-auto scrollbar-hide whitespace-nowrap">
+        <TabsList className="bg-transparent mb-8 mx-auto flex items-center justify-start sm:justify-center max-sm:w-full overflow-x-auto scrollbar-hide whitespace-nowrap">
           <TabsTrigger
             value="blogs"
             className="data-[state=active]:bg-slate-800 px-8 shrink-0 cursor-pointer"

@@ -441,7 +441,6 @@ export function ImageUploader() {
                 </svg>
                 Rotate Right
               </Button>
-
               <Separator orientation="vertical" className="h-8 bg-slate-700" />
               <Button
                 size="sm"

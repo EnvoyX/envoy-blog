@@ -16,7 +16,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getImagesWithAlbumsFn } from "@/data/image";
+import { deleteImagesFn, getImagesWithAlbumsFn } from "@/data/image";
 import { toast } from "sonner";
 import { useRouter } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
@@ -27,10 +27,10 @@ import { CheckCircle2, ImageIcon, Loader2, MousePointer2 } from "lucide-react";
 import { addExistingImagesToAlbumFn, removeExistingImagesToAlbumFn } from "@/data/album";
 import { cn } from "@/lib/utils";
 
-export function BulkImportDialog() {
+export function BulkAlbumDialog() {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const { isBulkDialogImportOpen, onOpenDialogChange, initialValues, currentAlbumId } =
+  const { isBulkDialogImportOpen, onOpenDialogChange, initialValues, currentAlbumId, bulkMode } =
     useAlbumStore();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isImporting, setIsImporting] = useState(false);
@@ -42,7 +42,6 @@ export function BulkImportDialog() {
     },
     enabled: isBulkDialogImportOpen,
   });
-
   const toggleSelection = (id: string) => {
     const newSelection = new Set(selectedIds);
     if (newSelection.has(id)) newSelection.delete(id);
@@ -55,8 +54,8 @@ export function BulkImportDialog() {
     const idsArray = Array.from(selectedIds);
 
     try {
-      toast.loading(`Importing ${idsArray.length} images...`, { id: "bulk-import" });
-      if (initialValues?.addPhotos) {
+      if (bulkMode === "add" && currentAlbumId) {
+        toast.loading(`Importing ${idsArray.length} images...`, { id: "bulk-import" });
         await addExistingImagesToAlbumFn({
           data: {
             albumId: currentAlbumId,
@@ -64,20 +63,38 @@ export function BulkImportDialog() {
           },
         });
 
-        toast.success("Images added successfully", { id: "bulk-import" });
+        toast.success(`Images added successfully to ${initialValues?.name}`, {
+          id: "bulk-import",
+        });
         setSelectedIds(new Set());
         onOpenDialogChange("bulk", false);
         void queryClient.invalidateQueries({ queryKey: ["available-images", currentAlbumId] });
         void router.invalidate();
-      } else {
-        toast.loading(`Removing ${idsArray.length} images...`, { id: "bulk-import" });
+      } else if (bulkMode === "remove" && currentAlbumId) {
+        toast.loading(`Deleting ${idsArray.length} images...`, { id: "bulk-import" });
         await removeExistingImagesToAlbumFn({
           data: {
             albumId: currentAlbumId,
             imageIds: idsArray,
           },
         });
-        toast.success("Images removed successfully", { id: "bulk-import" });
+        toast.success(`Images removed successfully from ${initialValues?.name}`, {
+          id: "bulk-import",
+        });
+        setSelectedIds(new Set());
+        onOpenDialogChange("bulk", false);
+        void queryClient.invalidateQueries({ queryKey: ["available-images", currentAlbumId] });
+        void router.invalidate();
+      } else if (bulkMode === "delete" && currentAlbumId) {
+        toast.loading(`Deleting ${idsArray.length} images...`, { id: "bulk-import" });
+        await deleteImagesFn({
+          data: {
+            imageIds: idsArray,
+          },
+        });
+        toast.success(`Images deleted successfully from ${initialValues?.name}`, {
+          id: "bulk-import",
+        });
         setSelectedIds(new Set());
         onOpenDialogChange("bulk", false);
         void queryClient.invalidateQueries({ queryKey: ["available-images", currentAlbumId] });
@@ -95,7 +112,8 @@ export function BulkImportDialog() {
     const imagesInAlbum = images?.filter((image) => {
       return image.albums.some((album) => album.id === currentAlbumId);
     });
-    if (!initialValues?.addPhotos) return imagesInAlbum;
+    if (!initialValues?.addPhotos && (bulkMode === "remove" || bulkMode === "delete"))
+      return imagesInAlbum;
     const imagesNotInAlbum = images?.filter((image) => {
       const existingImages = new Set(imagesInAlbum?.map((image) => image.id));
       return !existingImages.has(image.id);
@@ -109,7 +127,6 @@ export function BulkImportDialog() {
   useEffect(() => {
     setSelectedIds(new Set());
   }, [initialValues?.addPhotos]);
-
   return (
     <Dialog open={isBulkDialogImportOpen} onOpenChange={(open) => onOpenDialogChange("bulk", open)}>
       <DialogContent className="sm:max-w-6xl p-0 overflow-hidden border-zinc-800  shadow-2xl">
@@ -120,17 +137,26 @@ export function BulkImportDialog() {
                 <ImageIcon className="text-emerald-500 size-6" />
               </div>
               <DialogTitle className="text-2xl font-bold text-zinc-100 tracking-tight">
-                {initialValues?.addPhotos ? "Bulk Importer" : "Remove Photos"}
+                {bulkMode === "add"
+                  ? "Add Photos"
+                  : bulkMode === "remove"
+                    ? "Remove Photos"
+                    : "Delete Photos"}
               </DialogTitle>
               <DialogDescription className="text-zinc-400">
-                {initialValues?.addPhotos ? (
+                {bulkMode === "add" ? (
                   <>
                     Adding to{" "}
                     <span className="text-emerald-400 font-semibold">{initialValues?.name}</span>
                   </>
-                ) : (
+                ) : bulkMode === "remove" ? (
                   <>
                     Remove from{" "}
+                    <span className="text-emerald-400 font-semibold">{initialValues?.name}</span>
+                  </>
+                ) : (
+                  <>
+                    Delete from{" "}
                     <span className="text-emerald-400 font-semibold">{initialValues?.name}</span>
                   </>
                 )}
@@ -180,20 +206,31 @@ export function BulkImportDialog() {
               <div className="max-sm:text-center">
                 <h3 className="text-lg max-sm:text-2xl font-bold text-zinc-100">
                   {" "}
-                  {initialValues?.addPhotos ? "Add Images" : "Remove Images"}
+                  {bulkMode === "add"
+                    ? "Add Photos"
+                    : bulkMode === "remove"
+                      ? "Remove Photos"
+                      : "Delete Photos"}
                 </h3>
                 <DialogHeader className="md:hidden">
                   <DialogDescription className="text-zinc-400">
-                    {initialValues?.addPhotos ? (
+                    {bulkMode === "add" ? (
                       <>
                         Adding to{" "}
                         <span className="text-emerald-400 font-semibold">
                           {initialValues?.name}
                         </span>
                       </>
-                    ) : (
+                    ) : bulkMode === "remove" ? (
                       <>
                         Remove from{" "}
+                        <span className="text-emerald-400 font-semibold">
+                          {initialValues?.name}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        Delete from{" "}
                         <span className="text-emerald-400 font-semibold">
                           {initialValues?.name}
                         </span>
@@ -202,8 +239,13 @@ export function BulkImportDialog() {
                   </DialogDescription>
                 </DialogHeader>
                 <p className="text-xs text-zinc-500">
-                  Select images to {initialValues?.addPhotos ? "move into" : "remove from"} this
-                  album
+                  Select images to{" "}
+                  {bulkMode === "add"
+                    ? "add to"
+                    : bulkMode === "remove"
+                      ? "remove from"
+                      : "delete from"}{" "}
+                  this album
                 </p>
               </div>
               {selectedIds.size > 0 && (
@@ -223,10 +265,12 @@ export function BulkImportDialog() {
                   ) : (
                     <CheckCircle2 className="size-4 mr-2" />
                   )}
-                  {initialValues?.addPhotos ? (
+                  {bulkMode === "add" ? (
                     <>Confirm Import ({selectedIds.size})</>
-                  ) : (
+                  ) : bulkMode === "remove" ? (
                     <>Confirm Remove ({selectedIds.size})</>
+                  ) : (
+                    <>Confirm Delete ({selectedIds.size})</>
                   )}
                 </Button>
               )}
@@ -289,9 +333,11 @@ export function BulkImportDialog() {
                       </div>
                       <EmptyTitle className="text-zinc-300">No images available</EmptyTitle>
                       <EmptyDescription className="text-zinc-500">
-                        {initialValues?.addPhotos
+                        {bulkMode === "add"
                           ? "All your library images are already in this album."
-                          : "No images available to remove from this album"}
+                          : bulkMode === "remove"
+                            ? "No images available to remove from this album"
+                            : "No images available to delete from this album"}
                       </EmptyDescription>
                     </EmptyHeader>
                   </Empty>

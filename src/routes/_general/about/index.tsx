@@ -1,4 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { motion, useScroll } from 'motion/react';
+
+import { HeaderSection } from '@/components/web/about/HeaderSection';
+import { IntroductionSection } from '@/components/web/about/IntroductionSection';
+import { LanguagesSection } from '@/components/web/about/LanguagesSection';
+import { WorksSection } from '@/components/web/about/WorksSection';
 
 export const Route = createFileRoute('/_general/about/')({
   component: RouteComponent,
@@ -24,22 +30,22 @@ export const Route = createFileRoute('/_general/about/')({
 });
 
 function RouteComponent() {
+  const { scrollYProgress } = useScroll();
+
   return (
     <div className="min-h-screen p-4">
-      <section className="container mx-auto">
-        <header>
-          <h3 className="text-lg font-bold text-emerald-500">About</h3>
-          <h1 className="text-5xl max-sm:text-3xl font-black">Hanif Hafizhan</h1>
-        </header>
-        <main className="flex flex-col">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <figure>
-              <img src="" alt="" />
-            </figure>
-            <p></p>
-          </div>
-        </main>
-      </section>
+      <motion.div
+        style={{ scaleX: scrollYProgress, originX: 0 }}
+        className="fixed top-0 left-0 right-0 h-1 bg-emerald-500 z-50"
+      />
+      <main className="w-full">
+        <HeaderSection />
+        <section className="flex flex-col gap-4">
+          <IntroductionSection />
+          <WorksSection />
+          <LanguagesSection />
+        </section>
+      </main>
     </div>
   );
 }

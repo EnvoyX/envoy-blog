@@ -93,7 +93,7 @@ export function CommentItem({ comment, session, commentCollection, post }: ChatI
   const isCommentOwner = session?.user?.id === comment.user.id;
 
   return (
-    <div className="group flex gap-4 p-4 rounded-2xl transition-all hover:bg-slate-900/40 border border-transparent hover:border-slate-800">
+    <div className="group flex gap-4 p-4 rounded-2xl transition-all hover:bg-slate-900/40 border-l border-emerald-600">
       <Link
         to="/user/$userId"
         params={{

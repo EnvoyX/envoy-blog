@@ -1,8 +1,7 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
 import { Link } from '@tanstack/react-router';
 import { intlFormat } from 'date-fns';
-import { ChevronDown, ChevronLeft, ListIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ChevronDown, ChevronLeft } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -92,7 +91,7 @@ function BlogPost() {
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="text-sm font-medium text-slate-500 truncate md:max-w-none flex gap-1 items-center group">
+              <div className="text-sm font-medium text-slate-500 truncate max-w-48 md:max-w-none flex gap-1 items-center group">
                 <ChevronDown className={cn('size-4 group-hover:text-emerald-500 shrink-0')} />
                 <span className={cn('group-hover:text-emerald-500')}>{post.title}</span>
               </div>
@@ -128,7 +127,7 @@ function BlogPost() {
         </div>
         <ScrollProgress
           height={2}
-          styleProp={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
+          styleProp={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50 }}
         />
       </nav>
 

@@ -2,8 +2,7 @@ import { createId } from '@paralleldrive/cuid2';
 import { useLiveQuery, eq } from '@tanstack/react-db';
 import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router';
 import { intlFormat, intlFormatDistance } from 'date-fns';
-import { ChevronDown, ChevronLeft, Heart, ListIcon, MessagesSquareIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ChevronDown, ChevronLeft, Heart, MessagesSquareIcon } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { commentCollection, likeCollection } from '@/collections/blog';
@@ -178,7 +177,7 @@ function PostComponent() {
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="text-sm font-medium text-slate-500 truncate md:max-w-none flex gap-1 items-center group">
+              <div className="text-sm font-medium text-slate-500 truncate max-w-48 md:max-w-none flex gap-1 items-center group">
                 <ChevronDown className={cn('size-4 group-hover:text-emerald-500 shrink-0')} />
                 <span className={cn('group-hover:text-emerald-500')}>{post.title}</span>
               </div>
@@ -214,7 +213,7 @@ function PostComponent() {
         </div>
         <ScrollProgress
           height={2}
-          styleProp={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
+          styleProp={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50 }}
         />
       </nav>
       <main className="mx-auto max-w-7xl px-4 py-8 lg:px-8">

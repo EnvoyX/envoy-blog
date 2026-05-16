@@ -1,11 +1,11 @@
-import { createServerFn } from '@tanstack/react-start';
-import { z } from 'zod';
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 
-import { db } from '@/lib/db';
-import { authMiddleware } from '@/middlewares/auth';
-import { imageSchema } from '@/schemas/image';
+import { db } from "@/lib/db";
+import { authMiddleware } from "@/middlewares/auth";
+import { imageSchema } from "@/schemas/image";
 
-export const getAlbumsFn = createServerFn({ method: 'GET' })
+export const getAlbumsFn = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     return await db.album.findMany({
@@ -15,11 +15,11 @@ export const getAlbumsFn = createServerFn({ method: 'GET' })
         images: true,
         _count: { select: { images: true } },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
   });
 
-export const getAlbumByIdFn = createServerFn({ method: 'GET' })
+export const getAlbumByIdFn = createServerFn({ method: "GET" })
   .inputValidator(
     z.object({
       albumId: z.string(),
@@ -44,7 +44,7 @@ export const getAlbumByIdFn = createServerFn({ method: 'GET' })
     });
   });
 
-export const ImportImagesToAlbumFn = createServerFn({ method: 'POST' })
+export const ImportImagesToAlbumFn = createServerFn({ method: "POST" })
   .inputValidator(imageSchema.extend({ albumId: z.string() }))
   .middleware([authMiddleware])
   .handler(async ({ context, data }) => {
@@ -70,7 +70,7 @@ export const ImportImagesToAlbumFn = createServerFn({ method: 'POST' })
     return true;
   });
 
-export const addExistingImagesToAlbumFn = createServerFn({ method: 'POST' })
+export const addExistingImagesToAlbumFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       albumId: z.string(),
@@ -97,7 +97,7 @@ export const addExistingImagesToAlbumFn = createServerFn({ method: 'POST' })
     return true;
   });
 
-export const removeExistingImagesToAlbumFn = createServerFn({ method: 'POST' })
+export const removeExistingImagesToAlbumFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       albumId: z.string(),
@@ -124,7 +124,7 @@ export const removeExistingImagesToAlbumFn = createServerFn({ method: 'POST' })
     return true;
   });
 
-export const createAlbumFn = createServerFn({ method: 'POST' })
+export const createAlbumFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       name: z.string(),
@@ -148,7 +148,7 @@ export const createAlbumFn = createServerFn({ method: 'POST' })
     });
   });
 
-export const editAlbumFn = createServerFn({ method: 'POST' })
+export const editAlbumFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       albumId: z.string(),
@@ -174,7 +174,7 @@ export const editAlbumFn = createServerFn({ method: 'POST' })
     });
   });
 
-export const deleteAlbumFn = createServerFn({ method: 'POST' })
+export const deleteAlbumFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       albumId: z.string(),
@@ -182,12 +182,31 @@ export const deleteAlbumFn = createServerFn({ method: 'POST' })
   )
   .middleware([authMiddleware])
   .handler(async ({ context, data }) => {
+    const imagesInAlbum = await db.image.findMany({
+      where: {
+        albums: {
+          some: {
+            id: data.albumId,
+          },
+        },
+      },
+    });
+    for (const image of imagesInAlbum) {
+      await db.image.update({
+        where: { id: image.id },
+        data: {
+          albums: {
+            disconnect: { id: data.albumId },
+          },
+        },
+      });
+    }
     await db.album.delete({
       where: { id: data.albumId, authorId: context.user.id },
     });
   });
 
-export const changeAlbumCoverFn = createServerFn({ method: 'POST' })
+export const changeAlbumCoverFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       albumId: z.string(),

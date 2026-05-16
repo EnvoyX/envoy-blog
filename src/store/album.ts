@@ -12,6 +12,7 @@ export const useAlbumStore = create(
         isImageImportDialogOpen: false,
         isBulkDialogImportOpen: false,
         isAlbumCoverDialogOpen: false,
+        bulkMode: "" as "add" | "remove" | "delete",
         initialValues: null as {
           name: string;
           description: string;
@@ -24,7 +25,15 @@ export const useAlbumStore = create(
       },
       (set) => ({
         toggleDialog: (
-          dialog: "open" | "import" | "delete" | "bulk" | "albumCover" | "close",
+          dialog:
+            | "open"
+            | "import"
+            | "delete"
+            | "bulk-add"
+            | "bulk-remove"
+            | "bulk-delete"
+            | "albumCover"
+            | "close",
           albumId?: string,
         ) =>
           set(() => {
@@ -47,7 +56,7 @@ export const useAlbumStore = create(
                   isDeleteDialogOpen: false,
                   isImageImportDialogOpen: true,
                 };
-              case "bulk":
+              case "bulk-add":
                 return {
                   currentAlbumId: albumId ?? "",
                   isAlbumCoverDialogOpen: false,
@@ -55,6 +64,27 @@ export const useAlbumStore = create(
                   isBulkDialogImportOpen: true,
                   isDeleteDialogOpen: false,
                   isImageImportDialogOpen: false,
+                  bulkMode: "add",
+                };
+              case "bulk-remove":
+                return {
+                  currentAlbumId: albumId ?? "",
+                  isAlbumCoverDialogOpen: false,
+                  isAlbumDialogOpen: false,
+                  isBulkDialogImportOpen: true,
+                  isDeleteDialogOpen: false,
+                  isImageImportDialogOpen: false,
+                  bulkMode: "remove",
+                };
+              case "bulk-delete":
+                return {
+                  currentAlbumId: albumId ?? "",
+                  isAlbumCoverDialogOpen: false,
+                  isAlbumDialogOpen: false,
+                  isBulkDialogImportOpen: true,
+                  isDeleteDialogOpen: false,
+                  isImageImportDialogOpen: false,
+                  bulkMode: "delete",
                 };
               case "albumCover":
                 return {
@@ -147,14 +177,14 @@ export const useAlbumStore = create(
     ),
     {
       name: "album-dialog-storage",
-      partialize: (state) => ({
-        // only persist these, skip initialValues
-        currentAlbumId: state.currentAlbumId,
-        isAlbumDialogOpen: state.isAlbumDialogOpen,
-        isDeleteDialogOpen: state.isDeleteDialogOpen,
-        isImageImportDialogOpen: state.isImageImportDialogOpen,
-        isBulkDialogImportOpen: state.isBulkDialogImportOpen,
-      }),
+      // partialize: (state) => ({
+      //   // only persist these, skip initialValues
+      //   currentAlbumId: state.currentAlbumId,
+      //   isAlbumDialogOpen: state.isAlbumDialogOpen,
+      //   isDeleteDialogOpen: state.isDeleteDialogOpen,
+      //   isImageImportDialogOpen: state.isImageImportDialogOpen,
+      //   isBulkDialogImportOpen: state.isBulkDialogImportOpen,
+      // }),
     },
   ),
 );

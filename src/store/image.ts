@@ -1,17 +1,19 @@
-import { create } from 'zustand';
-import { persist, combine } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist, combine } from "zustand/middleware";
 
 export const useImageStore = create(
   persist(
     combine(
       {
-        postId: '',
+        postId: "",
         isImportToAlbumModalOpen: false,
+        isBulkImageDialogOpen: false,
         isEditDialogOpen: false,
         isCounterVisible: true,
         isCaptionVisible: false,
-        imageId: '',
-        imageUrl: '',
+        imageId: "",
+        imageUrl: "",
+        bulkMode: "" as "add" | "remove" | "delete" | "edit" | null,
         initialValues: null as {
           title: string;
           description: string;
@@ -21,49 +23,76 @@ export const useImageStore = create(
         } | null,
       },
       (set) => ({
-        toggleDialog: (dialog: 'open' | 'edit' | 'close', imageId?: string, imageUrl?: string) =>
+        toggleDialog: (
+          dialog: "open" | "bulk-delete" | "edit" | "close",
+          imageId?: string,
+          imageUrl?: string,
+        ) =>
           set(() => {
-            if (dialog === 'open') {
+            if (dialog === "open") {
               return {
+                isBulkImageDialogOpen: false,
                 isImportToAlbumModalOpen: true,
                 isEditDialogOpen: false,
                 imageId: imageId,
                 imageUrl: imageUrl,
+                bulkMode: null,
               };
             }
-            if (dialog === 'edit') {
+            if (dialog === "bulk-delete") {
               return {
+                isBulkImageDialogOpen: true,
+                isImportToAlbumModalOpen: false,
+                isEditDialogOpen: false,
+                imageId: "",
+                imageUrl: "",
+                bulkMode: "delete",
+              };
+            }
+            if (dialog === "edit") {
+              return {
+                isBulkImageDialogOpen: false,
                 isImportToAlbumModalOpen: false,
                 isEditDialogOpen: true,
                 imageId: imageId,
                 imageUrl: imageUrl,
+                bulkMode: null,
               };
-            } else if (dialog === 'close') {
+            } else if (dialog === "close") {
               return {
+                isBulkImageDialogOpen: false,
                 isImportToAlbumModalOpen: false,
                 isEditDialogOpen: false,
-                imageId: '',
-                imageUrl: '',
+                imageId: "",
+                imageUrl: "",
+                bulkMode: null,
+              };
+            } else {
+              return {
+                imageId: "",
+                isBulkImageDialogOpen: false,
+                isImportToAlbumModalOpen: false,
+                isEditDialogOpen: false,
+                imageUrl: "",
+                bulkMode: null,
               };
             }
-            return {
-              imageId: '',
-              isImportToAlbumModalOpen: false,
-              isEditDialogOpen: false,
-              imageUrl: '',
-            };
           }),
-        onOpenChangeDialog: (dialog: 'open' | 'edit', open: boolean) =>
+        onOpenChangeDialog: (dialog: "open" | "bulk-delete" | "edit", open: boolean) =>
           set(() => {
-            if (dialog === 'open') {
+            if (dialog === "open") {
               return { isImportToAlbumModalOpen: open };
-            }
-            if (dialog === 'edit') {
+            } else if (dialog === "bulk-delete") {
+              return { isBulkImageDialogOpen: open };
+            } else if (dialog === "edit") {
               return { isEditDialogOpen: open };
+            } else {
+              return {
+                isImportToAlbumModalOpen: false,
+                isBulkImageDialogOpen: false,
+                isEditDialogOpen: false,
+              };
             }
-            return {
-              isImportToAlbumModalOpen: false,
-            };
           }),
         toggleCounter: () =>
           set((prev) => ({
@@ -84,10 +113,10 @@ export const useImageStore = create(
         ) => {
           set({
             initialValues: {
-              title: initialValues ? initialValues.title : '',
-              description: initialValues ? initialValues.description : '',
+              title: initialValues ? initialValues.title : "",
+              description: initialValues ? initialValues.description : "",
               published: initialValues ? initialValues.published : false,
-              albumId: initialValues ? initialValues.albumId : '',
+              albumId: initialValues ? initialValues.albumId : "",
               showPrivateToFollowers: initialValues ? initialValues.showPrivateToFollowers : false,
             },
           });
@@ -96,7 +125,7 @@ export const useImageStore = create(
       }),
     ),
     {
-      name: 'image-store-storage',
+      name: "image-store-storage",
     },
   ),
 );

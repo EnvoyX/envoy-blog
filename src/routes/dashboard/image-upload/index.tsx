@@ -1,12 +1,13 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from "@tanstack/react-router";
 
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import PhotoGallery from '@/components/web/PhotoGallery';
-import { getImagesFn } from '@/data/image';
-import { imageUploadModalStore } from '@/store/imageUploadStore';
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import PhotoGallery from "@/components/web/PhotoGallery";
+import { getImagesFn } from "@/data/image";
+import { imageUploadModalStore } from "@/store/imageUploadStore";
+import UploadDropzone from "@/components/web/UploadDropzone";
 
-export const Route = createFileRoute('/dashboard/image-upload/')({
+export const Route = createFileRoute("/dashboard/image-upload/")({
   component: PageUpload,
   loader: async () => {
     const images = await getImagesFn();
@@ -18,26 +19,26 @@ export const Route = createFileRoute('/dashboard/image-upload/')({
     meta: [
       { title: `Image Upload | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
-      { property: 'og:title', content: 'Image Upload | Envoy Mindpalace' },
+      { property: "og:title", content: "Image Upload | Envoy Mindpalace" },
       {
-        property: 'og:description',
-        content: 'Create your own blog and write your thoughts!',
+        property: "og:description",
+        content: "Create your own blog and write your thoughts!",
       },
       {
-        property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
 
 function PageUpload() {
   const { images } = Route.useLoaderData();
-  const uploadedImages = images.filter((image) => image.source === 'IMGBB');
+  const uploadedImages = images.filter((image) => image.source === "IMGBB");
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-950 via-emerald-950/30 to-slate-950 p-8 font-sans">
@@ -84,7 +85,7 @@ function PageUpload() {
             </div>
           </div>
         </div>
-
+        <UploadDropzone />
         {uploadedImages.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center gap-3">

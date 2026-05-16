@@ -1,16 +1,17 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 // import { Separator } from '@/components/ui/separator'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { ImageDialog } from '@/components/web/image/ImageDialog';
-import { ImportImageModal } from '@/components/web/image/ImportImageModal';
-import { ImportToAlbumModal } from '@/components/web/image/ImportToAlbumModal';
-import { ImageUploader } from '@/components/web/ImageUploader';
-import { AppSidebar } from '@/components/web/sidebar/app-sidebar';
-import { getUser } from '@/data/session';
-import { useSidebarStore } from '@/store/sidebar';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { ImageDialog } from "@/components/web/image/ImageDialog";
+import { ImportImageModal } from "@/components/web/image/ImportImageModal";
+import { ImportToAlbumModal } from "@/components/web/image/ImportToAlbumModal";
+import { ImageUploader } from "@/components/web/ImageUploader";
+import { AppSidebar } from "@/components/web/sidebar/app-sidebar";
+import { getUser } from "@/data/session";
+import { useSidebarStore } from "@/store/sidebar";
+import { BulkImageDialog } from "@/components/web/image/BulkImageDialog";
 
-export const Route = createFileRoute('/dashboard')({
+export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
   loader: async () => {
     const session = await getUser();
@@ -47,6 +48,7 @@ function RouteComponent() {
       <ImportImageModal />
       <ImportToAlbumModal />
       <ImageDialog />
+      <BulkImageDialog />
     </SidebarProvider>
   );
 }

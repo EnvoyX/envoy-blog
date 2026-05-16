@@ -29,7 +29,6 @@ import { navItemsDashboard, navItemsMain } from './NavItems';
 import { UserAvatar } from './user-profile';
 
 export function Navbar() {
-  const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -40,6 +39,15 @@ export function Navbar() {
       const data = await authClient.getSession();
       return data.data;
     },
+  });
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, 'change', (current) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    if (current > previous && current > 150) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
   });
   const handleLogout = () => {
     setIsLoading(true);
@@ -71,15 +79,6 @@ export function Navbar() {
       });
     });
   };
-
-  useMotionValueEvent(scrollY, 'change', (current) => {
-    const previous = scrollY.getPrevious() ?? 0;
-    if (current > previous && current > 150) {
-      setHidden(true);
-    } else {
-      setHidden(false);
-    }
-  });
   return (
     <motion.nav
       className="sticky top-0 z-50 border-b bg-transparent backdrop-blur"

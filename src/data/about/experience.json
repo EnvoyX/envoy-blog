@@ -1,0 +1,56 @@
+[
+  {
+    "company": "Himpunan Mahasiswa Mesin (HMM) ITB",
+    "location": "Bandung, Jawa Barat",
+    "positions": [
+      {
+        "role": "Head of Information and Technology Development Sub Bureau",
+        "period": "Present",
+        "glimpse": "Leading digital transformation and optimizing information flow across organizational stakeholders."
+      },
+      {
+        "role": "Web Development Engineer",
+        "period": "Aug 2025 - Jul 2026",
+        "glimpse": "Served as a technical bridge for digital platforms and front-end engineering."
+      },
+      {
+        "role": "Member",
+        "period": "Oct 2024 - Jul 2027",
+        "glimpse": "Active engagement in internal departments and organizational operations."
+      }
+    ]
+  },
+  {
+    "company": "GIM ITB",
+    "location": "Bandung, Jawa Barat",
+    "positions": [
+      {
+        "role": "Frontend Web Developer Staff",
+        "period": "Jan 2025 - Jul 2026",
+        "glimpse": "Contributed to the development of frontend web applications for the organization."
+      }
+    ]
+  },
+  {
+    "company": "Amateur Radio Club ITB",
+    "location": "Bandung, Jawa Barat",
+    "positions": [
+      {
+        "role": "Member",
+        "period": "Aug 2025 - Present",
+        "glimpse": "Learned wide variety of web technologies and contributed to internal projects."
+      }
+    ]
+  },
+  {
+    "company": "Mechanical Festival 2026",
+    "location": "Bandung, Jawa Barat",
+    "positions": [
+      {
+        "role": "Vice Head of Web Development Divison",
+        "period": "Jun 2025 - Aug 2025",
+        "glimpse": "Leading development and engineered of the official website for Mechanical Festival 2026."
+      }
+    ]
+  }
+]
