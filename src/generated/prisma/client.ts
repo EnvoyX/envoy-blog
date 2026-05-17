@@ -57,15 +57,20 @@ export type QuranTrack = Prisma.QuranTrackModel
  */
 export type ShortPost = Prisma.ShortPostModel
 /**
- * Model Album
- * 
- */
-export type Album = Prisma.AlbumModel
-/**
  * Model Image
  * 
  */
 export type Image = Prisma.ImageModel
+/**
+ * Model ImagesOnShortPosts
+ * 
+ */
+export type ImagesOnShortPosts = Prisma.ImagesOnShortPostsModel
+/**
+ * Model Album
+ * 
+ */
+export type Album = Prisma.AlbumModel
 /**
  * Model Post
  * 

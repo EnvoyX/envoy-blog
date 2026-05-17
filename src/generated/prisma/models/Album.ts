@@ -366,6 +366,16 @@ export type AlbumUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type AlbumListRelationFilter = {
+  every?: Prisma.AlbumWhereInput
+  some?: Prisma.AlbumWhereInput
+  none?: Prisma.AlbumWhereInput
+}
+
+export type AlbumOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type AlbumCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -400,16 +410,6 @@ export type AlbumMinOrderByAggregateInput = {
   showPrivateToFollowers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type AlbumListRelationFilter = {
-  every?: Prisma.AlbumWhereInput
-  some?: Prisma.AlbumWhereInput
-  none?: Prisma.AlbumWhereInput
-}
-
-export type AlbumOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type AlbumCreateNestedManyWithoutImagesInput = {

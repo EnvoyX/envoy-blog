@@ -1,8 +1,10 @@
-import { saveImageUrl } from "@/data/image";
-import { useSettingStore } from "@/store/settings";
-import { useRouter } from "@tanstack/react-router";
-import { useCallback, useRef, useState } from "react";
-import { toast } from "sonner";
+import { useRouter } from '@tanstack/react-router';
+import { motion } from 'motion/react';
+import { useCallback, useRef, useState } from 'react';
+import { toast } from 'sonner';
+
+import { saveImageUrl } from '@/data/image';
+import { useSettingStore } from '@/store/settings';
 interface ImgBBResponse {
   data: {
     id: string;
@@ -31,7 +33,7 @@ export default function UploadDropzone() {
   const { ImgbbAPIKey } = useSettingStore();
 
   const [entries, setEntries] = useState<FileEntry[]>([]);
-  const [fileProgress, setFileProgress] = useState<Record<number, number | "done" | "error">>({});
+  const [fileProgress, setFileProgress] = useState<Record<number, number | 'done' | 'error'>>({});
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,12 +50,12 @@ export default function UploadDropzone() {
   }
 
   async function handleFiles(files: File[]) {
-    const validFiles = files.filter((file) => file.type.startsWith("image/"));
+    const validFiles = files.filter((file) => file.type.startsWith('image/'));
     if (validFiles.length === 0) {
-      setError("No valid image files found");
+      setError('No valid image files found');
       return;
     } else if (validFiles.length !== files.length) {
-      setError("Only image files are supported.");
+      setError('Only image files are supported.');
       return;
     }
     setError(null);
@@ -72,24 +74,24 @@ export default function UploadDropzone() {
 
   async function uploadEntry(entry: FileEntry, index: number): Promise<void> {
     if (!ImgbbAPIKey) {
-      toast.error("API Key missing", { description: "Set your API Key in settings." });
-      throw new Error("No API key");
+      toast.error('API Key missing', { description: 'Set your API Key in settings.' });
+      throw new Error('No API key');
     }
 
-    const setProgress = (progress: number | "done" | "error") =>
+    const setProgress = (progress: number | 'done' | 'error') =>
       setFileProgress((prev) => ({ ...prev, [index]: progress }));
 
     setProgress(10);
 
-    const base64 = entry.src.includes(",") ? entry.src.split(",")[1] : entry.src;
+    const base64 = entry.src.includes(',') ? entry.src.split(',')[1] : entry.src;
     const formData = new FormData();
-    formData.append("image", base64);
-    formData.append("name", entry.file.name.replace(/\.[^.]+$/, ""));
+    formData.append('image', base64);
+    formData.append('name', entry.file.name.replace(/\.[^.]+$/, ''));
 
     setProgress(30);
 
     const res = await fetch(`https://api.imgbb.com/1/upload?key=${ImgbbAPIKey}`, {
-      method: "POST",
+      method: 'POST',
       body: formData,
     });
 
@@ -97,7 +99,7 @@ export default function UploadDropzone() {
 
     if (!res.ok) throw new Error(`ImgBB responded with ${res.status}`);
     const json: ImgBBResponse = await res.json();
-    if (!json.success) throw new Error("ImgBB upload failed");
+    if (!json.success) throw new Error('ImgBB upload failed');
 
     setProgress(85);
 
@@ -110,7 +112,7 @@ export default function UploadDropzone() {
       },
     });
 
-    setProgress("done");
+    setProgress('done');
   }
 
   async function onUploadAll() {
@@ -126,9 +128,9 @@ export default function UploadDropzone() {
         toast.success(`Uploaded ${entries[i].file.name}`);
       } catch (err) {
         hadError = true;
-        setFileProgress((prev) => ({ ...prev, [i]: "error" }));
+        setFileProgress((prev) => ({ ...prev, [i]: 'error' }));
         toast.error(`Failed: ${entries[i].file.name}`, {
-          description: err instanceof Error ? err.message : "Unknown error",
+          description: err instanceof Error ? err.message : 'Unknown error',
         });
       }
     }
@@ -182,7 +184,7 @@ export default function UploadDropzone() {
             </svg>
           </div>
           <div>
-            <p className="text-emerald-300 font-semibold">Drop images here</p>
+            <p className="text-emerald-300 font-semibold">Drop or Upload images here</p>
             <p className="text-slate-500 text-sm mt-1">
               or click to browse · PNG, JPG, GIF, WebP up to 32 MB
             </p>
@@ -196,7 +198,7 @@ export default function UploadDropzone() {
           className="hidden"
           onChange={(e) => {
             if (e.target.files) void handleFiles(Array.from(e.target.files));
-            e.target.value = "";
+            e.target.value = '';
           }}
         />
       </div>
@@ -219,9 +221,12 @@ export default function UploadDropzone() {
           {entries.map((entry, i) => {
             const progress = fileProgress[i];
             return (
-              <li
+              <motion.li
                 key={i}
                 className="flex items-center gap-3 bg-slate-800/60 rounded-xl px-3 py-2 border border-slate-700"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, ease: 'easeOut', delay: i * 0.1 }}
               >
                 <img
                   src={entry.src}
@@ -230,7 +235,7 @@ export default function UploadDropzone() {
                 />
                 <div className="flex-1 min-w-0 space-y-1">
                   <p className="text-slate-200 text-xs truncate">{entry.file.name}</p>
-                  {typeof progress === "number" && (
+                  {typeof progress === 'number' && (
                     <div className="w-full bg-slate-700 rounded-full h-1">
                       <div
                         className="bg-emerald-500 h-1 rounded-full transition-all duration-300"
@@ -238,10 +243,10 @@ export default function UploadDropzone() {
                       />
                     </div>
                   )}
-                  {progress === "done" && <p className="text-emerald-400 text-xs">Uploaded ✓</p>}
-                  {progress === "error" && <p className="text-red-400 text-xs">Failed ✗</p>}
+                  {progress === 'done' && <p className="text-emerald-400 text-xs">Uploaded ✓</p>}
+                  {progress === 'error' && <p className="text-red-400 text-xs">Failed ✗</p>}
                 </div>
-                {!uploading && progress !== "done" && (
+                {!uploading && progress !== 'done' && (
                   <button
                     onClick={() => removeEntry(i)}
                     className="text-slate-500 hover:text-red-400 transition-colors shrink-0"
@@ -257,7 +262,7 @@ export default function UploadDropzone() {
                     </svg>
                   </button>
                 )}
-              </li>
+              </motion.li>
             );
           })}
         </ul>
@@ -273,7 +278,7 @@ export default function UploadDropzone() {
         >
           {uploading
             ? `Uploading…`
-            : `Upload ${entries.length} image${entries.length > 1 ? "s" : ""}`}
+            : `Upload ${entries.length} image${entries.length > 1 ? 's' : ''}`}
         </button>
       )}
     </div>

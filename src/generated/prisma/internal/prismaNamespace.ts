@@ -387,8 +387,9 @@ export const ModelName = {
   SavedItem: 'SavedItem',
   QuranTrack: 'QuranTrack',
   ShortPost: 'ShortPost',
-  Album: 'Album',
   Image: 'Image',
+  ImagesOnShortPosts: 'ImagesOnShortPosts',
+  Album: 'Album',
   Post: 'Post',
   Tag: 'Tag',
   TaskList: 'TaskList',
@@ -417,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "savedItem" | "quranTrack" | "shortPost" | "album" | "image" | "post" | "tag" | "taskList" | "task" | "chat" | "message" | "follow" | "like" | "comment" | "user" | "session" | "account" | "verification"
+    modelProps: "savedItem" | "quranTrack" | "shortPost" | "image" | "imagesOnShortPosts" | "album" | "post" | "tag" | "taskList" | "task" | "chat" | "message" | "follow" | "like" | "comment" | "user" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -643,80 +644,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Album: {
-      payload: Prisma.$AlbumPayload<ExtArgs>
-      fields: Prisma.AlbumFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.AlbumFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.AlbumFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
-        }
-        findFirst: {
-          args: Prisma.AlbumFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.AlbumFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
-        }
-        findMany: {
-          args: Prisma.AlbumFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>[]
-        }
-        create: {
-          args: Prisma.AlbumCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
-        }
-        createMany: {
-          args: Prisma.AlbumCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.AlbumCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>[]
-        }
-        delete: {
-          args: Prisma.AlbumDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
-        }
-        update: {
-          args: Prisma.AlbumUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
-        }
-        deleteMany: {
-          args: Prisma.AlbumDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.AlbumUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.AlbumUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>[]
-        }
-        upsert: {
-          args: Prisma.AlbumUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
-        }
-        aggregate: {
-          args: Prisma.AlbumAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateAlbum>
-        }
-        groupBy: {
-          args: Prisma.AlbumGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AlbumGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.AlbumCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AlbumCountAggregateOutputType> | number
-        }
-      }
-    }
     Image: {
       payload: Prisma.$ImagePayload<ExtArgs>
       fields: Prisma.ImageFieldRefs
@@ -788,6 +715,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ImageCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ImageCountAggregateOutputType> | number
+        }
+      }
+    }
+    ImagesOnShortPosts: {
+      payload: Prisma.$ImagesOnShortPostsPayload<ExtArgs>
+      fields: Prisma.ImagesOnShortPostsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ImagesOnShortPostsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesOnShortPostsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ImagesOnShortPostsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesOnShortPostsPayload>
+        }
+        findFirst: {
+          args: Prisma.ImagesOnShortPostsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesOnShortPostsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ImagesOnShortPostsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesOnShortPostsPayload>
+        }
+        findMany: {
+          args: Prisma.ImagesOnShortPostsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesOnShortPostsPayload>[]
+        }
+        create: {
+          args: Prisma.ImagesOnShortPostsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesOnShortPostsPayload>
+        }
+        createMany: {
+          args: Prisma.ImagesOnShortPostsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ImagesOnShortPostsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesOnShortPostsPayload>[]
+        }
+        delete: {
+          args: Prisma.ImagesOnShortPostsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesOnShortPostsPayload>
+        }
+        update: {
+          args: Prisma.ImagesOnShortPostsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesOnShortPostsPayload>
+        }
+        deleteMany: {
+          args: Prisma.ImagesOnShortPostsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ImagesOnShortPostsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ImagesOnShortPostsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesOnShortPostsPayload>[]
+        }
+        upsert: {
+          args: Prisma.ImagesOnShortPostsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesOnShortPostsPayload>
+        }
+        aggregate: {
+          args: Prisma.ImagesOnShortPostsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateImagesOnShortPosts>
+        }
+        groupBy: {
+          args: Prisma.ImagesOnShortPostsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImagesOnShortPostsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ImagesOnShortPostsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImagesOnShortPostsCountAggregateOutputType> | number
+        }
+      }
+    }
+    Album: {
+      payload: Prisma.$AlbumPayload<ExtArgs>
+      fields: Prisma.AlbumFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AlbumFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AlbumFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
+        }
+        findFirst: {
+          args: Prisma.AlbumFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AlbumFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
+        }
+        findMany: {
+          args: Prisma.AlbumFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>[]
+        }
+        create: {
+          args: Prisma.AlbumCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
+        }
+        createMany: {
+          args: Prisma.AlbumCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AlbumCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>[]
+        }
+        delete: {
+          args: Prisma.AlbumDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
+        }
+        update: {
+          args: Prisma.AlbumUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
+        }
+        deleteMany: {
+          args: Prisma.AlbumDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AlbumUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AlbumUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>[]
+        }
+        upsert: {
+          args: Prisma.AlbumUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlbumPayload>
+        }
+        aggregate: {
+          args: Prisma.AlbumAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAlbum>
+        }
+        groupBy: {
+          args: Prisma.AlbumGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AlbumGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AlbumCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AlbumCountAggregateOutputType> | number
         }
       }
     }
@@ -1845,6 +1920,34 @@ export const ShortPostScalarFieldEnum = {
 export type ShortPostScalarFieldEnum = (typeof ShortPostScalarFieldEnum)[keyof typeof ShortPostScalarFieldEnum]
 
 
+export const ImageScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  title: 'title',
+  description: 'description',
+  userId: 'userId',
+  published: 'published',
+  showPrivateToFollowers: 'showPrivateToFollowers',
+  size: 'size',
+  source: 'source',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  shortPostId: 'shortPostId'
+} as const
+
+export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof ImageScalarFieldEnum]
+
+
+export const ImagesOnShortPostsScalarFieldEnum = {
+  id: 'id',
+  imageId: 'imageId',
+  shortPostId: 'shortPostId',
+  createdAt: 'createdAt'
+} as const
+
+export type ImagesOnShortPostsScalarFieldEnum = (typeof ImagesOnShortPostsScalarFieldEnum)[keyof typeof ImagesOnShortPostsScalarFieldEnum]
+
+
 export const AlbumScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1858,24 +1961,6 @@ export const AlbumScalarFieldEnum = {
 } as const
 
 export type AlbumScalarFieldEnum = (typeof AlbumScalarFieldEnum)[keyof typeof AlbumScalarFieldEnum]
-
-
-export const ImageScalarFieldEnum = {
-  id: 'id',
-  url: 'url',
-  title: 'title',
-  description: 'description',
-  shortPostId: 'shortPostId',
-  userId: 'userId',
-  published: 'published',
-  showPrivateToFollowers: 'showPrivateToFollowers',
-  size: 'size',
-  source: 'source',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof ImageScalarFieldEnum]
 
 
 export const PostScalarFieldEnum = {
@@ -2383,8 +2468,9 @@ export type GlobalOmitConfig = {
   savedItem?: Prisma.SavedItemOmit
   quranTrack?: Prisma.QuranTrackOmit
   shortPost?: Prisma.ShortPostOmit
-  album?: Prisma.AlbumOmit
   image?: Prisma.ImageOmit
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsOmit
+  album?: Prisma.AlbumOmit
   post?: Prisma.PostOmit
   tag?: Prisma.TagOmit
   taskList?: Prisma.TaskListOmit

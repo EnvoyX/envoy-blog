@@ -93,19 +93,61 @@ model QuranTrack {
 model ShortPost {
   id String @id @default(cuid())
 
-  Images  Image[]
-  content String?
+  imagesOnShortPosts ImagesOnShortPosts[]
+  content            String?
 
   likes    Like[]
   comments Comment[]
 
-  published Boolean @default(false)
+  published              Boolean @default(false)
   showPrivateToFollowers Boolean @default(false)
 
   authorId  String
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  images    Image[]
+}
+
+model Image {
+  id  String @id @default(cuid())
+  url String
+
+  title       String?
+  description String?
+
+  albums     Album[]
+  shortPosts ImagesOnShortPosts[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  published              Boolean @default(false)
+  showPrivateToFollowers Boolean @default(false)
+
+  size   String?
+  source SourceImage?
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  shortPost   ShortPost? @relation(fields: [shortPostId], references: [id])
+  shortPostId String?
+
+  @@index([userId])
+}
+
+model ImagesOnShortPosts {
+  id          String    @id @default(cuid())
+  image       Image     @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  imageId     String
+  shortPost   ShortPost @relation(fields: [shortPostId], references: [id], onDelete: Cascade)
+  shortPostId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([imageId, shortPostId])
+  @@index([imageId])
+  @@index([shortPostId])
 }
 
 model Album {
@@ -118,7 +160,7 @@ model Album {
   authorId String
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-  published Boolean @default(false)
+  published              Boolean @default(false)
   showPrivateToFollowers Boolean @default(false)
 
   createdAt DateTime @default(now())
@@ -127,52 +169,23 @@ model Album {
   @@index([authorId])
 }
 
-model Image {
-  id  String @id @default(cuid())
-  url String
-
-  title String?
-  description String?
-
-  // keep image doesn't deleted if shortpost is removed
-  shortPost   ShortPost? @relation(fields: [shortPostId], references: [id])
-  shortPostId String?
-
-  albums Album[]
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  published Boolean @default(false)
-  showPrivateToFollowers Boolean @default(false)
-
-  size    String?
-  source  SourceImage?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-  @@index([shortPostId])
-}
-
 model Post {
-  id          String    @id @default(cuid())
-  title       String
-  description String
-  image       String?
-  slug        String    @unique
-  excerpt     String?
-  content     String    @db.Text
-  published   Boolean   @default(false) // Public or private
-  showPrivateToFollowers Boolean @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId    String
-  tags        Tag[]
-  likes       Like[]
-  comments    Comment[]
+  id                     String    @id @default(cuid())
+  title                  String
+  description            String
+  image                  String?
+  slug                   String    @unique
+  excerpt                String?
+  content                String    @db.Text
+  published              Boolean   @default(false) // Public or private
+  showPrivateToFollowers Boolean   @default(false)
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  author                 User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId               String
+  tags                   Tag[]
+  likes                  Like[]
+  comments               Comment[]
 
   @@unique([id, slug])
   @@index([authorId])
@@ -253,18 +266,18 @@ model Message {
 }
 
 model Follow {
-  id      String @id @default(cuid())
+  id String @id @default(cuid())
 
-  follower    User @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade) 
-  followerId  String
+  follower   User   @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId String
 
-  following   User @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade) 
+  following   User     @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
   followingId String
+  createdAt   DateTime @default(now())
 
   @@unique([followerId, followingId])
   @@index([followerId])
   @@index([followingId])
-  createdAt DateTime @default(now())  
 }
 
 model Like {
@@ -306,34 +319,34 @@ model Comment {
 }
 
 model User {
-  id            String      @id
-  name          String
-  email         String
-  password      String?
-  emailVerified Boolean
-  image         String?
-  imageKey      String?
-  defaultImage  String?
-  biodata       String?
-  showFollowStats Boolean @default(true)     
-  role          UserRole    @default(USER)
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  savedItems    SavedItem[]
-  posts         Post[]
-  tasks         Task[]
-  taskLists     TaskList[]
-  quranTrack    QuranTrack? 
-  chats         Chat[]
-  following     Follow[] @relation("UserFollowing") 
-  followers     Follow[] @relation("UserFollowers")
-  likes         Like[]
-  comments      Comment[]
-  shortPosts    ShortPost[]
-  images        Image[]
-  albums        Album[]
+  id              String      @id
+  name            String
+  email           String
+  password        String?
+  emailVerified   Boolean
+  image           String?
+  imageKey        String?
+  defaultImage    String?
+  biodata         String?
+  showFollowStats Boolean     @default(true)
+  role            UserRole    @default(USER)
+  createdAt       DateTime
+  updatedAt       DateTime
+  sessions        Session[]
+  accounts        Account[]
+  savedItems      SavedItem[]
+  posts           Post[]
+  tasks           Task[]
+  taskLists       TaskList[]
+  quranTrack      QuranTrack?
+  chats           Chat[]
+  following       Follow[]    @relation("UserFollowing")
+  followers       Follow[]    @relation("UserFollowers")
+  likes           Like[]
+  comments        Comment[]
+  shortPosts      ShortPost[]
+  images          Image[]
+  albums          Album[]
 
   @@unique([email])
   @@map("user")

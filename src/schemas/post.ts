@@ -4,7 +4,7 @@ export const shortPostSchema = z.object({
   images: z
     .array(
       z.object({
-        id: z.string(),
+        id: z.string().optional(),
         url: z.url("Invalid URL").min(1, "URL is required"),
         title: z.string().optional(),
         description: z.string().optional(),

@@ -1,10 +1,10 @@
-import { createServerFn } from "@tanstack/react-start";
-import z from "zod";
+import { createServerFn } from '@tanstack/react-start';
+import z from 'zod';
 
-import { db } from "@/lib/db";
-import { authMiddleware } from "@/middlewares/auth";
+import { db } from '@/lib/db';
+import { authMiddleware } from '@/middlewares/auth';
 
-export const getPublicProfileFn = createServerFn({ method: "GET" })
+export const getPublicProfileFn = createServerFn({ method: 'GET' })
   .inputValidator(
     z.object({
       userId: z.string(),
@@ -25,7 +25,7 @@ export const getPublicProfileFn = createServerFn({ method: "GET" })
             },
             _count: { select: { likes: true, comments: true } },
           },
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: 'desc' },
         },
         shortPosts: {
           include: {
@@ -41,12 +41,16 @@ export const getPublicProfileFn = createServerFn({ method: "GET" })
               },
             },
             author: true,
-            Images: true,
+            imagesOnShortPosts: {
+              include: {
+                image: true,
+              },
+            },
           },
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: 'desc' },
         },
         images: {
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: 'desc' },
         },
         albums: {
           include: {
@@ -54,7 +58,7 @@ export const getPublicProfileFn = createServerFn({ method: "GET" })
             images: true,
             _count: { select: { images: true } },
           },
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: 'desc' },
         },
         followers: {
           include: {
@@ -71,7 +75,7 @@ export const getPublicProfileFn = createServerFn({ method: "GET" })
     return profile;
   });
 
-export const updateProfile = createServerFn({ method: "POST" })
+export const updateProfile = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(
     z.object({

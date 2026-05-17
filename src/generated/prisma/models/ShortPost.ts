@@ -198,10 +198,11 @@ export type ShortPostWhereInput = {
   authorId?: Prisma.StringFilter<"ShortPost"> | string
   createdAt?: Prisma.DateTimeFilter<"ShortPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ShortPost"> | Date | string
-  Images?: Prisma.ImageListRelationFilter
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsListRelationFilter
   likes?: Prisma.LikeListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  images?: Prisma.ImageListRelationFilter
 }
 
 export type ShortPostOrderByWithRelationInput = {
@@ -212,10 +213,11 @@ export type ShortPostOrderByWithRelationInput = {
   authorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  Images?: Prisma.ImageOrderByRelationAggregateInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsOrderByRelationAggregateInput
   likes?: Prisma.LikeOrderByRelationAggregateInput
   comments?: Prisma.CommentOrderByRelationAggregateInput
   author?: Prisma.UserOrderByWithRelationInput
+  images?: Prisma.ImageOrderByRelationAggregateInput
 }
 
 export type ShortPostWhereUniqueInput = Prisma.AtLeast<{
@@ -229,10 +231,11 @@ export type ShortPostWhereUniqueInput = Prisma.AtLeast<{
   authorId?: Prisma.StringFilter<"ShortPost"> | string
   createdAt?: Prisma.DateTimeFilter<"ShortPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ShortPost"> | Date | string
-  Images?: Prisma.ImageListRelationFilter
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsListRelationFilter
   likes?: Prisma.LikeListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  images?: Prisma.ImageListRelationFilter
 }, "id">
 
 export type ShortPostOrderByWithAggregationInput = {
@@ -268,10 +271,11 @@ export type ShortPostCreateInput = {
   showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  Images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsCreateNestedManyWithoutShortPostInput
   likes?: Prisma.LikeCreateNestedManyWithoutShortPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutShortPostInput
   author: Prisma.UserCreateNestedOneWithoutShortPostsInput
+  images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
 }
 
 export type ShortPostUncheckedCreateInput = {
@@ -282,9 +286,10 @@ export type ShortPostUncheckedCreateInput = {
   authorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  Images?: Prisma.ImageUncheckedCreateNestedManyWithoutShortPostInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUncheckedCreateNestedManyWithoutShortPostInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutShortPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutShortPostInput
+  images?: Prisma.ImageUncheckedCreateNestedManyWithoutShortPostInput
 }
 
 export type ShortPostUpdateInput = {
@@ -294,10 +299,11 @@ export type ShortPostUpdateInput = {
   showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUpdateManyWithoutShortPostNestedInput
   likes?: Prisma.LikeUpdateManyWithoutShortPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutShortPostNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutShortPostsNestedInput
+  images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
 }
 
 export type ShortPostUncheckedUpdateInput = {
@@ -308,9 +314,10 @@ export type ShortPostUncheckedUpdateInput = {
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Images?: Prisma.ImageUncheckedUpdateManyWithoutShortPostNestedInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUncheckedUpdateManyWithoutShortPostNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutShortPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutShortPostNestedInput
+  images?: Prisma.ImageUncheckedUpdateManyWithoutShortPostNestedInput
 }
 
 export type ShortPostCreateManyInput = {
@@ -377,6 +384,11 @@ export type ShortPostNullableScalarRelationFilter = {
   isNot?: Prisma.ShortPostWhereInput | null
 }
 
+export type ShortPostScalarRelationFilter = {
+  is?: Prisma.ShortPostWhereInput
+  isNot?: Prisma.ShortPostWhereInput
+}
+
 export type ShortPostListRelationFilter = {
   every?: Prisma.ShortPostWhereInput
   some?: Prisma.ShortPostWhereInput
@@ -405,6 +417,20 @@ export type ShortPostUpdateOneWithoutImagesNestedInput = {
   delete?: Prisma.ShortPostWhereInput | boolean
   connect?: Prisma.ShortPostWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ShortPostUpdateToOneWithWhereWithoutImagesInput, Prisma.ShortPostUpdateWithoutImagesInput>, Prisma.ShortPostUncheckedUpdateWithoutImagesInput>
+}
+
+export type ShortPostCreateNestedOneWithoutImagesOnShortPostsInput = {
+  create?: Prisma.XOR<Prisma.ShortPostCreateWithoutImagesOnShortPostsInput, Prisma.ShortPostUncheckedCreateWithoutImagesOnShortPostsInput>
+  connectOrCreate?: Prisma.ShortPostCreateOrConnectWithoutImagesOnShortPostsInput
+  connect?: Prisma.ShortPostWhereUniqueInput
+}
+
+export type ShortPostUpdateOneRequiredWithoutImagesOnShortPostsNestedInput = {
+  create?: Prisma.XOR<Prisma.ShortPostCreateWithoutImagesOnShortPostsInput, Prisma.ShortPostUncheckedCreateWithoutImagesOnShortPostsInput>
+  connectOrCreate?: Prisma.ShortPostCreateOrConnectWithoutImagesOnShortPostsInput
+  upsert?: Prisma.ShortPostUpsertWithoutImagesOnShortPostsInput
+  connect?: Prisma.ShortPostWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ShortPostUpdateToOneWithWhereWithoutImagesOnShortPostsInput, Prisma.ShortPostUpdateWithoutImagesOnShortPostsInput>, Prisma.ShortPostUncheckedUpdateWithoutImagesOnShortPostsInput>
 }
 
 export type ShortPostCreateNestedOneWithoutLikesInput = {
@@ -488,6 +514,7 @@ export type ShortPostCreateWithoutImagesInput = {
   showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsCreateNestedManyWithoutShortPostInput
   likes?: Prisma.LikeCreateNestedManyWithoutShortPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutShortPostInput
   author: Prisma.UserCreateNestedOneWithoutShortPostsInput
@@ -501,6 +528,7 @@ export type ShortPostUncheckedCreateWithoutImagesInput = {
   authorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUncheckedCreateNestedManyWithoutShortPostInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutShortPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutShortPostInput
 }
@@ -528,6 +556,7 @@ export type ShortPostUpdateWithoutImagesInput = {
   showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUpdateManyWithoutShortPostNestedInput
   likes?: Prisma.LikeUpdateManyWithoutShortPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutShortPostNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutShortPostsNestedInput
@@ -541,8 +570,77 @@ export type ShortPostUncheckedUpdateWithoutImagesInput = {
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUncheckedUpdateManyWithoutShortPostNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutShortPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutShortPostNestedInput
+}
+
+export type ShortPostCreateWithoutImagesOnShortPostsInput = {
+  id?: string
+  content?: string | null
+  published?: boolean
+  showPrivateToFollowers?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  likes?: Prisma.LikeCreateNestedManyWithoutShortPostInput
+  comments?: Prisma.CommentCreateNestedManyWithoutShortPostInput
+  author: Prisma.UserCreateNestedOneWithoutShortPostsInput
+  images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
+}
+
+export type ShortPostUncheckedCreateWithoutImagesOnShortPostsInput = {
+  id?: string
+  content?: string | null
+  published?: boolean
+  showPrivateToFollowers?: boolean
+  authorId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutShortPostInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutShortPostInput
+  images?: Prisma.ImageUncheckedCreateNestedManyWithoutShortPostInput
+}
+
+export type ShortPostCreateOrConnectWithoutImagesOnShortPostsInput = {
+  where: Prisma.ShortPostWhereUniqueInput
+  create: Prisma.XOR<Prisma.ShortPostCreateWithoutImagesOnShortPostsInput, Prisma.ShortPostUncheckedCreateWithoutImagesOnShortPostsInput>
+}
+
+export type ShortPostUpsertWithoutImagesOnShortPostsInput = {
+  update: Prisma.XOR<Prisma.ShortPostUpdateWithoutImagesOnShortPostsInput, Prisma.ShortPostUncheckedUpdateWithoutImagesOnShortPostsInput>
+  create: Prisma.XOR<Prisma.ShortPostCreateWithoutImagesOnShortPostsInput, Prisma.ShortPostUncheckedCreateWithoutImagesOnShortPostsInput>
+  where?: Prisma.ShortPostWhereInput
+}
+
+export type ShortPostUpdateToOneWithWhereWithoutImagesOnShortPostsInput = {
+  where?: Prisma.ShortPostWhereInput
+  data: Prisma.XOR<Prisma.ShortPostUpdateWithoutImagesOnShortPostsInput, Prisma.ShortPostUncheckedUpdateWithoutImagesOnShortPostsInput>
+}
+
+export type ShortPostUpdateWithoutImagesOnShortPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  likes?: Prisma.LikeUpdateManyWithoutShortPostNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutShortPostNestedInput
+  author?: Prisma.UserUpdateOneRequiredWithoutShortPostsNestedInput
+  images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
+}
+
+export type ShortPostUncheckedUpdateWithoutImagesOnShortPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutShortPostNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutShortPostNestedInput
+  images?: Prisma.ImageUncheckedUpdateManyWithoutShortPostNestedInput
 }
 
 export type ShortPostCreateWithoutLikesInput = {
@@ -552,9 +650,10 @@ export type ShortPostCreateWithoutLikesInput = {
   showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  Images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsCreateNestedManyWithoutShortPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutShortPostInput
   author: Prisma.UserCreateNestedOneWithoutShortPostsInput
+  images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
 }
 
 export type ShortPostUncheckedCreateWithoutLikesInput = {
@@ -565,8 +664,9 @@ export type ShortPostUncheckedCreateWithoutLikesInput = {
   authorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  Images?: Prisma.ImageUncheckedCreateNestedManyWithoutShortPostInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUncheckedCreateNestedManyWithoutShortPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutShortPostInput
+  images?: Prisma.ImageUncheckedCreateNestedManyWithoutShortPostInput
 }
 
 export type ShortPostCreateOrConnectWithoutLikesInput = {
@@ -592,9 +692,10 @@ export type ShortPostUpdateWithoutLikesInput = {
   showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUpdateManyWithoutShortPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutShortPostNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutShortPostsNestedInput
+  images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
 }
 
 export type ShortPostUncheckedUpdateWithoutLikesInput = {
@@ -605,8 +706,9 @@ export type ShortPostUncheckedUpdateWithoutLikesInput = {
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Images?: Prisma.ImageUncheckedUpdateManyWithoutShortPostNestedInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUncheckedUpdateManyWithoutShortPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutShortPostNestedInput
+  images?: Prisma.ImageUncheckedUpdateManyWithoutShortPostNestedInput
 }
 
 export type ShortPostCreateWithoutCommentsInput = {
@@ -616,9 +718,10 @@ export type ShortPostCreateWithoutCommentsInput = {
   showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  Images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsCreateNestedManyWithoutShortPostInput
   likes?: Prisma.LikeCreateNestedManyWithoutShortPostInput
   author: Prisma.UserCreateNestedOneWithoutShortPostsInput
+  images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
 }
 
 export type ShortPostUncheckedCreateWithoutCommentsInput = {
@@ -629,8 +732,9 @@ export type ShortPostUncheckedCreateWithoutCommentsInput = {
   authorId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  Images?: Prisma.ImageUncheckedCreateNestedManyWithoutShortPostInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUncheckedCreateNestedManyWithoutShortPostInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutShortPostInput
+  images?: Prisma.ImageUncheckedCreateNestedManyWithoutShortPostInput
 }
 
 export type ShortPostCreateOrConnectWithoutCommentsInput = {
@@ -656,9 +760,10 @@ export type ShortPostUpdateWithoutCommentsInput = {
   showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUpdateManyWithoutShortPostNestedInput
   likes?: Prisma.LikeUpdateManyWithoutShortPostNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutShortPostsNestedInput
+  images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
 }
 
 export type ShortPostUncheckedUpdateWithoutCommentsInput = {
@@ -669,8 +774,9 @@ export type ShortPostUncheckedUpdateWithoutCommentsInput = {
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Images?: Prisma.ImageUncheckedUpdateManyWithoutShortPostNestedInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUncheckedUpdateManyWithoutShortPostNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutShortPostNestedInput
+  images?: Prisma.ImageUncheckedUpdateManyWithoutShortPostNestedInput
 }
 
 export type ShortPostCreateWithoutAuthorInput = {
@@ -680,9 +786,10 @@ export type ShortPostCreateWithoutAuthorInput = {
   showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  Images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsCreateNestedManyWithoutShortPostInput
   likes?: Prisma.LikeCreateNestedManyWithoutShortPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutShortPostInput
+  images?: Prisma.ImageCreateNestedManyWithoutShortPostInput
 }
 
 export type ShortPostUncheckedCreateWithoutAuthorInput = {
@@ -692,9 +799,10 @@ export type ShortPostUncheckedCreateWithoutAuthorInput = {
   showPrivateToFollowers?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  Images?: Prisma.ImageUncheckedCreateNestedManyWithoutShortPostInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUncheckedCreateNestedManyWithoutShortPostInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutShortPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutShortPostInput
+  images?: Prisma.ImageUncheckedCreateNestedManyWithoutShortPostInput
 }
 
 export type ShortPostCreateOrConnectWithoutAuthorInput = {
@@ -752,9 +860,10 @@ export type ShortPostUpdateWithoutAuthorInput = {
   showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUpdateManyWithoutShortPostNestedInput
   likes?: Prisma.LikeUpdateManyWithoutShortPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutShortPostNestedInput
+  images?: Prisma.ImageUpdateManyWithoutShortPostNestedInput
 }
 
 export type ShortPostUncheckedUpdateWithoutAuthorInput = {
@@ -764,9 +873,10 @@ export type ShortPostUncheckedUpdateWithoutAuthorInput = {
   showPrivateToFollowers?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Images?: Prisma.ImageUncheckedUpdateManyWithoutShortPostNestedInput
+  imagesOnShortPosts?: Prisma.ImagesOnShortPostsUncheckedUpdateManyWithoutShortPostNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutShortPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutShortPostNestedInput
+  images?: Prisma.ImageUncheckedUpdateManyWithoutShortPostNestedInput
 }
 
 export type ShortPostUncheckedUpdateManyWithoutAuthorInput = {
@@ -784,15 +894,17 @@ export type ShortPostUncheckedUpdateManyWithoutAuthorInput = {
  */
 
 export type ShortPostCountOutputType = {
-  Images: number
+  imagesOnShortPosts: number
   likes: number
   comments: number
+  images: number
 }
 
 export type ShortPostCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Images?: boolean | ShortPostCountOutputTypeCountImagesArgs
+  imagesOnShortPosts?: boolean | ShortPostCountOutputTypeCountImagesOnShortPostsArgs
   likes?: boolean | ShortPostCountOutputTypeCountLikesArgs
   comments?: boolean | ShortPostCountOutputTypeCountCommentsArgs
+  images?: boolean | ShortPostCountOutputTypeCountImagesArgs
 }
 
 /**
@@ -808,8 +920,8 @@ export type ShortPostCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ex
 /**
  * ShortPostCountOutputType without action
  */
-export type ShortPostCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ImageWhereInput
+export type ShortPostCountOutputTypeCountImagesOnShortPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ImagesOnShortPostsWhereInput
 }
 
 /**
@@ -826,6 +938,13 @@ export type ShortPostCountOutputTypeCountCommentsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.CommentWhereInput
 }
 
+/**
+ * ShortPostCountOutputType without action
+ */
+export type ShortPostCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ImageWhereInput
+}
+
 
 export type ShortPostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -835,10 +954,11 @@ export type ShortPostSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   authorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  Images?: boolean | Prisma.ShortPost$ImagesArgs<ExtArgs>
+  imagesOnShortPosts?: boolean | Prisma.ShortPost$imagesOnShortPostsArgs<ExtArgs>
   likes?: boolean | Prisma.ShortPost$likesArgs<ExtArgs>
   comments?: boolean | Prisma.ShortPost$commentsArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  images?: boolean | Prisma.ShortPost$imagesArgs<ExtArgs>
   _count?: boolean | Prisma.ShortPostCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["shortPost"]>
 
@@ -876,10 +996,11 @@ export type ShortPostSelectScalar = {
 
 export type ShortPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "published" | "showPrivateToFollowers" | "authorId" | "createdAt" | "updatedAt", ExtArgs["result"]["shortPost"]>
 export type ShortPostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Images?: boolean | Prisma.ShortPost$ImagesArgs<ExtArgs>
+  imagesOnShortPosts?: boolean | Prisma.ShortPost$imagesOnShortPostsArgs<ExtArgs>
   likes?: boolean | Prisma.ShortPost$likesArgs<ExtArgs>
   comments?: boolean | Prisma.ShortPost$commentsArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  images?: boolean | Prisma.ShortPost$imagesArgs<ExtArgs>
   _count?: boolean | Prisma.ShortPostCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ShortPostIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -892,10 +1013,11 @@ export type ShortPostIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type $ShortPostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ShortPost"
   objects: {
-    Images: Prisma.$ImagePayload<ExtArgs>[]
+    imagesOnShortPosts: Prisma.$ImagesOnShortPostsPayload<ExtArgs>[]
     likes: Prisma.$LikePayload<ExtArgs>[]
     comments: Prisma.$CommentPayload<ExtArgs>[]
     author: Prisma.$UserPayload<ExtArgs>
+    images: Prisma.$ImagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1299,10 +1421,11 @@ readonly fields: ShortPostFieldRefs;
  */
 export interface Prisma__ShortPostClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  Images<T extends Prisma.ShortPost$ImagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShortPost$ImagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  imagesOnShortPosts<T extends Prisma.ShortPost$imagesOnShortPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShortPost$imagesOnShortPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImagesOnShortPostsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   likes<T extends Prisma.ShortPost$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShortPost$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   comments<T extends Prisma.ShortPost$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShortPost$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  images<T extends Prisma.ShortPost$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShortPost$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1740,27 +1863,27 @@ export type ShortPostDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * ShortPost.Images
+ * ShortPost.imagesOnShortPosts
  */
-export type ShortPost$ImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ShortPost$imagesOnShortPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Image
+   * Select specific fields to fetch from the ImagesOnShortPosts
    */
-  select?: Prisma.ImageSelect<ExtArgs> | null
+  select?: Prisma.ImagesOnShortPostsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Image
+   * Omit specific fields from the ImagesOnShortPosts
    */
-  omit?: Prisma.ImageOmit<ExtArgs> | null
+  omit?: Prisma.ImagesOnShortPostsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ImageInclude<ExtArgs> | null
-  where?: Prisma.ImageWhereInput
-  orderBy?: Prisma.ImageOrderByWithRelationInput | Prisma.ImageOrderByWithRelationInput[]
-  cursor?: Prisma.ImageWhereUniqueInput
+  include?: Prisma.ImagesOnShortPostsInclude<ExtArgs> | null
+  where?: Prisma.ImagesOnShortPostsWhereInput
+  orderBy?: Prisma.ImagesOnShortPostsOrderByWithRelationInput | Prisma.ImagesOnShortPostsOrderByWithRelationInput[]
+  cursor?: Prisma.ImagesOnShortPostsWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ImageScalarFieldEnum | Prisma.ImageScalarFieldEnum[]
+  distinct?: Prisma.ImagesOnShortPostsScalarFieldEnum | Prisma.ImagesOnShortPostsScalarFieldEnum[]
 }
 
 /**
@@ -1809,6 +1932,30 @@ export type ShortPost$commentsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.CommentScalarFieldEnum | Prisma.CommentScalarFieldEnum[]
+}
+
+/**
+ * ShortPost.images
+ */
+export type ShortPost$imagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Image
+   */
+  select?: Prisma.ImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Image
+   */
+  omit?: Prisma.ImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImageInclude<ExtArgs> | null
+  where?: Prisma.ImageWhereInput
+  orderBy?: Prisma.ImageOrderByWithRelationInput | Prisma.ImageOrderByWithRelationInput[]
+  cursor?: Prisma.ImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ImageScalarFieldEnum | Prisma.ImageScalarFieldEnum[]
 }
 
 /**

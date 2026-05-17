@@ -185,8 +185,8 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
   // const slideshowRef = useRef(null);
   const thumbnailsRef = useRef<ThumbnailsRef>(null);
   const zoomRef = useRef<ZoomRef>(null);
-  const photos = post.Images?.map((photo, index) => ({
-    ...photo,
+  const photos = post.imagesOnShortPosts?.map((data, index) => ({
+    ...data.image,
     globalIndex: index,
   }));
   function handleToggleLike() {
@@ -269,7 +269,7 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
               exit={{ opacity: 0 }}
             >
               <PostCollage
-                images={post.Images}
+                images={photos}
                 post={post}
                 onExpand={() => setExpanded(true)}
                 handleToggleLightBox={handleToggleLightBox}
@@ -295,7 +295,7 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
                 </button>
               </div>
               <MasonryCollage
-                images={post.Images}
+                images={photos}
                 post={post}
                 handleToggleLightBox={handleToggleLightBox}
               />

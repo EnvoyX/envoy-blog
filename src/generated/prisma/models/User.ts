@@ -638,20 +638,6 @@ export type UserUpdateOneRequiredWithoutShortPostsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutShortPostsInput, Prisma.UserUpdateWithoutShortPostsInput>, Prisma.UserUncheckedUpdateWithoutShortPostsInput>
 }
 
-export type UserCreateNestedOneWithoutAlbumsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAlbumsInput, Prisma.UserUncheckedCreateWithoutAlbumsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAlbumsInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutAlbumsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAlbumsInput, Prisma.UserUncheckedCreateWithoutAlbumsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAlbumsInput
-  upsert?: Prisma.UserUpsertWithoutAlbumsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAlbumsInput, Prisma.UserUpdateWithoutAlbumsInput>, Prisma.UserUncheckedUpdateWithoutAlbumsInput>
-}
-
 export type UserCreateNestedOneWithoutImagesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutImagesInput, Prisma.UserUncheckedCreateWithoutImagesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutImagesInput
@@ -664,6 +650,20 @@ export type UserUpdateOneRequiredWithoutImagesNestedInput = {
   upsert?: Prisma.UserUpsertWithoutImagesInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutImagesInput, Prisma.UserUpdateWithoutImagesInput>, Prisma.UserUncheckedUpdateWithoutImagesInput>
+}
+
+export type UserCreateNestedOneWithoutAlbumsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAlbumsInput, Prisma.UserUncheckedCreateWithoutAlbumsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAlbumsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAlbumsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAlbumsInput, Prisma.UserUncheckedCreateWithoutAlbumsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAlbumsInput
+  upsert?: Prisma.UserUpsertWithoutAlbumsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAlbumsInput, Prisma.UserUpdateWithoutAlbumsInput>, Prisma.UserUncheckedUpdateWithoutAlbumsInput>
 }
 
 export type UserCreateNestedOneWithoutPostsInput = {
@@ -1222,142 +1222,6 @@ export type UserUncheckedUpdateWithoutShortPostsInput = {
   albums?: Prisma.AlbumUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
-export type UserCreateWithoutAlbumsInput = {
-  id: string
-  name: string
-  email: string
-  password?: string | null
-  emailVerified: boolean
-  image?: string | null
-  imageKey?: string | null
-  defaultImage?: string | null
-  biodata?: string | null
-  showFollowStats?: boolean
-  role?: $Enums.UserRole
-  createdAt: Date | string
-  updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
-  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-  taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
-  quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
-  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
-  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
-  shortPosts?: Prisma.ShortPostCreateNestedManyWithoutAuthorInput
-  images?: Prisma.ImageCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutAlbumsInput = {
-  id: string
-  name: string
-  email: string
-  password?: string | null
-  emailVerified: boolean
-  image?: string | null
-  imageKey?: string | null
-  defaultImage?: string | null
-  biodata?: string | null
-  showFollowStats?: boolean
-  role?: $Enums.UserRole
-  createdAt: Date | string
-  updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-  taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
-  quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
-  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
-  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
-  shortPosts?: Prisma.ShortPostUncheckedCreateNestedManyWithoutAuthorInput
-  images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutAlbumsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutAlbumsInput, Prisma.UserUncheckedCreateWithoutAlbumsInput>
-}
-
-export type UserUpsertWithoutAlbumsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutAlbumsInput, Prisma.UserUncheckedUpdateWithoutAlbumsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutAlbumsInput, Prisma.UserUncheckedCreateWithoutAlbumsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutAlbumsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutAlbumsInput, Prisma.UserUncheckedUpdateWithoutAlbumsInput>
-}
-
-export type UserUpdateWithoutAlbumsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  biodata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  showFollowStats?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-  taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
-  quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
-  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
-  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
-  shortPosts?: Prisma.ShortPostUpdateManyWithoutAuthorNestedInput
-  images?: Prisma.ImageUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutAlbumsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  biodata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  showFollowStats?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
-  taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
-  quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
-  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
-  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
-  shortPosts?: Prisma.ShortPostUncheckedUpdateManyWithoutAuthorNestedInput
-  images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
-}
-
 export type UserCreateWithoutImagesInput = {
   id: string
   name: string
@@ -1492,6 +1356,142 @@ export type UserUncheckedUpdateWithoutImagesInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   shortPosts?: Prisma.ShortPostUncheckedUpdateManyWithoutAuthorNestedInput
   albums?: Prisma.AlbumUncheckedUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserCreateWithoutAlbumsInput = {
+  id: string
+  name: string
+  email: string
+  password?: string | null
+  emailVerified: boolean
+  image?: string | null
+  imageKey?: string | null
+  defaultImage?: string | null
+  biodata?: string | null
+  showFollowStats?: boolean
+  role?: $Enums.UserRole
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
+  quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  shortPosts?: Prisma.ShortPostCreateNestedManyWithoutAuthorInput
+  images?: Prisma.ImageCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAlbumsInput = {
+  id: string
+  name: string
+  email: string
+  password?: string | null
+  emailVerified: boolean
+  image?: string | null
+  imageKey?: string | null
+  defaultImage?: string | null
+  biodata?: string | null
+  showFollowStats?: boolean
+  role?: $Enums.UserRole
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
+  quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  shortPosts?: Prisma.ShortPostUncheckedCreateNestedManyWithoutAuthorInput
+  images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAlbumsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAlbumsInput, Prisma.UserUncheckedCreateWithoutAlbumsInput>
+}
+
+export type UserUpsertWithoutAlbumsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAlbumsInput, Prisma.UserUncheckedUpdateWithoutAlbumsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAlbumsInput, Prisma.UserUncheckedCreateWithoutAlbumsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAlbumsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAlbumsInput, Prisma.UserUncheckedUpdateWithoutAlbumsInput>
+}
+
+export type UserUpdateWithoutAlbumsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  biodata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showFollowStats?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
+  quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  shortPosts?: Prisma.ShortPostUpdateManyWithoutAuthorNestedInput
+  images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAlbumsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  biodata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showFollowStats?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
+  quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  shortPosts?: Prisma.ShortPostUncheckedUpdateManyWithoutAuthorNestedInput
+  images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {

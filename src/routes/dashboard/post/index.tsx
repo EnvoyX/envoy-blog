@@ -1,13 +1,12 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useRouter } from "@tanstack/react-router";
-import { useSelector } from "@tanstack/react-store";
-import { zodValidator } from "@tanstack/zod-adapter";
-import { compareAsc, compareDesc } from "date-fns";
-import { MoreVertical, Pencil, Plus, Trash2 } from "lucide-react";
-import { toast } from "sonner";
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { useRouter } from '@tanstack/react-router';
+import { zodValidator } from '@tanstack/zod-adapter';
+import { compareAsc, compareDesc } from 'date-fns';
+import { MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Dialog,
   DialogClose,
@@ -16,28 +15,28 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { PostDialog } from "@/components/web/post/PostDialog";
-import { deleteShortPostFn, getShortPostsFn } from "@/data/post";
-import { getUser } from "@/data/session";
-import { SortedByStatus } from "@/lib/constants";
-import { shortPostSearchSchema } from "@/schemas/post";
-import { postModalStore } from "@/store/post";
+} from '@/components/ui/select';
+import { PostDialog } from '@/components/web/post/PostDialog';
+import { deleteShortPostFn, getShortPostsFn } from '@/data/post';
+import { getUser } from '@/data/session';
+import { SortedByStatus } from '@/lib/constants';
+import { shortPostSearchSchema } from '@/schemas/post';
+import { usePostStore } from '@/store/post';
 
-export const Route = createFileRoute("/dashboard/post/")({
+export const Route = createFileRoute('/dashboard/post/')({
   loader: async () => {
     const allPosts = await getShortPostsFn();
     const session = await getUser();
@@ -52,19 +51,19 @@ export const Route = createFileRoute("/dashboard/post/")({
     meta: [
       { title: `My Posts | Envoy Mindpalace` },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
-      { property: "og:title", content: "My Posts | Envoy Mindpalace" },
+      { property: 'og:title', content: 'My Posts | Envoy Mindpalace' },
       {
-        property: "og:description",
-        content: "Create your own blog and write your thoughts!",
+        property: 'og:description',
+        content: 'Create your own blog and write your thoughts!',
       },
       {
-        property: "og:image",
-        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+        property: 'og:image',
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
 });
@@ -72,22 +71,26 @@ export const Route = createFileRoute("/dashboard/post/")({
 function PostPageComponent() {
   const { allPosts, session } = Route.useLoaderData();
   const { sortDateBy } = Route.useSearch();
+  const {
+    currentPostId,
+    isDeletePostDialog,
+    isOpen,
+    toggleDialog,
+    setInitialValues,
+    onOpenDialogChange,
+  } = usePostStore();
   const navigate = useNavigate({ from: Route.fullPath });
   const router = useRouter();
   const sortedPosts = [...allPosts].sort((a, b) => {
     const dateA = new Date(a.createdAt);
     const dateB = new Date(b.createdAt);
 
-    if (sortDateBy === "ASC") {
+    if (sortDateBy === 'ASC') {
       return compareAsc(dateA, dateB);
     } else {
       return compareDesc(dateA, dateB);
     }
   });
-
-  const isDeletePostDialog = useSelector(postModalStore, (state) => state.isDeletePostDialog);
-  const isOpen = useSelector(postModalStore, (state) => state.isOpen);
-  const currentPostId = useSelector(postModalStore, (state) => state.currentPostId);
 
   async function handleDeletePost() {
     await deleteShortPostFn({
@@ -95,12 +98,8 @@ function PostPageComponent() {
         shortPostId: currentPostId,
       },
     });
-    postModalStore.setState((prev) => ({
-      ...prev,
-      isOpen: false,
-      isDeletePostDialog: false,
-    }));
-    toast.success("Post deleted successfully");
+    toggleDialog('close', '');
+    toast.success('Post deleted successfully');
     void router.invalidate();
   }
 
@@ -116,18 +115,15 @@ function PostPageComponent() {
             size="lg"
             className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
             onClick={() => {
-              postModalStore.setState((prev) => ({
-                ...prev,
-                isOpen: true,
-                initialValues: {
-                  images: [] as { id: string; url: string; title: string; description: string }[],
-                  content: "",
-                  published: false,
-                  showPrivateToFollowers: false,
-                  currentPostId: "",
-                  mode: "create",
-                },
-              }));
+              toggleDialog('open', '');
+              setInitialValues({
+                images: [] as { id?: string; url: string; title: string; description: string }[],
+                content: '',
+                published: false,
+                showPrivateToFollowers: false,
+                currentPostId: '',
+                mode: 'create',
+              });
             }}
           >
             <div className="flex items-center gap-2">
@@ -173,7 +169,10 @@ function PostPageComponent() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
           {sortedPosts.map((post) => {
-            const imgs = post.Images.map((img) => img.url);
+            const photos = post.imagesOnShortPosts.map((data) => ({
+              ...data.image,
+            }));
+            const imgs = photos.map((img) => img.url);
             const firstImageUrl = imgs[0];
             return (
               <Card
@@ -185,7 +184,7 @@ function PostPageComponent() {
                     src={
                       firstImageUrl
                         ? firstImageUrl
-                        : "https://tanstack.com/images/logos/logo-color-600.png"
+                        : 'https://tanstack.com/images/logos/logo-color-600.png'
                     }
                     alt={post.id}
                     className="object-cover w-full h-full transition-transform duration-500"
@@ -216,25 +215,22 @@ function PostPageComponent() {
                             <button
                               className="flex items-center gap-2 p-1 cursor-pointer w-full"
                               onClick={() => {
-                                postModalStore.setState((prev) => ({
-                                  ...prev,
-                                  isOpen: true,
-                                  initialValues: {
-                                    images: post.Images.map((image) => {
-                                      return {
-                                        id: image.id,
-                                        url: image.url,
-                                        title: image.title ?? "",
-                                        description: image.description ?? "",
-                                      };
-                                    }),
-                                    content: post.content ?? "",
-                                    published: post.published,
-                                    showPrivateToFollowers: post.showPrivateToFollowers,
-                                    currentPostId: post.id,
-                                    mode: "edit",
-                                  },
-                                }));
+                                toggleDialog('open', post.id);
+                                setInitialValues({
+                                  images: photos.map((image) => {
+                                    return {
+                                      id: image.id,
+                                      url: image.url,
+                                      title: image.title ?? '',
+                                      description: image.description ?? '',
+                                    };
+                                  }),
+                                  content: post.content ?? '',
+                                  published: post.published,
+                                  showPrivateToFollowers: post.showPrivateToFollowers,
+                                  currentPostId: post.id,
+                                  mode: 'edit',
+                                });
                               }}
                             >
                               <Pencil className="size-4" /> Edit Post
@@ -243,14 +239,7 @@ function PostPageComponent() {
                           <DropdownMenuItem
                             onClick={(e) => {
                               e.preventDefault();
-                              postModalStore.setState((prev) => {
-                                return {
-                                  ...prev,
-                                  isOpen: true,
-                                  isDeletePostDialog: true,
-                                  currentPostId: post.id,
-                                };
-                              });
+                              toggleDialog('delete', post.id);
                             }}
                             className="focus:bg-red-500/20 text-red-400 focus:text-red-400 cursor-pointer"
                           >
@@ -270,13 +259,7 @@ function PostPageComponent() {
       <Dialog
         open={isOpen && isDeletePostDialog}
         onOpenChange={(open) => {
-          postModalStore.setState((prev) => {
-            return {
-              ...prev,
-              isOpen: open,
-              isDeletePostDialog: open,
-            };
-          });
+          onOpenDialogChange('delete', open);
         }}
       >
         <DialogContent className="sm:max-w-md">
@@ -290,7 +273,7 @@ function PostPageComponent() {
           <DialogFooter className="sm:justify-center">
             <Button
               type="button"
-              variant={"destructive"}
+              variant={'destructive'}
               className="cursor-pointer"
               onClick={handleDeletePost}
             >

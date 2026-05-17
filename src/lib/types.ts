@@ -33,7 +33,11 @@ export type ShortPostPublic = Prisma.ShortPostGetPayload<{
       };
     };
     author: true;
-    Images: true;
+    imagesOnShortPosts: {
+      include: {
+        image: true;
+      };
+    };
   };
 }>;
 

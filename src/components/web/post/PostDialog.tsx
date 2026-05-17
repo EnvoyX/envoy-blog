@@ -1,6 +1,6 @@
-import { useForm } from "@tanstack/react-form";
-import { useRouter } from "@tanstack/react-router";
-import { useSelector } from "@tanstack/react-store";
+import { useForm } from '@tanstack/react-form';
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from '@tanstack/react-router';
 import {
   CheckCircle2,
   ImageIcon,
@@ -9,12 +9,11 @@ import {
   MousePointer2,
   Plus,
   Trash2,
-} from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   Carousel,
   CarouselContent,
@@ -22,7 +21,7 @@ import {
   CarouselNext,
   CarouselPrevious,
   type CarouselApi,
-} from "@/components/ui/carousel";
+} from '@/components/ui/carousel';
 import {
   Dialog,
   DialogClose,
@@ -30,33 +29,36 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Field, FieldError } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { createShortPostFn, editShortPostFn } from "@/data/post";
-import { shortPostSchema } from "@/schemas/post";
-import { postModalStore } from "@/store/post";
-import { useQuery } from "@tanstack/react-query";
-import { getImagesFn } from "@/data/image";
-import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
-import { cn } from "@/lib/utils";
-import { createId } from "@paralleldrive/cuid2";
+} from '@/components/ui/dialog';
+import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty';
+import { Field, FieldError } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { getImagesFn } from '@/data/image';
+import { createShortPostFn, editShortPostFn } from '@/data/post';
+import { cn } from '@/lib/utils';
+import { shortPostSchema } from '@/schemas/post';
+import { usePostStore } from '@/store/post';
 
 export function PostDialog() {
-  const isOpen = useSelector(postModalStore, (state) => state.isOpen);
-  const isDeleteDialogOpen = useSelector(postModalStore, (state) => state.isDeletePostDialog);
-  const initialValues = useSelector(postModalStore, (state) => state.initialValues);
-  const { currentPostId } = initialValues;
+  const {
+    currentPostId,
+    isDeletePostDialog,
+    isOpen,
+    toggleDialog,
+    onOpenDialogChange,
+    initialValues,
+  } = usePostStore();
   const router = useRouter();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const { data: images, isPending } = useQuery({
-    queryKey: ["all-images"],
+    queryKey: ['all-images'],
     queryFn: async () => {
       const images = await getImagesFn();
       return images;
@@ -67,8 +69,8 @@ export function PostDialog() {
     defaultValues: {
       images:
         initialValues?.images ??
-        ([] as { id: string; url: string; title: string; description: string }[]),
-      content: initialValues?.content ?? "",
+        ([] as { id?: string; url: string; title: string; description: string }[]),
+      content: initialValues?.content ?? '',
       published: initialValues?.published ?? false,
       showPrivateToFollowers: initialValues?.showPrivateToFollowers ?? false,
     },
@@ -82,7 +84,7 @@ export function PostDialog() {
     },
     onSubmit: async ({ value }) => {
       // console.log(value);
-      if (initialValues.mode === "edit") {
+      if (initialValues?.mode === 'edit') {
         await editShortPostFn({
           data: {
             postId: currentPostId,
@@ -92,17 +94,8 @@ export function PostDialog() {
             showPrivateToFollowers: value.showPrivateToFollowers,
           },
         });
-        toast.success("Post edited successfully");
-        postModalStore.setState((prev) => ({
-          ...prev,
-          initialValues: {
-            ...prev.initialValues,
-            images: value.images,
-            content: value.content,
-            published: value.published,
-            showPrivateToFollowers: value.showPrivateToFollowers,
-          },
-        }));
+        toast.success('Post edited successfully');
+        toggleDialog('close', '');
         form.reset();
         void router.invalidate();
       } else {
@@ -114,11 +107,8 @@ export function PostDialog() {
             showPrivateToFollowers: value.showPrivateToFollowers,
           },
         });
-        toast.success("Post created successfully");
-        postModalStore.setState((prev) => ({
-          ...prev,
-          isOpen: false,
-        }));
+        toast.success('Post created successfully');
+        toggleDialog('close', '');
         form.reset();
         void router.invalidate();
       }
@@ -131,20 +121,20 @@ export function PostDialog() {
     const newSelection = new Set(selectedIds);
     if (newSelection.has(imgId)) {
       newSelection.delete(imgId);
-      form.setFieldValue("images", (prev) => {
+      form.setFieldValue('images', (prev) => {
         const newImages = prev.filter((prevImg) => prevImg.id !== imgId);
         return [...newImages];
       });
     } else {
       newSelection.add(imgId);
-      form.setFieldValue("images", (prev) => {
+      form.setFieldValue('images', (prev) => {
         return [
           ...prev,
           {
-            id: selecedImage?.id ?? createId(),
-            url: selecedImage?.url ?? "",
-            title: selecedImage?.title ?? "",
-            description: selecedImage?.description ?? "",
+            id: selecedImage?.id ?? '',
+            url: selecedImage?.url ?? '',
+            title: selecedImage?.title ?? '',
+            description: selecedImage?.description ?? '',
           },
         ];
       });
@@ -170,23 +160,22 @@ export function PostDialog() {
     }
     // setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
-    api.on("select", () => {
+    api.on('select', () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
   useEffect(() => {
-    setSelectedIds(new Set(initialValues.images?.map((img) => img.id) ?? []));
-  }, [initialValues.images]);
+    const validImages = initialValues?.images?.filter((img) => {
+      return img.id !== undefined || img.id !== '';
+    });
+    setSelectedIds(new Set(validImages?.map((img) => img.id as string) ?? []));
+  }, [initialValues?.images]);
 
   return (
     <Dialog
-      open={isOpen && !isDeleteDialogOpen}
+      open={isOpen && !isDeletePostDialog}
       onOpenChange={(open) => {
-        postModalStore.setState((prev) => ({
-          ...prev,
-          isOpen: open,
-          isDeletePostDialog: false,
-        }));
+        onOpenDialogChange('open', open);
       }}
     >
       <DialogContent className="sm:max-w-6xl p-0 overflow-hidden border-zinc-800 bg-zinc-950">
@@ -197,7 +186,7 @@ export function PostDialog() {
                 <MailboxIcon className="text-emerald-500 size-6" />
               </div>
               <DialogTitle className="text-2xl font-bold text-zinc-100">
-                {initialValues.mode === "create" ? "Create Post" : "Edit Post"}
+                {initialValues?.mode === 'create' ? 'Create Post' : 'Edit Post'}
               </DialogTitle>
               <DialogDescription className="text-zinc-400">
                 Configure your post and visibility settings.
@@ -218,9 +207,9 @@ export function PostDialog() {
                   <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30">
                     <div className="space-y-0.5">
                       <Label className="text-sm font-medium text-zinc-200">
-                        Visibility:{" "}
-                        <span className={field.state.value ? "text-emerald-400" : "text-zinc-400"}>
-                          {field.state.value ? "Public" : "Private"}
+                        Visibility:{' '}
+                        <span className={field.state.value ? 'text-emerald-400' : 'text-zinc-400'}>
+                          {field.state.value ? 'Public' : 'Private'}
                         </span>
                       </Label>
                       <p className="text-xs text-zinc-500">Visible to all users in the app</p>
@@ -229,7 +218,7 @@ export function PostDialog() {
                       checked={field.state.value}
                       onCheckedChange={(checked) => {
                         field.handleChange(checked);
-                        if (checked === true) form.setFieldValue("showPrivateToFollowers", false);
+                        if (checked === true) form.setFieldValue('showPrivateToFollowers', false);
                       }}
                       className="data-[state=checked]:bg-emerald-500"
                     />
@@ -247,13 +236,13 @@ export function PostDialog() {
                           <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="space-y-0.5">
                               <Label className="text-sm font-medium text-zinc-200">
-                                Show Private:{" "}
+                                Show Private:{' '}
                                 <span
                                   className={
-                                    field.state.value ? "text-emerald-400" : "text-zinc-400"
+                                    field.state.value ? 'text-emerald-400' : 'text-zinc-400'
                                   }
                                 >
-                                  {field.state.value ? "Show" : ` Hidden`}
+                                  {field.state.value ? 'Show' : ` Hidden`}
                                 </span>
                               </Label>
                               <p className="text-xs text-zinc-500">
@@ -289,8 +278,8 @@ export function PostDialog() {
                           <span
                             className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
                               charCount > 0
-                                ? "text-emerald-400 border-emerald-500/20 bg-emerald-500/5"
-                                : "text-zinc-600 border-zinc-800"
+                                ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/5'
+                                : 'text-zinc-600 border-zinc-800'
                             }`}
                           >
                             {charCount} CHARS
@@ -307,7 +296,7 @@ export function PostDialog() {
                                     placeholder:text-zinc-600 text-zinc-200
                                     focus-visible:ring-emerald-500/40 focus-visible:border-emerald-500/50
                                     transition-all duration-300 rounded-xl
-                                    ${isInvalid ? "border-red-500/50 focus-visible:ring-red-500/20" : "hover:border-zinc-700"}
+                                    ${isInvalid ? 'border-red-500/50 focus-visible:ring-red-500/20' : 'hover:border-zinc-700'}
                                   `}
                             value={field.state.value}
                             onBlur={field.handleBlur}
@@ -374,7 +363,7 @@ export function PostDialog() {
                                         </div>
                                         <div className="space-y-1">
                                           <Input
-                                            placeholder="Image Id"
+                                            placeholder="Image Id (Empty if new import)"
                                             className="bg-zinc-950! border-zinc-800 focus-visible:ring-emerald-500/50 h-9 text-sm"
                                             value={subField.state.value.id}
                                             disabled
@@ -453,10 +442,10 @@ export function PostDialog() {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 field.pushValue({
-                                  id: createId(),
-                                  url: "",
-                                  title: "",
-                                  description: "",
+                                  id: '',
+                                  url: '',
+                                  title: '',
+                                  description: '',
                                 });
                                 setTimeout(() => {
                                   const lastIndex = field.state.value.length - 1;
@@ -464,8 +453,8 @@ export function PostDialog() {
                                   if (targetInput) {
                                     targetInput.focus();
                                     targetInput.scrollIntoView({
-                                      behavior: "smooth",
-                                      block: "nearest",
+                                      behavior: 'smooth',
+                                      block: 'nearest',
                                     });
                                   }
                                 }, 100);
@@ -488,12 +477,12 @@ export function PostDialog() {
                           <span
                             className={cn(
                               buttonVariants({
-                                variant: "default",
+                                variant: 'default',
                                 className:
-                                  "bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300 ",
+                                  'bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300 ',
                               }),
                               {
-                                "opacity-50 cursor-not-allowed": isSubmitting,
+                                'opacity-50 cursor-not-allowed': isSubmitting,
                               },
                             )}
                           >
@@ -525,29 +514,32 @@ export function PostDialog() {
                           return (
                             <div
                               key={img.id}
-                              onClick={() => toggleSelection(img.id)}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                toggleSelection(img.id);
+                              }}
                               className={cn(
-                                "group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300",
+                                'group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300',
                                 isSelected
-                                  ? "ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]"
-                                  : "hover:scale-[1.02] border border-zinc-800",
-                                form.state.isSubmitting ? "opacity-50 cursor-not-allowed" : "",
+                                  ? 'ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]'
+                                  : 'hover:scale-[1.02] border border-zinc-800',
+                                form.state.isSubmitting ? 'opacity-50 cursor-not-allowed' : '',
                               )}
                             >
                               <img
                                 src={img.url}
                                 alt="Asset"
-                                className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`}
+                                className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
                               />
 
                               {/* selection overlay */}
                               <div
-                                className={`absolute inset-0 transition-colors duration-300 ${isSelected ? "bg-emerald-500/10" : "bg-transparent group-hover:bg-black/20"}`}
+                                className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-emerald-500/10' : 'bg-transparent group-hover:bg-black/20'}`}
                               />
 
                               {/* status icon */}
                               <div
-                                className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? "bg-emerald-500 scale-100 shadow-lg" : "bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50"}`}
+                                className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? 'bg-emerald-500 scale-100 shadow-lg' : 'bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50'}`}
                               >
                                 <CheckCircle2 className="size-4 text-white" />
                               </div>
@@ -584,7 +576,7 @@ export function PostDialog() {
                       className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 rounded-xl transition-all shadow-lg shadow-emerald-900/20 cursor-pointer"
                     >
                       {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
-                      {initialValues.mode === "edit" ? "Edit" : "Create"}
+                      {initialValues?.mode === 'edit' ? 'Edit' : 'Create'}
                     </Button>
                   )}
                 />
@@ -604,7 +596,7 @@ export function PostDialog() {
             <form.Subscribe
               selector={(state) => state.values.images}
               children={(images) => {
-                const validImages = images?.filter((img) => img.url && img.url.trim() !== "") || [];
+                const validImages = images?.filter((img) => img.url && img.url.trim() !== '') || [];
                 if (validImages.length === 0) {
                   return (
                     <div className="relative z-10 text-center space-y-4">
@@ -631,7 +623,7 @@ export function PostDialog() {
                                 className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105 "
                                 onError={(e) => {
                                   (e.target as HTMLImageElement).src =
-                                    "https://placehold.co/600x800?text=Invalid+Image";
+                                    'https://placehold.co/600x800?text=Invalid+Image';
                                 }}
                               />
                               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

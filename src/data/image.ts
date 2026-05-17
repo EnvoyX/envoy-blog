@@ -5,6 +5,42 @@ import { db } from "@/lib/db";
 import { authMiddleware } from "@/middlewares/auth";
 import { editImageSchema, imageSchema } from "@/schemas/image";
 
+// export const tempMigrateFn = createServerFn().handler(async () => {
+//   // find all images that currently belong to a short post
+//   const imagesWithPosts = await db.image.findMany({
+//     where: {
+//       shortPostId: { not: null },
+//     },
+//     select: {
+//       id: true,
+//       shortPostId: true,
+//     },
+//   });
+
+//   console.log(`Found ${imagesWithPosts.length} relations to migrate...`);
+
+//   // loop through and insert them into the new join table
+//   for (const img of imagesWithPosts) {
+//     if (img.shortPostId) {
+//       await db.imagesOnShortPosts.upsert({
+//         where: {
+//           imageId_shortPostId: {
+//             imageId: img.id,
+//             shortPostId: img.shortPostId,
+//           },
+//         },
+//         update: {},
+//         create: {
+//           imageId: img.id,
+//           shortPostId: img.shortPostId,
+//         },
+//       });
+//     }
+//   }
+
+//   console.log("Migration complete!");
+// });
+
 export const saveImageUrl = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .inputValidator(

@@ -87,7 +87,11 @@ export const getProfileData = createServerFn({ method: 'GET' }).handler(async ()
             },
           },
           author: true,
-          Images: true,
+          imagesOnShortPosts: {
+            include: {
+              image: true,
+            },
+          },
         },
         orderBy: { createdAt: 'desc' },
       },

@@ -280,6 +280,13 @@ export function AlbumDialog() {
                               onChange={(e) => {
                                 field.handleChange(e.target.value);
                               }}
+                              onBlur={(e) => {
+                                if (e.target.value.trim() === '') {
+                                  field.setValue(
+                                    'https://tanstack.com/images/logos/splash-dark.png',
+                                  );
+                                }
+                              }}
                             />
                           </div>
                         </div>

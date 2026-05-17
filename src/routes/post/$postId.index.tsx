@@ -75,7 +75,11 @@ export const Route = createFileRoute('/post/$postId/')({
 
 function RouteComponent() {
   const { post, session } = Route.useLoaderData();
-  const firstImage = post?.Images?.[0]?.url;
+  const photos = post?.imagesOnShortPosts?.map((photo) => ({
+    ...photo.image,
+  }));
+
+  const firstImage = photos?.[0]?.url;
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const navigate = useNavigate();
@@ -148,7 +152,7 @@ function RouteComponent() {
         },
       )}
     >
-      {firstImage && post?.Images?.length === 1 && (
+      {firstImage && photos.length === 1 && (
         <div
           className="relative w-full sm:w-4/5 bg-transparent flex items-center justify-center border-r border-slate-800"
           onClick={(e) => {
@@ -176,7 +180,7 @@ function RouteComponent() {
         </div>
       )}
 
-      {firstImage && post?.Images?.length > 1 && (
+      {firstImage && photos?.length > 1 && (
         <Carousel
           className="relative w-full sm:w-4/5 bg-transparent flex items-center justify-center border-r border-slate-800"
           onClick={(e) => {
@@ -197,7 +201,7 @@ function RouteComponent() {
             </Button>
           </div>
           <CarouselContent>
-            {post?.Images?.map((image, index) => (
+            {photos?.map((image, index) => (
               <CarouselItem key={index}>
                 <div className="relative aspect-square overflow-hidden rounded-md border flex items-center justify-center">
                   {/*<ImageModal
@@ -220,7 +224,7 @@ function RouteComponent() {
           <CarouselPrevious className="cursor-pointer ml-3 absolute top-1/2 left-0 bg-emerald-500! text-slate-900!" />
           <CarouselNext className="cursor-pointer mr-3 absolute top-1/2 right-0 bg-emerald-500! text-slate-900!" />
           <div className="py-2 text-center flex items-center gap-2 font-bold absolute bottom-0">
-            {post?.Images.map((_, index) => {
+            {photos?.map((_, index) => {
               return (
                 <span
                   key={index}
