@@ -9,7 +9,7 @@ import {
   MousePointer2,
   RotateCw,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -159,9 +159,15 @@ export function AlbumDialog() {
     setSelectedCoverImageId(nextCoverImageSelection);
   }
 
-  console.log('Pending', isPending);
-  console.log('Cover Images Pending', isCoverImagesPending);
-
+  useEffect(() => {
+    if (isAlbumDialogOpen) {
+      if (initialValues?.type === 'edit') {
+        form.reset(initialValues);
+      } else {
+        form.reset();
+      }
+    }
+  }, [initialValues, isAlbumDialogOpen, form]);
   return (
     <Dialog
       open={isAlbumDialogOpen}

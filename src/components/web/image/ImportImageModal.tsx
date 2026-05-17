@@ -51,16 +51,6 @@ export function ImportImageModal() {
   });
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
-    // setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
-    api.on('select', () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
-  }, [api]);
   const form = useForm({
     defaultValues: {
       image: [] as { url: string; title: string; description: string }[],
@@ -104,7 +94,16 @@ export function ImportImageModal() {
       }
     },
   });
-
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+    // setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+    api.on('select', () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
   return (
     <Dialog
       open={isImageImportDialogOpen}

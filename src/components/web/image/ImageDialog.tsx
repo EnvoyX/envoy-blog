@@ -2,6 +2,7 @@ import { useForm } from '@tanstack/react-form';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { ImageIcon, Loader2, MailboxIcon } from 'lucide-react';
+import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -55,8 +56,11 @@ export function ImageDialog() {
       showPrivateToFollowers: initialValues ? initialValues.showPrivateToFollowers : false,
     },
     validators: {
+      // @ts-ignore just type error
       onSubmit: editImageSchema,
+      // @ts-ignore just type error
       onChange: editImageSchema,
+      // @ts-ignore just type error
       onBlur: editImageSchema,
     },
     onSubmit: async ({ value }) => {
@@ -78,6 +82,16 @@ export function ImageDialog() {
     },
   });
 
+  useEffect(() => {
+    if (isEditDialogOpen)
+      form.reset({
+        title: initialValues?.title ?? '',
+        description: initialValues?.description ?? '',
+        imageUrl: imageUrl ?? '',
+        published: initialValues?.published ?? false,
+        showPrivateToFollowers: initialValues?.showPrivateToFollowers ?? false,
+      });
+  }, [initialValues, isEditDialogOpen, form, imageUrl, imageId]);
   return (
     <Dialog
       open={isEditDialogOpen}

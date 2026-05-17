@@ -167,6 +167,20 @@ export function PostDialog() {
     setSelectedIds(new Set(validImages?.map((img) => img.id as string) ?? []));
   }, [initialValues?.images]);
 
+  useEffect(() => {
+    if (isOpen) {
+      if (initialValues?.mode === 'edit') {
+        form.reset({
+          content: initialValues.content,
+          images: initialValues.images ?? [],
+          published: initialValues.published,
+          showPrivateToFollowers: initialValues.showPrivateToFollowers,
+        });
+      } else {
+        form.reset();
+      }
+    }
+  }, [initialValues, isOpen, form]);
   return (
     <Dialog
       open={isOpen && !isDeletePostDialog}
