@@ -172,7 +172,10 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                   id="form-tanstack-switch-visibility"
                   name={field.name}
                   checked={field.state.value}
-                  onCheckedChange={field.handleChange}
+                  onCheckedChange={(checked) => {
+                    field.handleChange(checked);
+                    if (checked === true) form.setFieldValue('showPrivateToFollowers', false);
+                  }}
                   aria-invalid={isInvalid}
                 />
               </Field>
@@ -181,30 +184,38 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
         />
       </div>
       <div className="space-y-2">
-        <form.Field
-          name="showPrivateToFollowers"
-          children={(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-            return (
-              <Field orientation="horizontal" data-invalid={isInvalid}>
-                <FieldContent>
-                  <FieldLabel htmlFor="form-tanstack-switch-visibility">
-                    Show to Followers ({field.state.value === true ? 'Shown' : 'Hidden'})
-                  </FieldLabel>
-                  <FieldDescription>
-                    Enable whether this blog is shown to followers or hidden.
-                  </FieldDescription>
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </FieldContent>
-                <Switch
-                  id="form-tanstack-switch-visibility"
-                  name={field.name}
-                  checked={field.state.value}
-                  onCheckedChange={field.handleChange}
-                  aria-invalid={isInvalid}
+        <form.Subscribe
+          selector={(state) => state.values}
+          children={({ published }) => {
+            if (!published)
+              return (
+                <form.Field
+                  name="showPrivateToFollowers"
+                  children={(field) => {
+                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <Field orientation="horizontal" data-invalid={isInvalid}>
+                        <FieldContent>
+                          <FieldLabel htmlFor="form-tanstack-switch-visibility">
+                            Show to Followers ({field.state.value === true ? 'Shown' : 'Hidden'})
+                          </FieldLabel>
+                          <FieldDescription>
+                            Enable whether this blog is shown to followers or hidden.
+                          </FieldDescription>
+                          {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                        </FieldContent>
+                        <Switch
+                          id="form-tanstack-switch-visibility"
+                          name={field.name}
+                          checked={field.state.value}
+                          onCheckedChange={field.handleChange}
+                          aria-invalid={isInvalid}
+                        />
+                      </Field>
+                    );
+                  }}
                 />
-              </Field>
-            );
+              );
           }}
         />
       </div>

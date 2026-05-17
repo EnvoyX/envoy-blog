@@ -141,7 +141,10 @@ export function ImageDialog() {
                     </div>
                     <Switch
                       checked={field.state.value}
-                      onCheckedChange={field.handleChange}
+                      onCheckedChange={(checked) => {
+                        field.handleChange(checked);
+                        if (checked === true) form.setFieldValue('showPrivateToFollowers', false);
+                      }}
                       className="data-[state=checked]:bg-emerald-500"
                     />
                   </div>
