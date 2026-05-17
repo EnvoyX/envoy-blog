@@ -100,7 +100,10 @@ export function WorksSection() {
   const xRaw = useTransform(
     scrollYProgress,
     [0, 1],
-    ['100vw', `${isMobile ? `-${projects.length * 100}px` : `-${100 / projects.length + 100}vw`}`],
+    [
+      '100vw',
+      `${isMobile ? `-${250 / projects.length + 200}vw` : `-${100 / projects.length + 100}vw`}`,
+    ],
   );
   const x = useSpring(xRaw, { stiffness: 50, damping: 20 });
 
