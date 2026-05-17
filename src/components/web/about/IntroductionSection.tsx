@@ -31,23 +31,29 @@ export function IntroductionSection() {
           <h1 className="text-5xl font-black">Hello!</h1>
           <p className="text-2xl">
             I'm a <span className="text-emerald-400 font-bold">self-taught developer</span>, and
-            also a third-year student from Indonesia. I currently study in{' '}
-            <span className="text-emerald-400 font-bold">Institute of Technology Bandung</span>,
-            majoring in Mechanical Engineering.
+            also a third-year student from Indonesia. I am a{' '}
+            <span className="text-emerald-400 font-bold">Mechanical Engineering</span> student at{' '}
+            <span className="text-emerald-400 font-bold">Institute of Technology Bandung</span> with
+            a strong focus on integrating industrial maintenance systems with information
+            technology.
           </p>
           <p className="text-2xl">
-            I'd like and interested in programming and computer science stuff, mostly learning it as
-            my hobby. Now i'm currently learning{' '}
+            I work across engineering and software to deliver data-driven solutions using tools like
+            Next.js, Python, and Typescript, while managing multidisciplinary projects with clear
+            execution.
+          </p>
+          <p className="text-2xl">
+            I'd pique my curiosity and interest in programming and computer science stuff, mostly
+            learning it as my hobby. Now i'm currently learning{' '}
             <span className="text-emerald-400 font-bold">web development</span>, and building
-            projects to learn and grow as a developer. Beside web development, i'd also interested
-            in learning <span className="text-emerald-400 font-bold">game development</span> in
-            Unity and Godot.
+            projects to learn and grow as a developer. Beside web development, i'd also learning{' '}
+            <span className="text-emerald-400 font-bold">game development</span> in Unity and Godot.
           </p>
           <p className="text-2xl">
             Other than that, in my spare time, i'd like to read books, fiction or non-fiction.
             Playing videogames too of course, especially single-player games. Watching wide variety
             of animes and movies too. I will also keep post updates or anything about my hobbies and
-            interest in this website!.
+            interest in this website. Photos of my photography works will also be posted here!
           </p>
         </motion.div>
       </main>

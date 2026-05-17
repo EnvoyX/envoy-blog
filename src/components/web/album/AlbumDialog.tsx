@@ -1,9 +1,18 @@
 import { useForm } from '@tanstack/react-form';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
-import { ImageIcon, Loader2, MailboxIcon } from 'lucide-react';
+import {
+  CheckCircle2,
+  ImageIcon,
+  Loader2,
+  MailboxIcon,
+  MousePointer2,
+  RotateCw,
+} from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -12,16 +21,21 @@ import {
   DialogTitle,
   // DialogTrigger,
 } from '@/components/ui/dialog';
+import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty';
 import { Field, FieldError } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { createAlbumFn, editAlbumFn } from '@/data/album';
+import { createAlbumFn, editAlbumFn, getAlbumByIdFn } from '@/data/album';
+import { getImagesFn } from '@/data/image';
+import { cn } from '@/lib/utils';
 import { albumSchema } from '@/schemas/album';
 import { useAlbumStore } from '@/store/album';
 
 export function AlbumDialog() {
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selectedCoverImageId, setSelectedCoverImageId] = useState<Set<string>>(new Set());
   const router = useRouter();
   const {
     onOpenDialogChange,
@@ -31,17 +45,42 @@ export function AlbumDialog() {
     setInitialValues,
     currentAlbumId,
   } = useAlbumStore();
+
+  const { data: images, isPending } = useQuery({
+    queryKey: ['all-images'],
+    queryFn: async () => {
+      const images = await getImagesFn();
+      return images;
+    },
+    enabled: isAlbumDialogOpen && initialValues?.type === 'create',
+  });
+  const { data: coverImages, isPending: isCoverImagesPending } = useQuery({
+    queryKey: ['cover-images', currentAlbumId],
+    queryFn: async () => {
+      const data = await getAlbumByIdFn({
+        data: { albumId: currentAlbumId },
+      });
+      return data?.images;
+    },
+    enabled: currentAlbumId ? true : false,
+  });
+
   const form = useForm({
     defaultValues: {
       name: initialValues ? initialValues.name : '',
       description: initialValues ? initialValues.description : '',
       published: initialValues ? initialValues.published : false,
-      coverImageUrl: initialValues ? initialValues.coverImageUrl : '',
+      coverImageUrl: initialValues
+        ? initialValues.coverImageUrl
+        : 'https://tanstack.com/images/logos/splash-dark.png',
       showPrivateToFollowers: initialValues ? initialValues.showPrivateToFollowers : false,
     },
     validators: {
+      // @ts-ignore just type error
       onSubmit: albumSchema,
+      // @ts-ignore just type error
       onChange: albumSchema,
+      // @ts-ignore just type error
       onBlur: albumSchema,
     },
     onSubmit: async ({ value }) => {
@@ -71,6 +110,7 @@ export function AlbumDialog() {
             published: value.published,
             coverImageUrl: value.coverImageUrl,
             showPrivateToFollowers: value.showPrivateToFollowers,
+            imageIds: Array.from(selectedIds) ?? [],
           },
         });
         toast.success('Album created successfully');
@@ -80,6 +120,47 @@ export function AlbumDialog() {
       }
     },
   });
+
+  const photos = images;
+
+  function toggleSelection(imgId: string) {
+    if (form.state.isSubmitting) return;
+    const newSelection = new Set(selectedIds);
+    if (newSelection.has(imgId)) {
+      newSelection.delete(imgId);
+      if (selectedCoverImageId.has(imgId)) {
+        setSelectedCoverImageId(new Set());
+        form.setFieldValue('coverImageUrl', 'https://tanstack.com/images/logos/splash-dark.png');
+      }
+    } else newSelection.add(imgId);
+    setSelectedIds(newSelection);
+  }
+
+  function handleCoverImages() {
+    if (initialValues?.type === 'create') return images?.filter((img) => selectedIds.has(img.id));
+    else if (initialValues?.type === 'edit') return coverImages;
+  }
+
+  const coverImageSelections = handleCoverImages();
+
+  function handleCoverImageSelection(imgId: string) {
+    if (form.state.isSubmitting) return;
+    const nextCoverImageSelection = new Set(selectedCoverImageId);
+    if (nextCoverImageSelection.has(imgId)) nextCoverImageSelection.delete(imgId);
+    else {
+      nextCoverImageSelection.clear();
+      nextCoverImageSelection.add(imgId);
+    }
+    form.setFieldValue(
+      'coverImageUrl',
+      images?.find((img) => nextCoverImageSelection.has(img.id))?.url ??
+        'https://tanstack.com/images/logos/splash-dark.png',
+    );
+    setSelectedCoverImageId(nextCoverImageSelection);
+  }
+
+  console.log('Pending', isPending);
+  console.log('Cover Images Pending', isCoverImagesPending);
 
   return (
     <Dialog
@@ -111,7 +192,7 @@ export function AlbumDialog() {
                 e.stopPropagation();
                 void form.handleSubmit();
               }}
-              className="space-y-8 "
+              className="space-y-8"
             >
               <form.Field
                 name="published"
@@ -264,7 +345,7 @@ export function AlbumDialog() {
               </Field>
               <Field>
                 <Label className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
-                  Cover Image
+                  Album Cover Image
                 </Label>
                 <form.Field name="coverImageUrl">
                   {(field) => {
@@ -279,12 +360,14 @@ export function AlbumDialog() {
                               value={field.state.value}
                               onChange={(e) => {
                                 field.handleChange(e.target.value);
+                                setSelectedCoverImageId(new Set());
                               }}
                               onBlur={(e) => {
                                 if (e.target.value.trim() === '') {
                                   field.setValue(
                                     'https://tanstack.com/images/logos/splash-dark.png',
                                   );
+                                  setSelectedCoverImageId(new Set());
                                 }
                               }}
                             />
@@ -303,6 +386,193 @@ export function AlbumDialog() {
                   }}
                 </form.Field>
               </Field>
+              {((selectedIds.size > 0 && initialValues?.type === 'create') ||
+                initialValues?.type === 'edit') && (
+                <Field className="-mt-8">
+                  <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-400 scrollbar-track-emerald-900 max-h-125 relative">
+                    {(isPending && initialValues?.type === 'create') ||
+                    (isCoverImagesPending && initialValues?.type === 'edit') ? (
+                      <div className="flex items-center justify-center">
+                        <div className="flex flex-col items-center gap-4">
+                          <Loader2 className="animate-spin size-10 text-emerald-500" />
+                          <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest animate-pulse">
+                            Loading Images...
+                          </p>
+                        </div>
+                      </div>
+                    ) : coverImageSelections?.length ? (
+                      <div className="grid grid-cols-2 gap-4">
+                        {coverImageSelections?.map((img) => {
+                          const isSelected = selectedCoverImageId.has(img.id);
+                          return (
+                            <div
+                              key={img.id}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleCoverImageSelection(img.id);
+                              }}
+                              className={cn(
+                                'group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300',
+                                isSelected
+                                  ? 'ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]'
+                                  : 'hover:scale-[1.02] border border-zinc-800',
+                                form.state.isSubmitting ? 'opacity-50 cursor-not-allowed' : '',
+                              )}
+                            >
+                              <img
+                                src={img.url}
+                                alt="Asset"
+                                className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
+                              />
+
+                              {/* selection overlay */}
+                              <div
+                                className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-emerald-500/10' : 'bg-transparent group-hover:bg-black/20'}`}
+                              />
+
+                              {/* status icon */}
+                              <div
+                                className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? 'bg-emerald-500 scale-100 shadow-lg' : 'bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50'}`}
+                              >
+                                <CheckCircle2 className="size-4 text-white" />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="h-full flex items-center justify-center">
+                        <Empty className="border border-dashed border-zinc-800 bg-zinc-900/20 p-12 rounded-3xl">
+                          <EmptyHeader>
+                            <div className="mx-auto bg-zinc-800/50 p-4 rounded-full mb-4">
+                              <MousePointer2 className="size-8 text-zinc-600" />
+                            </div>
+                            <EmptyTitle className="text-zinc-300">No images</EmptyTitle>
+                            <EmptyDescription className="text-zinc-500">
+                              No images available to select
+                            </EmptyDescription>
+                          </EmptyHeader>
+                        </Empty>
+                      </div>
+                    )}
+                  </div>
+                </Field>
+              )}
+              {initialValues?.type === 'create' && (
+                <Field>
+                  <Label className="text-sm font-semibold uppercase tracking-wider text-emerald-500 w-full flex justify-center items-center ">
+                    Gallery Photos
+                  </Label>
+                  <form.Subscribe
+                    selector={(state) => [state.isSubmitting]}
+                    children={([isSubmitting]) => (
+                      <div className="w-full flex items-center justify-center gap-2 mb-4">
+                        <span
+                          className={cn(
+                            buttonVariants({
+                              variant: 'default',
+                              className:
+                                'bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl w-fit font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300',
+                            }),
+                            {
+                              'opacity-50 cursor-not-allowed': isSubmitting,
+                            },
+                          )}
+                        >
+                          {isSubmitting ? (
+                            <Loader2 className="size-4 animate-spin" />
+                          ) : (
+                            <CheckCircle2 className="size-4" />
+                          )}
+                          {selectedIds.size}
+                        </span>
+                        <Button
+                          variant="default"
+                          size="icon-lg"
+                          className={cn(
+                            'bg-destructive/75 hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20 animate-in fade-in zoom-in duration-300 cursor-pointer',
+                            {
+                              'opacity-50 cursor-not-allowed': isSubmitting,
+                            },
+                          )}
+                          onClick={() => {
+                            setSelectedIds(new Set());
+                          }}
+                        >
+                          <RotateCw className="size-4" />
+                        </Button>
+                      </div>
+                    )}
+                  />
+
+                  <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-400 scrollbar-track-emerald-900 max-h-125 relative border-t-2 border-b-2 border-emerald-400">
+                    {isPending ? (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="flex flex-col items-center gap-4">
+                          <Loader2 className="animate-spin size-10 text-emerald-500" />
+                          <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest animate-pulse">
+                            Loading Images...
+                          </p>
+                        </div>
+                      </div>
+                    ) : photos?.length ? (
+                      <div className="grid grid-cols-2 gap-4">
+                        {photos?.map((img) => {
+                          const isSelected = selectedIds.has(img.id);
+                          return (
+                            <div
+                              key={img.id}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                toggleSelection(img.id);
+                              }}
+                              className={cn(
+                                'group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300',
+                                isSelected
+                                  ? 'ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]'
+                                  : 'hover:scale-[1.02] border border-zinc-800',
+                                form.state.isSubmitting ? 'opacity-50 cursor-not-allowed' : '',
+                              )}
+                            >
+                              <img
+                                src={img.url}
+                                alt="Asset"
+                                className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
+                              />
+
+                              {/* selection overlay */}
+                              <div
+                                className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-emerald-500/10' : 'bg-transparent group-hover:bg-black/20'}`}
+                              />
+
+                              {/* status icon */}
+                              <div
+                                className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? 'bg-emerald-500 scale-100 shadow-lg' : 'bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50'}`}
+                              >
+                                <CheckCircle2 className="size-4 text-white" />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="h-full flex items-center justify-center">
+                        <Empty className="border border-dashed border-zinc-800 bg-zinc-900/20 p-12 rounded-3xl">
+                          <EmptyHeader>
+                            <div className="mx-auto bg-zinc-800/50 p-4 rounded-full mb-4">
+                              <MousePointer2 className="size-8 text-zinc-600" />
+                            </div>
+                            <EmptyTitle className="text-zinc-300">No images</EmptyTitle>
+                            <EmptyDescription className="text-zinc-500">
+                              No images available to select
+                            </EmptyDescription>
+                          </EmptyHeader>
+                        </Empty>
+                      </div>
+                    )}
+                  </div>
+                </Field>
+              )}
 
               <div className="flex items-center gap-3 animate-in fade-in slide-in-from-left-2 duration-300">
                 <form.Subscribe

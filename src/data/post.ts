@@ -104,8 +104,10 @@ export const createShortPostFn = createServerFn({ method: 'POST' })
       if (!data.images?.length) return newPost;
 
       const newImagesData = inputtedImages.filter((img) => !img.id); // imported images
-      const existingImageIds = inputtedImages.filter((img) => img.id).map((img) => img.id); // images picked from gallery
+      const existingImagesData = inputtedImages.filter((img) => img.id); // images picked from gallery
+      const existingImageIds = inputtedImages.filter((img) => img.id).map((img) => img.id);
 
+      // create new images
       let newImageIds: string[] = [];
       if (newImagesData.length > 0) {
         const createdImages = await ctx.image.createManyAndReturn({
@@ -119,6 +121,24 @@ export const createShortPostFn = createServerFn({ method: 'POST' })
           })),
         });
         newImageIds = createdImages.map((img) => img.id);
+      }
+
+      // update metadata of images picked from gallery
+      if (existingImagesData.length > 0) {
+        await Promise.all(
+          existingImagesData.map((img) =>
+            ctx.image.update({
+              where: { id: img.id },
+              data: {
+                url: img.url ?? '',
+                title: img.title ?? '',
+                description: img.description ?? '',
+                published: data.published,
+                showPrivateToFollowers: data.showPrivateToFollowers,
+              },
+            }),
+          ),
+        );
       }
 
       const allImageIds = [...newImageIds, ...existingImageIds];
@@ -187,6 +207,8 @@ export const editShortPostFn = createServerFn({ method: 'POST' })
                 url: img.url ?? '',
                 title: img.title ?? '',
                 description: img.description ?? '',
+                published: data.published,
+                showPrivateToFollowers: data.showPrivateToFollowers,
               },
             }),
           ),

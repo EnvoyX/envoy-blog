@@ -8,6 +8,7 @@ import {
   MailboxIcon,
   MousePointer2,
   Plus,
+  RotateCw,
   Trash2,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -114,9 +115,8 @@ export function PostDialog() {
       }
     },
   });
-
   function toggleSelection(imgId: string) {
-    const selecedImage = images?.find((img) => img.id === imgId);
+    const selectedImage = images?.find((img) => img.id === imgId);
     if (form.state.isSubmitting) return;
     const newSelection = new Set(selectedIds);
     if (newSelection.has(imgId)) {
@@ -131,27 +131,23 @@ export function PostDialog() {
         return [
           ...prev,
           {
-            id: selecedImage?.id ?? '',
-            url: selecedImage?.url ?? '',
-            title: selecedImage?.title ?? '',
-            description: selecedImage?.description ?? '',
+            id: selectedImage?.id ?? '',
+            url: selectedImage?.url ?? '',
+            title: selectedImage?.title ?? '',
+            description: selectedImage?.description ?? '',
           },
         ];
       });
     }
     setSelectedIds(newSelection);
   }
-
   function handlePhotos() {
     if (!initialValues?.images) return images;
     else {
-      const sortedSelectedImages = images?.sort((a, b) => {
-        return selectedIds.has(a.id) ? -1 : 1;
-      });
-      return sortedSelectedImages;
+      const photos = images;
+      return photos;
     }
   }
-
   const photos = handlePhotos();
 
   useEffect(() => {
@@ -246,7 +242,7 @@ export function PostDialog() {
                                 </span>
                               </Label>
                               <p className="text-xs text-zinc-500">
-                                Show this post to follower even if private
+                                Show this private post and related content to follower
                               </p>
                             </div>
                             <Switch
@@ -473,13 +469,13 @@ export function PostDialog() {
                     <form.Subscribe
                       selector={(state) => [state.isSubmitting]}
                       children={([isSubmitting]) => (
-                        <div className="w-full flex justify-center items-center mb-4">
+                        <div className="w-full flex items-center justify-center gap-2 mb-4">
                           <span
                             className={cn(
                               buttonVariants({
                                 variant: 'default',
                                 className:
-                                  'bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300 ',
+                                  'bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl w-fit font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300',
                               }),
                               {
                                 'opacity-50 cursor-not-allowed': isSubmitting,
@@ -487,17 +483,32 @@ export function PostDialog() {
                             )}
                           >
                             {isSubmitting ? (
-                              <Loader2 className="size-4 animate-spin mr-2" />
+                              <Loader2 className="size-4 animate-spin" />
                             ) : (
-                              <CheckCircle2 className="size-4 mr-2" />
+                              <CheckCircle2 className="size-4" />
                             )}
-                            Selected ({selectedIds.size})
+                            {selectedIds.size}
                           </span>
+                          <Button
+                            variant="default"
+                            size="icon-lg"
+                            className={cn(
+                              'bg-destructive/75 hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20 animate-in fade-in zoom-in duration-300 cursor-pointer',
+                              {
+                                'opacity-50 cursor-not-allowed': isSubmitting,
+                              },
+                            )}
+                            onClick={() => {
+                              setSelectedIds(new Set());
+                            }}
+                          >
+                            <RotateCw className="size-4" />
+                          </Button>
                         </div>
                       )}
                     />
                   )}
-                  <div className="flex-1 overflow-y-auto p-8 scrollbar-hide max-h-125 relative border-t-2 border-b-2 border-emerald-400">
+                  <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-400 scrollbar-track-emerald-900 max-h-125 relative border-t-2 border-b-2 border-emerald-400">
                     {isPending ? (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="flex flex-col items-center gap-4">

@@ -1,3 +1,10 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from '@tanstack/react-router';
+import { CheckCircle2, ImageIcon, Loader2, MousePointer2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   // DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   Empty,
   //   EmptyContent,
@@ -14,18 +21,11 @@ import {
   EmptyHeader,
   //   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getImagesWithAlbumsFn } from "@/data/image";
-import { toast } from "sonner";
-import { useRouter } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
-import { useAlbumStore } from "@/store/album";
-
-import { useEffect, useState } from "react";
-import { CheckCircle2, ImageIcon, Loader2, MousePointer2 } from "lucide-react";
-import { changeAlbumCoverFn } from "@/data/album";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/empty';
+import { changeAlbumCoverFn } from '@/data/album';
+import { getImagesWithAlbumsFn } from '@/data/image';
+import { cn } from '@/lib/utils';
+import { useAlbumStore } from '@/store/album';
 
 export function AlbumCoverDialog() {
   const queryClient = useQueryClient();
@@ -35,7 +35,7 @@ export function AlbumCoverDialog() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isImporting, setIsImporting] = useState(false);
   const { data: images, isPending } = useQuery({
-    queryKey: ["available-images", currentAlbumId],
+    queryKey: ['available-images', currentAlbumId],
     queryFn: async () => {
       const images = await getImagesWithAlbumsFn();
       return images;
@@ -65,20 +65,20 @@ export function AlbumCoverDialog() {
     setIsImporting(true);
 
     try {
-      toast.loading(`Changing album cover...`, { id: "album-cover" });
+      toast.loading(`Changing album cover...`, { id: 'album-cover' });
       await changeAlbumCoverFn({
         data: {
           albumId: currentAlbumId,
           imageUrl: imageUrlFromSelector ?? (initialValues?.coverImageUrl as string),
         },
       });
-      toast.success("Album cover updated successfully", { id: "album-cover" });
+      toast.success('Album cover updated successfully', { id: 'album-cover' });
       setSelectedIds(new Set());
-      onOpenDialogChange("albumCover", false);
-      void queryClient.invalidateQueries({ queryKey: ["available-images", currentAlbumId] });
+      onOpenDialogChange('albumCover', false);
+      void queryClient.invalidateQueries({ queryKey: ['available-images', currentAlbumId] });
       void router.invalidate();
     } catch (error) {
-      toast.error("Failed to change album cover", { id: "album-cover" });
+      toast.error('Failed to change album cover', { id: 'album-cover' });
       console.error(error);
     } finally {
       setIsImporting(false);
@@ -92,7 +92,7 @@ export function AlbumCoverDialog() {
   return (
     <Dialog
       open={isAlbumCoverDialogOpen}
-      onOpenChange={(open) => onOpenDialogChange("albumCover", open)}
+      onOpenChange={(open) => onOpenDialogChange('albumCover', open)}
     >
       <DialogContent className="sm:max-w-6xl p-0 overflow-hidden border-zinc-800  shadow-2xl">
         <div className="flex flex-col md:flex-row h-[85vh] ">
@@ -105,7 +105,7 @@ export function AlbumCoverDialog() {
                 Album Cover
               </DialogTitle>
               <DialogDescription className="text-zinc-400">
-                Change album cover of{" "}
+                Change album cover of{' '}
                 <span className="text-emerald-400 font-semibold">{initialValues?.name}</span>
               </DialogDescription>
             </DialogHeader>
@@ -119,10 +119,10 @@ export function AlbumCoverDialog() {
             </div>
 
             <div className="mt-auto pt-6 space-y-4">
-              <div className={cn("p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10")}>
+              <div className={cn('p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10')}>
                 <p
                   className={cn(
-                    "text-[10px] font-bold text-emerald-500/70 uppercase tracking-widest mb-1 text-center",
+                    'text-[10px] font-bold text-emerald-500/70 uppercase tracking-widest mb-1 text-center',
                   )}
                 >
                   Total of
@@ -143,7 +143,7 @@ export function AlbumCoverDialog() {
                 <h3 className="text-lg max-sm:text-2xl font-bold text-zinc-100">Select Image</h3>
                 <DialogHeader className="md:hidden">
                   <DialogDescription className="text-zinc-400">
-                    Change album cover of{" "}
+                    Change album cover of{' '}
                     <span className="text-emerald-400 font-semibold">{initialValues?.name}</span>
                   </DialogDescription>
                 </DialogHeader>
@@ -154,7 +154,7 @@ export function AlbumCoverDialog() {
                   onClick={handleAlbumCoverChange}
                   disabled={isImporting}
                   className={cn(
-                    "bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300 cursor-pointer",
+                    'bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300 cursor-pointer',
                   )}
                 >
                   {isImporting ? (
@@ -189,25 +189,25 @@ export function AlbumCoverDialog() {
                           group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300
                           ${
                             isSelected
-                              ? "ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]"
-                              : "hover:scale-[1.02] border border-zinc-800"
+                              ? 'ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]'
+                              : 'hover:scale-[1.02] border border-zinc-800'
                           }
                         `}
                       >
                         <img
                           src={img.url}
                           alt="Asset"
-                          className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`}
+                          className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
                         />
 
                         {/* selection overlay */}
                         <div
-                          className={`absolute inset-0 transition-colors duration-300 ${isSelected ? "bg-emerald-500/10" : "bg-transparent group-hover:bg-black/20"}`}
+                          className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-emerald-500/10' : 'bg-transparent group-hover:bg-black/20'}`}
                         />
 
                         {/* status icon */}
                         <div
-                          className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? "bg-emerald-500 scale-100 shadow-lg" : "bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50"}`}
+                          className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? 'bg-emerald-500 scale-100 shadow-lg' : 'bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50'}`}
                         >
                           <CheckCircle2 className="size-4 text-white" />
                         </div>

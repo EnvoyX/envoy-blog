@@ -50,7 +50,7 @@ function RouteComponent() {
             onClick={() => {
               toggleDialog('open', '');
               setInitialValues({
-                coverImageUrl: '',
+                coverImageUrl: 'https://tanstack.com/images/logos/splash-dark.png',
                 description: '',
                 name: '',
                 published: false,
@@ -74,7 +74,7 @@ function RouteComponent() {
             onClick={() => {
               toggleDialog('open', '');
               setInitialValues({
-                coverImageUrl: '',
+                coverImageUrl: 'https://tanstack.com/images/logos/splash-dark.png',
                 description: '',
                 name: '',
                 published: false,

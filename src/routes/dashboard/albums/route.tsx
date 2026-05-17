@@ -1,9 +1,9 @@
-import { useNavigate } from "@tanstack/react-router";
-import { useRouter } from "@tanstack/react-router";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { toast } from "sonner";
+import { useNavigate } from '@tanstack/react-router';
+import { useRouter } from '@tanstack/react-router';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -12,14 +12,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { AlbumCoverDialog } from "@/components/web/album/AlbumCoverDialog";
-import { AlbumDialog } from "@/components/web/album/AlbumDialog";
-import { BulkAlbumDialog } from "@/components/web/album/BulkAlbumDialog";
-import { deleteAlbumFn } from "@/data/album";
-import { useAlbumStore } from "@/store/album";
+} from '@/components/ui/dialog';
+import { AlbumCoverDialog } from '@/components/web/album/AlbumCoverDialog';
+import { AlbumDialog } from '@/components/web/album/AlbumDialog';
+import { BulkAlbumDialog } from '@/components/web/album/BulkAlbumDialog';
+import { deleteAlbumFn } from '@/data/album';
+import { useAlbumStore } from '@/store/album';
 
-export const Route = createFileRoute("/dashboard/albums")({
+export const Route = createFileRoute('/dashboard/albums')({
   component: RouteComponent,
 });
 
@@ -33,12 +33,12 @@ function RouteComponent() {
         albumId: currentAlbumId,
       },
     });
-    toast.success("Album successfully deleted");
+    toast.success('Album successfully deleted');
     void router.invalidate();
     navigate({
-      to: "/dashboard/albums",
+      to: '/dashboard/albums',
     });
-    toggleDialog("close", "");
+    toggleDialog('close', '');
   }
 
   return (
@@ -50,7 +50,7 @@ function RouteComponent() {
       <Dialog
         open={isDeleteDialogOpen}
         onOpenChange={(open) => {
-          onOpenDialogChange("delete", open);
+          onOpenDialogChange('delete', open);
         }}
       >
         <DialogContent className="sm:max-w-md">
@@ -64,7 +64,7 @@ function RouteComponent() {
           <DialogFooter className="sm:justify-center">
             <Button
               type="button"
-              variant={"destructive"}
+              variant={'destructive'}
               className="cursor-pointer"
               onClick={handleDeleteAlbum}
             >
