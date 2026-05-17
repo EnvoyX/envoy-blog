@@ -1,6 +1,7 @@
 import { IconLogout2 } from '@tabler/icons-react';
 import { useLiveQuery } from '@tanstack/react-db';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { zodValidator } from '@tanstack/zod-adapter';
 import {
   Calendar,
   CheckCheck,
@@ -38,6 +39,7 @@ import { UploadThingModal } from '@/components/web/uplooadthing/UploadThingModal
 import { UserFollowDialog } from '@/components/web/UserFollowDialog';
 import { getProfileData, getUser } from '@/data/session';
 import { authClient } from '@/lib/auth-client';
+import { profilePageSearchParamsSchema } from '@/schemas/searchSchemas';
 import { imageUploadModalStore } from '@/store/imageUploadStore';
 import { followDialogStore, useProfileStore } from '@/store/profile';
 
@@ -50,6 +52,7 @@ export const Route = createFileRoute('/dashboard/profile')({
       session,
     };
   },
+  validateSearch: zodValidator(profilePageSearchParamsSchema),
   head: () => ({
     meta: [
       { title: 'Profile | Envoy Mindpalace' },
@@ -74,10 +77,11 @@ export const Route = createFileRoute('/dashboard/profile')({
 
 function RouteComponent() {
   const { user, session } = Route.useLoaderData();
-  const navigate = useNavigate();
+  const { currentTab } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
   const [isTransition, startTransition] = useTransition();
   const { data: follows } = useLiveQuery((q) => q.from({ follow: followColection }));
-  const { viewMode, toggleViewMode, lastViewedTab, setLastViewedTab } = useProfileStore();
+  const { viewMode, toggleViewMode } = useProfileStore();
   const viewAll = viewMode === 'all';
   const viewPublic = viewMode === 'public';
   const viewOnlyFollowers = viewMode === 'showToFollowers';
@@ -290,7 +294,7 @@ function RouteComponent() {
         </div>
       </header>
 
-      <div className="mt-6 mb-12 pb-6 border-b border-border flex max-sm:flex-col gap-4">
+      <div className="mt-6 mb-12 pb-6 border-b border-border flex max-sm:flex-col overflow-auto gap-4 scrollbar-thin scrollbar-thumb-emerald-800">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="cursor-pointer flex items-center">
@@ -361,10 +365,14 @@ function RouteComponent() {
         </Button>
       </div>
       <Tabs
-        defaultValue={lastViewedTab ?? 'posts'}
-        onValueChange={(value) =>
-          setLastViewedTab(value as 'blogs' | 'posts' | 'images' | 'albums')
-        }
+        defaultValue={currentTab}
+        onValueChange={(value) => {
+          navigate({
+            search: () => ({
+              currentTab: value as 'blogs' | 'posts' | 'images' | 'albums',
+            }),
+          });
+        }}
         className="w-full"
         orientation="horizontal"
       >

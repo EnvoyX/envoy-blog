@@ -1,11 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
+import { zodValidator } from '@tanstack/zod-adapter';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ShortPostCard } from '@/components/web/post/ShortPostCard';
 import { getFollowsByUserIdFn } from '@/data/follow';
 import { getGlobalFeedFn } from '@/data/post';
 import { getUser } from '@/data/session';
-import { usePostStore } from '@/store/post';
+import { postPageSearchParamsSchema } from '@/schemas/searchSchemas';
 
 export const Route = createFileRoute('/_general/post/')({
   component: RouteComponent,
@@ -43,6 +45,7 @@ export const Route = createFileRoute('/_general/post/')({
       session,
     };
   },
+  validateSearch: zodValidator(postPageSearchParamsSchema),
   head: () => ({
     meta: [
       { title: `Posts | Envoy Mindpalace` },
@@ -66,15 +69,20 @@ export const Route = createFileRoute('/_general/post/')({
 
 function RouteComponent() {
   const { publicPost, latestPosts, followingPosts, session } = Route.useLoaderData();
-  const { lastViewedTab, setLastViewedTab } = usePostStore();
+  const { currentTab } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
 
   return (
     <main className="min-h-screen">
       <Tabs
-        defaultValue={lastViewedTab ?? 'latest-post'}
-        onValueChange={(value) =>
-          setLastViewedTab(value as 'latest-post' | 'for-you' | 'following-post')
-        }
+        defaultValue={currentTab}
+        onValueChange={(value) => {
+          navigate({
+            search: () => ({
+              currentTab: value as 'latest-post' | 'for-you' | 'following-post',
+            }),
+          });
+        }}
         orientation="horizontal"
       >
         <header className="backdrop-blur-md mt-8 max-sm:px-12">

@@ -9,7 +9,6 @@ export const usePostStore = create(
         isOpen: false,
         isDeletePostDialog: false,
         currentPostId: '',
-        lastViewedTab: '',
         initialValues: null as {
           images: { id?: string; url: string; title: string; description: string }[] | null;
           content: string;
@@ -81,8 +80,6 @@ export const usePostStore = create(
             },
           });
         },
-        setLastViewedTab: (value: 'latest-post' | 'for-you' | 'following-post') =>
-          set(() => ({ lastViewedTab: value })),
       }),
     ),
     {
