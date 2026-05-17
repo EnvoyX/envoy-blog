@@ -65,7 +65,7 @@ function RouteComponent() {
             </div>
           </Button>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 md:gap-6 lg:gap-8">
           {albums.map((album) => (
             <AlbumCard key={album.id} album={album} inDashboard={true} />
           ))}

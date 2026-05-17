@@ -1,8 +1,10 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useRouter } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { zodValidator } from '@tanstack/zod-adapter';
 import { compareAsc, compareDesc } from 'date-fns';
 import { MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -167,7 +169,7 @@ function PostPageComponent() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 mx-auto">
           {sortedPosts.map((post) => {
             const photos = post.imagesOnShortPosts.map((data) => ({
               ...data.image,
@@ -175,83 +177,99 @@ function PostPageComponent() {
             const imgs = photos.map((img) => img.url);
             const firstImageUrl = imgs[0];
             return (
-              <Card
-                key={post.id}
-                className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0"
+              <Link
+                to="/post/$postId"
+                params={{
+                  postId: post.id,
+                }}
               >
-                <div className="aspect-square relative overflow-hidden">
-                  <img
-                    src={
-                      firstImageUrl
-                        ? firstImageUrl
-                        : 'https://tanstack.com/images/logos/logo-color-600.png'
-                    }
-                    alt={post.id}
-                    className="object-cover w-full h-full transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
+                <Card
+                  key={post.id}
+                  className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0"
+                >
+                  <motion.div
+                    className="aspect-square relative overflow-hidden rounded-xl"
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <img
+                      src={
+                        firstImageUrl
+                          ? firstImageUrl
+                          : 'https://tanstack.com/images/logos/logo-color-600.png'
+                      }
+                      alt={post.id}
+                      className="object-cover w-full h-full transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
 
-                  {post.authorId === session?.user?.id && (
-                    <div className="absolute top-3 right-3">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="secondary"
-                            size="icon"
-                            className="size-8 rounded-full bg-slate-950/50 backdrop-blur-md border-slate-700 hover:bg-slate-800 cursor-pointer"
-                          >
-                            <MoreVertical className="size-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                          align="end"
-                          className="w-40 bg-transparent backdrop-blur-lg border-slate-800 text-slate-200"
-                        >
-                          <DropdownMenuItem
-                            className="cursor-pointer"
-                            onSelect={(e) => e.preventDefault()}
-                            asChild
-                          >
-                            <button
-                              className="flex items-center gap-2 p-1 cursor-pointer w-full"
-                              onClick={() => {
-                                toggleDialog('open', post.id);
-                                setInitialValues({
-                                  images: photos.map((image) => {
-                                    return {
-                                      id: image.id,
-                                      url: image.url,
-                                      title: image.title ?? '',
-                                      description: image.description ?? '',
-                                    };
-                                  }),
-                                  content: post.content ?? '',
-                                  published: post.published,
-                                  showPrivateToFollowers: post.showPrivateToFollowers,
-                                  currentPostId: post.id,
-                                  mode: 'edit',
-                                });
+                    {post.authorId === session?.user?.id && (
+                      <div className="absolute top-3 right-3 z-20">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="secondary"
+                              size="icon"
+                              className="size-8 rounded-full bg-slate-950/50 backdrop-blur-md border-slate-700 hover:bg-slate-800 cursor-pointer"
+                              onClick={(e) => {
+                                e.preventDefault();
                               }}
                             >
-                              <Pencil className="size-4" /> Edit Post
-                            </button>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={(e) => {
-                              e.preventDefault();
-                              toggleDialog('delete', post.id);
-                            }}
-                            className="focus:bg-red-500/20 text-red-400 focus:text-red-400 cursor-pointer"
+                              <MoreVertical className="size-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            className="w-40 bg-transparent backdrop-blur-lg border-slate-800 text-slate-200"
                           >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            <span>Delete Post</span>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  )}
-                </div>
-              </Card>
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onSelect={(e) => {
+                                e.preventDefault();
+                              }}
+                              asChild
+                            >
+                              <button
+                                className="flex items-center gap-2 p-1 cursor-pointer w-full"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  toggleDialog('open', post.id);
+                                  setInitialValues({
+                                    images: photos.map((image) => {
+                                      return {
+                                        id: image.id,
+                                        url: image.url,
+                                        title: image.title ?? '',
+                                        description: image.description ?? '',
+                                      };
+                                    }),
+                                    content: post.content ?? '',
+                                    published: post.published,
+                                    showPrivateToFollowers: post.showPrivateToFollowers,
+                                    currentPostId: post.id,
+                                    mode: 'edit',
+                                  });
+                                }}
+                              >
+                                <Pencil className="size-4" /> Edit Post
+                              </button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.preventDefault();
+                                toggleDialog('delete', post.id);
+                              }}
+                              className="focus:bg-red-500/20 text-red-400 focus:text-red-400 cursor-pointer"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              <span>Delete Post</span>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    )}
+                  </motion.div>
+                </Card>
+              </Link>
             );
           })}
         </div>
