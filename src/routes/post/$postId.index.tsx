@@ -3,7 +3,7 @@ import { eq, useLiveQuery } from '@tanstack/react-db';
 import { createFileRoute, Link, redirect } from '@tanstack/react-router';
 import { useNavigate } from '@tanstack/react-router';
 import { formatDistanceToNow } from 'date-fns';
-import { ArrowLeft, Heart, MessageSquare, PanelRightClose } from 'lucide-react';
+import { ArrowLeft, ChevronsRight, Heart, MessageSquare } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
@@ -213,7 +213,11 @@ function RouteComponent() {
                 setHidden((prev) => !prev);
               }}
             >
-              <PanelRightClose className="size-6 text-primary" />
+              <ChevronsRight
+                className={cn('size-6 text-primary', {
+                  'rotate-180': hidden,
+                })}
+              />
             </Button>
           </div>
           <CarouselContent>
@@ -276,12 +280,25 @@ function RouteComponent() {
       )}
 
       <div
-        className={cn(`flex flex-col h-full max-sm:flex-1 sm:min-w-xs`, {
+        className={cn(`flex flex-col h-full max-sm:flex-1 sm:min-w-xs sm:max-w-xs`, {
           'max-w-3xl mx-auto w-full shadow-2xl': !photos.length,
           hidden: hidden,
         })}
       >
-        <div className="p-4 border-b border-slate-900">
+        <div className="p-4 border-b border-slate-900 relative">
+          <header className="sm:hidden w-full border-b h-8 flex items-center py-6 mb-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="cursor-pointer"
+              onClick={() => {
+                window.history.back();
+              }}
+            >
+              <ArrowLeft className="size-5 text-primary" />
+            </Button>
+            <span className="text-lg font-bold text-emerald-400 leading-none ml-2">Post</span>
+          </header>
           <div className="flex items-center justify-between">
             <Link
               to="/user/$userId"
@@ -305,7 +322,6 @@ function RouteComponent() {
                 <MoreHorizontal className="size-4" />
               </button> */}
           </div>
-
           {post?.content && (
             <div className="mt-4 text-sm text-slate-300 leading-relaxed h-fit sm:max-h-37.5 overflow-y-auto scrollbar-hide">
               {post?.content}
