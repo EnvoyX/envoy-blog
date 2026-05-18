@@ -126,7 +126,7 @@ function RouteComponent() {
               ))
             ) : (
               <div className="text-center py-20 border border-dashed border-slate-800 rounded-3xl">
-                <p className="text-slate-400 italic">No thoughts shared in the feed yet.</p>
+                <p className="text-slate-400 italic">No posts shared in the latest feed yet.</p>
               </div>
             )}
           </div>

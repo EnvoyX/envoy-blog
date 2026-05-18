@@ -148,7 +148,7 @@ function BlogPageComponent() {
 
         {filteredPosts.length === 0 && (
           <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
-            <p className="text-slate-500">No posts found. Create your first blog post!</p>
+            <p className="text-slate-500">No latest blogs found. Stay tuned!</p>
           </div>
         )}
 

@@ -85,7 +85,7 @@ function ArticleIndex() {
         {/* Empty State */}
         {sortedPosts.length === 0 && (
           <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
-            <p className="text-slate-500">No posts found. Start your journey today!</p>
+            <p className="text-slate-500">No articles found. Stay tuned!</p>
           </div>
         )}
 
