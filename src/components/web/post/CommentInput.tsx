@@ -11,7 +11,7 @@ export default function CommentInput({ handleAddComment }: CommentInputProps) {
   return (
     <div className="relative flex items-center gap-3">
       <textarea
-        placeholder="Write a comment..."
+        placeholder=""
         value={commentText}
         onChange={(e) => {
           setCommentText(e.target.value);

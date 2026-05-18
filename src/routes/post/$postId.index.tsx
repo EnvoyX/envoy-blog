@@ -3,8 +3,10 @@ import { eq, useLiveQuery } from '@tanstack/react-db';
 import { createFileRoute, Link, redirect } from '@tanstack/react-router';
 import { useNavigate } from '@tanstack/react-router';
 import { formatDistanceToNow } from 'date-fns';
-import { ArrowLeft, Heart, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Heart, MessageSquare, PanelRightClose } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { useMediaQuery } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
 
 import { commentCollection, likeCollection } from '@/collections/post';
@@ -20,10 +22,14 @@ import {
 } from '@/components/ui/carousel';
 // import { ImageModal } from '@/components/web/ImageModal';
 import CommentInput from '@/components/web/post/CommentInput';
+import MasonryCollage from '@/components/web/post/MasonryCollage';
+import PostCollage from '@/components/web/post/PostCollage';
+import { PostLightBox } from '@/components/web/post/PostLightBox';
 import { getShortPostByIdFn } from '@/data/post';
 import { getUser } from '@/data/session';
 import { User } from '@/generated/prisma/client';
 import { cn } from '@/lib/utils';
+import { useImageStore } from '@/store/image';
 
 export const Route = createFileRoute('/post/$postId/')({
   component: RouteComponent,
@@ -33,6 +39,7 @@ export const Route = createFileRoute('/post/$postId/')({
         shortPostId: params.postId,
       },
     });
+    if (!post) throw redirect({ to: '/post' });
     const session = await getUser();
     const isOwner = session?.user?.id === post?.authorId;
     const isPrivateShownToFollower =
@@ -42,8 +49,9 @@ export const Route = createFileRoute('/post/$postId/')({
       !post.published;
 
     if (!post?.published && !isOwner && !isPrivateShownToFollower) {
-      throw redirect({ to: '/dashboard/albums' });
+      throw redirect({ to: '/post' });
     }
+
     return {
       post,
       session,
@@ -75,24 +83,16 @@ export const Route = createFileRoute('/post/$postId/')({
 
 function RouteComponent() {
   const { post, session } = Route.useLoaderData();
-  const photos = post?.imagesOnShortPosts?.map((photo) => ({
+  const photos = post?.imagesOnShortPosts?.map((photo, index) => ({
     ...photo.image,
+    globalIndex: index,
   }));
-
-  const firstImage = photos?.[0]?.url;
+  const isMobile = useMediaQuery('(max-width: 640px)');
+  const [expanded, setExpanded] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
-    // setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
-    api.on('select', () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
-  }, [api]);
   const { data: likes } = useLiveQuery((q) =>
     q.from({ like: likeCollection }).where(({ like }) => eq(like.shortPostId, post?.id)),
   );
@@ -103,6 +103,11 @@ function RouteComponent() {
       .orderBy(({ comment }) => comment.createdAt, 'desc'),
   );
   const hasLiked = likes.find((like) => like.userId === session?.user?.id);
+
+  // lightbox states & variables
+  const { setPostId } = useImageStore();
+  const [open, setOpen] = useState(false);
+  const [index, setIndex] = useState(0);
 
   function handleToggleLike() {
     if (!session.user) return;
@@ -123,7 +128,6 @@ function RouteComponent() {
       likeCollection.delete(existingLike.id);
     }
   }
-
   function handleAddComment(commentText: string) {
     if (!session.user) return;
 
@@ -143,46 +147,46 @@ function RouteComponent() {
       updatedAt: new Date(),
     });
   }
+  function handleToggleLightBox(index: number, postId: string, open: boolean) {
+    setIndex(index);
+    setOpen(open);
+    setPostId(postId);
+  }
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+    // setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+    setIndex(api.selectedScrollSnap());
+    api.on('select', () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+      setIndex(api.selectedScrollSnap());
+    });
+  }, [api]);
+  useEffect(() => {
+    if (isMobile) setHidden(false);
+    else if (!isMobile) {
+      setCurrent(1);
+    }
+  }, [isMobile]);
   return (
     <section
       className={cn(
         'w-full p-0 overflow-hidden bg-slate-950 border-slate-800 h-[90vh] flex flex-col sm:flex-row min-h-screen',
         {
-          'max-sm:h-full': firstImage,
+          'max-sm:h-full': photos.length!,
         },
       )}
     >
-      {firstImage && photos.length === 1 && (
-        <div
-          className="relative w-full sm:w-4/5 bg-transparent flex items-center justify-center border-r border-slate-800"
-          onClick={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <div className="absolute top-1 left-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="cursor-pointer"
-              onClick={() => {
-                window.history.back();
-              }}
-            >
-              <ArrowLeft className="size-6 text-primary" />
-            </Button>
-          </div>
-          <img
-            src={firstImage}
-            alt={`Post Image by ${post?.author?.name}`}
-            className="max-h-full max-w-full object-contain cursor-pointer"
-            loading="lazy"
-          />
-        </div>
-      )}
-
-      {firstImage && photos?.length > 1 && (
+      {photos?.length >= 1 && (
         <Carousel
-          className="relative w-full sm:w-4/5 bg-transparent flex items-center justify-center border-r border-slate-800"
+          className={cn(
+            'relative w-full bg-transparent flex items-center justify-center border-r border-slate-800',
+            {
+              hidden: isMobile,
+            },
+          )}
           onClick={(e) => {
             e.preventDefault();
           }}
@@ -200,10 +204,22 @@ function RouteComponent() {
               <ArrowLeft className="size-6 text-primary" />
             </Button>
           </div>
+          <div className="absolute top-1 right-2 z-10 max-sm:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="cursor-pointer"
+              onClick={() => {
+                setHidden((prev) => !prev);
+              }}
+            >
+              <PanelRightClose className="size-6 text-primary" />
+            </Button>
+          </div>
           <CarouselContent>
             {photos?.map((image, index) => (
               <CarouselItem key={index}>
-                <div className="relative aspect-square overflow-hidden rounded-md border flex items-center justify-center">
+                <div className="relative aspect-square rounded-md flex items-center justify-center">
                   {/*<ImageModal
                     imageUrl={image.url}
                     className="max-h-[90vh] max-w-full object-contain object-center cursor-pointer rounded-lg shadow-2xl animate-in zoom-in-95 duration-200"
@@ -216,30 +232,54 @@ function RouteComponent() {
                     alt={`Preview ${index + 1}`}
                     className="max-h-[90vh] max-w-full object-contain object-center cursor-pointer rounded-lg shadow-2xl animate-in zoom-in-95 duration-200"
                     loading="lazy"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleToggleLightBox(index, post?.id as string, true);
+                    }}
                   />
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="cursor-pointer ml-3 absolute top-1/2 left-0 bg-emerald-500! text-slate-900!" />
-          <CarouselNext className="cursor-pointer mr-3 absolute top-1/2 right-0 bg-emerald-500! text-slate-900!" />
+          <CarouselPrevious
+            className={cn(
+              'cursor-pointer ml-3 absolute top-1/2 left-0 bg-emerald-500! text-slate-900!',
+              {
+                hidden: photos.length === 1,
+              },
+            )}
+          />
+          <CarouselNext
+            className={cn(
+              'cursor-pointer mr-3 absolute top-1/2 right-0 bg-emerald-500! text-slate-900!',
+              {
+                hidden: photos.length === 1,
+              },
+            )}
+          />
           <div className="py-2 text-center flex items-center gap-2 font-bold absolute bottom-0">
-            {photos?.map((_, index) => {
+            {/*{photos?.map((_, index) => {
               return (
                 <span
                   key={index}
                   className={cn('rounded-full w-2 h-2 bg-emerald-500/50', {
                     'bg-emerald-500': index + 1 === current,
-                  })}
+                  })
                 />
               );
-            })}
+            })}*/}
+            <span key={current} className="text-emerald-600 font-normal text-shadow-lg">
+              {current}/{photos?.length}
+            </span>
           </div>
         </Carousel>
       )}
 
       <div
-        className={`flex flex-col flex-1 h-full ${!firstImage && 'max-w-3xl mx-auto w-full shadow-2xl'}`}
+        className={cn(`flex flex-col h-full max-sm:flex-1 sm:min-w-xs`, {
+          'max-w-3xl mx-auto w-full shadow-2xl': !photos.length,
+          hidden: hidden,
+        })}
       >
         <div className="p-4 border-b border-slate-900">
           <div className="flex items-center justify-between">
@@ -267,42 +307,62 @@ function RouteComponent() {
           </div>
 
           {post?.content && (
-            <div className="mt-4 text-sm text-slate-300 leading-relaxed max-h-37.5 overflow-y-auto scrollbar-hide">
+            <div className="mt-4 text-sm text-slate-300 leading-relaxed h-fit sm:max-h-37.5 overflow-y-auto scrollbar-hide">
               {post?.content}
             </div>
           )}
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-thin scrollbar-thumb-slate-800">
-          {comments && comments.length > 0 ? (
-            comments.map((comment) => (
-              <div key={comment.id} className="flex gap-3">
-                <Avatar className="h-8 w-8 border border-slate-900">
-                  <AvatarImage src={comment.user?.image ?? ''} />
-                  <AvatarFallback>
-                    {comment.user?.name
-                      .split(' ')
-                      .map((n) => n[0])
-                      .join('')}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col gap-1">
-                  <div className="flex max-sm:flex-col sm:items-center gap-2">
-                    <span className="text-xs font-bold text-slate-200">{comment.user.name}</span>
-                    <span className="text-[10px] text-slate-500">
-                      {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
-                    </span>
+          <div className="relative my-2 sm:hidden">
+            <AnimatePresence mode="wait">
+              {!expanded ? (
+                <motion.div
+                  key="grid"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <PostCollage
+                    images={photos}
+                    post={post}
+                    onExpand={() => setExpanded(true)}
+                    handleToggleLightBox={handleToggleLightBox}
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="masonry"
+                  initial={{ opacity: 0, height: 'auto' }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0 }}
+                  className="relative"
+                >
+                  <div className="flex justify-end items-center mb-2 px-1">
+                    {/*<span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
+                      Full Gallery View
+                    </span>*/}
+                    <button
+                      onClick={() => setExpanded(false)}
+                      className="text-[10px] font-bold text-emerald-500  hover:text-slate-500 transition-colors uppercase tracking-widest cursor-pointer"
+                    >
+                      Collapse ↑
+                    </button>
                   </div>
-                  <p className="text-sm text-slate-400">{comment.content}</p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="h-full flex flex-col items-center justify-center opacity-20 py-10">
-              <MessageSquare className="size-10 mb-2" />
-              <p className="text-xs">No comments yet</p>
-            </div>
-          )}
+                  <MasonryCollage
+                    images={photos}
+                    post={post}
+                    handleToggleLightBox={handleToggleLightBox}
+                  />
+                  <div className="flex justify-end items-center mt-2 px-1">
+                    <button
+                      onClick={() => setExpanded(false)}
+                      className="text-[10px] font-bold text-emerald-500  hover:text-slate-500 transition-colors uppercase tracking-widest cursor-pointer"
+                    >
+                      Collapse ↑
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         <div className="p-4 border-t border-slate-900 bg-slate-950">
@@ -341,7 +401,45 @@ function RouteComponent() {
             </div>
           )}
         </div>
+        <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-thin scrollbar-thumb-slate-800">
+          {comments && comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.id} className="flex gap-3">
+                <Avatar className="h-8 w-8 border border-slate-900">
+                  <AvatarImage src={comment.user?.image ?? ''} />
+                  <AvatarFallback>
+                    {comment.user?.name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col gap-1">
+                  <div className="flex max-sm:flex-col sm:items-center gap-2">
+                    <span className="text-xs font-bold text-slate-200">{comment.user.name}</span>
+                    <span className="text-[10px] text-slate-500">
+                      {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-400">{comment.content}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="h-full flex flex-col items-center justify-center opacity-20 py-10">
+              <MessageSquare className="size-10 mb-2" />
+              <p className="text-xs">No comments yet</p>
+            </div>
+          )}
+        </div>
       </div>
+      <PostLightBox
+        photos={photos}
+        post={post}
+        triggerOpen={open}
+        setTriggerOpen={setOpen}
+        targetIndex={index}
+      />
     </section>
   );
 }
