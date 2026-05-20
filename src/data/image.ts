@@ -1,9 +1,9 @@
-import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
+import { createServerFn } from '@tanstack/react-start';
+import { z } from 'zod';
 
-import { db } from "@/lib/db";
-import { authMiddleware } from "@/middlewares/auth";
-import { editImageSchema, imageSchema } from "@/schemas/image";
+import { db } from '@/lib/db';
+import { authMiddleware } from '@/middlewares/auth';
+import { editImageSchema, imageSchema } from '@/schemas/image';
 
 // export const tempMigrateFn = createServerFn().handler(async () => {
 //   // find all images that currently belong to a short post
@@ -41,27 +41,28 @@ import { editImageSchema, imageSchema } from "@/schemas/image";
 //   console.log("Migration complete!");
 // });
 
-export const saveImageUrl = createServerFn({ method: "POST" })
+export const saveImageUrl = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(
     z.object({
+      id: z.string().optional(),
       url: z.string(),
       filename: z.string(),
       size: z.string(),
-      imgbbId: z.string(),
+      imgbbId: z.string().optional(),
       type: z.string().optional(),
       albumId: z.string().optional(),
     }),
   )
   .handler(async ({ data, context }) => {
-    console.log("[server] Saving image URL to DB:", data);
+    console.log('[server] Saving image URL to DB:', data);
     const newImage = await db.image.create({
       data: {
-        id: data.imgbbId,
+        id: data.id,
         url: data.url,
         title: data.filename,
         userId: context.user.id as string,
-        source: "IMGBB",
+        source: 'IMGBB',
         size: data.size,
       },
     });
@@ -86,21 +87,21 @@ export const saveImageUrl = createServerFn({ method: "POST" })
     };
   });
 
-export const getImagesFn = createServerFn({ method: "GET" })
+export const getImagesFn = createServerFn({ method: 'GET' })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     return await db.image.findMany({
       where: { userId: context.user.id },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
     });
   });
 
-export const getImagesWithAlbumsFn = createServerFn({ method: "GET" })
+export const getImagesWithAlbumsFn = createServerFn({ method: 'GET' })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     return await db.image.findMany({
       where: { userId: context.user.id },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
       include: {
         albums: true,
         user: true,
@@ -108,24 +109,24 @@ export const getImagesWithAlbumsFn = createServerFn({ method: "GET" })
     });
   });
 
-export const getPublicImagesFn = createServerFn({ method: "GET" }).handler(async () => {
+export const getPublicImagesFn = createServerFn({ method: 'GET' }).handler(async () => {
   return await db.image.findMany({
     where: { shortPost: { published: true } },
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: 'desc' },
   });
 });
 
-export const getImagesByIdFn = createServerFn({ method: "GET" })
+export const getImagesByIdFn = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ userId: z.string() }))
   .middleware([authMiddleware])
   .handler(async ({ data }) => {
     return await db.image.findMany({
       where: { userId: data.userId },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
     });
   });
 
-export const ImportImagesFn = createServerFn({ method: "POST" })
+export const ImportImagesFn = createServerFn({ method: 'POST' })
   .inputValidator(imageSchema)
   .middleware([authMiddleware])
   .handler(async ({ context, data }) => {
@@ -142,7 +143,7 @@ export const ImportImagesFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const ImportImageToAlbumFn = createServerFn({ method: "POST" })
+export const ImportImageToAlbumFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
       imageUrl: z.url(),
@@ -174,7 +175,7 @@ export const ImportImageToAlbumFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const ImportImagesToAlbumFn = createServerFn({ method: "POST" })
+export const ImportImagesToAlbumFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
       published: z.boolean(),
@@ -211,7 +212,7 @@ export const ImportImagesToAlbumFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const editImageFn = createServerFn({ method: "POST" })
+export const editImageFn = createServerFn({ method: 'POST' })
   .inputValidator(
     editImageSchema.extend({
       imageId: z.string(),
@@ -237,7 +238,7 @@ export const editImageFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const removeImageFromAlbumFn = createServerFn({ method: "POST" })
+export const removeImageFromAlbumFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
       imageId: z.string(),
@@ -261,7 +262,7 @@ export const removeImageFromAlbumFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const deleteImageFn = createServerFn({ method: "POST" })
+export const deleteImageFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
       imageId: z.string(),
@@ -277,7 +278,7 @@ export const deleteImageFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const deleteImagesFn = createServerFn({ method: "POST" })
+export const deleteImagesFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
       imageIds: z.array(z.string()),
@@ -298,7 +299,7 @@ export const deleteImagesFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const setPrivateImageFn = createServerFn({ method: "POST" })
+export const setPrivateImageFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
       imageId: z.string(),
@@ -317,7 +318,7 @@ export const setPrivateImageFn = createServerFn({ method: "POST" })
     return true;
   });
 
-export const setShowPrivateImageToFollowersFn = createServerFn({ method: "POST" })
+export const setShowPrivateImageToFollowersFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
       imageId: z.string(),
@@ -336,7 +337,7 @@ export const setShowPrivateImageToFollowersFn = createServerFn({ method: "POST" 
     return true;
   });
 
-export const setHidePrivateImageToFollowersFn = createServerFn({ method: "POST" })
+export const setHidePrivateImageToFollowersFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
       imageId: z.string(),
@@ -355,7 +356,7 @@ export const setHidePrivateImageToFollowersFn = createServerFn({ method: "POST" 
     return true;
   });
 
-export const setPublicImageFn = createServerFn({ method: "POST" })
+export const setPublicImageFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
       imageId: z.string(),

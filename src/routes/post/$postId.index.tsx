@@ -279,11 +279,19 @@ function RouteComponent() {
         </Carousel>
       )}
 
-      <div
+      <motion.div
         className={cn(`flex flex-col h-full max-sm:flex-1 sm:min-w-xs sm:max-w-xs`, {
           'max-w-3xl mx-auto w-full shadow-2xl': !photos.length,
-          hidden: hidden,
         })}
+        animate={{
+          opacity: hidden ? 0 : 1,
+          display: hidden ? 'none' : 'flex',
+          translateX: hidden ? '100%' : '0',
+          transition: {
+            ease: 'easeInOut',
+            duration: 0.2,
+          },
+        }}
       >
         <div className="p-4 border-b border-slate-900 relative">
           <header className="sm:hidden w-full border-b h-8 flex items-center py-6 mb-4">
@@ -448,7 +456,7 @@ function RouteComponent() {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
       <PostLightBox
         photos={photos}
         post={post}

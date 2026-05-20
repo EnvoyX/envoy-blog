@@ -1,3 +1,4 @@
+import { createId } from '@paralleldrive/cuid2';
 import { useRouter } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { useCallback, useRef, useState } from 'react';
@@ -105,6 +106,7 @@ export default function UploadDropzone() {
 
     await saveImageUrl({
       data: {
+        id: createId(),
         url: json.data.url,
         filename: json.data.image.filename,
         size: String(json.data.size),
@@ -249,7 +251,7 @@ export default function UploadDropzone() {
                 {!uploading && progress !== 'done' && (
                   <button
                     onClick={() => removeEntry(i)}
-                    className="text-slate-500 hover:text-red-400 transition-colors shrink-0"
+                    className="text-slate-500 hover:text-red-400 transition-colors shrink-0 cursor-pointer"
                   >
                     <svg
                       className="w-4 h-4"

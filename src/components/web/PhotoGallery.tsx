@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
 // import Slideshow from 'yet-another-react-lightbox/plugins/slideshow';
-// import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import {
   AlbumIcon,
   Eye,
@@ -241,48 +240,6 @@ export default function PhotoGallery({
           );
         }}
       />
-      {/*<VirtuosoMasonry
-              columnCount={4}
-              data={photos}
-              style={{ height: '100%' }}
-              initialItemCount={photos.length}
-              ItemContent={({ data: photo }) => {
-                  return (
-                      <motion.div
-                          key={photo.id}
-                          className="group relative overflow-hidden rounded-2xl shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer "
-                          onClick={() => {
-                              setOpen(true);
-                              setIndex(photo.globalIndex);
-                          }}
-                      >
-                          <motion.img
-                              initial={{ opacity: 0, filter: 'blur(16px)' }}
-                              whileInView={{ opacity: 1, filter: 'blur(0px)' }}
-                              viewport={{ once: true, amount: 0.2 }} // animation only plays the first time an element scrolls into view
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{
-                                  scale: 0.95,
-                                  transition: {
-                                      duration: 0.3,
-                                  },
-                              }}
-                              transition={{ ease: 'easeOut', duration: 0.5 }}
-                              src={photo.url}
-                              alt={photo.id}
-                              className="w-full h-auto display:block"
-                              loading="lazy"
-                          />
-                          {(photo.title || photo.description) && (
-                              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                                  <h3 className="text-white font-semibold text-lg">{photo.title}</h3>
-                                  <p className="text-gray-200 text-xs">{photo.description}</p>
-                              </div>
-                          )}
-                      </motion.div>
-                  );
-              }}
-          />*/}
       <Dialog
         open={isOpen}
         onOpenChange={(open) => {

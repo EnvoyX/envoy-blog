@@ -55,7 +55,7 @@ export function BulkAlbumDialog() {
 
     try {
       if (bulkMode === 'add' && currentAlbumId) {
-        toast.loading(`Importing ${idsArray.length} images...`, { id: 'bulk-import' });
+        toast.loading(`Adding ${idsArray.length} images...`, { id: 'bulk-import' });
         await addExistingImagesToAlbumFn({
           data: {
             albumId: currentAlbumId,
@@ -71,7 +71,7 @@ export function BulkAlbumDialog() {
         void queryClient.invalidateQueries({ queryKey: ['available-images', currentAlbumId] });
         void router.invalidate();
       } else if (bulkMode === 'remove' && currentAlbumId) {
-        toast.loading(`Deleting ${idsArray.length} images...`, { id: 'bulk-import' });
+        toast.loading(`Removing ${idsArray.length} images...`, { id: 'bulk-import' });
         await removeExistingImagesToAlbumFn({
           data: {
             albumId: currentAlbumId,
