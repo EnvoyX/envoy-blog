@@ -14,6 +14,21 @@ export const imageSchema = z.object({
   showPrivateToFollowers: z.boolean(),
 });
 
+export const editImagesSchema = z.object({
+  images: z
+    .array(
+      z.object({
+        id: z.string(),
+        url: z.url('Invalid URL').min(1, 'URL is required'),
+        title: z.string().optional(),
+        description: z.string().optional(),
+      }),
+    )
+    .min(1, 'At least one image is required'),
+  published: z.boolean(),
+  showPrivateToFollowers: z.boolean(),
+});
+
 export const editImageSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),

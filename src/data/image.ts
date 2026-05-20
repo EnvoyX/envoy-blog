@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { db } from '@/lib/db';
 import { authMiddleware } from '@/middlewares/auth';
-import { editImageSchema, imageSchema } from '@/schemas/image';
+import { editImageSchema, editImagesSchema, imageSchema } from '@/schemas/image';
 
 // export const tempMigrateFn = createServerFn().handler(async () => {
 //   // find all images that currently belong to a short post
@@ -93,6 +93,18 @@ export const getImagesFn = createServerFn({ method: 'GET' })
     return await db.image.findMany({
       where: { userId: context.user.id },
       orderBy: { createdAt: 'desc' },
+    });
+  });
+
+export const getImagesWithAlbumFn = createServerFn({ method: 'GET' })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    return await db.image.findMany({
+      where: { userId: context.user.id },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        albums: true,
+      },
     });
   });
 
@@ -236,6 +248,36 @@ export const editImageFn = createServerFn({ method: 'POST' })
       });
     });
     return true;
+  });
+
+export const editImagesFn = createServerFn({ method: 'POST' })
+  .inputValidator(
+    editImagesSchema.extend({
+      albumId: z.string().optional(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ context, data }) => {
+    const userId = context.user.id as string;
+    const inputtedImages = data.images ?? [];
+    // update metadata of images picked from gallery
+    if (inputtedImages.length > 0) {
+      await Promise.all(
+        inputtedImages.map((img) =>
+          db.image.update({
+            where: { id: img.id },
+            data: {
+              url: img.url ?? '',
+              title: img.title ?? '',
+              description: img.description ?? '',
+              published: data.published,
+              showPrivateToFollowers: data.showPrivateToFollowers,
+              userId: userId,
+            },
+          }),
+        ),
+      );
+    }
   });
 
 export const removeImageFromAlbumFn = createServerFn({ method: 'POST' })
