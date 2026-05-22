@@ -96,14 +96,15 @@ function RouteComponent() {
             </Button>
           </div>
         </div>
-        {images.length === 0 && (
+        {images.length === 0 ? (
           <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
             <p className="text-slate-500">No images found. Add or import your first image!</p>
           </div>
+        ) : (
+          <div className="w-full">
+            <PhotoGallery images={images} type="private" />
+          </div>
         )}
-        <div className="w-full">
-          <PhotoGallery images={images} type="private" />
-        </div>
       </div>
     </div>
   );
