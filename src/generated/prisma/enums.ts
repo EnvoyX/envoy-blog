@@ -9,16 +9,6 @@
 * 🟢 You can import this file directly.
 */
 
-export const ItemStatus = {
-  PENDING: 'PENDING',
-  PROCESSING: 'PROCESSING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
-} as const
-
-export type ItemStatus = (typeof ItemStatus)[keyof typeof ItemStatus]
-
-
 export const Status = {
   TODO: 'TODO',
   IN_PROGRESS: 'IN_PROGRESS',

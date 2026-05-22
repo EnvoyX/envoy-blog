@@ -1,7 +1,7 @@
 'use client';
 
 import { Link } from '@tanstack/react-router';
-import { Key, LucideIcon } from 'lucide-react';
+import { BookMarkedIcon, Key, LucideIcon } from 'lucide-react';
 
 import {
   SidebarGroup,
@@ -30,23 +30,40 @@ export function NavPrimary({ items, user }: NavPrimaryProps) {
     <SidebarGroup>
       <SidebarGroupContent>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild size="sm">
-              {allowedRoles.includes(user?.role as string) && (
-                <Link
-                  to={'/dashboard/admin'}
-                  activeProps={{
-                    className: 'bg-primary/10! text-primary! border-r-2! border-primary!',
-                  }}
-                  className="flex items-center gap-3! px-3! py-3! text-sm! font-medium! rounded-lg! transition-colors! hover:bg-white/5!"
-                  activeOptions={{ exact: false }}
-                >
-                  <Key />
-                  <span>Admin</span>
-                </Link>
-              )}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {allowedRoles.includes(user?.role as string) && (
+            <>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild size="sm">
+                  <Link
+                    to={'/dashboard/admin'}
+                    activeProps={{
+                      className: 'bg-primary/10! text-primary! border-r-2! border-primary!',
+                    }}
+                    className="flex items-center gap-3! px-3! py-3! text-sm! font-medium! rounded-lg! transition-colors! hover:bg-white/5!"
+                    activeOptions={{ exact: false }}
+                  >
+                    <Key />
+                    <span>Admin</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild size="sm">
+                  <Link
+                    to={'/dashboard/quran-tracker'}
+                    activeProps={{
+                      className: 'bg-primary/10! text-primary! border-r-2! border-primary!',
+                    }}
+                    className="flex items-center gap-3! px-3! py-3! text-sm! font-medium! rounded-lg! transition-colors! hover:bg-white/5!"
+                    activeOptions={{ exact: false }}
+                  >
+                    <BookMarkedIcon />
+                    <span>Qur'an Tracker</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </>
+          )}
           {items.map((item, index) => {
             // If the menu items can be reordered, don't use index but unique value for
             // for the key

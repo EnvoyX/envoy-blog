@@ -384,7 +384,6 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  SavedItem: 'SavedItem',
   QuranTrack: 'QuranTrack',
   ShortPost: 'ShortPost',
   Image: 'Image',
@@ -418,84 +417,10 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "savedItem" | "quranTrack" | "shortPost" | "image" | "imagesOnShortPosts" | "album" | "post" | "tag" | "taskList" | "task" | "chat" | "message" | "follow" | "like" | "comment" | "user" | "session" | "account" | "verification"
+    modelProps: "quranTrack" | "shortPost" | "image" | "imagesOnShortPosts" | "album" | "post" | "tag" | "taskList" | "task" | "chat" | "message" | "follow" | "like" | "comment" | "user" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
-    SavedItem: {
-      payload: Prisma.$SavedItemPayload<ExtArgs>
-      fields: Prisma.SavedItemFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.SavedItemFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedItemPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.SavedItemFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedItemPayload>
-        }
-        findFirst: {
-          args: Prisma.SavedItemFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedItemPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.SavedItemFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedItemPayload>
-        }
-        findMany: {
-          args: Prisma.SavedItemFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedItemPayload>[]
-        }
-        create: {
-          args: Prisma.SavedItemCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedItemPayload>
-        }
-        createMany: {
-          args: Prisma.SavedItemCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.SavedItemCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedItemPayload>[]
-        }
-        delete: {
-          args: Prisma.SavedItemDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedItemPayload>
-        }
-        update: {
-          args: Prisma.SavedItemUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedItemPayload>
-        }
-        deleteMany: {
-          args: Prisma.SavedItemDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.SavedItemUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.SavedItemUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedItemPayload>[]
-        }
-        upsert: {
-          args: Prisma.SavedItemUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedItemPayload>
-        }
-        aggregate: {
-          args: Prisma.SavedItemAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSavedItem>
-        }
-        groupBy: {
-          args: Prisma.SavedItemGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SavedItemGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.SavedItemCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SavedItemCountAggregateOutputType> | number
-        }
-      }
-    }
     QuranTrack: {
       payload: Prisma.$QuranTrackPayload<ExtArgs>
       fields: Prisma.QuranTrackFieldRefs
@@ -1867,32 +1792,6 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const SavedItemScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  url: 'url',
-  title: 'title',
-  description: 'description',
-  content: 'content',
-  summary: 'summary',
-  tags: 'tags',
-  author: 'author',
-  publishedAt: 'publishedAt',
-  ogTitle: 'ogTitle',
-  ogDescription: 'ogDescription',
-  ogUrl: 'ogUrl',
-  ogImage: 'ogImage',
-  ogSiteName: 'ogSiteName',
-  sourceUrl: 'sourceUrl',
-  status: 'status',
-  prompt: 'prompt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SavedItemScalarFieldEnum = (typeof SavedItemScalarFieldEnum)[keyof typeof SavedItemScalarFieldEnum]
-
-
 export const QuranTrackScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -2210,34 +2109,6 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'DateTime'
- */
-export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime[]'
- */
-export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-/**
- * Reference to a field of type 'ItemStatus'
- */
-export type EnumItemStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ItemStatus'>
-    
-
-
-/**
- * Reference to a field of type 'ItemStatus[]'
- */
-export type ListEnumItemStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ItemStatus[]'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -2248,6 +2119,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime'
+ */
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -2465,7 +2350,6 @@ export type PrismaClientOptions = ({
   queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
-  savedItem?: Prisma.SavedItemOmit
   quranTrack?: Prisma.QuranTrackOmit
   shortPost?: Prisma.ShortPostOmit
   image?: Prisma.ImageOmit

@@ -248,7 +248,6 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
-  savedItems?: Prisma.SavedItemListRelationFilter
   posts?: Prisma.PostListRelationFilter
   tasks?: Prisma.TaskListRelationFilter
   taskLists?: Prisma.TaskListListRelationFilter
@@ -279,7 +278,6 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
-  savedItems?: Prisma.SavedItemOrderByRelationAggregateInput
   posts?: Prisma.PostOrderByRelationAggregateInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
   taskLists?: Prisma.TaskListOrderByRelationAggregateInput
@@ -313,7 +311,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
-  savedItems?: Prisma.SavedItemListRelationFilter
   posts?: Prisma.PostListRelationFilter
   tasks?: Prisma.TaskListRelationFilter
   taskLists?: Prisma.TaskListListRelationFilter
@@ -382,7 +379,6 @@ export type UserCreateInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -413,7 +409,6 @@ export type UserUncheckedCreateInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -444,7 +439,6 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -475,7 +469,6 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -594,20 +587,6 @@ export type UserMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type UserCreateNestedOneWithoutSavedItemsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedItemsInput, Prisma.UserUncheckedCreateWithoutSavedItemsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedItemsInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutSavedItemsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedItemsInput, Prisma.UserUncheckedCreateWithoutSavedItemsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedItemsInput
-  upsert?: Prisma.UserUpsertWithoutSavedItemsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSavedItemsInput, Prisma.UserUpdateWithoutSavedItemsInput>, Prisma.UserUncheckedUpdateWithoutSavedItemsInput>
 }
 
 export type UserCreateNestedOneWithoutQuranTrackInput = {
@@ -814,142 +793,6 @@ export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
 }
 
-export type UserCreateWithoutSavedItemsInput = {
-  id: string
-  name: string
-  email: string
-  password?: string | null
-  emailVerified: boolean
-  image?: string | null
-  imageKey?: string | null
-  defaultImage?: string | null
-  biodata?: string | null
-  showFollowStats?: boolean
-  role?: $Enums.UserRole
-  createdAt: Date | string
-  updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
-  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-  taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
-  quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
-  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
-  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
-  shortPosts?: Prisma.ShortPostCreateNestedManyWithoutAuthorInput
-  images?: Prisma.ImageCreateNestedManyWithoutUserInput
-  albums?: Prisma.AlbumCreateNestedManyWithoutAuthorInput
-}
-
-export type UserUncheckedCreateWithoutSavedItemsInput = {
-  id: string
-  name: string
-  email: string
-  password?: string | null
-  emailVerified: boolean
-  image?: string | null
-  imageKey?: string | null
-  defaultImage?: string | null
-  biodata?: string | null
-  showFollowStats?: boolean
-  role?: $Enums.UserRole
-  createdAt: Date | string
-  updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-  taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
-  quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
-  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
-  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
-  shortPosts?: Prisma.ShortPostUncheckedCreateNestedManyWithoutAuthorInput
-  images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
-  albums?: Prisma.AlbumUncheckedCreateNestedManyWithoutAuthorInput
-}
-
-export type UserCreateOrConnectWithoutSavedItemsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutSavedItemsInput, Prisma.UserUncheckedCreateWithoutSavedItemsInput>
-}
-
-export type UserUpsertWithoutSavedItemsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutSavedItemsInput, Prisma.UserUncheckedUpdateWithoutSavedItemsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutSavedItemsInput, Prisma.UserUncheckedCreateWithoutSavedItemsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutSavedItemsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutSavedItemsInput, Prisma.UserUncheckedUpdateWithoutSavedItemsInput>
-}
-
-export type UserUpdateWithoutSavedItemsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  biodata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  showFollowStats?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-  taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
-  quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
-  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
-  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
-  shortPosts?: Prisma.ShortPostUpdateManyWithoutAuthorNestedInput
-  images?: Prisma.ImageUpdateManyWithoutUserNestedInput
-  albums?: Prisma.AlbumUpdateManyWithoutAuthorNestedInput
-}
-
-export type UserUncheckedUpdateWithoutSavedItemsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  biodata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  showFollowStats?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
-  taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
-  quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
-  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
-  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
-  shortPosts?: Prisma.ShortPostUncheckedUpdateManyWithoutAuthorNestedInput
-  images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
-  albums?: Prisma.AlbumUncheckedUpdateManyWithoutAuthorNestedInput
-}
-
 export type UserCreateWithoutQuranTrackInput = {
   id: string
   name: string
@@ -966,7 +809,6 @@ export type UserCreateWithoutQuranTrackInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -996,7 +838,6 @@ export type UserUncheckedCreateWithoutQuranTrackInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -1042,7 +883,6 @@ export type UserUpdateWithoutQuranTrackInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -1072,7 +912,6 @@ export type UserUncheckedUpdateWithoutQuranTrackInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -1102,7 +941,6 @@ export type UserCreateWithoutShortPostsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -1132,7 +970,6 @@ export type UserUncheckedCreateWithoutShortPostsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -1178,7 +1015,6 @@ export type UserUpdateWithoutShortPostsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -1208,7 +1044,6 @@ export type UserUncheckedUpdateWithoutShortPostsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -1238,7 +1073,6 @@ export type UserCreateWithoutImagesInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -1268,7 +1102,6 @@ export type UserUncheckedCreateWithoutImagesInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -1314,7 +1147,6 @@ export type UserUpdateWithoutImagesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -1344,7 +1176,6 @@ export type UserUncheckedUpdateWithoutImagesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -1374,7 +1205,6 @@ export type UserCreateWithoutAlbumsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -1404,7 +1234,6 @@ export type UserUncheckedCreateWithoutAlbumsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -1450,7 +1279,6 @@ export type UserUpdateWithoutAlbumsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -1480,7 +1308,6 @@ export type UserUncheckedUpdateWithoutAlbumsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -1510,7 +1337,6 @@ export type UserCreateWithoutPostsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
@@ -1540,7 +1366,6 @@ export type UserUncheckedCreateWithoutPostsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
@@ -1586,7 +1411,6 @@ export type UserUpdateWithoutPostsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
@@ -1616,7 +1440,6 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
@@ -1646,7 +1469,6 @@ export type UserCreateWithoutTaskListsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
@@ -1676,7 +1498,6 @@ export type UserUncheckedCreateWithoutTaskListsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
@@ -1722,7 +1543,6 @@ export type UserUpdateWithoutTaskListsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
@@ -1752,7 +1572,6 @@ export type UserUncheckedUpdateWithoutTaskListsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
@@ -1782,7 +1601,6 @@ export type UserCreateWithoutTasksInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackCreateNestedOneWithoutUserInput
@@ -1812,7 +1630,6 @@ export type UserUncheckedCreateWithoutTasksInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
   quranTrack?: Prisma.QuranTrackUncheckedCreateNestedOneWithoutUserInput
@@ -1858,7 +1675,6 @@ export type UserUpdateWithoutTasksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUpdateOneWithoutUserNestedInput
@@ -1888,7 +1704,6 @@ export type UserUncheckedUpdateWithoutTasksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
   quranTrack?: Prisma.QuranTrackUncheckedUpdateOneWithoutUserNestedInput
@@ -1918,7 +1733,6 @@ export type UserCreateWithoutChatsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -1948,7 +1762,6 @@ export type UserUncheckedCreateWithoutChatsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -1994,7 +1807,6 @@ export type UserUpdateWithoutChatsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -2024,7 +1836,6 @@ export type UserUncheckedUpdateWithoutChatsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -2054,7 +1865,6 @@ export type UserCreateWithoutFollowingInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -2084,7 +1894,6 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -2119,7 +1928,6 @@ export type UserCreateWithoutFollowersInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -2149,7 +1957,6 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -2195,7 +2002,6 @@ export type UserUpdateWithoutFollowingInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -2225,7 +2031,6 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -2266,7 +2071,6 @@ export type UserUpdateWithoutFollowersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -2296,7 +2100,6 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -2326,7 +2129,6 @@ export type UserCreateWithoutLikesInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -2356,7 +2158,6 @@ export type UserUncheckedCreateWithoutLikesInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -2402,7 +2203,6 @@ export type UserUpdateWithoutLikesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -2432,7 +2232,6 @@ export type UserUncheckedUpdateWithoutLikesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -2462,7 +2261,6 @@ export type UserCreateWithoutCommentsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -2492,7 +2290,6 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -2538,7 +2335,6 @@ export type UserUpdateWithoutCommentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -2568,7 +2364,6 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -2597,7 +2392,6 @@ export type UserCreateWithoutSessionsInput = {
   createdAt: Date | string
   updatedAt: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -2627,7 +2421,6 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   createdAt: Date | string
   updatedAt: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -2673,7 +2466,6 @@ export type UserUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -2703,7 +2495,6 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -2733,7 +2524,6 @@ export type UserCreateWithoutAccountsInput = {
   createdAt: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemCreateNestedManyWithoutUserInput
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListCreateNestedManyWithoutUserInput
@@ -2763,7 +2553,6 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   createdAt: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  savedItems?: Prisma.SavedItemUncheckedCreateNestedManyWithoutUserInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   taskLists?: Prisma.TaskListUncheckedCreateNestedManyWithoutUserInput
@@ -2809,7 +2598,6 @@ export type UserUpdateWithoutAccountsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUpdateManyWithoutUserNestedInput
@@ -2839,7 +2627,6 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  savedItems?: Prisma.SavedItemUncheckedUpdateManyWithoutUserNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   taskLists?: Prisma.TaskListUncheckedUpdateManyWithoutUserNestedInput
@@ -2862,7 +2649,6 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
 export type UserCountOutputType = {
   sessions: number
   accounts: number
-  savedItems: number
   posts: number
   tasks: number
   taskLists: number
@@ -2879,7 +2665,6 @@ export type UserCountOutputType = {
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
-  savedItems?: boolean | UserCountOutputTypeCountSavedItemsArgs
   posts?: boolean | UserCountOutputTypeCountPostsArgs
   tasks?: boolean | UserCountOutputTypeCountTasksArgs
   taskLists?: boolean | UserCountOutputTypeCountTaskListsArgs
@@ -2915,13 +2700,6 @@ export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.E
  */
 export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AccountWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountSavedItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SavedItemWhereInput
 }
 
 /**
@@ -3018,7 +2796,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
-  savedItems?: boolean | Prisma.User$savedItemsArgs<ExtArgs>
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
   tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>
   taskLists?: boolean | Prisma.User$taskListsArgs<ExtArgs>
@@ -3086,7 +2863,6 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
-  savedItems?: boolean | Prisma.User$savedItemsArgs<ExtArgs>
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
   tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>
   taskLists?: boolean | Prisma.User$taskListsArgs<ExtArgs>
@@ -3109,7 +2885,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     accounts: Prisma.$AccountPayload<ExtArgs>[]
-    savedItems: Prisma.$SavedItemPayload<ExtArgs>[]
     posts: Prisma.$PostPayload<ExtArgs>[]
     tasks: Prisma.$TaskPayload<ExtArgs>[]
     taskLists: Prisma.$TaskListPayload<ExtArgs>[]
@@ -3533,7 +3308,6 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  savedItems<T extends Prisma.User$savedItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   posts<T extends Prisma.User$postsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$postsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tasks<T extends Prisma.User$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskLists<T extends Prisma.User$taskListsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskListsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskListPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4026,30 +3800,6 @@ export type User$accountsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
-}
-
-/**
- * User.savedItems
- */
-export type User$savedItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the SavedItem
-   */
-  select?: Prisma.SavedItemSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the SavedItem
-   */
-  omit?: Prisma.SavedItemOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SavedItemInclude<ExtArgs> | null
-  where?: Prisma.SavedItemWhereInput
-  orderBy?: Prisma.SavedItemOrderByWithRelationInput | Prisma.SavedItemOrderByWithRelationInput[]
-  cursor?: Prisma.SavedItemWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.SavedItemScalarFieldEnum | Prisma.SavedItemScalarFieldEnum[]
 }
 
 /**

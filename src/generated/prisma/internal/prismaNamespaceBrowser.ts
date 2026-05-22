@@ -51,7 +51,6 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  SavedItem: 'SavedItem',
   QuranTrack: 'QuranTrack',
   ShortPost: 'ShortPost',
   Image: 'Image',
@@ -86,32 +85,6 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
-
-
-export const SavedItemScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  url: 'url',
-  title: 'title',
-  description: 'description',
-  content: 'content',
-  summary: 'summary',
-  tags: 'tags',
-  author: 'author',
-  publishedAt: 'publishedAt',
-  ogTitle: 'ogTitle',
-  ogDescription: 'ogDescription',
-  ogUrl: 'ogUrl',
-  ogImage: 'ogImage',
-  ogSiteName: 'ogSiteName',
-  sourceUrl: 'sourceUrl',
-  status: 'status',
-  prompt: 'prompt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SavedItemScalarFieldEnum = (typeof SavedItemScalarFieldEnum)[keyof typeof SavedItemScalarFieldEnum]
 
 
 export const QuranTrackScalarFieldEnum = {

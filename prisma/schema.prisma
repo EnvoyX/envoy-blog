@@ -7,13 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum ItemStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-}
-
 enum Status {
   TODO
   IN_PROGRESS
@@ -44,35 +37,6 @@ enum MessageRole {
 enum SourceImage {
   EXTERNAL
   IMGBB
-}
-
-model SavedItem {
-  id          String   @id @default(uuid())
-  userId      String
-  url         String
-  title       String?
-  description String?
-  content     String? // Markdown from Firecrawl
-  summary     String? // AI generated summary
-  tags        String[] // AI extracted summary
-  author      String?
-
-  publishedAt   DateTime?
-  ogTitle       String?
-  ogDescription String?
-  ogUrl         String?
-  ogImage       String?
-  ogSiteName    String?
-  sourceUrl     String?
-
-  status ItemStatus @default(PENDING)
-  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  prompt String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
 }
 
 model QuranTrack {
@@ -334,7 +298,6 @@ model User {
   updatedAt       DateTime
   sessions        Session[]
   accounts        Account[]
-  savedItems      SavedItem[]
   posts           Post[]
   tasks           Task[]
   taskLists       TaskList[]

@@ -8,7 +8,6 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/SavedItem.ts'
 export type * from './models/QuranTrack.ts'
 export type * from './models/ShortPost.ts'
 export type * from './models/Image.ts'

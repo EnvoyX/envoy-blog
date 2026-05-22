@@ -1,23 +1,9 @@
-import { useState } from 'react'
-import { Link, useNavigate } from '@tanstack/react-router'
-import {
-  MessageSquare,
-  Trash2,
-  Edit2,
-  Loader2,
-  MoreVertical,
-} from 'lucide-react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { updateChatTitleFn, deleteChatFn } from '@/data/chat-ai'
-// import { formatDistanceToNow } from 'date-fns'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { MessageSquare, Trash2, Edit2, Loader2, MoreVertical } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,50 +14,58 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+// import { formatDistanceToNow } from 'date-fns'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
-import { toast } from 'sonner'
-import { Chat } from '@/generated/prisma/client'
-import { modelMessageSchema } from 'ai'
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { updateChatTitleFn, deleteChatFn } from '@/data/chat-ai';
+import { Chat } from '@/generated/prisma/client';
 
 export function ChatItem({ chat }: { chat: Chat }) {
-  const queryClient = useQueryClient()
-  const [newTitle, setNewTitle] = useState(chat.title || '')
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const navigate = useNavigate()
+  const queryClient = useQueryClient();
+  const [newTitle, setNewTitle] = useState(chat.title || '');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const navigate = useNavigate();
 
   const updateMutation = useMutation({
     mutationFn: updateChatTitleFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['chats'] })
-      toast.success('Updated chat successfully!')
-      setIsEditDialogOpen(false)
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      toast.success('Updated chat successfully!');
+      setIsEditDialogOpen(false);
     },
-  })
+  });
 
   const deleteMutation = useMutation({
     mutationFn: deleteChatFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['chats'] })
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
       navigate({
         to: '/chat/$adapter',
         params: {
           adapter: 'openrouter',
         },
-      })
-      toast.success('Delete chat successfully!')
+      });
+      toast.success('Delete chat successfully!');
     },
-  })
+  });
 
   return (
     <div className="group relative">
@@ -98,19 +92,15 @@ export function ChatItem({ chat }: { chat: Chat }) {
 
           <DropdownMenu open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="rounded-full"
-                onClick={(e) => e.preventDefault()}
-              >
+              <Button variant="ghost" className="rounded-full" onClick={(e) => e.preventDefault()}>
                 <MoreVertical />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem
                 onClick={(e) => {
-                  e.preventDefault()
-                  setIsEditDialogOpen((prev) => !prev)
+                  e.preventDefault();
+                  setIsEditDialogOpen((prev) => !prev);
                 }}
               >
                 <Edit2 size={12} />
@@ -119,8 +109,8 @@ export function ChatItem({ chat }: { chat: Chat }) {
               <DropdownMenuItem
                 variant="destructive"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setIsDeleteDialogOpen((prev) => !prev)
+                  e.preventDefault();
+                  setIsDeleteDialogOpen((prev) => !prev);
                 }}
               >
                 <Trash2 size={12} />
@@ -156,25 +146,17 @@ export function ChatItem({ chat }: { chat: Chat }) {
                   }
                   disabled={updateMutation.isPending}
                 >
-                  {updateMutation.isPending && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
+                  {updateMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Save
                 </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => setIsEditDialogOpen(false)}
-                >
+                <Button variant="ghost" onClick={() => setIsEditDialogOpen(false)}>
                   Cancel
                 </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
 
-          <AlertDialog
-            open={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-          >
+          <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
             {/* <AlertDialogTrigger asChild>
               <button
                 onClick={(e) => e.preventDefault()}
@@ -187,8 +169,7 @@ export function ChatItem({ chat }: { chat: Chat }) {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription className="text-zinc-400">
-                  This will permanently delete the chat and all associated
-                  messages.
+                  This will permanently delete the chat and all associated messages.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -213,5 +194,5 @@ export function ChatItem({ chat }: { chat: Chat }) {
         </div>
       </Link>
     </div>
-  )
+  );
 }

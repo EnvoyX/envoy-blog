@@ -15,8 +15,6 @@ import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
-import { Route as DashboardImportRouteImport } from './routes/dashboard/import'
-import { Route as DashboardDiscoverRouteImport } from './routes/dashboard/discover'
 import { Route as ArticleSlugRouteImport } from './routes/article/$slug'
 import { Route as ApiUploadthingRouteImport } from './routes/api/uploadthing'
 import { Route as ApiProxyImageRouteImport } from './routes/api/proxy-image'
@@ -31,7 +29,6 @@ import { Route as DashboardTaskTrackerIndexRouteImport } from './routes/dashboar
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
 import { Route as DashboardQuranTrackerIndexRouteImport } from './routes/dashboard/quran-tracker/index'
 import { Route as DashboardPostIndexRouteImport } from './routes/dashboard/post/index'
-import { Route as DashboardItemsIndexRouteImport } from './routes/dashboard/items/index'
 import { Route as DashboardImagesIndexRouteImport } from './routes/dashboard/images/index'
 import { Route as DashboardImageUploadIndexRouteImport } from './routes/dashboard/image-upload/index'
 import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
@@ -46,9 +43,7 @@ import { Route as GeneralAboutIndexRouteImport } from './routes/_general/about/i
 import { Route as ChatChatIndexRouteImport } from './routes/_chat/chat/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as DashboardTaskTrackerTaskListIdRouteImport } from './routes/dashboard/task-tracker/$taskListId'
-import { Route as DashboardItemsItemIdRouteImport } from './routes/dashboard/items/$itemId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as ApiAiSummaryRouteImport } from './routes/api/ai/summary'
 import { Route as GeneralUserUserIdRouteImport } from './routes/_general/user/$userId'
 import { Route as ChatChatChatboxRouteRouteImport } from './routes/_chat/chat/_chatbox/route'
 import { Route as DashboardBlogMdEditorIndexRouteImport } from './routes/dashboard/blog/md-editor/index'
@@ -86,16 +81,6 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
 const DashboardProfileRoute = DashboardProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardImportRoute = DashboardImportRouteImport.update({
-  id: '/import',
-  path: '/import',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardDiscoverRoute = DashboardDiscoverRouteImport.update({
-  id: '/discover',
-  path: '/discover',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
 const ArticleSlugRoute = ArticleSlugRouteImport.update({
@@ -170,11 +155,6 @@ const DashboardPostIndexRoute = DashboardPostIndexRouteImport.update({
   path: '/post/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const DashboardItemsIndexRoute = DashboardItemsIndexRouteImport.update({
-  id: '/items/',
-  path: '/items/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
 const DashboardImagesIndexRoute = DashboardImagesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -247,19 +227,9 @@ const DashboardTaskTrackerTaskListIdRoute =
     path: '/task-tracker/$taskListId',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
-const DashboardItemsItemIdRoute = DashboardItemsItemIdRouteImport.update({
-  id: '/items/$itemId',
-  path: '/items/$itemId',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAiSummaryRoute = ApiAiSummaryRouteImport.update({
-  id: '/api/ai/summary',
-  path: '/api/ai/summary',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GeneralUserUserIdRoute = GeneralUserUserIdRouteImport.update({
@@ -332,15 +302,11 @@ export interface FileRoutesByFullPath {
   '/api/proxy-image': typeof ApiProxyImageRoute
   '/api/uploadthing': typeof ApiUploadthingRoute
   '/article/$slug': typeof ArticleSlugRoute
-  '/dashboard/discover': typeof DashboardDiscoverRoute
-  '/dashboard/import': typeof DashboardImportRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/chat': typeof ChatChatChatboxRouteRouteWithChildren
   '/user/$userId': typeof GeneralUserUserIdRoute
-  '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/login/': typeof AuthLoginIndexRoute
   '/chat/': typeof ChatChatIndexRoute
@@ -355,7 +321,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/image-upload/': typeof DashboardImageUploadIndexRoute
   '/dashboard/images/': typeof DashboardImagesIndexRoute
-  '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/post/': typeof DashboardPostIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
@@ -379,15 +344,11 @@ export interface FileRoutesByTo {
   '/api/proxy-image': typeof ApiProxyImageRoute
   '/api/uploadthing': typeof ApiUploadthingRoute
   '/article/$slug': typeof ArticleSlugRoute
-  '/dashboard/discover': typeof DashboardDiscoverRoute
-  '/dashboard/import': typeof DashboardImportRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard': typeof DashboardIndexRoute
   '/chat': typeof ChatChatIndexRoute
   '/user/$userId': typeof GeneralUserUserIdRoute
-  '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/login': typeof AuthLoginIndexRoute
   '/about': typeof GeneralAboutIndexRoute
@@ -401,7 +362,6 @@ export interface FileRoutesByTo {
   '/dashboard/blog': typeof DashboardBlogIndexRoute
   '/dashboard/image-upload': typeof DashboardImageUploadIndexRoute
   '/dashboard/images': typeof DashboardImagesIndexRoute
-  '/dashboard/items': typeof DashboardItemsIndexRoute
   '/dashboard/post': typeof DashboardPostIndexRoute
   '/dashboard/quran-tracker': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/settings': typeof DashboardSettingsIndexRoute
@@ -431,15 +391,11 @@ export interface FileRoutesById {
   '/api/proxy-image': typeof ApiProxyImageRoute
   '/api/uploadthing': typeof ApiUploadthingRoute
   '/article/$slug': typeof ArticleSlugRoute
-  '/dashboard/discover': typeof DashboardDiscoverRoute
-  '/dashboard/import': typeof DashboardImportRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/_chat/chat/_chatbox': typeof ChatChatChatboxRouteRouteWithChildren
   '/_general/user/$userId': typeof GeneralUserUserIdRoute
-  '/api/ai/summary': typeof ApiAiSummaryRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/dashboard/items/$itemId': typeof DashboardItemsItemIdRoute
   '/dashboard/task-tracker/$taskListId': typeof DashboardTaskTrackerTaskListIdRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_chat/chat/': typeof ChatChatIndexRoute
@@ -454,7 +410,6 @@ export interface FileRoutesById {
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
   '/dashboard/image-upload/': typeof DashboardImageUploadIndexRoute
   '/dashboard/images/': typeof DashboardImagesIndexRoute
-  '/dashboard/items/': typeof DashboardItemsIndexRoute
   '/dashboard/post/': typeof DashboardPostIndexRoute
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
@@ -483,15 +438,11 @@ export interface FileRouteTypes {
     | '/api/proxy-image'
     | '/api/uploadthing'
     | '/article/$slug'
-    | '/dashboard/discover'
-    | '/dashboard/import'
     | '/dashboard/profile'
     | '/dashboard/'
     | '/chat'
     | '/user/$userId'
-    | '/api/ai/summary'
     | '/api/auth/$'
-    | '/dashboard/items/$itemId'
     | '/dashboard/task-tracker/$taskListId'
     | '/login/'
     | '/chat/'
@@ -506,7 +457,6 @@ export interface FileRouteTypes {
     | '/dashboard/blog/'
     | '/dashboard/image-upload/'
     | '/dashboard/images/'
-    | '/dashboard/items/'
     | '/dashboard/post/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/settings/'
@@ -530,15 +480,11 @@ export interface FileRouteTypes {
     | '/api/proxy-image'
     | '/api/uploadthing'
     | '/article/$slug'
-    | '/dashboard/discover'
-    | '/dashboard/import'
     | '/dashboard/profile'
     | '/dashboard'
     | '/chat'
     | '/user/$userId'
-    | '/api/ai/summary'
     | '/api/auth/$'
-    | '/dashboard/items/$itemId'
     | '/dashboard/task-tracker/$taskListId'
     | '/login'
     | '/about'
@@ -552,7 +498,6 @@ export interface FileRouteTypes {
     | '/dashboard/blog'
     | '/dashboard/image-upload'
     | '/dashboard/images'
-    | '/dashboard/items'
     | '/dashboard/post'
     | '/dashboard/quran-tracker'
     | '/dashboard/settings'
@@ -581,15 +526,11 @@ export interface FileRouteTypes {
     | '/api/proxy-image'
     | '/api/uploadthing'
     | '/article/$slug'
-    | '/dashboard/discover'
-    | '/dashboard/import'
     | '/dashboard/profile'
     | '/dashboard/'
     | '/_chat/chat/_chatbox'
     | '/_general/user/$userId'
-    | '/api/ai/summary'
     | '/api/auth/$'
-    | '/dashboard/items/$itemId'
     | '/dashboard/task-tracker/$taskListId'
     | '/_auth/login/'
     | '/_chat/chat/'
@@ -604,7 +545,6 @@ export interface FileRouteTypes {
     | '/dashboard/blog/'
     | '/dashboard/image-upload/'
     | '/dashboard/images/'
-    | '/dashboard/items/'
     | '/dashboard/post/'
     | '/dashboard/quran-tracker/'
     | '/dashboard/settings/'
@@ -633,7 +573,6 @@ export interface RootRouteChildren {
   ApiUploadthingRoute: typeof ApiUploadthingRoute
   ArticleSlugRoute: typeof ArticleSlugRoute
   ChatChatChatboxRouteRoute: typeof ChatChatChatboxRouteRouteWithChildren
-  ApiAiSummaryRoute: typeof ApiAiSummaryRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ChatChatIndexRoute: typeof ChatChatIndexRoute
   AlbumAlbumIdIndexRoute: typeof AlbumAlbumIdIndexRoute
@@ -683,20 +622,6 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/dashboard/profile'
       preLoaderRoute: typeof DashboardProfileRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/import': {
-      id: '/dashboard/import'
-      path: '/import'
-      fullPath: '/dashboard/import'
-      preLoaderRoute: typeof DashboardImportRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/discover': {
-      id: '/dashboard/discover'
-      path: '/discover'
-      fullPath: '/dashboard/discover'
-      preLoaderRoute: typeof DashboardDiscoverRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/article/$slug': {
@@ -797,13 +722,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPostIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/dashboard/items/': {
-      id: '/dashboard/items/'
-      path: '/items'
-      fullPath: '/dashboard/items/'
-      preLoaderRoute: typeof DashboardItemsIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
     '/dashboard/images/': {
       id: '/dashboard/images/'
       path: '/'
@@ -902,25 +820,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTaskTrackerTaskListIdRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/dashboard/items/$itemId': {
-      id: '/dashboard/items/$itemId'
-      path: '/items/$itemId'
-      fullPath: '/dashboard/items/$itemId'
-      preLoaderRoute: typeof DashboardItemsItemIdRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/ai/summary': {
-      id: '/api/ai/summary'
-      path: '/api/ai/summary'
-      fullPath: '/api/ai/summary'
-      preLoaderRoute: typeof ApiAiSummaryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_general/user/$userId': {
@@ -1055,16 +959,12 @@ const DashboardImagesRouteRouteWithChildren =
 interface DashboardRouteRouteChildren {
   DashboardAlbumsRouteRoute: typeof DashboardAlbumsRouteRouteWithChildren
   DashboardImagesRouteRoute: typeof DashboardImagesRouteRouteWithChildren
-  DashboardDiscoverRoute: typeof DashboardDiscoverRoute
-  DashboardImportRoute: typeof DashboardImportRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardItemsItemIdRoute: typeof DashboardItemsItemIdRoute
   DashboardTaskTrackerTaskListIdRoute: typeof DashboardTaskTrackerTaskListIdRoute
   DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
   DashboardBlogIndexRoute: typeof DashboardBlogIndexRoute
   DashboardImageUploadIndexRoute: typeof DashboardImageUploadIndexRoute
-  DashboardItemsIndexRoute: typeof DashboardItemsIndexRoute
   DashboardPostIndexRoute: typeof DashboardPostIndexRoute
   DashboardQuranTrackerIndexRoute: typeof DashboardQuranTrackerIndexRoute
   DashboardSettingsIndexRoute: typeof DashboardSettingsIndexRoute
@@ -1079,16 +979,12 @@ interface DashboardRouteRouteChildren {
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardAlbumsRouteRoute: DashboardAlbumsRouteRouteWithChildren,
   DashboardImagesRouteRoute: DashboardImagesRouteRouteWithChildren,
-  DashboardDiscoverRoute: DashboardDiscoverRoute,
-  DashboardImportRoute: DashboardImportRoute,
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardIndexRoute: DashboardIndexRoute,
-  DashboardItemsItemIdRoute: DashboardItemsItemIdRoute,
   DashboardTaskTrackerTaskListIdRoute: DashboardTaskTrackerTaskListIdRoute,
   DashboardAdminIndexRoute: DashboardAdminIndexRoute,
   DashboardBlogIndexRoute: DashboardBlogIndexRoute,
   DashboardImageUploadIndexRoute: DashboardImageUploadIndexRoute,
-  DashboardItemsIndexRoute: DashboardItemsIndexRoute,
   DashboardPostIndexRoute: DashboardPostIndexRoute,
   DashboardQuranTrackerIndexRoute: DashboardQuranTrackerIndexRoute,
   DashboardSettingsIndexRoute: DashboardSettingsIndexRoute,
@@ -1131,7 +1027,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiUploadthingRoute: ApiUploadthingRoute,
   ArticleSlugRoute: ArticleSlugRoute,
   ChatChatChatboxRouteRoute: ChatChatChatboxRouteRouteWithChildren,
-  ApiAiSummaryRoute: ApiAiSummaryRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ChatChatIndexRoute: ChatChatIndexRoute,
   AlbumAlbumIdIndexRoute: AlbumAlbumIdIndexRoute,
