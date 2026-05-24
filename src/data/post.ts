@@ -89,69 +89,75 @@ export const createShortPostFn = createServerFn({ method: 'POST' })
   .inputValidator(shortPostSchema)
   .middleware([authMiddleware])
   .handler(async ({ context, data }) => {
-    await db.$transaction(async (ctx) => {
-      const userId = context.user.id as string;
-      const inputtedImages = data.images ?? [];
-      const newPost = await ctx.shortPost.create({
-        data: {
-          authorId: userId,
-          content: data.content,
-          published: data.published,
-          showPrivateToFollowers: data.showPrivateToFollowers,
-        },
-      });
-
-      if (!data.images?.length) return newPost;
-
-      const newImagesData = inputtedImages.filter((img) => !img.id); // imported images
-      const existingImagesData = inputtedImages.filter((img) => img.id); // images picked from gallery
-      const existingImageIds = inputtedImages.filter((img) => img.id).map((img) => img.id);
-
-      // create new images
-      let newImageIds: string[] = [];
-      if (newImagesData.length > 0) {
-        const createdImages = await ctx.image.createManyAndReturn({
-          data: newImagesData.map((image) => ({
-            url: image.url,
-            title: image.title ?? '',
-            description: image.description ?? '',
-            userId: userId,
+    await db.$transaction(
+      async (ctx) => {
+        const userId = context.user.id as string;
+        const inputtedImages = data.images ?? [];
+        const newPost = await ctx.shortPost.create({
+          data: {
+            authorId: userId,
+            content: data.content,
             published: data.published,
             showPrivateToFollowers: data.showPrivateToFollowers,
-          })),
+          },
         });
-        newImageIds = createdImages.map((img) => img.id);
-      }
 
-      // update metadata of images picked from gallery
-      if (existingImagesData.length > 0) {
-        await Promise.all(
-          existingImagesData.map((img) =>
-            ctx.image.update({
-              where: { id: img.id },
-              data: {
-                url: img.url ?? '',
-                title: img.title ?? '',
-                description: img.description ?? '',
-                published: data.published,
-                showPrivateToFollowers: data.showPrivateToFollowers,
-              },
-            }),
-          ),
-        );
-      }
+        if (!data.images?.length) return newPost;
 
-      const allImageIds = [...newImageIds, ...existingImageIds];
+        const newImagesData = inputtedImages.filter((img) => !img.id); // imported images
+        const existingImagesData = inputtedImages.filter((img) => img.id); // images picked from gallery
+        const existingImageIds = inputtedImages.filter((img) => img.id).map((img) => img.id);
 
-      if (allImageIds.length > 0) {
-        await ctx.imagesOnShortPosts.createMany({
-          data: allImageIds.map((imgId) => ({
-            imageId: imgId as string,
-            shortPostId: newPost.id,
-          })),
-        });
-      }
-    });
+        // create new images
+        let newImageIds: string[] = [];
+        if (newImagesData.length > 0) {
+          const createdImages = await ctx.image.createManyAndReturn({
+            data: newImagesData.map((image) => ({
+              url: image.url,
+              title: image.title ?? '',
+              description: image.description ?? '',
+              userId: userId,
+              published: data.published,
+              showPrivateToFollowers: data.showPrivateToFollowers,
+            })),
+          });
+          newImageIds = createdImages.map((img) => img.id);
+        }
+
+        // update metadata of images picked from gallery
+        if (existingImagesData.length > 0) {
+          await Promise.all(
+            existingImagesData.map((img) =>
+              ctx.image.update({
+                where: { id: img.id },
+                data: {
+                  url: img.url ?? '',
+                  title: img.title ?? '',
+                  description: img.description ?? '',
+                  published: data.published,
+                  showPrivateToFollowers: data.showPrivateToFollowers,
+                },
+              }),
+            ),
+          );
+        }
+
+        const allImageIds = [...newImageIds, ...existingImageIds];
+
+        if (allImageIds.length > 0) {
+          await ctx.imagesOnShortPosts.createMany({
+            data: allImageIds.map((imgId) => ({
+              imageId: imgId as string,
+              shortPostId: newPost.id,
+            })),
+          });
+        }
+      },
+      {
+        maxWait: 5000, // Max wait to acquire transaction (default: 2000ms)
+        timeout: 900000, // Max transaction run time (default: 5000ms)
+      },
+    );
   });
 
 export const editShortPostFn = createServerFn({ method: 'POST' })
@@ -165,87 +171,93 @@ export const editShortPostFn = createServerFn({ method: 'POST' })
     const userId = context.user.id as string;
     const inputtedImages = data.images ?? [];
 
-    await db.$transaction(async (tx) => {
-      await tx.shortPost.update({
-        where: { id: data.postId, authorId: userId },
-        data: {
-          content: data.content,
-          published: data.published,
-          showPrivateToFollowers: data.showPrivateToFollowers,
-        },
-      });
-
-      const currentPostImageIds = await tx.imagesOnShortPosts.findMany({
-        where: { shortPostId: data.postId },
-        select: { imageId: true },
-      });
-      const currentImageIds = new Set(currentPostImageIds.map((postData) => postData.imageId));
-
-      //  categorize incoming image data
-      const newImagesData = inputtedImages.filter((img) => !img.id); // imported images
-      const existingImagesData = inputtedImages.filter((img) => img.id); // images picked from gallery
-      const inputtedExistingImageIds = new Set(existingImagesData.map((img) => img.id as string)); // ids of images picked from gallery
-
-      // disconnect removed images from the junction table
-      const idsToDelete = [...currentImageIds].filter((id) => !inputtedExistingImageIds.has(id));
-      if (idsToDelete.length > 0) {
-        await tx.imagesOnShortPosts.deleteMany({
-          where: {
-            shortPostId: data.postId,
-            imageId: { in: idsToDelete },
-          },
-        });
-      }
-
-      // update metadata of images picked from gallery
-      if (existingImagesData.length > 0) {
-        await Promise.all(
-          existingImagesData.map((img) =>
-            tx.image.update({
-              where: { id: img.id },
-              data: {
-                url: img.url ?? '',
-                title: img.title ?? '',
-                description: img.description ?? '',
-                published: data.published,
-                showPrivateToFollowers: data.showPrivateToFollowers,
-              },
-            }),
-          ),
-        );
-      }
-
-      // create new imported images
-      let newImageIds: string[] = [];
-      if (newImagesData.length > 0) {
-        const createdImages = await tx.image.createManyAndReturn({
-          data: newImagesData.map((image) => ({
-            url: image.url,
-            title: image.title ?? '',
-            description: image.description ?? '',
-            userId: userId,
+    await db.$transaction(
+      async (tx) => {
+        await tx.shortPost.update({
+          where: { id: data.postId, authorId: userId },
+          data: {
+            content: data.content,
             published: data.published,
             showPrivateToFollowers: data.showPrivateToFollowers,
-          })),
+          },
         });
-        newImageIds = createdImages.map((img) => img.id);
-      }
 
-      // link or insert existing gallery images to the post
-      const idsToInsert = [...inputtedExistingImageIds].filter((id) => !currentImageIds.has(id));
-
-      // merge newly created image Ids and newly picked gallery image Ids
-      const mergedImageIds = [...idsToInsert, ...newImageIds];
-
-      if (mergedImageIds.length > 0) {
-        await tx.imagesOnShortPosts.createMany({
-          data: mergedImageIds.map((imgId) => ({
-            shortPostId: data.postId,
-            imageId: imgId,
-          })),
+        const currentPostImageIds = await tx.imagesOnShortPosts.findMany({
+          where: { shortPostId: data.postId },
+          select: { imageId: true },
         });
-      }
-    });
+        const currentImageIds = new Set(currentPostImageIds.map((postData) => postData.imageId));
+
+        //  categorize incoming image data
+        const newImagesData = inputtedImages.filter((img) => !img.id); // imported images
+        const existingImagesData = inputtedImages.filter((img) => img.id); // images picked from gallery
+        const inputtedExistingImageIds = new Set(existingImagesData.map((img) => img.id as string)); // ids of images picked from gallery
+
+        // disconnect removed images from the junction table
+        const idsToDelete = [...currentImageIds].filter((id) => !inputtedExistingImageIds.has(id));
+        if (idsToDelete.length > 0) {
+          await tx.imagesOnShortPosts.deleteMany({
+            where: {
+              shortPostId: data.postId,
+              imageId: { in: idsToDelete },
+            },
+          });
+        }
+
+        // update metadata of images picked from gallery
+        if (existingImagesData.length > 0) {
+          await Promise.all(
+            existingImagesData.map((img) =>
+              tx.image.update({
+                where: { id: img.id },
+                data: {
+                  url: img.url ?? '',
+                  title: img.title ?? '',
+                  description: img.description ?? '',
+                  published: data.published,
+                  showPrivateToFollowers: data.showPrivateToFollowers,
+                },
+              }),
+            ),
+          );
+        }
+
+        // create new imported images
+        let newImageIds: string[] = [];
+        if (newImagesData.length > 0) {
+          const createdImages = await tx.image.createManyAndReturn({
+            data: newImagesData.map((image) => ({
+              url: image.url,
+              title: image.title ?? '',
+              description: image.description ?? '',
+              userId: userId,
+              published: data.published,
+              showPrivateToFollowers: data.showPrivateToFollowers,
+            })),
+          });
+          newImageIds = createdImages.map((img) => img.id);
+        }
+
+        // link or insert existing gallery images to the post
+        const idsToInsert = [...inputtedExistingImageIds].filter((id) => !currentImageIds.has(id));
+
+        // merge newly created image Ids and newly picked gallery image Ids
+        const mergedImageIds = [...idsToInsert, ...newImageIds];
+
+        if (mergedImageIds.length > 0) {
+          await tx.imagesOnShortPosts.createMany({
+            data: mergedImageIds.map((imgId) => ({
+              shortPostId: data.postId,
+              imageId: imgId,
+            })),
+          });
+        }
+      },
+      {
+        maxWait: 5000, // Max wait to acquire transaction (default: 2000ms)
+        timeout: 900000, // Max transaction run time (default: 5000ms)
+      },
+    );
   });
 export const deleteShortPostFn = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ shortPostId: z.string() }))

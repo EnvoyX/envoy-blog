@@ -3,6 +3,7 @@ import { useRouter } from '@tanstack/react-router';
 import { CheckCircle2, ImageIcon, Loader2, MousePointer2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { set } from 'zod/v3';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -33,6 +34,7 @@ export function BulkAlbumDialog() {
   const { isBulkDialogImportOpen, onOpenDialogChange, initialValues, currentAlbumId, bulkMode } =
     useAlbumStore();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [lastSelectedId, setLastSelectedId] = useState<string | null>(null);
   const [isImporting, setIsImporting] = useState(false);
   const { data: images, isPending } = useQuery({
     queryKey: ['available-images', currentAlbumId],
@@ -42,13 +44,6 @@ export function BulkAlbumDialog() {
     },
     enabled: isBulkDialogImportOpen,
   });
-  const toggleSelection = (id: string) => {
-    const newSelection = new Set(selectedIds);
-    if (newSelection.has(id)) newSelection.delete(id);
-    else newSelection.add(id);
-    setSelectedIds(newSelection);
-  };
-
   async function handleBulkImport() {
     setIsImporting(true);
     const idsArray = Array.from(selectedIds);
@@ -123,6 +118,38 @@ export function BulkAlbumDialog() {
   }
 
   const targetImages = handlePhotos();
+
+  const toggleSelection = (id: string, isShift: boolean = false) => {
+    const currentImages = targetImages ?? [];
+    const currentIndex = currentImages.findIndex((img) => img.id === id);
+    const lastIndex = currentImages.findIndex((img) => img.id === lastSelectedId);
+    // handle shift + click for range selection
+    if (isShift && lastSelectedId && lastIndex !== -1 && currentIndex !== -1) {
+      const start = Math.min(currentIndex, lastIndex);
+      const end = Math.max(currentIndex, lastIndex);
+
+      const rangedImages = currentImages.slice(start, end + 1);
+      const newSelection = new Set(selectedIds);
+      rangedImages.forEach((image) => {
+        if (!newSelection.has(image.id)) newSelection.add(image.id);
+      });
+
+      setLastSelectedId(id);
+      setSelectedIds(newSelection);
+      return;
+    }
+
+    // handle single toggle selection
+    const newSelection = new Set(selectedIds);
+    if (newSelection.has(id)) {
+      newSelection.delete(id);
+      setLastSelectedId(null);
+    } else {
+      newSelection.add(id);
+      setLastSelectedId(id);
+    }
+    setSelectedIds(newSelection);
+  };
 
   useEffect(() => {
     setSelectedIds(new Set());
@@ -293,7 +320,10 @@ export function BulkAlbumDialog() {
                     return (
                       <div
                         key={img.id}
-                        onClick={() => toggleSelection(img.id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleSelection(img.id, e.shiftKey);
+                        }}
                         className={`
                           group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300
                           ${

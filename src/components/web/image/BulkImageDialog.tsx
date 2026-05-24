@@ -1,3 +1,10 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from '@tanstack/react-router';
+import { CheckCircle2, ImageIcon, Loader2, MousePointer2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   // DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   Empty,
   //   EmptyContent,
@@ -14,36 +21,55 @@ import {
   EmptyHeader,
   //   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteImagesFn, getImagesFn } from "@/data/image";
-import { toast } from "sonner";
-import { useRouter } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
-
-import { useEffect, useState } from "react";
-import { CheckCircle2, ImageIcon, Loader2, MousePointer2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useImageStore } from "@/store/image";
+} from '@/components/ui/empty';
+import { deleteImagesFn, getImagesFn } from '@/data/image';
+import { cn } from '@/lib/utils';
+import { useImageStore } from '@/store/image';
 
 export function BulkImageDialog() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { isBulkImageDialogOpen, onOpenChangeDialog, bulkMode } = useImageStore();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [lastSelectedId, setLastSelectedId] = useState<string | null>(null);
   const [isImporting, setIsImporting] = useState(false);
   const { data: images, isPending } = useQuery({
-    queryKey: ["all-images"],
+    queryKey: ['all-images'],
     queryFn: async () => {
       const images = await getImagesFn();
       return images;
     },
     enabled: isBulkImageDialogOpen,
   });
-  const toggleSelection = (id: string) => {
+  const toggleSelection = (id: string, isShift: boolean = false) => {
+    const currentImages = images ?? [];
+    const currentIndex = currentImages.findIndex((img) => img.id === id);
+    const lastIndex = currentImages.findIndex((img) => img.id === lastSelectedId);
+    // handle shift + click for range selection
+    if (isShift && lastSelectedId && lastIndex !== -1 && currentIndex !== -1) {
+      const start = Math.min(currentIndex, lastIndex);
+      const end = Math.max(currentIndex, lastIndex);
+
+      const rangedImages = currentImages.slice(start, end + 1);
+      const newSelection = new Set(selectedIds);
+      rangedImages.forEach((image) => {
+        if (!newSelection.has(image.id)) newSelection.add(image.id);
+      });
+
+      setLastSelectedId(id);
+      setSelectedIds(newSelection);
+      return;
+    }
+
+    // handle single toggle selection
     const newSelection = new Set(selectedIds);
-    if (newSelection.has(id)) newSelection.delete(id);
-    else newSelection.add(id);
+    if (newSelection.has(id)) {
+      newSelection.delete(id);
+      setLastSelectedId(null);
+    } else {
+      newSelection.add(id);
+      setLastSelectedId(id);
+    }
     setSelectedIds(newSelection);
   };
 
@@ -52,23 +78,23 @@ export function BulkImageDialog() {
     const idsArray = Array.from(selectedIds);
 
     try {
-      if (bulkMode === "delete") {
-        toast.loading(`Deleting ${idsArray.length} images...`, { id: "bulk-import" });
+      if (bulkMode === 'delete') {
+        toast.loading(`Deleting ${idsArray.length} images...`, { id: 'bulk-import' });
         await deleteImagesFn({
           data: {
             imageIds: idsArray,
           },
         });
         toast.success(`Images deleted successfully`, {
-          id: "bulk-import",
+          id: 'bulk-import',
         });
         setSelectedIds(new Set());
-        onOpenChangeDialog("bulk-delete", false);
-        void queryClient.invalidateQueries({ queryKey: ["all-images"] });
+        onOpenChangeDialog('bulk-delete', false);
+        void queryClient.invalidateQueries({ queryKey: ['all-images'] });
         void router.invalidate();
       }
     } catch (error) {
-      toast.error("Failed to delete images", { id: "bulk-import" });
+      toast.error('Failed to delete images', { id: 'bulk-import' });
       console.error(error);
     } finally {
       setIsImporting(false);
@@ -81,7 +107,7 @@ export function BulkImageDialog() {
   return (
     <Dialog
       open={isBulkImageDialogOpen}
-      onOpenChange={(open) => onOpenChangeDialog("bulk-delete", open)}
+      onOpenChange={(open) => onOpenChangeDialog('bulk-delete', open)}
     >
       <DialogContent className="sm:max-w-6xl p-0 overflow-hidden border-zinc-800  shadow-2xl">
         <div className="flex flex-col md:flex-row h-[85vh] ">
@@ -93,18 +119,18 @@ export function BulkImageDialog() {
                 </div>
                 <DialogHeader className="flex flex-col">
                   <DialogTitle className="text-2xl font-bold text-zinc-100 tracking-tight">
-                    {bulkMode === "add"
-                      ? "Add Photos"
-                      : bulkMode === "remove"
-                        ? "Remove Photos"
-                        : "Delete Photos"}
+                    {bulkMode === 'add'
+                      ? 'Add Photos'
+                      : bulkMode === 'remove'
+                        ? 'Remove Photos'
+                        : 'Delete Photos'}
                   </DialogTitle>
                   <DialogDescription className="text-zinc-400">
-                    {bulkMode === "add" ? (
+                    {bulkMode === 'add' ? (
                       <>
                         Adding <span className="text-emerald-400 font-semibold">Images</span>
                       </>
-                    ) : bulkMode === "remove" ? (
+                    ) : bulkMode === 'remove' ? (
                       <>
                         Remove <span className="text-emerald-400 font-semibold">Images</span>
                       </>
@@ -121,10 +147,10 @@ export function BulkImageDialog() {
                   onClick={handleBulkImport}
                   disabled={isImporting}
                   className={cn(
-                    "bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300 cursor-pointer",
+                    'bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300 cursor-pointer',
                     {
-                      "bg-destructive hover:bg-destructive/80 shadow-destructive/20":
-                        bulkMode === "delete",
+                      'bg-destructive hover:bg-destructive/80 shadow-destructive/20':
+                        bulkMode === 'delete',
                     },
                   )}
                 >
@@ -133,9 +159,9 @@ export function BulkImageDialog() {
                   ) : (
                     <CheckCircle2 className="size-4 mr-2" />
                   )}
-                  {bulkMode === "add" ? (
+                  {bulkMode === 'add' ? (
                     <>Confirm Import ({selectedIds.size})</>
-                  ) : bulkMode === "remove" ? (
+                  ) : bulkMode === 'remove' ? (
                     <>Confirm Remove ({selectedIds.size})</>
                   ) : (
                     <>Confirm Delete ({selectedIds.size})</>
@@ -161,30 +187,33 @@ export function BulkImageDialog() {
                     return (
                       <div
                         key={img.id}
-                        onClick={() => toggleSelection(img.id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleSelection(img.id, e.shiftKey);
+                        }}
                         className={`
                           group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300
                           ${
                             isSelected
-                              ? "ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]"
-                              : "hover:scale-[1.02] border border-zinc-800"
+                              ? 'ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]'
+                              : 'hover:scale-[1.02] border border-zinc-800'
                           }
                         `}
                       >
                         <img
                           src={img.url}
                           alt="Asset"
-                          className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`}
+                          className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
                         />
 
                         {/* selection overlay */}
                         <div
-                          className={`absolute inset-0 transition-colors duration-300 ${isSelected ? "bg-emerald-500/10" : "bg-transparent group-hover:bg-black/20"}`}
+                          className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-emerald-500/10' : 'bg-transparent group-hover:bg-black/20'}`}
                         />
 
                         {/* status icon */}
                         <div
-                          className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? "bg-emerald-500 scale-100 shadow-lg" : "bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50"}`}
+                          className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? 'bg-emerald-500 scale-100 shadow-lg' : 'bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50'}`}
                         >
                           <CheckCircle2 className="size-4 text-white" />
                         </div>

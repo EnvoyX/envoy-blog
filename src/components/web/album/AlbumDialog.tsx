@@ -35,6 +35,7 @@ import { useAlbumStore } from '@/store/album';
 
 export function AlbumDialog() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [lastSelectedId, setLastSelectedId] = useState<string | null>(null);
   const [selectedCoverImageId, setSelectedCoverImageId] = useState<Set<string>>(new Set());
   const router = useRouter();
   const {
@@ -123,16 +124,44 @@ export function AlbumDialog() {
 
   const photos = images;
 
-  function toggleSelection(imgId: string) {
+  function toggleSelection(imgId: string, isShift: boolean = false) {
     if (form.state.isSubmitting) return;
+
+    const currentImages = photos ?? [];
+    const currentIndex = currentImages.findIndex((img) => img.id === imgId);
+    const lastIndex = currentImages.findIndex((img) => img.id === lastSelectedId);
+
+    // handle Shift + Click range selection
+    if (isShift && lastSelectedId && lastIndex !== -1 && currentIndex !== -1) {
+      const start = Math.min(lastIndex, currentIndex);
+      const end = Math.max(lastIndex, currentIndex);
+
+      const rangeImages = currentImages.slice(start, end + 1);
+
+      const newSelection = new Set(selectedIds);
+
+      rangeImages.forEach((img) => {
+        if (!newSelection.has(img.id)) newSelection.add(img.id);
+      });
+
+      setSelectedIds(newSelection);
+      setLastSelectedId(imgId);
+      return;
+    }
+
+    // handle single toggle selection
     const newSelection = new Set(selectedIds);
     if (newSelection.has(imgId)) {
       newSelection.delete(imgId);
+      setLastSelectedId(null);
       if (selectedCoverImageId.has(imgId)) {
         setSelectedCoverImageId(new Set());
         form.setFieldValue('coverImageUrl', 'https://tanstack.com/images/logos/splash-dark.png');
       }
-    } else newSelection.add(imgId);
+    } else {
+      newSelection.add(imgId);
+      setLastSelectedId(imgId);
+    }
     setSelectedIds(newSelection);
   }
 
@@ -506,6 +535,11 @@ export function AlbumDialog() {
                           )}
                           onClick={() => {
                             setSelectedIds(new Set());
+                            setLastSelectedId(null);
+                            form.setFieldValue(
+                              'coverImageUrl',
+                              'https://tanstack.com/images/logos/splash-dark.png',
+                            );
                           }}
                         >
                           <RotateCw className="size-4" />
@@ -533,7 +567,7 @@ export function AlbumDialog() {
                               key={img.id}
                               onClick={(e) => {
                                 e.preventDefault();
-                                toggleSelection(img.id);
+                                toggleSelection(img.id, e.shiftKey);
                               }}
                               className={cn(
                                 'group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300',

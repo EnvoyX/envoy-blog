@@ -36,6 +36,7 @@ export function EditImagesDialog() {
   const { isBulkEditDialogOpen, onOpenChangeDialog, toggleDialog, albumId } = useImageStore();
   const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
+  const [lastSelectedId, setLastSelectedId] = useState<string | null>(null);
   const { data: images, isPending } = useQuery({
     queryKey: ['edit-images'],
     queryFn: async () => {
@@ -77,29 +78,64 @@ export function EditImagesDialog() {
       void router.invalidate();
     },
   });
-  function toggleSelection(imgId: string) {
-    const selectedImage = images?.find((img) => img.id === imgId);
+  function toggleSelection(imgId: string, isShift: boolean = false) {
     if (form.state.isSubmitting) return;
+
+    const currentImages = photos ?? [];
+    const currentIndex = currentImages.findIndex((img) => img.id === imgId);
+    const lastIndex = currentImages.findIndex((img) => img.id === lastSelectedId);
+
+    // handle Shift + Click range selection
+    if (isShift && lastSelectedId && lastIndex !== -1 && currentIndex !== -1) {
+      const start = Math.min(lastIndex, currentIndex);
+      const end = Math.max(lastIndex, currentIndex);
+
+      const rangeImages = currentImages.slice(start, end + 1);
+
+      const newSelection = new Set(selectedIds);
+      const imagesToAppend: typeof form.state.values.images = [];
+
+      rangeImages.forEach((img) => {
+        if (!newSelection.has(img.id)) {
+          newSelection.add(img.id);
+          imagesToAppend.push({
+            id: img.id,
+            url: img.url,
+            title: img.title ?? '',
+            description: img.description ?? '',
+          });
+        }
+      });
+
+      if (imagesToAppend.length > 0) {
+        form.setFieldValue('images', (prev) => [...prev, ...imagesToAppend]);
+        setSelectedIds(newSelection);
+      }
+
+      setLastSelectedId(imgId);
+      return;
+    }
+
+    const selectedImage = currentImages.find((img) => img.id === imgId);
     const newSelection = new Set(selectedIds);
+
+    // handle single toggle selection
     if (newSelection.has(imgId)) {
       newSelection.delete(imgId);
-      form.setFieldValue('images', (prev) => {
-        const newImages = prev.filter((prevImg) => prevImg.id !== imgId);
-        return [...newImages];
-      });
+      form.setFieldValue('images', (prev) => prev.filter((prevImg) => prevImg.id !== imgId));
+      setLastSelectedId(null);
     } else {
       newSelection.add(imgId);
-      form.setFieldValue('images', (prev) => {
-        return [
-          ...prev,
-          {
-            id: selectedImage?.id ?? '',
-            url: selectedImage?.url ?? '',
-            title: selectedImage?.title ?? '',
-            description: selectedImage?.description ?? '',
-          },
-        ];
-      });
+      form.setFieldValue('images', (prev) => [
+        ...prev,
+        {
+          id: selectedImage?.id ?? '',
+          url: selectedImage?.url ?? '',
+          title: selectedImage?.title ?? '',
+          description: selectedImage?.description ?? '',
+        },
+      ]);
+      setLastSelectedId(imgId);
     }
     setSelectedIds(newSelection);
   }
@@ -249,6 +285,8 @@ export function EditImagesDialog() {
                             )}
                             onClick={() => {
                               setSelectedIds(new Set());
+                              setLastSelectedId(null);
+                              form.setFieldValue('images', []);
                             }}
                           >
                             <RotateCw className="size-4" />
@@ -275,7 +313,10 @@ export function EditImagesDialog() {
                         return (
                           <div
                             key={img.id}
-                            onClick={() => toggleSelection(img.id)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              toggleSelection(img.id, e.shiftKey);
+                            }}
                             className={`
                               group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300
                               ${
@@ -493,6 +534,8 @@ export function EditImagesDialog() {
                         )}
                         onClick={() => {
                           setSelectedIds(new Set());
+                          setLastSelectedId(null);
+                          form.setFieldValue('images', []);
                         }}
                       >
                         <RotateCw className="size-4" />
@@ -519,7 +562,10 @@ export function EditImagesDialog() {
                     return (
                       <div
                         key={img.id}
-                        onClick={() => toggleSelection(img.id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleSelection(img.id, e.shiftKey);
+                        }}
                         className={`
                           group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300
                           ${
