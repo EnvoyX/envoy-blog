@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
-import { CheckCircle2, ImageIcon, Loader2, MousePointer2 } from 'lucide-react';
+import { CheckCircle2, ImageIcon, Loader2, MousePointer2, RotateCw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { set } from 'zod/v3';
@@ -276,30 +276,45 @@ export function BulkAlbumDialog() {
                 </p>
               </div>
               {selectedIds.size > 0 && (
-                <Button
-                  onClick={handleBulkImport}
-                  disabled={isImporting}
-                  className={cn(
-                    'bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300 cursor-pointer',
-                    {
-                      'bg-destructive hover:bg-destructive/80 shadow-destructive/20':
-                        !initialValues?.addPhotos,
-                    },
-                  )}
-                >
-                  {isImporting ? (
-                    <Loader2 className="size-4 animate-spin mr-2" />
-                  ) : (
-                    <CheckCircle2 className="size-4 mr-2" />
-                  )}
-                  {bulkMode === 'add' ? (
-                    <>Confirm Import ({selectedIds.size})</>
-                  ) : bulkMode === 'remove' ? (
-                    <>Confirm Remove ({selectedIds.size})</>
-                  ) : (
-                    <>Confirm Delete ({selectedIds.size})</>
-                  )}
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={handleBulkImport}
+                    disabled={isImporting}
+                    className={cn(
+                      'bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-2 font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300 cursor-pointer',
+                      {
+                        'bg-destructive hover:bg-destructive/80 shadow-destructive/20':
+                          bulkMode === 'delete' || bulkMode === 'remove',
+                      },
+                    )}
+                  >
+                    {isImporting ? (
+                      <Loader2 className="size-4 animate-spin" />
+                    ) : (
+                      <CheckCircle2 className="size-4" />
+                    )}
+                    {bulkMode === 'add' ? (
+                      <>Import ({selectedIds.size})</>
+                    ) : bulkMode === 'remove' ? (
+                      <>Remove ({selectedIds.size})</>
+                    ) : (
+                      <>Delete ({selectedIds.size})</>
+                    )}
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="icon"
+                    className={cn(
+                      'bg-destructive/75 hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20 animate-in fade-in zoom-in duration-300 cursor-pointer',
+                    )}
+                    onClick={() => {
+                      setSelectedIds(new Set());
+                      setLastSelectedId(null);
+                    }}
+                  >
+                    <RotateCw className="size-4" />
+                  </Button>
+                </div>
               )}
             </div>
 

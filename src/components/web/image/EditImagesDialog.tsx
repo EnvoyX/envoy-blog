@@ -1,15 +1,7 @@
 import { useForm } from '@tanstack/react-form';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
-import {
-  CheckCircle2,
-  ImageIcon,
-  Loader2,
-  MailboxIcon,
-  MousePointer2,
-  RotateCw,
-  Trash2,
-} from 'lucide-react';
+import { CheckCircle2, Loader2, MailboxIcon, MousePointer2, RotateCw, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -276,7 +268,7 @@ export function EditImagesDialog() {
                           </span>
                           <Button
                             variant="default"
-                            size="icon-lg"
+                            size="icon"
                             className={cn(
                               'bg-destructive/75 hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20 animate-in fade-in zoom-in duration-300 cursor-pointer',
                               {
@@ -525,7 +517,7 @@ export function EditImagesDialog() {
                       </span>
                       <Button
                         variant="default"
-                        size="icon-lg"
+                        size="icon"
                         className={cn(
                           'bg-destructive/75 hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20 animate-in fade-in zoom-in duration-300 cursor-pointer',
                           {

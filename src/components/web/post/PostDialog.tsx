@@ -541,7 +541,7 @@ export function PostDialog() {
                           </span>
                           <Button
                             variant="default"
-                            size="icon-lg"
+                            size="icon"
                             className={cn(
                               'bg-destructive/75 hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20 animate-in fade-in zoom-in duration-300 cursor-pointer',
                               {
