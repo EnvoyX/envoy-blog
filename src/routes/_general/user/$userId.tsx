@@ -24,24 +24,25 @@ import { BlogCard } from '@/components/web/BlogCard';
 import PhotoGallery from '@/components/web/PhotoGallery';
 import { ShortPostCard } from '@/components/web/post/ShortPostCard';
 import { UserFollowDialog } from '@/components/web/UserFollowDialog';
-import { getUser } from '@/data/session';
 import { getPublicProfileFn } from '@/data/user';
+import { User } from '@/generated/prisma/client';
 import { profilePageSearchParamsSchema } from '@/schemas/searchSchemas';
 import { followDialogStore } from '@/store/profile';
 
 export const Route = createFileRoute('/_general/user/$userId')({
   component: PublicProfileComponent,
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
     const user = await getPublicProfileFn({
       data: {
         userId: params.userId,
       },
     });
 
-    const session = await getUser();
     return {
       user,
-      session,
+      session: {
+        user: context?.user,
+      },
     };
   },
   validateSearch: zodValidator(profilePageSearchParamsSchema),
@@ -381,7 +382,7 @@ function PublicProfileComponent() {
           <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {userPosts?.length ? (
               userPosts?.map((post) => {
-                return <ShortPostCard key={post.id} post={post} session={session} />;
+                return <ShortPostCard key={post.id} post={post} user={session.user as User} />;
               })
             ) : (
               <div className="py-20 text-center rounded-3xl">

@@ -46,28 +46,26 @@ interface ChatItemProps {
       password: string | null;
     };
   };
-  session?: {
-    user:
-      | {
-          id?: string | undefined;
-          name?: string | undefined;
-          createdAt?: Date | undefined;
-          updatedAt?: Date | undefined;
-          email?: string | undefined;
-          emailVerified?: boolean | undefined;
-          image?: string | null | undefined;
-          password?: string | null | undefined;
-          defaultImage?: string | null | undefined;
-          biodata?: string | null | undefined;
-          role?: UserRole | undefined;
-        }
-      | undefined;
-  };
+  user:
+    | {
+        id?: string | undefined;
+        name?: string | undefined;
+        createdAt?: Date | undefined;
+        updatedAt?: Date | undefined;
+        email?: string | undefined;
+        emailVerified?: boolean | undefined;
+        image?: string | null | undefined;
+        password?: string | null | undefined;
+        defaultImage?: string | null | undefined;
+        biodata?: string | null | undefined;
+        role?: UserRole | undefined;
+      }
+    | undefined;
   post: BlogPostPublic;
   commentCollection: CommentCollection;
 }
 
-export function CommentItem({ comment, session, commentCollection, post }: ChatItemProps) {
+export function CommentItem({ comment, user, commentCollection, post }: ChatItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
 
@@ -89,8 +87,8 @@ export function CommentItem({ comment, session, commentCollection, post }: ChatI
     commentCollection.delete(comment.id);
   };
 
-  const isOwner = session?.user?.id === post.authorId;
-  const isCommentOwner = session?.user?.id === comment.user.id;
+  const isOwner = user?.id === post.authorId;
+  const isCommentOwner = user?.id === comment.user.id;
 
   return (
     <div className="group flex gap-4 p-4 rounded-2xl transition-all hover:bg-slate-900/40 border-l border-emerald-600">

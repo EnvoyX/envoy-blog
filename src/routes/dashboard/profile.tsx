@@ -37,19 +37,21 @@ import PhotoGallery from '@/components/web/PhotoGallery';
 import { ShortPostCard } from '@/components/web/post/ShortPostCard';
 import { UploadThingModal } from '@/components/web/uplooadthing/UploadThingModal';
 import { UserFollowDialog } from '@/components/web/UserFollowDialog';
-import { getProfileData, getUser } from '@/data/session';
+import { getProfileData } from '@/data/session';
+import { User as UserType } from '@/generated/prisma/client';
 import { authClient } from '@/lib/auth-client';
 import { profilePageSearchParamsSchema } from '@/schemas/searchSchemas';
 import { imageUploadModalStore } from '@/store/imageUploadStore';
 import { followDialogStore, useProfileStore } from '@/store/profile';
 
 export const Route = createFileRoute('/dashboard/profile')({
-  loader: async () => {
+  loader: async ({ context }) => {
     const data = await getProfileData();
-    const session = await getUser();
     return {
       user: data.user,
-      session,
+      session: {
+        user: context?.user,
+      },
     };
   },
   validateSearch: zodValidator(profilePageSearchParamsSchema),
@@ -144,6 +146,7 @@ function RouteComponent() {
             toast.success('Logged out successfully');
             void navigate({
               to: '/login',
+              reloadDocument: true,
             });
           },
         },
@@ -421,7 +424,7 @@ function RouteComponent() {
           <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {userPosts?.length ? (
               userPosts?.map((post) => {
-                return <ShortPostCard key={post.id} post={post} session={session} />;
+                return <ShortPostCard key={post.id} post={post} user={session?.user as UserType} />;
               })
             ) : (
               <div className="py-20 text-center rounded-3xl">

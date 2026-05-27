@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/query-core';
 import { aiDevtoolsPlugin } from '@tanstack/react-ai-devtools';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
@@ -5,7 +6,12 @@ import { HotkeysProvider, useHotkey } from '@tanstack/react-hotkeys';
 import { hotkeysDevtoolsPlugin } from '@tanstack/react-hotkeys-devtools';
 import { pacerDevtoolsPlugin } from '@tanstack/react-pacer-devtools';
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
-import { HeadContent, Scripts, createRootRoute, useRouter } from '@tanstack/react-router';
+import {
+  HeadContent,
+  Scripts,
+  createRootRouteWithContext,
+  useRouter,
+} from '@tanstack/react-router';
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import { LenisRef, ReactLenis } from 'lenis/react';
 import { cancelFrame, frame } from 'motion';
@@ -13,11 +19,29 @@ import { useEffect, useRef } from 'react';
 
 import { Toaster } from '@/components/ui/sonner';
 import { QueryProvider } from '@/components/web/query-provider';
+import { getSession } from '@/data/session';
+
+import 'lenis/dist/lenis.css';
+import { Session, User } from '@/generated/prisma/client';
 import { ThemeProvider } from '@/lib/theme-provider';
 
 import appCss from '../styles.css?url';
-import 'lenis/dist/lenis.css';
-export const Route = createRootRoute({
+
+export interface RouterContext {
+  user: User | null;
+  session: Session | null;
+  queryClient: QueryClient;
+}
+export const Route = createRootRouteWithContext<RouterContext>()({
+  beforeLoad: async () => {
+    const data = await getSession();
+
+    // whatever returned here automatically merges into the Route Context!
+    return {
+      user: data?.user,
+      session: data?.session,
+    };
+  },
   head: () => ({
     meta: [
       {
@@ -28,7 +52,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: `Envoy's TanStack Start Blog`,
+        title: `Envoy Mindpalace`,
       },
     ],
     links: [

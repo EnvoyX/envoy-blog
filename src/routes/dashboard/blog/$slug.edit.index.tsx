@@ -1,45 +1,46 @@
-import { BlogDashboardEditor } from "@/components/web/dashboard/BlogDashboardEditor";
-import { getPostFn } from "@/data/blog";
-import { getUser } from "@/data/session";
-import { Post } from "@/generated/prisma/client";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-export const Route = createFileRoute("/dashboard/blog/$slug/edit/")({
+import { BlogDashboardEditor } from '@/components/web/dashboard/BlogDashboardEditor';
+import { getPostFn } from '@/data/blog';
+import { Post } from '@/generated/prisma/client';
+
+export const Route = createFileRoute('/dashboard/blog/$slug/edit/')({
   component: RouteComponent,
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
     const post = await getPostFn({ data: params.slug });
-    const session = await getUser();
 
-    if (session?.user?.id !== post?.authorId) {
+    if (context?.user?.id !== post?.authorId) {
       throw redirect({
-        to: "/dashboard/blog",
+        to: '/dashboard/blog',
       });
     }
     return {
       post,
-      session,
+      session: {
+        user: context?.user,
+      },
     };
   },
   head: ({ loaderData }) => ({
     meta: [
       { title: `Edit Blog | ${loaderData?.post?.slug} | Envoy Mindpalace` },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
       {
-        property: "og:title",
+        property: 'og:title',
         content: `${loaderData?.post?.title} | Envoy Blog`,
       },
       {
-        property: "og:description",
+        property: 'og:description',
         content: `${loaderData?.post?.description}`,
       },
       {
-        property: "og:image",
+        property: 'og:image',
         content: `${loaderData?.post?.image}`,
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
 });

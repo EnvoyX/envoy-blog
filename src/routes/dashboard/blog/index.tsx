@@ -46,18 +46,18 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { getMyPostsFn, deletePostFn } from '@/data/blog';
-import { getUser } from '@/data/session';
 import { BlogStatus } from '@/lib/constants';
 import { postSearchSchema } from '@/schemas/blog';
 import { modalStore } from '@/store/blogStore';
 
 export const Route = createFileRoute('/dashboard/blog/')({
-  loader: async () => {
+  loader: async ({ context }) => {
     const allPosts = await getMyPostsFn();
-    const session = await getUser();
     return {
       allPosts,
-      session,
+      session: {
+        user: context?.user,
+      },
     };
   },
   component: BlogPageComponent,

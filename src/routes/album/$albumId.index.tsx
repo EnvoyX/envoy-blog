@@ -15,18 +15,16 @@ import { Footer } from '@/components/web/footer';
 import PhotoGallery from '@/components/web/PhotoGallery';
 import { UserAvatar } from '@/components/web/user-profile';
 import { getAlbumByIdFn } from '@/data/album';
-import { getUser } from '@/data/session';
 import { Image } from '@/generated/prisma/client';
 import { downloadAlbumClientSide } from '@/utils/utils';
 export const Route = createFileRoute('/album/$albumId/')({
   component: AlbumPage,
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
     const album = await getAlbumByIdFn({ data: { albumId: params.albumId } });
-    const session = await getUser();
-    const isOwner = session?.user?.id === album?.authorId;
+    const isOwner = context?.user?.id === album?.authorId;
     const isPrivateShownToFollower =
-      session &&
-      album?.author.followers.some((follow) => follow.follower.id === session?.user?.id) &&
+      context.user &&
+      album?.author.followers.some((follow) => follow.follower.id === context?.user?.id) &&
       album.showPrivateToFollowers &&
       !album.published;
     if (!album?.published && !isOwner && !isPrivateShownToFollower) {

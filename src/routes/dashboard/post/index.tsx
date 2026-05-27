@@ -33,18 +33,16 @@ import {
 } from '@/components/ui/select';
 import { PostDialog } from '@/components/web/post/PostDialog';
 import { deleteShortPostFn, getShortPostsFn } from '@/data/post';
-import { getUser } from '@/data/session';
 import { SortedByStatus } from '@/lib/constants';
 import { shortPostSearchSchema } from '@/schemas/post';
 import { usePostStore } from '@/store/post';
 
 export const Route = createFileRoute('/dashboard/post/')({
-  loader: async () => {
+  loader: async ({ context }) => {
     const allPosts = await getShortPostsFn();
-    const session = await getUser();
     return {
       allPosts,
-      session,
+      user: context.user,
     };
   },
   component: PostPageComponent,
@@ -71,7 +69,7 @@ export const Route = createFileRoute('/dashboard/post/')({
 });
 
 function PostPageComponent() {
-  const { allPosts, session } = Route.useLoaderData();
+  const { allPosts, user } = Route.useLoaderData();
   const { sortDateBy } = Route.useSearch();
   const {
     currentPostId,
@@ -182,6 +180,7 @@ function PostPageComponent() {
                 params={{
                   postId: post.id,
                 }}
+                key={post.id}
               >
                 <Card
                   key={post.id}
@@ -202,7 +201,7 @@ function PostPageComponent() {
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
 
-                    {post.authorId === session?.user?.id && (
+                    {post.authorId === user?.id && (
                       <div className="absolute top-3 right-3 z-20">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>

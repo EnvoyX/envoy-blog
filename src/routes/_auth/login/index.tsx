@@ -13,19 +13,16 @@ import {
   FieldGroup,
   //   FieldLabel,
 } from '@/components/ui/field';
-import { getUser } from '@/data/session';
 import { authClient } from '@/lib/auth-client';
 
 export const Route = createFileRoute('/_auth/login/')({
-  beforeLoad: async () => {
-    const session = await getUser();
-    if (session.user) throw redirect({ to: '/dashboard' });
+  beforeLoad: ({ context }) => {
+    if (context?.user) throw redirect({ to: '/dashboard' });
     return;
   },
-  loader: async () => {
-    const session = await getUser();
-    if (session.user) throw redirect({ to: '/dashboard' });
-    return { session };
+  loader: ({ context }) => {
+    if (context?.user) throw redirect({ to: '/dashboard' });
+    return { user: context?.user };
   },
   validateSearch: zodValidator(
     z.object({
@@ -50,7 +47,7 @@ export const Route = createFileRoute('/_auth/login/')({
 
 function RouteComponent() {
   const { callbackUrl } = Route.useSearch();
-  const { session } = Route.useLoaderData();
+  const { user } = Route.useLoaderData();
   const [isPending, startTransition] = useTransition();
   const [isRedirecting, setIsRedirecting] = useState(false);
   const hasInitialized = useRef(false);
@@ -87,10 +84,10 @@ function RouteComponent() {
     hasInitialized.current = true;
   });
   useEffect(() => {
-    if (!session.user) {
+    if (!user) {
       setIsRedirecting(false);
     }
-  }, [session, session.user]);
+  }, [user]);
 
   if (isRedirecting) {
     return (

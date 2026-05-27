@@ -63,7 +63,7 @@ export function AlbumDialog() {
       });
       return data?.images;
     },
-    enabled: currentAlbumId ? true : false,
+    enabled: currentAlbumId && isAlbumDialogOpen && initialValues?.type === 'edit' ? true : false,
   });
 
   const form = useForm({

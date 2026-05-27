@@ -26,25 +26,23 @@ import MasonryCollage from '@/components/web/post/MasonryCollage';
 import PostCollage from '@/components/web/post/PostCollage';
 import { PostLightBox } from '@/components/web/post/PostLightBox';
 import { getShortPostByIdFn } from '@/data/post';
-import { getUser } from '@/data/session';
 import { User } from '@/generated/prisma/client';
 import { cn } from '@/lib/utils';
 import { useImageStore } from '@/store/image';
 
 export const Route = createFileRoute('/post/$postId/')({
   component: RouteComponent,
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
     const post = await getShortPostByIdFn({
       data: {
         shortPostId: params.postId,
       },
     });
     if (!post) throw redirect({ to: '/post' });
-    const session = await getUser();
-    const isOwner = session?.user?.id === post?.authorId;
+    const isOwner = context?.user?.id === post?.authorId;
     const isPrivateShownToFollower =
-      session &&
-      post?.author.followers.some((follow) => follow.follower.id === session?.user?.id) &&
+      context.user &&
+      post?.author.followers.some((follow) => follow.follower.id === context?.user?.id) &&
       post.showPrivateToFollowers &&
       !post.published;
 
@@ -54,7 +52,7 @@ export const Route = createFileRoute('/post/$postId/')({
 
     return {
       post,
-      session,
+      user: context.user,
     };
   },
   head: ({ loaderData }) => ({
@@ -82,7 +80,7 @@ export const Route = createFileRoute('/post/$postId/')({
 });
 
 function RouteComponent() {
-  const { post, session } = Route.useLoaderData();
+  const { post, user } = Route.useLoaderData();
   const photos = post?.imagesOnShortPosts?.map((photo, index) => ({
     ...photo.image,
     globalIndex: index,
@@ -102,7 +100,7 @@ function RouteComponent() {
       .where(({ comment }) => eq(comment.shortPostId, post?.id))
       .orderBy(({ comment }) => comment.createdAt, 'desc'),
   );
-  const hasLiked = likes.find((like) => like.userId === session?.user?.id);
+  const hasLiked = likes.find((like) => like.userId === user?.id);
 
   // lightbox states & variables
   const { setPostId } = useImageStore();
@@ -110,8 +108,8 @@ function RouteComponent() {
   const [index, setIndex] = useState(0);
 
   function handleToggleLike() {
-    if (!session.user) return;
-    const existingLike = likes.find((like) => like.userId === session?.user?.id);
+    if (!user) return;
+    const existingLike = likes.find((like) => like.userId === user?.id);
 
     if (!existingLike) {
       // optimistic Insert like
@@ -120,7 +118,7 @@ function RouteComponent() {
         post_slug: post?.authorId as string,
         postId: uuidv4(),
         shortPostId: post?.id as string,
-        userId: session.user.id as string,
+        userId: user?.id as string,
         createdAt: new Date(),
       });
     } else {
@@ -129,7 +127,7 @@ function RouteComponent() {
     }
   }
   function handleAddComment(commentText: string) {
-    if (!session.user) return;
+    if (!user) return;
 
     if (!commentText.trim()) return;
 
@@ -140,9 +138,9 @@ function RouteComponent() {
       postId: uuidv4(),
       shortPostId: post?.id as string,
       post_slug: post?.authorId as string,
-      userId: session.user.id as string,
+      userId: user?.id as string,
       createdAt: new Date(),
-      user: session.user as User,
+      user: user as User,
       parentId: createId(),
       updatedAt: new Date(),
     });
@@ -394,7 +392,7 @@ function RouteComponent() {
             <div className="flex items-center gap-4">
               <button
                 onClick={handleToggleLike}
-                className={`flex items-center gap-1.5 transition-colors ${session.user ? 'cursor-pointer' : 'cursor-not-allowed'} ${hasLiked ? 'text-emerald-500' : 'text-slate-400 hover:text-white'}`}
+                className={`flex items-center gap-1.5 transition-colors ${user ? 'cursor-pointer' : 'cursor-not-allowed'} ${hasLiked ? 'text-emerald-500' : 'text-slate-400 hover:text-white'}`}
               >
                 <Heart className={`size-5 ${hasLiked && 'fill-current'}`} />
                 <span className="text-xs font-bold">{likes.length}</span>
@@ -406,7 +404,7 @@ function RouteComponent() {
             </div>
           </div>
 
-          {session.user ? (
+          {user ? (
             <CommentInput handleAddComment={handleAddComment} />
           ) : (
             <div className="relative flex items-center gap-3">

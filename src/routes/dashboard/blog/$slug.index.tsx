@@ -24,23 +24,23 @@ import ScrollProgress from '@/components/web/ScrollProgress';
 import SideNav, { extractHeadings } from '@/components/web/SideNav';
 import { UserAvatar } from '@/components/web/user-profile';
 import { getPostFn } from '@/data/blog';
-import { getUser } from '@/data/session';
 import { User } from '@/generated/prisma/browser';
 import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/dashboard/blog/$slug/')({
   component: PostComponent,
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
     const post = await getPostFn({ data: params.slug });
-    const session = await getUser();
-    if (!post?.published && session?.user?.id !== post?.authorId) {
+    if (!post?.published && context?.user?.id !== post?.authorId) {
       throw redirect({
         to: '/dashboard/blog',
       });
     }
     return {
       post,
-      session,
+      session: {
+        user: context?.user,
+      },
     };
   },
   head: ({ loaderData }) => ({
@@ -343,9 +343,9 @@ function PostComponent() {
                       <CommentItem
                         key={comment.id}
                         comment={comment}
-                        session={session}
                         commentCollection={commentCollection}
                         post={post}
+                        user={session?.user as User}
                       />
                     ))}
                   </div>

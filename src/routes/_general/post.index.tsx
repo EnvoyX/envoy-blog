@@ -6,22 +6,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ShortPostCard } from '@/components/web/post/ShortPostCard';
 import { getFollowsByUserIdFn } from '@/data/follow';
 import { getGlobalFeedFn } from '@/data/post';
-import { getUser } from '@/data/session';
+import { User } from '@/generated/prisma/client';
 import { postPageSearchParamsSchema } from '@/schemas/searchSchemas';
 
 export const Route = createFileRoute('/_general/post/')({
   component: RouteComponent,
-  loader: async () => {
-    const session = await getUser();
+  loader: async ({ context }) => {
     const allPosts = await getGlobalFeedFn();
     const latestPosts = allPosts.filter(
       (post) => post.author.email === 'muhamadhanifhafizhan@gmail.com' && post.published,
     );
     const publicPost = allPosts.filter((post) => post.published);
-    if (session.user) {
+    if (context.user) {
       const userFollows = await getFollowsByUserIdFn({
         data: {
-          userId: session?.user?.id as string,
+          userId: context?.user?.id as string,
         },
       });
       const followingUserIds = new Set(userFollows?.following?.map((user) => user.followingId));
@@ -36,13 +35,13 @@ export const Route = createFileRoute('/_general/post/')({
         publicPost,
         latestPosts,
         followingPosts,
-        session,
+        user: context.user,
       };
     }
     return {
       publicPost,
       latestPosts,
-      session,
+      user: context.user,
     };
   },
   validateSearch: zodValidator(postPageSearchParamsSchema),
@@ -68,7 +67,7 @@ export const Route = createFileRoute('/_general/post/')({
 });
 
 function RouteComponent() {
-  const { publicPost, latestPosts, followingPosts, session } = Route.useLoaderData();
+  const { publicPost, latestPosts, followingPosts, user } = Route.useLoaderData();
   const { currentTab } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
@@ -102,7 +101,7 @@ function RouteComponent() {
             >
               <h1 className="text-xl font-bold tracking-tight text-white pb-0.5">For You</h1>
             </TabsTrigger>
-            {session.user && (
+            {user && (
               <TabsTrigger
                 className="flex items-center gap-2 after:bg-emerald-500 cursor-pointer"
                 value="following-post"
@@ -121,7 +120,7 @@ function RouteComponent() {
                   key={post.id}
                   className="animate-in fade-in slide-in-from-bottom-4 duration-500"
                 >
-                  <ShortPostCard post={post} session={session} />
+                  <ShortPostCard post={post} user={user as User} />
                 </div>
               ))
             ) : (
@@ -140,7 +139,7 @@ function RouteComponent() {
                   key={post.id}
                   className="animate-in fade-in slide-in-from-bottom-4 duration-500"
                 >
-                  <ShortPostCard post={post} session={session} />
+                  <ShortPostCard post={post} user={user as User} />
                 </div>
               ))
             ) : (
@@ -151,7 +150,7 @@ function RouteComponent() {
           </div>
         </TabsContent>
 
-        {session.user && (
+        {user && (
           <TabsContent value="following-post">
             <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
               {followingPosts && followingPosts.length > 0 ? (
@@ -160,7 +159,7 @@ function RouteComponent() {
                     key={post.id}
                     className="animate-in fade-in slide-in-from-bottom-4 duration-500"
                   >
-                    <ShortPostCard post={post} session={session} />
+                    <ShortPostCard post={post} user={user as User} />
                   </div>
                 ))
               ) : (

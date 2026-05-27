@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 
 // import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
@@ -9,16 +9,15 @@ import { ImportImageModal } from '@/components/web/image/ImportImageModal';
 import { ImportToAlbumModal } from '@/components/web/image/ImportToAlbumModal';
 import { ImageUploader } from '@/components/web/ImageUploader';
 import { AppSidebar } from '@/components/web/sidebar/app-sidebar';
-import { getUser } from '@/data/session';
 import { useSidebarStore } from '@/store/sidebar';
 
 export const Route = createFileRoute('/dashboard')({
   component: RouteComponent,
-  loader: async () => {
-    const session = await getUser();
+  loader: async ({ context }) => {
+    if (!context?.user) throw redirect({ to: '/login' });
 
     return {
-      user: session.user,
+      user: context?.user,
     };
   },
 });

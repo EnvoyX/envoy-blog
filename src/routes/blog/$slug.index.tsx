@@ -24,23 +24,21 @@ import ScrollProgress from '@/components/web/ScrollProgress';
 import SideNav, { extractHeadings } from '@/components/web/SideNav';
 import { UserAvatar } from '@/components/web/user-profile';
 import { getPostFn } from '@/data/blog';
-import { getUser } from '@/data/session';
 import { User } from '@/generated/prisma/browser';
 import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/blog/$slug/')({
   component: PostComponent,
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
     const post = await getPostFn({ data: params.slug });
-    const session = await getUser();
-    if (!post?.published && session?.user?.id !== post?.authorId) {
+    if (!post?.published && context?.user?.id !== post?.authorId) {
       throw redirect({
         to: '/blog',
       });
     }
     return {
       post,
-      session,
+      user: context?.user,
     };
   },
   head: ({ loaderData }) => ({
@@ -68,7 +66,7 @@ export const Route = createFileRoute('/blog/$slug/')({
 });
 
 function PostComponent() {
-  const { post, session } = Route.useLoaderData();
+  const { post, user } = Route.useLoaderData();
   const headings = post?.content ? extractHeadings(post.content) : [];
   const navigate = useNavigate();
   const { data: likes } = useLiveQuery((q) =>
@@ -81,11 +79,11 @@ function PostComponent() {
       .orderBy(({ comment }) => comment.createdAt, 'desc'),
   );
 
-  const hasLiked = likes.find((like) => like.userId === session?.user?.id);
+  const hasLiked = likes.find((like) => like.userId === user?.id);
 
   function handleToggleLike() {
-    if (!session.user) return;
-    const existingLike = likes.find((like) => like.userId === session?.user?.id);
+    if (!user) return;
+    const existingLike = likes.find((like) => like.userId === user?.id);
 
     if (!existingLike) {
       // optimistic Insert like
@@ -94,7 +92,7 @@ function PostComponent() {
         post_slug: post?.slug as string,
         postId: post?.id as string,
         shortPostId: uuidv4(),
-        userId: session.user.id as string,
+        userId: user?.id as string,
         createdAt: new Date(),
       });
     } else {
@@ -104,7 +102,7 @@ function PostComponent() {
   }
 
   function handleAddComment(commentText: string) {
-    if (!session.user) return;
+    if (!user) return;
     if (!commentText.trim()) return;
 
     // optimistic Insert comment
@@ -114,9 +112,9 @@ function PostComponent() {
       postId: post?.id as string,
       shortPostId: uuidv4(),
       post_slug: post?.slug as string,
-      userId: session.user.id as string,
+      userId: user.id as string,
       createdAt: new Date(),
-      user: session.user as User,
+      user: user as User,
       parentId: createId(),
       updatedAt: new Date(),
     });
@@ -294,7 +292,7 @@ function PostComponent() {
                     <span className="text-sm font-medium text-slate-300">{likes.length} likes</span>
                     <button
                       onClick={() => handleToggleLike()}
-                      className={`p-3 rounded-full transition-all border ${session.user ? 'cursor-pointer' : 'cursor-not-allowed'}  ${
+                      className={`p-3 rounded-full transition-all border ${user ? 'cursor-pointer' : 'cursor-not-allowed'}  ${
                         hasLiked
                           ? 'bg-emerald-500/10 border-emerald-500 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
                           : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
@@ -315,21 +313,21 @@ function PostComponent() {
                     </h3>
                   </div>
 
-                  {session?.user ? (
+                  {user ? (
                     <div className="flex gap-4">
                       <Link
                         to="/user/$userId"
                         params={{
-                          userId: session.user.id as string,
+                          userId: user.id as string,
                         }}
                         target="_blank"
                       >
                         <Avatar className="h-10 w-10 shrink-0 items-center justify-center">
-                          <AvatarImage src={session.user.image as string} />
+                          <AvatarImage src={user.image as string} />
                           <AvatarFallback>
                             {' '}
-                            {(session.user.name as string)
-                              ? (session.user.name as string)
+                            {user.name
+                              ? (user.name as string)
                                   .split(' ')
                                   .map((n) => n[0])
                                   .join('')
@@ -363,7 +361,7 @@ function PostComponent() {
                       <CommentItem
                         key={comment.id}
                         comment={comment}
-                        session={session}
+                        user={user}
                         commentCollection={commentCollection}
                         post={post}
                       />

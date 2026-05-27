@@ -1,5 +1,10 @@
-import { UserSession } from "@/data/session";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useNavigate } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
+import { ChevronsUpDownIcon, LogOutIcon, UserIcon } from 'lucide-react';
+import { Suspense, useTransition } from 'react';
+import { toast } from 'sonner';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,20 +13,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { authClient } from "@/lib/auth-client";
-import { useNavigate } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
-import { ChevronsUpDownIcon, LogOutIcon, UserIcon } from "lucide-react";
-import { Suspense, useTransition } from "react";
-import { toast } from "sonner";
+} from '@/components/ui/sidebar';
+import { Skeleton } from '@/components/ui/skeleton';
+import { UserSession } from '@/data/session';
+import { authClient } from '@/lib/auth-client';
 
 export function NavUser({ user }: UserSession) {
   const { isMobile } = useSidebar();
@@ -32,21 +33,22 @@ export function NavUser({ user }: UserSession) {
       await authClient.signOut({
         fetchOptions: {
           onRequest: () => {
-            toast.loading("Logging out...", {
-              id: "logout",
+            toast.loading('Logging out...', {
+              id: 'logout',
             });
           },
           onError: ({ error }) => {
-            toast.dismiss("logout");
-            toast.error("Failed to log out", {
+            toast.dismiss('logout');
+            toast.error('Failed to log out', {
               description: error.message,
             });
           },
           onSuccess: () => {
-            toast.dismiss("logout");
-            toast.success("Logged out successfully");
+            toast.dismiss('logout');
+            toast.success('Logged out successfully');
             navigate({
-              to: "/login",
+              to: '/login',
+              reloadDocument: true,
             });
           },
         },
@@ -67,9 +69,9 @@ export function NavUser({ user }: UserSession) {
                 <AvatarImage src={user?.image as string} alt={user?.name} />
                 <AvatarFallback className="rounded-lg">
                   {user?.name
-                    ?.split(" ")
+                    ?.split(' ')
                     .map((n) => n[0])
-                    .join("")}
+                    .join('')}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -85,7 +87,7 @@ export function NavUser({ user }: UserSession) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >
@@ -95,9 +97,9 @@ export function NavUser({ user }: UserSession) {
                   <AvatarImage src={user?.image as string} alt={user?.name} />
                   <AvatarFallback className="rounded-lg">
                     {user?.name
-                      ?.split(" ")
+                      ?.split(' ')
                       .map((n) => n[0])
-                      .join("")}
+                      .join('')}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -112,7 +114,7 @@ export function NavUser({ user }: UserSession) {
                 <Link
                   to="/dashboard/profile"
                   activeProps={{
-                    "data-active": true,
+                    'data-active': true,
                   }}
                   activeOptions={{
                     exact: false,
@@ -124,7 +126,12 @@ export function NavUser({ user }: UserSession) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} disabled={isTransition}>
+            <DropdownMenuItem
+              onClick={handleLogout}
+              disabled={isTransition}
+              variant="destructive"
+              className="cursor-pointer"
+            >
               <LogOutIcon />
               Log out
             </DropdownMenuItem>

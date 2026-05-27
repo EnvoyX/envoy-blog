@@ -25,7 +25,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import PhotoGallery from '@/components/web/PhotoGallery';
 import { getAlbumByIdFn } from '@/data/album';
-import { getUser } from '@/data/session';
 import { Image } from '@/generated/prisma/client';
 import { useAlbumStore } from '@/store/album';
 import { useImageStore } from '@/store/image';
@@ -34,10 +33,9 @@ import { downloadAlbumClientSide } from '@/utils/utils';
 
 export const Route = createFileRoute('/dashboard/albums/$albumId/')({
   component: AlbumPage,
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
     const album = await getAlbumByIdFn({ data: { albumId: params.albumId } });
-    const session = await getUser();
-    if (album && !album?.published && album?.authorId !== session.user?.id)
+    if (album && !album?.published && album?.authorId !== context.user?.id)
       throw redirect({ to: '/dashboard/albums' });
     return album;
   },

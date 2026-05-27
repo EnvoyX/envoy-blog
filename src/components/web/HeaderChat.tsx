@@ -78,6 +78,7 @@ export default function HeaderChat({
             toast.success('Logged out successfully');
             navigate({
               to: '/login',
+              reloadDocument: true,
             });
           },
         },

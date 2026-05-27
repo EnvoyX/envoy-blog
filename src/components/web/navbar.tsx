@@ -73,6 +73,7 @@ export function Navbar() {
             toast.success('Logged out successfully');
             void navigate({
               to: '/login',
+              reloadDocument: true,
             });
           },
         },

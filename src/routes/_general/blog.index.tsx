@@ -38,17 +38,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { deletePostFn, getPostsFn } from '@/data/blog';
-import { getUser } from '@/data/session';
 import { postPublishedSearchSchema } from '@/schemas/blog';
 import { modalStore } from '@/store/blogStore';
 
 export const Route = createFileRoute('/_general/blog/')({
-  loader: async () => {
+  loader: async ({ context }) => {
     const allPosts = await getPostsFn();
-    const session = await getUser();
     return {
       allPosts,
-      session,
+      user: context.user,
     };
   },
   component: BlogPageComponent,
@@ -75,7 +73,7 @@ export const Route = createFileRoute('/_general/blog/')({
 });
 
 function BlogPageComponent() {
-  const { allPosts, session } = Route.useLoaderData();
+  const { allPosts, user } = Route.useLoaderData();
   const posts = allPosts.filter((post) => post.author.email === 'muhamadhanifhafizhan@gmail.com');
 
   const { query } = Route.useSearch();
@@ -116,7 +114,7 @@ function BlogPageComponent() {
             <h1 className="text-4xl font-black tracking-tight text-white">Blog Posts</h1>
             <p className="text-slate-400 mt-2">View latest blog posts.</p>
           </div>
-          {session.user && (
+          {user && (
             <Button
               asChild
               size="lg"
@@ -155,7 +153,7 @@ function BlogPageComponent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
           {filteredPosts.map((post) => {
             const hasLiked = post.likes.find(
-              (like) => like.userId === session?.user?.id && like.postId === post.id,
+              (like) => like.userId === user?.id && like.postId === post.id,
             );
             return (
               <Card
@@ -170,7 +168,7 @@ function BlogPageComponent() {
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
 
-                  {post.authorId === session?.user?.id && (
+                  {post.authorId === user?.id && (
                     <div className="absolute top-3 right-3">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>

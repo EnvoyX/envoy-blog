@@ -1,19 +1,19 @@
-import { useDebouncedCallback } from "@tanstack/react-pacer";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, Outlet, redirect, useNavigate } from "@tanstack/react-router";
-import { Plus, Search, LogOut, Sparkles, ChevronDown } from "lucide-react";
-import { useState, useTransition } from "react";
-import { toast } from "sonner";
+import { useDebouncedCallback } from '@tanstack/react-pacer';
+import { useQuery } from '@tanstack/react-query';
+import { createFileRoute, Link, Outlet, redirect, useNavigate } from '@tanstack/react-router';
+import { Plus, Search, LogOut, Sparkles, ChevronDown } from 'lucide-react';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
 
-import { ChatItem } from "@/components/ai-elements/ChatItem";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { ChatItem } from '@/components/ai-elements/ChatItem';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Sheet,
   SheetClose,
@@ -22,26 +22,26 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { ChatAppSidebar } from "@/components/web/sidebar/chat-app-sidebar";
-import { UserAvatar } from "@/components/web/user-profile";
-import { getChatListFn } from "@/data/chat-ai";
-import { getSession } from "@/data/session";
-import { authClient } from "@/lib/auth-client";
-import { MODEL_CONFIG } from "@/lib/constants";
-import { useSidebarMobileStore } from "@/store/sidebar";
+} from '@/components/ui/sheet';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { ChatAppSidebar } from '@/components/web/sidebar/chat-app-sidebar';
+import { UserAvatar } from '@/components/web/user-profile';
+import { getChatListFn } from '@/data/chat-ai';
+import { authClient } from '@/lib/auth-client';
+import { MODEL_CONFIG } from '@/lib/constants';
+import { useSidebarMobileStore } from '@/store/sidebar';
 
-export const Route = createFileRoute("/_chat/chat/_chatbox")({
+export const Route = createFileRoute('/_chat/chat/_chatbox')({
   component: RouteComponent,
-  loader: async () => {
-    const session = await getSession();
-    if (!session)
+  loader: async ({ context }) => {
+    if (!context?.user)
       throw redirect({
-        to: "/login",
+        to: '/login',
       });
     return {
-      session,
+      session: {
+        user: context?.user,
+      },
     };
   },
 });
@@ -52,10 +52,10 @@ function RouteComponent() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isTransition, startTransition] = useTransition();
-  const [query, setQuery] = useState<string>("");
+  const [query, setQuery] = useState<string>('');
 
   const { data: chats } = useQuery({
-    queryKey: ["chats"],
+    queryKey: ['chats'],
     queryFn: async () => {
       const chats = await getChatListFn();
 
@@ -77,24 +77,25 @@ function RouteComponent() {
       await authClient.signOut({
         fetchOptions: {
           onRequest: () => {
-            toast.loading("Logging out...", {
-              id: "logout",
+            toast.loading('Logging out...', {
+              id: 'logout',
             });
             setIsLoading(true);
           },
           onError: ({ error }) => {
             setIsLoading(false);
-            toast.dismiss("logout");
-            toast.error("Failed to log out", {
+            toast.dismiss('logout');
+            toast.error('Failed to log out', {
               description: error.message,
             });
           },
           onSuccess: () => {
             setIsLoading(false);
-            toast.dismiss("logout");
-            toast.success("Logged out successfully");
+            toast.dismiss('logout');
+            toast.success('Logged out successfully');
             void navigate({
-              to: "/login",
+              to: '/login',
+              reloadDocument: true,
             });
           },
         },
@@ -168,7 +169,7 @@ function RouteComponent() {
                               className="cursor-pointer py-3 px-3 focus:bg-zinc-900 focus:text-white rounded-lg transition-colors"
                               onClick={() => {
                                 void navigate({
-                                  to: "/chat/$adapter",
+                                  to: '/chat/$adapter',
                                   params: {
                                     adapter: provider,
                                   },
@@ -176,7 +177,7 @@ function RouteComponent() {
                                     model: m.value,
                                   },
                                 });
-                                if (typeof toggleSheet === "function") toggleSheet(false);
+                                if (typeof toggleSheet === 'function') toggleSheet(false);
                               }}
                             >
                               <span className="truncate text-sm font-medium">{m.label}</span>
@@ -234,7 +235,7 @@ function RouteComponent() {
                   </Button>
                 ) : (
                   <SheetClose asChild>
-                    <Link to="/login" className={buttonVariants({ className: "w-full" })}>
+                    <Link to="/login" className={buttonVariants({ className: 'w-full' })}>
                       Login
                     </Link>
                   </SheetClose>

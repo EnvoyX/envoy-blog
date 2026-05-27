@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { commentCollection, likeCollection } from '@/collections/post';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { UserSession } from '@/data/session';
+import { User } from '@/generated/prisma/client';
 import { ShortPostPublic } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useImageStore } from '@/store/image';
@@ -22,12 +22,12 @@ import MasonryCollage from './MasonryCollage';
 import PostCollage from './PostCollage';
 import { PostLightBox } from './PostLightBox';
 
-export function ShortPostCard({ post, session }: { post: ShortPostPublic; session: UserSession }) {
+export function ShortPostCard({ post, user }: { post: ShortPostPublic; user: User | null }) {
   const [expanded, setExpanded] = useState(false);
   const { data: likes } = useLiveQuery((q) =>
     q.from({ like: likeCollection }).where(({ like }) => eq(like.shortPostId, post?.id)),
   );
-  const hasLiked = likes.find((like) => like.userId === session?.user?.id);
+  const hasLiked = likes.find((like) => like.userId === user?.id);
   const { data: comments } = useLiveQuery((q) =>
     q
       .from({ comment: commentCollection })
@@ -44,8 +44,8 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
     globalIndex: index,
   }));
   function handleToggleLike() {
-    if (!session.user) return;
-    const existingLike = likes.find((like) => like.userId === session?.user?.id);
+    if (!user) return;
+    const existingLike = likes.find((like) => like.userId === user?.id);
 
     if (!existingLike) {
       // optimistic Insert like
@@ -54,7 +54,7 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
         post_slug: post?.authorId as string,
         postId: uuidv4(),
         shortPostId: post?.id as string,
-        userId: session.user.id as string,
+        userId: user.id as string,
         createdAt: new Date(),
       });
     } else {
@@ -168,7 +168,7 @@ export function ShortPostCard({ post, session }: { post: ShortPostPublic; sessio
 
       <div className="relative z-20 flex items-center gap-6 pt-2">
         <button
-          className={`flex items-center gap-2 text-slate-500 hover:text-emerald-500 transition-colors group/stat ${session.user ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+          className={`flex items-center gap-2 text-slate-500 hover:text-emerald-500 transition-colors group/stat ${user ? 'cursor-pointer' : 'cursor-not-allowed'}`}
           onClick={(e) => {
             handleToggleLike();
             e.stopPropagation();
