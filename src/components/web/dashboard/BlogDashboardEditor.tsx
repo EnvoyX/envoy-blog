@@ -1,4 +1,5 @@
 import { useForm } from '@tanstack/react-form';
+import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useNavigate } from '@tanstack/react-router';
 import {
@@ -32,6 +33,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { MarkdownRenderer } from '@/components/web/markdown/Markdown';
 import { createPostFn, updatePostFn } from '@/data/blog';
+import { dashboardBlogPostsOptions } from '@/data/query-options/dashboardQueryOptions';
 import { Post } from '@/generated/prisma/client';
 import { cn } from '@/lib/utils';
 import { postSchema } from '@/schemas/blog';
@@ -44,6 +46,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
   const [activeTab, setActiveTab] = useState('edit-blog');
   const [showPreview, setShowPreview] = useState(false);
   const [copied, setCopied] = useState(false);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const handleCopy = async (markdown: string) => {
     await navigator.clipboard.writeText(markdown);
@@ -72,10 +75,16 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
             ...value,
           },
         });
+        void queryClient.invalidateQueries({
+          ...dashboardBlogPostsOptions(),
+        });
         toast.success('Blog updated succesfully!');
       } else {
         console.log(value);
         await createPostFn({ data: value });
+        void queryClient.invalidateQueries({
+          ...dashboardBlogPostsOptions(),
+        });
         toast.success('Blog published succesfully!');
         navigate({
           to: '/dashboard/blog',

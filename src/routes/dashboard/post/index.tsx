@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useRouter } from '@tanstack/react-router';
 import { Link } from '@tanstack/react-router';
@@ -32,16 +33,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { PostDialog } from '@/components/web/post/PostDialog';
-import { deleteShortPostFn, getShortPostsFn } from '@/data/post';
+import { deleteShortPostFn } from '@/data/post';
+import { dashboardShortPostsOptions } from '@/data/query-options/dashboardQueryOptions';
 import { SortedByStatus } from '@/lib/constants';
 import { shortPostSearchSchema } from '@/schemas/post';
 import { usePostStore } from '@/store/post';
 
 export const Route = createFileRoute('/dashboard/post/')({
-  loader: async ({ context }) => {
-    const allPosts = await getShortPostsFn();
+  loader: ({ context }) => {
     return {
-      allPosts,
       user: context.user,
     };
   },
@@ -69,7 +69,11 @@ export const Route = createFileRoute('/dashboard/post/')({
 });
 
 function PostPageComponent() {
-  const { allPosts, user } = Route.useLoaderData();
+  const { user } = Route.useLoaderData();
+  const { queryClient } = Route.useRouteContext();
+  const { data: allPosts } = useSuspenseQuery({
+    ...dashboardShortPostsOptions(),
+  });
   const { sortDateBy } = Route.useSearch();
   const {
     currentPostId,
@@ -101,6 +105,9 @@ function PostPageComponent() {
     toggleDialog('close', '');
     toast.success('Post deleted successfully');
     void router.invalidate();
+    void queryClient.invalidateQueries({
+      queryKey: [...dashboardShortPostsOptions().queryKey],
+    });
   }
 
   return (

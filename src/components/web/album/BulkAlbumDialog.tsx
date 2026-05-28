@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/empty';
 import { addExistingImagesToAlbumFn, removeExistingImagesToAlbumFn } from '@/data/album';
 import { deleteImagesFn, getImagesWithAlbumsFn } from '@/data/image';
+import { dashboardAlbumIdOptions } from '@/data/query-options/dashboardQueryOptions';
 import { cn } from '@/lib/utils';
 import { useAlbumStore } from '@/store/album';
 
@@ -63,8 +64,6 @@ export function BulkAlbumDialog() {
         });
         setSelectedIds(new Set());
         onOpenDialogChange('bulk', false);
-        void queryClient.invalidateQueries({ queryKey: ['available-images', currentAlbumId] });
-        void router.invalidate();
       } else if (bulkMode === 'remove' && currentAlbumId) {
         toast.loading(`Removing ${idsArray.length} images...`, { id: 'bulk-import' });
         await removeExistingImagesToAlbumFn({
@@ -78,8 +77,6 @@ export function BulkAlbumDialog() {
         });
         setSelectedIds(new Set());
         onOpenDialogChange('bulk', false);
-        void queryClient.invalidateQueries({ queryKey: ['available-images', currentAlbumId] });
-        void router.invalidate();
       } else if (bulkMode === 'delete' && currentAlbumId) {
         toast.loading(`Deleting ${idsArray.length} images...`, { id: 'bulk-import' });
         await deleteImagesFn({
@@ -92,13 +89,16 @@ export function BulkAlbumDialog() {
         });
         setSelectedIds(new Set());
         onOpenDialogChange('bulk', false);
-        void queryClient.invalidateQueries({ queryKey: ['available-images', currentAlbumId] });
-        void router.invalidate();
       }
     } catch (error) {
       toast.error('Failed to import images', { id: 'bulk-import' });
       console.error(error);
     } finally {
+      void queryClient.invalidateQueries({ queryKey: ['available-images', currentAlbumId] });
+      void queryClient.invalidateQueries({
+        queryKey: [...dashboardAlbumIdOptions(currentAlbumId).queryKey],
+      });
+      void router.invalidate();
       setIsImporting(false);
     }
   }

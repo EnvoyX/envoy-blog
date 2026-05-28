@@ -10,15 +10,14 @@ import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Loader2 } from "lucide-react";
-import { getUserSettings, updateUserSettings } from "@/data/settings";
+import { updateUserSettings } from "@/data/settings";
+import { dashboardUserPreferences } from "@/data/query-options/dashboardQueryOptions";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/dashboard/settings/")({
   component: RouteComponent,
-  loader: async () => {
-    const userPreferences = await getUserSettings();
-    return {
-      userPreferences,
-    };
+  loader: ({ context }) => {
+    context.queryClient.prefetchQuery(dashboardUserPreferences());
   },
   head: () => ({
     meta: [
@@ -45,12 +44,15 @@ export const Route = createFileRoute("/dashboard/settings/")({
 });
 
 function RouteComponent() {
-  const { userPreferences } = Route.useLoaderData();
+  const { queryClient } = Route.useRouteContext();
+  const { data } = useSuspenseQuery({
+    ...dashboardUserPreferences(),
+  });
   const inputRef = useRef<HTMLInputElement>(null);
   const { saveKey, ImgbbAPIKey } = useSettingStore();
   const form = useForm({
     defaultValues: {
-      showFollowStats: userPreferences.showFollowStats ?? false,
+      showFollowStats: data.userPreferences.showFollowStats ?? false,
     },
     validators: {
       onSubmit: settingsSchema,
@@ -63,6 +65,7 @@ function RouteComponent() {
         },
       });
       toast.success("Settings saved succesfully!");
+      void queryClient.invalidateQueries({ queryKey: ["user-preferences"] });
     },
   });
   const handleSaveKey = () => {

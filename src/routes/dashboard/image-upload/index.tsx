@@ -3,17 +3,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import PhotoGallery from "@/components/web/PhotoGallery";
-import { getImagesFn } from "@/data/image";
 import { imageUploadModalStore } from "@/store/imageUploadStore";
 import UploadDropzone from "@/components/web/UploadDropzone";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { imageGalleryOptions } from "@/data/query-options/dashboardQueryOptions";
 
 export const Route = createFileRoute("/dashboard/image-upload/")({
   component: PageUpload,
-  loader: async () => {
-    const images = await getImagesFn();
-    return {
-      images,
-    };
+  loader: ({ context }) => {
+    context.queryClient.prefetchQuery(imageGalleryOptions());
   },
   head: () => ({
     meta: [
@@ -37,7 +35,9 @@ export const Route = createFileRoute("/dashboard/image-upload/")({
 });
 
 function PageUpload() {
-  const { images } = Route.useLoaderData();
+  const { data: images } = useSuspenseQuery({
+    ...imageGalleryOptions(),
+  });
   const uploadedImages = images.filter((image) => image.source === "IMGBB");
 
   return (

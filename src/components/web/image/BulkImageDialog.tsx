@@ -23,6 +23,7 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 import { deleteImagesFn, getImagesFn } from '@/data/image';
+import { imageGalleryOptions } from '@/data/query-options/dashboardQueryOptions';
 import { cn } from '@/lib/utils';
 import { useImageStore } from '@/store/image';
 
@@ -91,6 +92,9 @@ export function BulkImageDialog() {
         setSelectedIds(new Set());
         onOpenChangeDialog('bulk-delete', false);
         void queryClient.invalidateQueries({ queryKey: ['all-images'] });
+        void queryClient.invalidateQueries({
+          queryKey: [...imageGalleryOptions().queryKey],
+        });
         void router.invalidate();
       }
     } catch (error) {

@@ -1,21 +1,8 @@
-import { useRef, useState, useCallback } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { saveImageUrl } from "@/data/image";
-import { useSelector } from "@tanstack/react-store";
-import { imageUploadModalStore } from "@/store/imageUploadStore";
-import { useRouter } from "@tanstack/react-router";
-import { useMediaQuery } from "usehooks-ts";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from '@tanstack/react-router';
+import { useSelector } from '@tanstack/react-store';
+import { FlipHorizontal, FlipVertical } from 'lucide-react';
+import { useRef, useState, useCallback } from 'react';
 import {
   Coordinates,
   Cropper,
@@ -23,13 +10,31 @@ import {
   CropperRef,
   ImageRestriction,
   RectangleStencil,
-} from "react-advanced-cropper";
-import { cn } from "@/lib/utils";
-import { FlipHorizontal, FlipVertical } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { getAlbumByIdFn } from "@/data/album";
-import { useSettingStore } from "@/store/settings";
-import { toast } from "sonner";
+} from 'react-advanced-cropper';
+import { toast } from 'sonner';
+import { useMediaQuery } from 'usehooks-ts';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
+import { getAlbumByIdFn } from '@/data/album';
+import { saveImageUrl } from '@/data/image';
+import {
+  dashboardAlbumIdOptions,
+  imageGalleryOptions,
+} from '@/data/query-options/dashboardQueryOptions';
+import { cn } from '@/lib/utils';
+import { imageUploadModalStore } from '@/store/imageUploadStore';
+import { useSettingStore } from '@/store/settings';
 
 interface ImgBBResponse {
   data: {
@@ -63,24 +68,25 @@ function applyEditToCanvas(
   const rotW = swapped ? naturalH : naturalW;
   const rotH = swapped ? naturalW : naturalH;
 
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d")!;
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d')!;
 
   // draw rotated source, then crop
-  const tmpCanvas = document.createElement("canvas");
+  const tmpCanvas = document.createElement('canvas');
   tmpCanvas.width = rotW;
   tmpCanvas.height = rotH;
-  const tmpCtx = tmpCanvas.getContext("2d")!;
+  const tmpCtx = tmpCanvas.getContext('2d')!;
   tmpCtx.translate(rotW / 2, rotH / 2);
   tmpCtx.rotate(rad);
   tmpCtx.drawImage(source, -naturalW / 2, -naturalH / 2, naturalW, naturalH);
 
   ctx.drawImage(tmpCanvas, 0, 0);
-  return canvas.toDataURL("image/jpeg", 1);
+  return canvas.toDataURL('image/jpeg', 1);
 }
 
 export function ImageUploader() {
-  const isMobile = useMediaQuery("(max-width: 640px)");
+  const queryClient = useQueryClient();
+  const isMobile = useMediaQuery('(max-width: 640px)');
   const isDialogOpen = useSelector(imageUploadModalStore, (state) => state.isDialogOpen);
   const albumId = useSelector(imageUploadModalStore, (state) => state.albumId);
   const { ImgbbAPIKey } = useSettingStore();
@@ -107,11 +113,11 @@ export function ImageUploader() {
   const dropRef = useRef<HTMLDivElement>(null);
 
   const { data: album } = useQuery({
-    queryKey: ["album", albumId],
+    queryKey: ['album-gallery', albumId],
     queryFn: async () => {
       const album = await getAlbumByIdFn({
         data: {
-          albumId: albumId ?? "",
+          albumId: albumId ?? '',
         },
       });
       return album;
@@ -120,8 +126,8 @@ export function ImageUploader() {
   });
 
   const handleFile = (f: File) => {
-    if (!f.type.startsWith("image/")) {
-      setError("Only image files are supported.");
+    if (!f.type.startsWith('image/')) {
+      setError('Only image files are supported.');
       return;
     }
     setFile(f);
@@ -180,8 +186,8 @@ export function ImageUploader() {
     const src = editedSrc ?? previewSrc;
     if (!src || !file) return;
     if (!ImgbbAPIKey) {
-      toast.error("API Key not exist", {
-        description: "Please set your API Key in settings",
+      toast.error('API Key not exist', {
+        description: 'Please set your API Key in settings',
       });
     }
 
@@ -191,18 +197,18 @@ export function ImageUploader() {
 
     try {
       // convert data-URL to base64 string (strip prefix)
-      const base64 = src.includes(",") ? src.split(",")[1] : src;
+      const base64 = src.includes(',') ? src.split(',')[1] : src;
 
       const formData = new FormData();
-      formData.append("image", base64);
-      formData.append("name", file.name.replace(/\.[^.]+$/, ""));
+      formData.append('image', base64);
+      formData.append('name', file.name.replace(/\.[^.]+$/, ''));
 
       setProgress(30);
 
       // const apiKey = import.meta.env.VITE_IMGBB_API_KEY;
       const apiKey = ImgbbAPIKey;
       const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-        method: "POST",
+        method: 'POST',
         body: formData,
       });
 
@@ -210,7 +216,7 @@ export function ImageUploader() {
 
       if (!res.ok) throw new Error(`ImgBB responded with ${res.status}`);
       const json: ImgBBResponse = await res.json();
-      if (!json.success) throw new Error("ImgBB upload failed");
+      if (!json.success) throw new Error('ImgBB upload failed');
 
       setProgress(85);
 
@@ -226,15 +232,22 @@ export function ImageUploader() {
 
       setProgress(100);
 
-      imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: false, albumId: "" }));
+      imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: false, albumId: '' }));
       setFile(null);
       setPreviewSrc(null);
       setEditedSrc(null);
       setEditedFile(null);
-      void router.invalidate();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed");
+      setError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
+      void router.invalidate();
+      void queryClient.invalidateQueries({
+        queryKey: [...imageGalleryOptions().queryKey],
+      });
+      if (albumId)
+        void queryClient.invalidateQueries({
+          queryKey: [...dashboardAlbumIdOptions(albumId).queryKey],
+        });
       setUploading(false);
       setTimeout(() => setProgress(0), 800);
     }
@@ -252,17 +265,17 @@ export function ImageUploader() {
       const canvas = cropperRef.current?.getCanvas();
       if (canvas) {
         canvas.toBlob((blob) => {
-          console.log("Blob: ", blob);
+          console.log('Blob: ', blob);
           if (blob) {
             const newFile = new File([blob], `${file?.name}-cropped`, {
               // blob.type ---> if don't specify type it defaults to png. choose either jpeg or webp for better compression
               // type: blob.type,
-              type: "image/jpeg",
+              type: 'image/jpeg',
             });
-            console.log("New File: ", newFile);
+            console.log('New File: ', newFile);
             setEditedFile(newFile);
           }
-        }, "image/jpeg");
+        }, 'image/jpeg');
       }
       setIsCropping(false);
     }
@@ -277,7 +290,7 @@ export function ImageUploader() {
       open={isDialogOpen}
       onOpenChange={(open) => {
         if (!uploading)
-          imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: open, albumId: "" }));
+          imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: open, albumId: '' }));
         resetEdits();
       }}
     >
@@ -342,7 +355,7 @@ export function ImageUploader() {
                 onChange={(e) => {
                   const f = e.target.files?.[0];
                   if (f) handleFile(f);
-                  e.target.value = "";
+                  e.target.value = '';
                 }}
               />
             </div>
@@ -379,12 +392,12 @@ export function ImageUploader() {
                     ref={imgRef}
                     src={displaySrc}
                     alt="preview"
-                    className={cn("w-full object-contain")}
+                    className={cn('w-full object-contain')}
                     style={{
                       transform: `rotate(${rotation}deg)`,
-                      transition: "transform 0.3s ease",
+                      transition: 'transform 0.3s ease',
                       maxHeight: 360,
-                      display: "block",
+                      display: 'block',
                     }}
                     crossOrigin="anonymous"
                   />
@@ -690,7 +703,7 @@ export function ImageUploader() {
                   Uploading…
                 </span>
               ) : (
-                "Upload"
+                'Upload'
               )}
             </Button>
           )}

@@ -1,5 +1,5 @@
-import { createFileRoute, useNavigate, redirect } from '@tanstack/react-router';
-import { intlFormat, intlFormatDistance } from 'date-fns';
+import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
+import { intlFormat, intlFormatDistance } from "date-fns";
 import {
   ArrowLeft,
   MoreVertical,
@@ -12,84 +12,89 @@ import {
   Download,
   ImageIcon,
   PencilLine,
-} from 'lucide-react';
-import { toast } from 'sonner';
+} from "lucide-react";
+import { toast } from "sonner";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import PhotoGallery from '@/components/web/PhotoGallery';
-import { getAlbumByIdFn } from '@/data/album';
-import { Image } from '@/generated/prisma/client';
-import { useAlbumStore } from '@/store/album';
-import { useImageStore } from '@/store/image';
-import { imageUploadModalStore } from '@/store/imageUploadStore';
-import { downloadAlbumClientSide } from '@/utils/utils';
+} from "@/components/ui/dropdown-menu";
+import PhotoGallery from "@/components/web/PhotoGallery";
+import { Image } from "@/generated/prisma/client";
+import { useAlbumStore } from "@/store/album";
+import { useImageStore } from "@/store/image";
+import { imageUploadModalStore } from "@/store/imageUploadStore";
+import { downloadAlbumClientSide } from "@/utils/utils";
+import { dashboardAlbumIdOptions } from "@/data/query-options/dashboardQueryOptions";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute('/dashboard/albums/$albumId/')({
+export const Route = createFileRoute("/dashboard/albums/$albumId/")({
   component: AlbumPage,
-  loader: async ({ params, context }) => {
-    const album = await getAlbumByIdFn({ data: { albumId: params.albumId } });
+  loader: async ({ context, params }) => {
+    const album = await context.queryClient.ensureQueryData(
+      dashboardAlbumIdOptions(params.albumId),
+    );
     if (album && !album?.published && album?.authorId !== context.user?.id)
-      throw redirect({ to: '/dashboard/albums' });
+      throw redirect({ to: "/dashboard/albums" });
     return album;
   },
   head: ({ loaderData }) => ({
     meta: [
       { title: `${loaderData?.name} | Album | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
-      { property: 'og:title', content: `${loaderData?.name} | Album | Envoy Mindpalace` },
+      { property: "og:title", content: `${loaderData?.name} | Album | Envoy Mindpalace` },
       {
-        property: 'og:description',
-        content: 'Create your own blog and write your thoughts!',
+        property: "og:description",
+        content: "Create your own blog and write your thoughts!",
       },
       {
-        property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
 
 function AlbumPage() {
-  const album = Route.useLoaderData();
   const { albumId } = Route.useParams();
+  const { data: album } = useSuspenseQuery({
+    ...dashboardAlbumIdOptions(albumId),
+  });
   const navigate = useNavigate();
   const { toggleDialog, setInitialValues } = useAlbumStore();
   const { toggleDialog: toggleImageDialog } = useImageStore();
 
   const handleDownload = async () => {
     if (!album) {
-      toast.error('Album are not found');
+      toast.error("Album are not found");
       return;
     }
-    toast.loading('Downloading album as ZIP...', {
-      id: 'download-zip',
+    toast.loading("Downloading album as ZIP...", {
+      id: "download-zip",
     });
     await downloadAlbumClientSide(album?.name, album?.images);
-    toast.dismiss('download-zip');
-    toast.success('Album sucessfully downloaded!');
+    toast.dismiss("download-zip");
+    toast.success("Album sucessfully downloaded!");
   };
 
   const handleEdit = () => {
     setInitialValues({
-      name: album?.name ?? '',
-      description: album?.description || '',
+      name: album?.name ?? "",
+      description: album?.description || "",
       published: album?.published as boolean,
-      coverImageUrl: album?.coverImageUrl || '',
-      type: 'edit',
+      coverImageUrl: album?.coverImageUrl || "",
+      type: "edit",
       showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
     });
-    toggleDialog('open', album?.id);
+    toggleDialog("open", album?.id);
   };
 
   return (
@@ -103,7 +108,7 @@ function AlbumPage() {
               className="rounded-full hover:bg-white/10 cursor-pointer"
               onClick={() => {
                 void navigate({
-                  to: '/dashboard/albums',
+                  to: "/dashboard/albums",
                 });
               }}
             >
@@ -122,15 +127,15 @@ function AlbumPage() {
               className="hidden sm:flex gap-2 rounded-full hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer"
               onClick={() => {
                 setInitialValues({
-                  name: album?.name ?? '',
-                  description: album?.description || '',
+                  name: album?.name ?? "",
+                  description: album?.description || "",
                   published: album?.published as boolean,
-                  coverImageUrl: album?.coverImageUrl || '',
-                  type: 'edit',
+                  coverImageUrl: album?.coverImageUrl || "",
+                  type: "edit",
                   addPhotos: true,
                   showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
                 });
-                toggleDialog('bulk-add', albumId);
+                toggleDialog("bulk-add", albumId);
               }}
             >
               <Plus className="size-4" /> Add Photos
@@ -154,7 +159,7 @@ function AlbumPage() {
                 className="w-48 bg-slate-900/90 backdrop-blur-lg border-white/10"
               >
                 <DropdownMenuItem
-                  onClick={() => toggleDialog('import', albumId)}
+                  onClick={() => toggleDialog("import", albumId)}
                   className="cursor-pointer"
                 >
                   <FileDown className="mr-2 size-4" /> Import Photos
@@ -162,15 +167,15 @@ function AlbumPage() {
                 <DropdownMenuItem
                   onClick={() => {
                     setInitialValues({
-                      name: album?.name ?? '',
-                      description: album?.description || '',
+                      name: album?.name ?? "",
+                      description: album?.description || "",
                       published: album?.published as boolean,
-                      coverImageUrl: album?.coverImageUrl || '',
-                      type: 'edit',
+                      coverImageUrl: album?.coverImageUrl || "",
+                      type: "edit",
                       addPhotos: true,
                       showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
                     });
-                    toggleDialog('bulk-add', albumId);
+                    toggleDialog("bulk-add", albumId);
                   }}
                   className="cursor-pointer"
                 >
@@ -192,14 +197,14 @@ function AlbumPage() {
                   className="cursor-pointer"
                   onClick={() => {
                     setInitialValues({
-                      name: album?.name ?? '',
-                      description: album?.description || '',
+                      name: album?.name ?? "",
+                      description: album?.description || "",
                       published: album?.published as boolean,
-                      coverImageUrl: album?.coverImageUrl || '',
-                      type: 'edit',
+                      coverImageUrl: album?.coverImageUrl || "",
+                      type: "edit",
                       showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
                     });
-                    toggleDialog('albumCover', albumId);
+                    toggleDialog("albumCover", albumId);
                   }}
                 >
                   <ImageIcon className="mr-2 size-4" /> Set album cover
@@ -212,7 +217,7 @@ function AlbumPage() {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
-                    toggleImageDialog('bulk-edit', '', '', albumId);
+                    toggleImageDialog("bulk-edit", "", "", albumId);
                   }}
                   className="cursor-pointer"
                 >
@@ -222,15 +227,15 @@ function AlbumPage() {
                 <DropdownMenuItem
                   onClick={() => {
                     setInitialValues({
-                      name: album?.name ?? '',
-                      description: album?.description || '',
+                      name: album?.name ?? "",
+                      description: album?.description || "",
                       published: album?.published as boolean,
-                      coverImageUrl: album?.coverImageUrl || '',
-                      type: 'edit',
+                      coverImageUrl: album?.coverImageUrl || "",
+                      type: "edit",
                       addPhotos: false,
                       showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
                     });
-                    toggleDialog('bulk-remove', albumId);
+                    toggleDialog("bulk-remove", albumId);
                   }}
                   className="text-red-400 focus:text-red-400 cursor-pointer"
                 >
@@ -239,22 +244,22 @@ function AlbumPage() {
                 <DropdownMenuItem
                   onClick={() => {
                     setInitialValues({
-                      name: album?.name ?? '',
-                      description: album?.description || '',
+                      name: album?.name ?? "",
+                      description: album?.description || "",
                       published: album?.published as boolean,
-                      coverImageUrl: album?.coverImageUrl || '',
-                      type: 'edit',
+                      coverImageUrl: album?.coverImageUrl || "",
+                      type: "edit",
                       addPhotos: false,
                       showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
                     });
-                    toggleDialog('bulk-delete', albumId);
+                    toggleDialog("bulk-delete", albumId);
                   }}
                   className="text-red-400 focus:text-red-400 cursor-pointer"
                 >
                   <Trash2 className="mr-2 size-4" /> Delete photos
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => toggleDialog('delete', album?.id)}
+                  onClick={() => toggleDialog("delete", album?.id)}
                   className="text-red-400 focus:text-red-400 cursor-pointer"
                 >
                   <Trash2 className="mr-2 size-4" /> Delete album
@@ -272,9 +277,9 @@ function AlbumPage() {
           <div className="flex flex-row items-center gap-2 sm:gap-4 text-slate-400 ">
             <p className="flex items-center">
               {intlFormat(new Date(album?.createdAt as Date), {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
+                month: "short",
+                day: "numeric",
+                year: "numeric",
               })}
             </p>
             <span className="inline text-slate-700">•</span>

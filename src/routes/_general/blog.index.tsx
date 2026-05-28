@@ -1,8 +1,8 @@
-import { useDebouncedCallback } from '@tanstack/react-pacer';
-import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router';
-import { useSelector } from '@tanstack/react-store';
-import { zodValidator } from '@tanstack/zod-adapter';
-import { intlFormat, intlFormatDistance } from 'date-fns';
+import { useDebouncedCallback } from "@tanstack/react-pacer";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { useSelector } from "@tanstack/react-store";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { intlFormat, intlFormatDistance } from "date-fns";
 import {
   Plus,
   MoreVertical,
@@ -16,11 +16,11 @@ import {
   Search,
   Heart,
   MessageSquare,
-} from 'lucide-react';
-import { toast } from 'sonner';
+} from "lucide-react";
+import { toast } from "sonner";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -29,23 +29,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogClose,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { deletePostFn, getPostsFn } from '@/data/blog';
-import { postPublishedSearchSchema } from '@/schemas/blog';
-import { modalStore } from '@/store/blogStore';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { deletePostFn } from "@/data/blog";
+import { postPublishedSearchSchema } from "@/schemas/blog";
+import { modalStore } from "@/store/blogStore";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { blogOptions } from "@/data/query-options/queryOptions";
 
-export const Route = createFileRoute('/_general/blog/')({
-  loader: async ({ context }) => {
-    const allPosts = await getPostsFn();
+export const Route = createFileRoute("/_general/blog/")({
+  loader: ({ context }) => {
+    context.queryClient.prefetchQuery(blogOptions());
     return {
-      allPosts,
       user: context.user,
     };
   },
@@ -55,26 +56,29 @@ export const Route = createFileRoute('/_general/blog/')({
     meta: [
       { title: `Blogs | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
-      { property: 'og:title', content: 'Blogs | Envoy Mindpalace' },
+      { property: "og:title", content: "Blogs | Envoy Mindpalace" },
       {
-        property: 'og:description',
-        content: 'Create your own blog and write your thoughts!',
+        property: "og:description",
+        content: "Create your own blog and write your thoughts!",
       },
       {
-        property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
 
 function BlogPageComponent() {
-  const { allPosts, user } = Route.useLoaderData();
-  const posts = allPosts.filter((post) => post.author.email === 'muhamadhanifhafizhan@gmail.com');
+  const { user } = Route.useLoaderData();
+  const { data } = useSuspenseQuery(blogOptions());
+  const posts = data.allPosts.filter(
+    (post) => post.author.email === "muhamadhanifhafizhan@gmail.com",
+  );
 
   const { query } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
@@ -86,7 +90,7 @@ function BlogPageComponent() {
     const matchedQuery =
       post.title?.toLowerCase().includes(query.toLowerCase()) ||
       post.description?.toLowerCase().includes(query.toLowerCase()) ||
-      query === '';
+      query === "";
 
     return matchedQuery;
   });
@@ -162,7 +166,7 @@ function BlogPageComponent() {
               >
                 <div className="aspect-video relative overflow-hidden">
                   <img
-                    src={post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
+                    src={post.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
                     alt={post.title}
                     className="object-cover w-full h-full transition-transform duration-500"
                   />
@@ -223,9 +227,9 @@ function BlogPageComponent() {
                     <div className="flex items-center gap-2 text-xs text-slate-500 mb-3 uppercase tracking-widest font-semibold">
                       <Calendar className="size-3" />
                       {intlFormat(new Date(post.createdAt), {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
                       })}
                     </div>
                   </div>
@@ -242,7 +246,7 @@ function BlogPageComponent() {
                   <span className="absolute flex flex-col items-center gap-1 bottom-6 right-3 group">
                     <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-emerald-500/30 transition-colors">
                       <Heart
-                        className={`size-3.5 ${hasLiked ? 'fill-emerald-500 text-emerald-500' : ''}`}
+                        className={`size-3.5 ${hasLiked ? "fill-emerald-500 text-emerald-500" : ""}`}
                       />
                       <span className="text-[11px] font-bold tabular-nums">
                         {post._count.likes}
@@ -301,13 +305,13 @@ function BlogPageComponent() {
                     postId: modalStore.state.dialogId,
                   },
                 });
-                toast.success('Blog deleted');
+                toast.success("Blog deleted");
                 void router.invalidate();
                 modalStore.setState((prev) => {
                   return {
                     ...prev,
                     isLoading: false,
-                    dialogId: '',
+                    dialogId: "",
                     isOpen: false,
                   };
                 });

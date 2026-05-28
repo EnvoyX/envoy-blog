@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { profileOptions } from '@/data/query-options/dashboardQueryOptions';
 import { updateProfile } from '@/data/user';
 
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -31,7 +32,7 @@ export function EditProfileDialog({ user }: { user: any }) {
   const mutation = useMutation({
     mutationFn: updateProfile,
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      void queryClient.invalidateQueries({ queryKey: [...profileOptions().queryKey] });
       toast.success('Profile updated successfully');
       setOpen(false);
     },

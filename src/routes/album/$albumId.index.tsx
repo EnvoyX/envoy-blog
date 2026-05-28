@@ -1,26 +1,29 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import { Link } from '@tanstack/react-router';
-import { intlFormat, intlFormatDistance } from 'date-fns';
-import { ArrowLeft, Download, MoreVertical } from 'lucide-react';
-import { toast } from 'sonner';
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
+import { intlFormat, intlFormatDistance } from "date-fns";
+import { ArrowLeft, Download, MoreVertical } from "lucide-react";
+import { toast } from "sonner";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Footer } from '@/components/web/footer';
-import PhotoGallery from '@/components/web/PhotoGallery';
-import { UserAvatar } from '@/components/web/user-profile';
-import { getAlbumByIdFn } from '@/data/album';
-import { Image } from '@/generated/prisma/client';
-import { downloadAlbumClientSide } from '@/utils/utils';
-export const Route = createFileRoute('/album/$albumId/')({
+} from "@/components/ui/dropdown-menu";
+import { Footer } from "@/components/web/footer";
+import PhotoGallery from "@/components/web/PhotoGallery";
+import { UserAvatar } from "@/components/web/user-profile";
+import { Image } from "@/generated/prisma/client";
+import { downloadAlbumClientSide } from "@/utils/utils";
+import { albumIdOptions } from "@/data/query-options/queryOptions";
+import { useSuspenseQuery } from "@tanstack/react-query";
+
+export const Route = createFileRoute("/album/$albumId/")({
   component: AlbumPage,
   loader: async ({ params, context }) => {
-    const album = await getAlbumByIdFn({ data: { albumId: params.albumId } });
+    const album = await context.queryClient.ensureQueryData(albumIdOptions(params.albumId));
+    if (!album) throw new Error("Album not found");
     const isOwner = context?.user?.id === album?.authorId;
     const isPrivateShownToFollower =
       context.user &&
@@ -28,46 +31,50 @@ export const Route = createFileRoute('/album/$albumId/')({
       album.showPrivateToFollowers &&
       !album.published;
     if (!album?.published && !isOwner && !isPrivateShownToFollower) {
-      throw redirect({ to: '/dashboard/albums' });
+      throw redirect({ to: "/dashboard/albums" });
     }
-    return album;
+    return {
+      album,
+    };
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.name} | Album | Envoy Mindpalace` },
+      { title: `${loaderData?.album.name} | Album | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
-      { property: 'og:title', content: `${loaderData?.name} | Album | Envoy Mindpalace` },
+      { property: "og:title", content: `${loaderData?.album.name} | Album | Envoy Mindpalace` },
       {
-        property: 'og:description',
-        content: 'Create your own blog and write your thoughts!',
+        property: "og:description",
+        content: "Create your own blog and write your thoughts!",
       },
       {
-        property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
 
 function AlbumPage() {
-  const album = Route.useLoaderData();
   const { albumId } = Route.useParams();
+  const { data: album } = useSuspenseQuery({
+    ...albumIdOptions(albumId),
+  });
 
   const handleDownload = async () => {
     if (!album) {
-      toast.error('Album are not found');
+      toast.error("Album are not found");
       return;
     }
-    toast.loading('Downloading album as ZIP...', {
-      id: 'download-zip',
+    toast.loading("Downloading album as ZIP...", {
+      id: "download-zip",
     });
     await downloadAlbumClientSide(album?.name, album?.images);
-    toast.dismiss('download-zip');
-    toast.success('Album sucessfully downloaded!');
+    toast.dismiss("download-zip");
+    toast.success("Album sucessfully downloaded!");
   };
 
   return (
@@ -153,9 +160,9 @@ function AlbumPage() {
             <div className="flex flex-row items-center gap-2 sm:gap-4 text-slate-400">
               <p className="flex items-center">
                 {intlFormat(new Date(album?.createdAt as Date), {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
                 })}
               </p>
               <span className="inline text-slate-700">•</span>

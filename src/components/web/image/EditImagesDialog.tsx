@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { CheckCircle2, Loader2, MailboxIcon, MousePointer2, RotateCw, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -20,12 +20,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { editImagesFn, getImagesWithAlbumFn } from '@/data/image';
+import {
+  dashboardAlbumIdOptions,
+  imageGalleryOptions,
+} from '@/data/query-options/dashboardQueryOptions';
 import { cn } from '@/lib/utils';
 import { editImagesSchema } from '@/schemas/image';
 import { useImageStore } from '@/store/image';
 
 export function EditImagesDialog() {
   const { isBulkEditDialogOpen, onOpenChangeDialog, toggleDialog, albumId } = useImageStore();
+  const queryClient = useQueryClient();
   const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null);
@@ -67,6 +72,13 @@ export function EditImagesDialog() {
       toast.success(`Updated ${value.images.length} images successfully`);
       toggleDialog('close');
       form.reset();
+      void queryClient.invalidateQueries({
+        queryKey: [...imageGalleryOptions().queryKey],
+      });
+      if (albumId)
+        void queryClient.invalidateQueries({
+          queryKey: [...dashboardAlbumIdOptions(albumId).queryKey],
+        });
       void router.invalidate();
     },
   });

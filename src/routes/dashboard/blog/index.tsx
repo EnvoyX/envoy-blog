@@ -1,4 +1,5 @@
 import { useDebouncedCallback } from '@tanstack/react-pacer';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
 import { zodValidator } from '@tanstack/zod-adapter';
@@ -45,16 +46,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getMyPostsFn, deletePostFn } from '@/data/blog';
+import { deletePostFn } from '@/data/blog';
+import { dashboardBlogPostsOptions } from '@/data/query-options/dashboardQueryOptions';
 import { BlogStatus } from '@/lib/constants';
 import { postSearchSchema } from '@/schemas/blog';
 import { modalStore } from '@/store/blogStore';
 
 export const Route = createFileRoute('/dashboard/blog/')({
-  loader: async ({ context }) => {
-    const allPosts = await getMyPostsFn();
+  loader: ({ context }) => {
+    context.queryClient.prefetchQuery({
+      ...dashboardBlogPostsOptions(),
+    });
     return {
-      allPosts,
       session: {
         user: context?.user,
       },
@@ -84,7 +87,11 @@ export const Route = createFileRoute('/dashboard/blog/')({
 });
 
 function BlogPageComponent() {
-  const { allPosts, session } = Route.useLoaderData();
+  const { session } = Route.useLoaderData();
+  const { queryClient } = Route.useRouteContext();
+  const { data: allPosts } = useSuspenseQuery({
+    ...dashboardBlogPostsOptions(),
+  });
   const { visibility, query } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const router = useRouter();
@@ -113,10 +120,6 @@ function BlogPageComponent() {
       wait: 500, // Wait 500ms after last keystroke
     },
   );
-
-  //   const { unsubscribe } = modalStore.subscribe(() => {
-  //     console.log('The state is now:', modalStore.state)
-  //   })
 
   return (
     <div className="min-h-screen text-slate-50 p-8">
@@ -349,6 +352,9 @@ function BlogPageComponent() {
                 });
                 toast.success('Blog deleted');
                 void router.invalidate();
+                void queryClient.invalidateQueries({
+                  ...dashboardBlogPostsOptions(),
+                });
                 modalStore.setState((prev) => {
                   return {
                     ...prev,

@@ -51,7 +51,6 @@ const options = {
   },
   plugins: [
     //...plugins
-    tanstackStartCookies(),
   ],
 } satisfies BetterAuthOptions;
 
@@ -70,6 +69,7 @@ export const auth = betterAuth({
         session,
       };
     }, options),
+    tanstackStartCookies(),
   ],
 });
 

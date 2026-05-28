@@ -1,15 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { intlFormat, intlFormatDistance } from 'date-fns';
-import {
-  Calendar,
-  ExternalLink,
-  Heart,
-  LucideClockFading,
-  MessageSquare,
-  MoreVertical,
-  Pencil,
-  Trash2,
-} from 'lucide-react';
+import { Calendar, Heart, LucideClockFading, MessageSquare } from 'lucide-react';
 
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { UserRole } from '@/generated/prisma/enums';

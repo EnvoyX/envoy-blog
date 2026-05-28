@@ -1,76 +1,48 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useNavigate } from '@tanstack/react-router';
-import { zodValidator } from '@tanstack/zod-adapter';
+import { createFileRoute } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ShortPostCard } from '@/components/web/post/ShortPostCard';
-import { getFollowsByUserIdFn } from '@/data/follow';
-import { getGlobalFeedFn } from '@/data/post';
-import { User } from '@/generated/prisma/client';
-import { postPageSearchParamsSchema } from '@/schemas/searchSchemas';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ShortPostCard } from "@/components/web/post/ShortPostCard";
+import { User } from "@/generated/prisma/client";
+import { postPageSearchParamsSchema } from "@/schemas/searchSchemas";
+import { shortPostOptions } from "@/data/query-options/queryOptions";
+import { RouterContext } from "../__root";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute('/_general/post/')({
+export const Route = createFileRoute("/_general/post/")({
   component: RouteComponent,
-  loader: async ({ context }) => {
-    const allPosts = await getGlobalFeedFn();
-    const latestPosts = allPosts.filter(
-      (post) => post.author.email === 'muhamadhanifhafizhan@gmail.com' && post.published,
-    );
-    const publicPost = allPosts.filter((post) => post.published);
-    if (context.user) {
-      const userFollows = await getFollowsByUserIdFn({
-        data: {
-          userId: context?.user?.id as string,
-        },
-      });
-      const followingUserIds = new Set(userFollows?.following?.map((user) => user.followingId));
-      const followingPosts = allPosts.filter((post) => {
-        const isFollowingPublic = followingUserIds.has(post.authorId) && post.published;
-        const isPrivateShownToFollower =
-          followingUserIds.has(post.authorId) && post.showPrivateToFollowers && !post.published;
-
-        return isFollowingPublic || isPrivateShownToFollower;
-      });
-      return {
-        publicPost,
-        latestPosts,
-        followingPosts,
-        user: context.user,
-      };
-    }
-    return {
-      publicPost,
-      latestPosts,
-      user: context.user,
-    };
+  loader: ({ context }) => {
+    context.queryClient.prefetchQuery(shortPostOptions({ context: context as RouterContext }));
   },
   validateSearch: zodValidator(postPageSearchParamsSchema),
   head: () => ({
     meta: [
       { title: `Posts | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
-      { property: 'og:title', content: 'Posts | Envoy Mindpalace' },
+      { property: "og:title", content: "Posts | Envoy Mindpalace" },
       {
-        property: 'og:description',
-        content: 'Create your own blog and write your thoughts!',
+        property: "og:description",
+        content: "Create your own blog and write your thoughts!",
       },
       {
-        property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
 
 function RouteComponent() {
-  const { publicPost, latestPosts, followingPosts, user } = Route.useLoaderData();
   const { currentTab } = Route.useSearch();
+  const context = Route.useRouteContext();
   const navigate = useNavigate({ from: Route.fullPath });
-
+  const { data } = useSuspenseQuery(shortPostOptions({ context: context as RouterContext }));
+  const { latestPosts, publicPost, followingPosts, user } = data;
   return (
     <main className="min-h-screen">
       <Tabs
@@ -78,7 +50,7 @@ function RouteComponent() {
         onValueChange={(value) => {
           navigate({
             search: () => ({
-              currentTab: value as 'latest-post' | 'for-you' | 'following-post',
+              currentTab: value as "latest-post" | "for-you" | "following-post",
             }),
           });
         }}

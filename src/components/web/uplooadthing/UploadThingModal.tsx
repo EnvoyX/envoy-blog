@@ -1,21 +1,8 @@
-import { useRef, useState, useCallback } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { useSelector } from "@tanstack/react-store";
-import { imageUploadModalStore } from "@/store/imageUploadStore";
-import { useUploadThing } from "@/utils/uploadthing";
-import { toast } from "sonner";
-import { useRouter } from "@tanstack/react-router";
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from '@tanstack/react-router';
+import { useSelector } from '@tanstack/react-store';
+import { FlipHorizontal, FlipVertical } from 'lucide-react';
+import { useRef, useState, useCallback } from 'react';
 import {
   CropperRef,
   CircleStencil,
@@ -23,11 +10,27 @@ import {
   Coordinates,
   CropperPreviewRef,
   ImageRestriction,
-} from "react-advanced-cropper";
-import "react-advanced-cropper/dist/style.css";
-import { cn } from "@/lib/utils";
-import { useMediaQuery } from "usehooks-ts";
-import { FlipHorizontal, FlipVertical } from "lucide-react";
+} from 'react-advanced-cropper';
+import { toast } from 'sonner';
+import { useMediaQuery } from 'usehooks-ts';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
+
+import 'react-advanced-cropper/dist/style.css';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+import { imageUploadModalStore } from '@/store/imageUploadStore';
+import { useUploadThing } from '@/utils/uploadthing';
 
 function applyEditToCanvas(
   source: HTMLImageElement,
@@ -42,23 +45,24 @@ function applyEditToCanvas(
   const rotW = swapped ? naturalH : naturalW;
   const rotH = swapped ? naturalW : naturalH;
 
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d")!;
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d')!;
 
   // draw rotated source, then crop
-  const tmpCanvas = document.createElement("canvas");
+  const tmpCanvas = document.createElement('canvas');
   tmpCanvas.width = rotW;
   tmpCanvas.height = rotH;
-  const tmpCtx = tmpCanvas.getContext("2d")!;
+  const tmpCtx = tmpCanvas.getContext('2d')!;
   tmpCtx.translate(rotW / 2, rotH / 2);
   tmpCtx.rotate(rad);
   tmpCtx.drawImage(source, -naturalW / 2, -naturalH / 2, naturalW, naturalH);
   ctx.drawImage(tmpCanvas, 0, 0);
-  return canvas.toDataURL("image/jpeg", 1);
+  return canvas.toDataURL('image/jpeg', 1);
 }
 
 export function UploadThingModal() {
-  const isMobile = useMediaQuery("(max-width: 640px)");
+  const queryClient = useQueryClient();
+  const isMobile = useMediaQuery('(max-width: 640px)');
   const isUploadThingDialogOpen = useSelector(
     imageUploadModalStore,
     (state) => state.isUploadThingDialogOpen,
@@ -86,8 +90,8 @@ export function UploadThingModal() {
   const dropRef = useRef<HTMLDivElement>(null);
 
   function handleFile(f: File) {
-    if (!f.type.startsWith("image/")) {
-      setError("Only image files are supported.");
+    if (!f.type.startsWith('image/')) {
+      setError('Only image files are supported.');
       return;
     }
     setFile(f);
@@ -147,17 +151,17 @@ export function UploadThingModal() {
   }
 
   // UploadThing
-  const { startUpload } = useUploadThing("updateProfilePicture", {
+  const { startUpload } = useUploadThing('updateProfilePicture', {
     onBeforeUploadBegin(files) {
       toast.loading(`Presigning URL for profile image...`, {
-        id: "presigning-url",
+        id: 'presigning-url',
       });
       return files;
     },
     onUploadBegin: (filename: string) => {
       setUploading(true);
       setError(null);
-      toast.dismiss("presigning-url");
+      toast.dismiss('presigning-url');
       toast.info(`Upload has begun for profile image`, {
         description: `Uploading ${filename}`,
       });
@@ -166,27 +170,27 @@ export function UploadThingModal() {
       if (p === 0) {
         setProgress(p);
         toast.loading(`Uploading profile image...`, {
-          id: "upload-profile-image",
+          id: 'upload-profile-image',
           description: `Starting upload...`,
         });
       }
       if (p < 100) {
         setProgress(p);
         toast.loading(`Uploading profile image...`, {
-          id: "upload-profile-image",
+          id: 'upload-profile-image',
           description: `${p}%`,
         });
       }
       if (p === 100) {
         setProgress(p);
         toast.loading(`Uploading profile image...`, {
-          id: "upload-profile-image",
+          id: 'upload-profile-image',
           description: `Finalizing upload...`,
         });
       }
     },
     onClientUploadComplete: () => {
-      toast.dismiss("upload-profile-image");
+      toast.dismiss('upload-profile-image');
       toast.success(`Profile image uploaded successfully!`);
       imageUploadModalStore.setState((prev) => ({ ...prev, isUploadThingDialogOpen: false }));
       setFile(null);
@@ -196,17 +200,20 @@ export function UploadThingModal() {
       setUploading(false);
       setTimeout(() => setProgress(0), 800);
       void router.invalidate();
+      void queryClient.invalidateQueries({
+        queryKey: ['profile-dashboard'],
+      });
     },
     onUploadError: (e) => {
-      setError(e.message ?? "Upload failed");
+      setError(e.message ?? 'Upload failed');
       setUploading(false);
       setTimeout(() => setProgress(0), 800);
-      toast.dismiss("upload-profile-image");
+      toast.dismiss('upload-profile-image');
       toast.error(`Failed to upload profile image`, {
         description: e.message,
       });
     },
-    uploadProgressGranularity: "fine",
+    uploadProgressGranularity: 'fine',
   });
 
   const displaySrc = editedSrc ?? previewSrc;
@@ -221,17 +228,17 @@ export function UploadThingModal() {
       const canvas = cropperRef.current?.getCanvas();
       if (canvas) {
         canvas.toBlob((blob) => {
-          console.log("Blob: ", blob);
+          console.log('Blob: ', blob);
           if (blob) {
             const newFile = new File([blob], `${file?.name}-cropped`, {
               // blob.type ---> if don't specify type it defaults to png. choose either jpeg or webp for better compression
               // type: blob.type,
-              type: "image/jpeg",
+              type: 'image/jpeg',
             });
-            console.log("New File: ", newFile);
+            console.log('New File: ', newFile);
             setEditedFile(newFile);
           }
-        }, "image/jpeg");
+        }, 'image/jpeg');
       }
       setIsCropping(false);
     }
@@ -242,13 +249,13 @@ export function UploadThingModal() {
   }
 
   async function onUpload() {
-    console.log("EditedFile: ", editedFile);
+    console.log('EditedFile: ', editedFile);
     if (editedSrc && editedFile) {
       await startUpload([editedFile]);
       return;
     } else {
       const fileToUpload = file;
-      console.log("File: ", fileToUpload);
+      console.log('File: ', fileToUpload);
 
       if (fileToUpload) await startUpload([fileToUpload]);
       return;
@@ -323,7 +330,7 @@ export function UploadThingModal() {
                 onChange={(e) => {
                   const f = e.target.files?.[0];
                   if (f) handleFile(f);
-                  e.target.value = "";
+                  e.target.value = '';
                 }}
               />
             </div>
@@ -360,14 +367,14 @@ export function UploadThingModal() {
                     ref={imgRef}
                     src={displaySrc}
                     alt="preview"
-                    className={cn("w-full object-contain", {
-                      "object-cover rounded-full": editedSrc,
+                    className={cn('w-full object-contain', {
+                      'object-cover rounded-full': editedSrc,
                     })}
                     style={{
                       transform: `rotate(${rotation}deg)`,
-                      transition: "transform 0.3s ease",
+                      transition: 'transform 0.3s ease',
                       maxHeight: 360,
-                      display: "block",
+                      display: 'block',
                     }}
                     crossOrigin="anonymous"
                   />
@@ -677,7 +684,7 @@ export function UploadThingModal() {
                   Uploading…
                 </span>
               ) : (
-                "Upload"
+                'Upload'
               )}
             </Button>
           )}

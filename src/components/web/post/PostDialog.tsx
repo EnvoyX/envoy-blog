@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import {
   CheckCircle2,
@@ -40,6 +40,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { getImagesFn } from '@/data/image';
 import { createShortPostFn, editShortPostFn } from '@/data/post';
+import { dashboardShortPostsOptions } from '@/data/query-options/dashboardQueryOptions';
 import { cn } from '@/lib/utils';
 import { shortPostSchema } from '@/schemas/post';
 import { usePostStore } from '@/store/post';
@@ -53,6 +54,7 @@ export function PostDialog() {
     onOpenDialogChange,
     initialValues,
   } = usePostStore();
+  const queryClient = useQueryClient();
   const router = useRouter();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -100,6 +102,9 @@ export function PostDialog() {
         toggleDialog('close', '');
         form.reset();
         void router.invalidate();
+        void queryClient.invalidateQueries({
+          queryKey: [...dashboardShortPostsOptions().queryKey],
+        });
       } else {
         await createShortPostFn({
           data: {
@@ -113,6 +118,9 @@ export function PostDialog() {
         toggleDialog('close', '');
         form.reset();
         void router.invalidate();
+        void queryClient.invalidateQueries({
+          queryKey: [...dashboardShortPostsOptions().queryKey],
+        });
       }
     },
   });

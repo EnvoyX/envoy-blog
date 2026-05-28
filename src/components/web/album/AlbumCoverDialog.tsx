@@ -24,6 +24,10 @@ import {
 } from '@/components/ui/empty';
 import { changeAlbumCoverFn } from '@/data/album';
 import { getImagesWithAlbumsFn } from '@/data/image';
+import {
+  dashboardAlbumIdOptions,
+  dashboardAlbumsOptions,
+} from '@/data/query-options/dashboardQueryOptions';
 import { cn } from '@/lib/utils';
 import { useAlbumStore } from '@/store/album';
 
@@ -40,7 +44,7 @@ export function AlbumCoverDialog() {
       const images = await getImagesWithAlbumsFn();
       return images;
     },
-    enabled: isAlbumCoverDialogOpen,
+    enabled: isAlbumCoverDialogOpen && currentAlbumId ? true : false,
   });
 
   const imagesInAlbum = images?.filter((image) => {
@@ -75,7 +79,15 @@ export function AlbumCoverDialog() {
       toast.success('Album cover updated successfully', { id: 'album-cover' });
       setSelectedIds(new Set());
       onOpenDialogChange('albumCover', false);
-      void queryClient.invalidateQueries({ queryKey: ['available-images', currentAlbumId] });
+      void queryClient.invalidateQueries({
+        queryKey: ['available-images', currentAlbumId],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: [...dashboardAlbumsOptions().queryKey],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: [...dashboardAlbumIdOptions(currentAlbumId).queryKey],
+      });
       void router.invalidate();
     } catch (error) {
       toast.error('Failed to change album cover', { id: 'album-cover' });

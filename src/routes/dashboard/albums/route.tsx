@@ -17,6 +17,7 @@ import { AlbumCoverDialog } from '@/components/web/album/AlbumCoverDialog';
 import { AlbumDialog } from '@/components/web/album/AlbumDialog';
 import { BulkAlbumDialog } from '@/components/web/album/BulkAlbumDialog';
 import { deleteAlbumFn } from '@/data/album';
+import { dashboardAlbumsOptions } from '@/data/query-options/dashboardQueryOptions';
 import { useAlbumStore } from '@/store/album';
 
 export const Route = createFileRoute('/dashboard/albums')({
@@ -24,6 +25,7 @@ export const Route = createFileRoute('/dashboard/albums')({
 });
 
 function RouteComponent() {
+  const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   const { toggleDialog, isDeleteDialogOpen, onOpenDialogChange, currentAlbumId } = useAlbumStore();
   const navigate = useNavigate();
@@ -35,6 +37,9 @@ function RouteComponent() {
     });
     toast.success('Album successfully deleted');
     void router.invalidate();
+    void queryClient.invalidateQueries({
+      ...dashboardAlbumsOptions(),
+    });
     navigate({
       to: '/dashboard/albums',
     });

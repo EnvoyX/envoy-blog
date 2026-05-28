@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import {
   CheckCircle2,
@@ -29,6 +29,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { createAlbumFn, editAlbumFn, getAlbumByIdFn } from '@/data/album';
 import { getImagesFn } from '@/data/image';
+import { dashboardAlbumsOptions } from '@/data/query-options/dashboardQueryOptions';
 import { cn } from '@/lib/utils';
 import { albumSchema } from '@/schemas/album';
 import { useAlbumStore } from '@/store/album';
@@ -38,6 +39,7 @@ export function AlbumDialog() {
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null);
   const [selectedCoverImageId, setSelectedCoverImageId] = useState<Set<string>>(new Set());
   const router = useRouter();
+  const queryClient = useQueryClient();
   const {
     onOpenDialogChange,
     isAlbumDialogOpen,
@@ -56,7 +58,7 @@ export function AlbumDialog() {
     enabled: isAlbumDialogOpen && initialValues?.type === 'create',
   });
   const { data: coverImages, isPending: isCoverImagesPending } = useQuery({
-    queryKey: ['cover-images', currentAlbumId],
+    queryKey: ['album-gallery', currentAlbumId],
     queryFn: async () => {
       const data = await getAlbumByIdFn({
         data: { albumId: currentAlbumId },
@@ -101,6 +103,9 @@ export function AlbumDialog() {
         toast.success('Album edited successfully');
         form.reset();
         void router.invalidate();
+        void queryClient.invalidateQueries({
+          ...dashboardAlbumsOptions(),
+        });
         setInitialValues(null);
         toggleDialog('close', '');
       } else if (initialValues?.type === 'create') {
@@ -117,6 +122,9 @@ export function AlbumDialog() {
         toast.success('Album created successfully');
         form.reset();
         void router.invalidate();
+        void queryClient.invalidateQueries({
+          ...dashboardAlbumsOptions(),
+        });
         toggleDialog('close', '');
       }
     },

@@ -1,19 +1,22 @@
-import { createFileRoute, Link, redirect } from '@tanstack/react-router';
-import Editor from '@uiw/react-md-editor';
-import { ChevronLeft, Copy, CopyCheck } from 'lucide-react';
-import { useState } from 'react';
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import Editor from "@uiw/react-md-editor";
+import { ChevronLeft, Copy, CopyCheck } from "lucide-react";
+import { useState } from "react";
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { getPostFn } from '@/data/blog';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { dashboardBlogPostSlugOptions } from "@/data/query-options/dashboardQueryOptions";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute('/dashboard/blog/$slug/edit/md-editor')({
+export const Route = createFileRoute("/dashboard/blog/$slug/edit/md-editor")({
   component: RouteComponent,
   loader: async ({ params, context }) => {
-    const post = await getPostFn({ data: params.slug });
+    const post = await context.queryClient.ensureQueryData(
+      dashboardBlogPostSlugOptions(params.slug),
+    );
     if (context?.user?.id !== post?.authorId) {
       throw redirect({
-        to: '/dashboard/blog',
+        to: "/dashboard/blog",
       });
     }
     return {
@@ -29,29 +32,30 @@ export const Route = createFileRoute('/dashboard/blog/$slug/edit/md-editor')({
         title: `Markdown Editor | ${loaderData?.post?.slug} | Envoy Mindpalace`,
       },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
       {
-        property: 'og:title',
+        property: "og:title",
         content: `${loaderData?.post?.title} | Envoy Blog`,
       },
       {
-        property: 'og:description',
+        property: "og:description",
         content: `${loaderData?.post?.description}`,
       },
       {
-        property: 'og:image',
+        property: "og:image",
         content: `${loaderData?.post?.image}`,
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
 
 function RouteComponent() {
-  const { post } = Route.useLoaderData();
-  const [markdown, setMarkdown] = useState(post?.content ?? '');
+  const { slug } = Route.useParams();
+  const { data: post } = useSuspenseQuery(dashboardBlogPostSlugOptions(slug));
+  const [markdown, setMarkdown] = useState(post?.content ?? "");
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -61,7 +65,7 @@ function RouteComponent() {
   };
 
   const handleReset = () => {
-    setMarkdown('# Markdown editor');
+    setMarkdown("# Markdown editor");
   };
 
   return (
@@ -76,7 +80,7 @@ function RouteComponent() {
           </div>
           <div className="flex gap-3 max-sm:flex-col">
             <Button variant="default" className="gap-2" asChild>
-              <Link to="/dashboard/blog/$slug/edit" params={{ slug: post?.slug ?? '' }}>
+              <Link to="/dashboard/blog/$slug/edit" params={{ slug: post?.slug ?? "" }}>
                 <ChevronLeft className="size-4" /> Edit Blog
               </Link>
             </Button>
@@ -93,7 +97,7 @@ function RouteComponent() {
                 </span>
               )}
             </Button>
-            <Button variant={'outline'} className="cursor-pointer" onClick={handleReset}>
+            <Button variant={"outline"} className="cursor-pointer" onClick={handleReset}>
               Reset
             </Button>
           </div>

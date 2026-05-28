@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { ImageIcon, Loader2, MailboxIcon } from 'lucide-react';
 import { useEffect } from 'react';
@@ -21,11 +21,16 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { getAlbumByIdFn } from '@/data/album';
 import { editImageFn } from '@/data/image';
+import {
+  dashboardAlbumIdOptions,
+  imageGalleryOptions,
+} from '@/data/query-options/dashboardQueryOptions';
 import { editImageSchema } from '@/schemas/image';
 import { useImageStore } from '@/store/image';
 
 export function ImageDialog() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const {
     setInitialValues,
     isEditDialogOpen,
@@ -36,7 +41,7 @@ export function ImageDialog() {
     toggleDialog,
   } = useImageStore();
   const { data: album } = useQuery({
-    queryKey: ['album', initialValues?.albumId],
+    queryKey: ['album-gallery', initialValues?.albumId],
     queryFn: async () => {
       const album = await getAlbumByIdFn({
         data: {
@@ -77,6 +82,13 @@ export function ImageDialog() {
       });
       toast.success('Image edited successfully!');
       form.reset();
+      void queryClient.invalidateQueries({
+        queryKey: [...imageGalleryOptions().queryKey],
+      });
+      if (initialValues?.albumId)
+        void queryClient.invalidateQueries({
+          queryKey: [...dashboardAlbumIdOptions(initialValues.albumId).queryKey],
+        });
       void router.invalidate();
       toggleDialog('close', '', '');
     },

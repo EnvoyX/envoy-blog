@@ -1,47 +1,47 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { Pencil, Plus, Trash2, Upload } from 'lucide-react';
+import { createFileRoute } from "@tanstack/react-router";
+import { Pencil, Plus, Trash2, Upload } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import PhotoGallery from '@/components/web/PhotoGallery';
-import { getImagesFn } from '@/data/image';
-import { useAlbumStore } from '@/store/album';
-import { useImageStore } from '@/store/image';
-import { imageUploadModalStore } from '@/store/imageUploadStore';
+import { Button } from "@/components/ui/button";
+import PhotoGallery from "@/components/web/PhotoGallery";
+import { useAlbumStore } from "@/store/album";
+import { useImageStore } from "@/store/image";
+import { imageUploadModalStore } from "@/store/imageUploadStore";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { imageGalleryOptions } from "@/data/query-options/dashboardQueryOptions";
 
-export const Route = createFileRoute('/dashboard/images/')({
+export const Route = createFileRoute("/dashboard/images/")({
   component: RouteComponent,
-  loader: async () => {
-    const images = await getImagesFn();
-    return {
-      images,
-    };
+  loader: ({ context }) => {
+    context.queryClient.prefetchQuery(imageGalleryOptions());
   },
   head: () => ({
     meta: [
       { title: `Images | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
       {
-        property: 'og:title',
+        property: "og:title",
         content: `Images | Envoy Mindpalace`,
       },
       {
-        property: 'og:description',
+        property: "og:description",
         content: `Manage and edit your images here.`,
       },
       {
-        property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
 
 function RouteComponent() {
-  const { images } = Route.useLoaderData();
+  const { data: images } = useSuspenseQuery({
+    ...imageGalleryOptions(),
+  });
   const { toggleDialog } = useAlbumStore();
   const { toggleDialog: toggleImageDialog } = useImageStore();
   return (
@@ -56,7 +56,7 @@ function RouteComponent() {
             <Button
               size="icon-lg"
               className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
-              onClick={() => toggleDialog('import', '')}
+              onClick={() => toggleDialog("import", "")}
             >
               <div className="flex items-center gap-2">
                 <Plus className="size-5 group-hover:rotate-90 transition-transform duration-300" />
@@ -65,7 +65,7 @@ function RouteComponent() {
             <Button
               size="icon-lg"
               className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
-              onClick={() => toggleImageDialog('bulk-edit')}
+              onClick={() => toggleImageDialog("bulk-edit")}
             >
               <div className="flex items-center gap-2">
                 <Pencil className="size-5" />
@@ -88,7 +88,7 @@ function RouteComponent() {
             <Button
               size="icon-lg"
               className="bg-destructive/90 hover:bg-destructive text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-destructive/40 group active:scale-95 cursor-pointer"
-              onClick={() => toggleImageDialog('bulk-delete', '', '')}
+              onClick={() => toggleImageDialog("bulk-delete", "", "")}
             >
               <div className="flex items-center gap-2">
                 <Trash2 className="size-5" />

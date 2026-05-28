@@ -1,9 +1,10 @@
-import { db } from '@/lib/db'
-import { authMiddleware } from '@/middlewares/auth'
-import { quranTrackSchema } from '@/schemas/quran-tracker'
-import { differenceInHours } from 'date-fns'
-import { createServerFn } from '@tanstack/react-start'
-import { getCurrentDate } from '@/lib/utils'
+import { createServerFn } from '@tanstack/react-start';
+import { differenceInHours } from 'date-fns';
+
+import { db } from '@/lib/db';
+import { getCurrentDate } from '@/lib/utils';
+import { authMiddleware } from '@/middlewares/auth';
+import { quranTrackSchema } from '@/schemas/quran-tracker';
 
 export const savedQuranProgressFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
@@ -13,17 +14,13 @@ export const savedQuranProgressFn = createServerFn({ method: 'POST' })
       where: {
         userId: context.user.id as string,
       },
-    })
+    });
 
-    const currentDate = getCurrentDate()
+    const currentDate = getCurrentDate();
 
-    function updateStreak(
-      currentDate: Date,
-      lastUpdated: Date,
-      streak: number,
-    ) {
-      if (differenceInHours(currentDate, lastUpdated) >= 24) return 1
-      return streak + 1
+    function updateStreak(currentDate: Date, lastUpdated: Date, streak: number) {
+      if (differenceInHours(currentDate, lastUpdated) >= 24) return 1;
+      return streak + 1;
     }
 
     if (!existingProgress) {
@@ -35,7 +32,7 @@ export const savedQuranProgressFn = createServerFn({ method: 'POST' })
           currentJuz: data.currentJuz,
           currentStreak: 1,
         },
-      })
+      });
     }
 
     await db.quranTrack.update({
@@ -52,8 +49,8 @@ export const savedQuranProgressFn = createServerFn({ method: 'POST' })
           existingProgress?.currentStreak as number,
         ),
       },
-    })
-  })
+    });
+  });
 
 export const fetchCurrentQuranProgressFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
@@ -62,6 +59,6 @@ export const fetchCurrentQuranProgressFn = createServerFn({ method: 'POST' })
       where: {
         userId: context.user.id as string,
       },
-    })
-    return existingProgress
-  })
+    });
+    return existingProgress;
+  });

@@ -1,13 +1,13 @@
-import { redirect } from "@tanstack/react-router";
-import { createMiddleware } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
+import { redirect } from '@tanstack/react-router';
+import { createMiddleware } from '@tanstack/react-start';
+import { getRequestHeaders } from '@tanstack/react-start/server';
 
-import { auth } from "@/lib/auth";
-export const authMiddleware = createMiddleware({ type: "function" }).server(async ({ next }) => {
+import { auth } from '@/lib/auth';
+export const authMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
   if (!session) {
-    throw redirect({ to: "/login" });
+    throw redirect({ to: '/login' });
   }
   return next({
     context: {
@@ -17,12 +17,12 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(asyn
   });
 });
 
-export const authRouteMiddleware = createMiddleware({ type: "request" }).server(
+export const authRouteMiddleware = createMiddleware({ type: 'request' }).server(
   async ({ next }) => {
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
     if (!session) {
-      throw redirect({ to: "/login" });
+      throw redirect({ to: '/login' });
     }
 
     return next({
@@ -34,11 +34,11 @@ export const authRouteMiddleware = createMiddleware({ type: "request" }).server(
   },
 );
 
-export const authGlobalMiddleware = createMiddleware({ type: "request" }).server(
+export const authGlobalMiddleware = createMiddleware({ type: 'request' }).server(
   async ({ next, request }) => {
     // Public route access
     const url = new URL(request.url);
-    if (!url.pathname.includes("/dashboard")) {
+    if (!url.pathname.includes('/dashboard')) {
       return next();
     }
 
@@ -47,7 +47,7 @@ export const authGlobalMiddleware = createMiddleware({ type: "request" }).server
     if (!session) {
       const redirectTo = `${url.pathname}${url.search}`;
       throw redirect({
-        to: "/login",
+        to: '/login',
         search: {
           callbackUrl: redirectTo,
         },

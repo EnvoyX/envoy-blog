@@ -1,10 +1,12 @@
 import { createId } from '@paralleldrive/cuid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { saveImageUrl } from '@/data/image';
+import { imageGalleryOptions } from '@/data/query-options/dashboardQueryOptions';
 import { useSettingStore } from '@/store/settings';
 interface ImgBBResponse {
   data: {
@@ -32,7 +34,7 @@ interface FileEntry {
 export default function UploadDropzone() {
   const router = useRouter();
   const { ImgbbAPIKey } = useSettingStore();
-
+  const queryClient = useQueryClient();
   const [entries, setEntries] = useState<FileEntry[]>([]);
   const [fileProgress, setFileProgress] = useState<Record<number, number | 'done' | 'error'>>({});
   const [uploading, setUploading] = useState(false);
@@ -142,6 +144,7 @@ export default function UploadDropzone() {
     if (!hadError) {
       setEntries([]);
       setFileProgress({});
+      void queryClient.invalidateQueries({ queryKey: [...imageGalleryOptions().queryKey] });
       void router.invalidate();
     }
   }

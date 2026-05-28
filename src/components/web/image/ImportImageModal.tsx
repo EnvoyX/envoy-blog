@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { ImageIcon, Loader2, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -29,16 +29,21 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { getAlbumByIdFn, ImportImagesToAlbumFn } from '@/data/album';
 import { ImportImagesFn } from '@/data/image';
+import {
+  dashboardAlbumIdOptions,
+  imageGalleryOptions,
+} from '@/data/query-options/dashboardQueryOptions';
 import { imageSchema } from '@/schemas/image';
 import { useAlbumStore } from '@/store/album';
 
 export function ImportImageModal() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { isImageImportDialogOpen, onOpenDialogChange, toggleDialog, currentAlbumId } =
     useAlbumStore();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const { data: album } = useQuery({
-    queryKey: ['album', currentAlbumId],
+    queryKey: ['album-gallery', currentAlbumId],
     queryFn: async () => {
       const album = await getAlbumByIdFn({
         data: {
@@ -47,7 +52,7 @@ export function ImportImageModal() {
       });
       return album;
     },
-    enabled: currentAlbumId ? true : false,
+    enabled: isImageImportDialogOpen && currentAlbumId ? true : false,
   });
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -63,33 +68,47 @@ export function ImportImageModal() {
       onBlur: imageSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
-      if (currentAlbumId) {
-        await ImportImagesToAlbumFn({
-          data: {
-            albumId: currentAlbumId,
-            image: value.image,
-            published: value.published,
-            showPrivateToFollowers: value.showPrivateToFollowers,
-          },
+      try {
+        console.log(value);
+        if (currentAlbumId) {
+          await ImportImagesToAlbumFn({
+            data: {
+              albumId: currentAlbumId,
+              image: value.image,
+              published: value.published,
+              showPrivateToFollowers: value.showPrivateToFollowers,
+            },
+          });
+          toast.success('Images imported successfully', {
+            description: `Album | ${album?.name}`,
+          });
+        } else if (!currentAlbumId) {
+          await ImportImagesFn({
+            data: {
+              image: value.image,
+              published: value.published,
+              showPrivateToFollowers: value.showPrivateToFollowers,
+            },
+          });
+          toast.success('Images imported successfully');
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          toast.error(err.message);
+          throw new Error(err.message);
+        } else {
+          toast.error('An unknown error occurred');
+          throw new Error('An unknown error occurred');
+        }
+      } finally {
+        void queryClient.invalidateQueries({
+          queryKey: [...imageGalleryOptions().queryKey],
         });
-        toast.success('Images imported successfully', {
-          description: `Album | ${album?.name}`,
+        void queryClient.invalidateQueries({
+          queryKey: [...dashboardAlbumIdOptions(currentAlbumId).queryKey],
         });
-        form.reset();
         void router.invalidate();
-        toggleDialog('close', '');
-      } else if (!currentAlbumId) {
-        await ImportImagesFn({
-          data: {
-            image: value.image,
-            published: value.published,
-            showPrivateToFollowers: value.showPrivateToFollowers,
-          },
-        });
-        toast.success('Images imported successfully');
         form.reset();
-        void router.invalidate();
         toggleDialog('close', '');
       }
     },

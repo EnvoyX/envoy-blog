@@ -1,5 +1,5 @@
 import { IconDownload } from '@tabler/icons-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
 // import Slideshow from 'yet-another-react-lightbox/plugins/slideshow';
@@ -57,6 +57,10 @@ import {
   setPublicImageFn,
   setShowPrivateImageToFollowersFn,
 } from '@/data/image';
+import {
+  dashboardAlbumIdOptions,
+  imageGalleryOptions,
+} from '@/data/query-options/dashboardQueryOptions';
 import { Image } from '@/generated/prisma/client';
 import { useImageStore } from '@/store/image';
 import { photoGalleryStore } from '@/store/photoGallery';
@@ -71,6 +75,7 @@ export default function PhotoGallery({
   type?: 'public' | 'private';
   albumId?: string;
 }) {
+  const queryClient = useQueryClient();
   const isOpen = useSelector(photoGalleryStore, (state) => state.isOpen);
   const {
     toggleDialog,
@@ -89,7 +94,7 @@ export default function PhotoGallery({
   const zoomRef = useRef<ZoomRef>(null);
   const router = useRouter();
   const { data: album } = useQuery({
-    queryKey: ['album', albumId],
+    queryKey: ['album-gallery', albumId],
     queryFn: async () => {
       const album = await getAlbumByIdFn({
         data: {
@@ -106,91 +111,103 @@ export default function PhotoGallery({
   }));
   async function handleAction(action: string, photoId: string) {
     console.log(`Action: ${action} for Photo: ${photoId}`);
-    if (action === 'public') {
-      toast.loading('Updating...', {
-        id: 'action',
-      });
-      await setPublicImageFn({
-        data: {
-          imageId: photoId,
-        },
-      });
-      toast.dismiss('action');
-      toast.success('Photo successfully set to public');
+    try {
+      if (action === 'public') {
+        toast.loading('Updating...', {
+          id: 'action',
+        });
+        await setPublicImageFn({
+          data: {
+            imageId: photoId,
+          },
+        });
+        toast.dismiss('action');
+        toast.success('Photo successfully set to public');
+      } else if (action === 'private') {
+        toast.loading('Updating...', {
+          id: 'action',
+        });
+        await setPrivateImageFn({
+          data: {
+            imageId: photoId,
+          },
+        });
+        toast.dismiss('action');
+        toast.success('Photo successfully set to private');
+      } else if (action === 'show-private-to-followers') {
+        toast.loading('Updating...', {
+          id: 'action',
+        });
+        await setShowPrivateImageToFollowersFn({
+          data: {
+            imageId: photoId,
+          },
+        });
+        toast.dismiss('action');
+        toast.success('This private photo is now visible to followers');
+      } else if (action === 'hide-private-to-followers') {
+        toast.loading('Updating...', {
+          id: 'action',
+        });
+        await setHidePrivateImageToFollowersFn({
+          data: {
+            imageId: photoId,
+          },
+        });
+        toast.dismiss('action');
+        toast.success('This private photo is now hidden to followers');
+      } else if (action === 'remove-image' && albumId) {
+        toast.loading('Updating...', {
+          id: 'action',
+        });
+        await removeImageFromAlbumFn({
+          data: {
+            imageId: photoId,
+            albumId: albumId,
+          },
+        });
+        photoGalleryStore.setState((prev) => {
+          return {
+            ...prev,
+            isOpen: false,
+          };
+        });
+        toast.dismiss('action');
+        toast.success('Photo remove from album successfully');
+      } else if (action === 'delete') {
+        toast.loading('Updating...', {
+          id: 'action',
+        });
+        await deleteImageFn({
+          data: {
+            imageId: photoId,
+          },
+        });
+        photoGalleryStore.setState((prev) => {
+          return {
+            ...prev,
+            isOpen: false,
+          };
+        });
+        toast.dismiss('action');
+        toast.success('Photo deleted successfully');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        throw new Error(error.message);
+      }
+      toast.error('Error has been occurred');
+      throw new Error('Error has been occurred');
+    } finally {
       void router.invalidate();
-    } else if (action === 'private') {
-      toast.loading('Updating...', {
-        id: 'action',
+      void queryClient.invalidateQueries({
+        queryKey: [...imageGalleryOptions().queryKey],
       });
-      await setPrivateImageFn({
-        data: {
-          imageId: photoId,
-        },
-      });
-      toast.dismiss('action');
-      toast.success('Photo successfully set to private');
-      void router.invalidate();
-    } else if (action === 'show-private-to-followers') {
-      toast.loading('Updating...', {
-        id: 'action',
-      });
-      await setShowPrivateImageToFollowersFn({
-        data: {
-          imageId: photoId,
-        },
-      });
-      toast.dismiss('action');
-      toast.success('This private photo is now visible to followers');
-      void router.invalidate();
-    } else if (action === 'hide-private-to-followers') {
-      toast.loading('Updating...', {
-        id: 'action',
-      });
-      await setHidePrivateImageToFollowersFn({
-        data: {
-          imageId: photoId,
-        },
-      });
-      toast.dismiss('action');
-      toast.success('This private photo is now hidden to followers');
-      void router.invalidate();
-    } else if (action === 'remove-image' && albumId) {
-      toast.loading('Updating...', {
-        id: 'action',
-      });
-      await removeImageFromAlbumFn({
-        data: {
-          imageId: photoId,
-          albumId: albumId,
-        },
-      });
-      photoGalleryStore.setState((prev) => {
-        return {
-          ...prev,
-          isOpen: false,
-        };
-      });
-      toast.dismiss('action');
-      toast.success('Photo remove from album successfully');
-      void router.invalidate();
-    } else if (action === 'delete') {
-      toast.loading('Updating...', {
-        id: 'action',
-      });
-      await deleteImageFn({
-        data: {
-          imageId: photoId,
-        },
-      });
-      photoGalleryStore.setState((prev) => {
-        return {
-          ...prev,
-          isOpen: false,
-        };
-      });
-      toast.dismiss('action');
-      toast.success('Photo deleted successfully');
-      void router.invalidate();
+      if (albumId)
+        void queryClient.invalidateQueries({
+          queryKey: [...dashboardAlbumIdOptions(albumId).queryKey],
+        });
     }
   }
   return (

@@ -1,17 +1,17 @@
-import { createId } from '@paralleldrive/cuid2';
-import { eq, useLiveQuery } from '@tanstack/react-db';
-import { createFileRoute, Link, redirect } from '@tanstack/react-router';
-import { useNavigate } from '@tanstack/react-router';
-import { formatDistanceToNow } from 'date-fns';
-import { ArrowLeft, ChevronsRight, Heart, MessageSquare } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
-import { useEffect, useState } from 'react';
-import { useMediaQuery } from 'usehooks-ts';
-import { v4 as uuidv4 } from 'uuid';
+import { createId } from "@paralleldrive/cuid2";
+import { eq, useLiveQuery } from "@tanstack/react-db";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
+import { formatDistanceToNow } from "date-fns";
+import { ArrowLeft, ChevronsRight, Heart, MessageSquare } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
+import { v4 as uuidv4 } from "uuid";
 
-import { commentCollection, likeCollection } from '@/collections/post';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { commentCollection, likeCollection } from "@/collections/post";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselApi,
@@ -19,26 +19,23 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@/components/ui/carousel';
+} from "@/components/ui/carousel";
 // import { ImageModal } from '@/components/web/ImageModal';
-import CommentInput from '@/components/web/post/CommentInput';
-import MasonryCollage from '@/components/web/post/MasonryCollage';
-import PostCollage from '@/components/web/post/PostCollage';
-import { PostLightBox } from '@/components/web/post/PostLightBox';
-import { getShortPostByIdFn } from '@/data/post';
-import { User } from '@/generated/prisma/client';
-import { cn } from '@/lib/utils';
-import { useImageStore } from '@/store/image';
+import CommentInput from "@/components/web/post/CommentInput";
+import MasonryCollage from "@/components/web/post/MasonryCollage";
+import PostCollage from "@/components/web/post/PostCollage";
+import { PostLightBox } from "@/components/web/post/PostLightBox";
+import { User } from "@/generated/prisma/client";
+import { cn } from "@/lib/utils";
+import { useImageStore } from "@/store/image";
+import { shortPostIdOptions } from "@/data/query-options/queryOptions";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute('/post/$postId/')({
+export const Route = createFileRoute("/post/$postId/")({
   component: RouteComponent,
   loader: async ({ params, context }) => {
-    const post = await getShortPostByIdFn({
-      data: {
-        shortPostId: params.postId,
-      },
-    });
-    if (!post) throw redirect({ to: '/post' });
+    const post = await context.queryClient.ensureQueryData(shortPostIdOptions(params.postId));
+    if (!post) throw redirect({ to: "/post" });
     const isOwner = context?.user?.id === post?.authorId;
     const isPrivateShownToFollower =
       context.user &&
@@ -47,7 +44,7 @@ export const Route = createFileRoute('/post/$postId/')({
       !post.published;
 
     if (!post?.published && !isOwner && !isPrivateShownToFollower) {
-      throw redirect({ to: '/post' });
+      throw redirect({ to: "/post" });
     }
 
     return {
@@ -59,33 +56,37 @@ export const Route = createFileRoute('/post/$postId/')({
     meta: [
       { title: `${loaderData?.post?.author.name} | Post | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
       {
-        property: 'og:title',
+        property: "og:title",
         content: `${loaderData?.post?.author.name} | Post | Envoy Mindpalace`,
       },
       {
-        property: 'og:description',
+        property: "og:description",
         content: `${loaderData?.post?.content}`,
       },
       {
-        property: 'og:image',
+        property: "og:image",
         content: `${loaderData?.post?.author.image}`,
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
 
 function RouteComponent() {
-  const { post, user } = Route.useLoaderData();
+  const { user } = Route.useLoaderData();
+  const { postId } = Route.useParams();
+  const { data: post } = useSuspenseQuery({
+    ...shortPostIdOptions(postId),
+  });
   const photos = post?.imagesOnShortPosts?.map((photo, index) => ({
     ...photo.image,
     globalIndex: index,
   }));
-  const isMobile = useMediaQuery('(max-width: 640px)');
+  const isMobile = useMediaQuery("(max-width: 640px)");
   const [expanded, setExpanded] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [api, setApi] = useState<CarouselApi>();
@@ -98,7 +99,7 @@ function RouteComponent() {
     q
       .from({ comment: commentCollection })
       .where(({ comment }) => eq(comment.shortPostId, post?.id))
-      .orderBy(({ comment }) => comment.createdAt, 'desc'),
+      .orderBy(({ comment }) => comment.createdAt, "desc"),
   );
   const hasLiked = likes.find((like) => like.userId === user?.id);
 
@@ -157,7 +158,7 @@ function RouteComponent() {
     // setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
     setIndex(api.selectedScrollSnap());
-    api.on('select', () => {
+    api.on("select", () => {
       setCurrent(api.selectedScrollSnap() + 1);
       setIndex(api.selectedScrollSnap());
     });
@@ -171,16 +172,16 @@ function RouteComponent() {
   return (
     <section
       className={cn(
-        'w-full p-0 overflow-hidden bg-slate-950 border-slate-800 h-[90vh] flex flex-col sm:flex-row min-h-screen',
+        "w-full p-0 overflow-hidden bg-slate-950 border-slate-800 h-[90vh] flex flex-col sm:flex-row min-h-screen",
         {
-          'max-sm:h-full': photos.length!,
+          "max-sm:h-full": photos.length!,
         },
       )}
     >
       {photos?.length >= 1 && (
         <Carousel
           className={cn(
-            'relative w-full bg-transparent flex items-center justify-center border-r border-slate-800',
+            "relative w-full bg-transparent flex items-center justify-center border-r border-slate-800",
             {
               hidden: isMobile,
             },
@@ -212,8 +213,8 @@ function RouteComponent() {
               }}
             >
               <ChevronsRight
-                className={cn('size-6 text-primary', {
-                  'rotate-180': hidden,
+                className={cn("size-6 text-primary", {
+                  "rotate-180": hidden,
                 })}
               />
             </Button>
@@ -245,7 +246,7 @@ function RouteComponent() {
           </CarouselContent>
           <CarouselPrevious
             className={cn(
-              'cursor-pointer ml-3 absolute top-1/2 left-0 bg-emerald-500! text-slate-900!',
+              "cursor-pointer ml-3 absolute top-1/2 left-0 bg-emerald-500! text-slate-900!",
               {
                 hidden: photos.length === 1,
               },
@@ -253,7 +254,7 @@ function RouteComponent() {
           />
           <CarouselNext
             className={cn(
-              'cursor-pointer mr-3 absolute top-1/2 right-0 bg-emerald-500! text-slate-900!',
+              "cursor-pointer mr-3 absolute top-1/2 right-0 bg-emerald-500! text-slate-900!",
               {
                 hidden: photos.length === 1,
               },
@@ -279,14 +280,14 @@ function RouteComponent() {
 
       <motion.div
         className={cn(`flex flex-col h-full max-sm:flex-1 sm:min-w-xs sm:max-w-xs`, {
-          'max-w-3xl mx-auto w-full shadow-2xl': !photos.length,
+          "max-w-3xl mx-auto w-full shadow-2xl": !photos.length,
         })}
         animate={{
           opacity: hidden ? 0 : 1,
-          display: hidden ? 'none' : 'flex',
-          translateX: hidden ? '100%' : '0',
+          display: hidden ? "none" : "flex",
+          translateX: hidden ? "100%" : "0",
           transition: {
-            ease: 'easeInOut',
+            ease: "easeInOut",
             duration: 0.2,
           },
         }}
@@ -352,8 +353,8 @@ function RouteComponent() {
               ) : (
                 <motion.div
                   key="masonry"
-                  initial={{ opacity: 0, height: 'auto' }}
-                  animate={{ opacity: 1, height: 'auto' }}
+                  initial={{ opacity: 0, height: "auto" }}
+                  animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0 }}
                   className="relative"
                 >
@@ -392,9 +393,9 @@ function RouteComponent() {
             <div className="flex items-center gap-4">
               <button
                 onClick={handleToggleLike}
-                className={`flex items-center gap-1.5 transition-colors ${user ? 'cursor-pointer' : 'cursor-not-allowed'} ${hasLiked ? 'text-emerald-500' : 'text-slate-400 hover:text-white'}`}
+                className={`flex items-center gap-1.5 transition-colors ${user ? "cursor-pointer" : "cursor-not-allowed"} ${hasLiked ? "text-emerald-500" : "text-slate-400 hover:text-white"}`}
               >
-                <Heart className={`size-5 ${hasLiked && 'fill-current'}`} />
+                <Heart className={`size-5 ${hasLiked && "fill-current"}`} />
                 <span className="text-xs font-bold">{likes.length}</span>
               </button>
               <div className="flex items-center gap-1.5 text-slate-400">
@@ -413,7 +414,7 @@ function RouteComponent() {
                   className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 cursor-pointer font-bold text-xs"
                   onClick={() => {
                     void navigate({
-                      to: '/login',
+                      to: "/login",
                     });
                   }}
                 >
@@ -428,12 +429,12 @@ function RouteComponent() {
             comments.map((comment) => (
               <div key={comment.id} className="flex gap-3">
                 <Avatar className="h-8 w-8 border border-slate-900">
-                  <AvatarImage src={comment.user?.image ?? ''} />
+                  <AvatarImage src={comment.user?.image ?? ""} />
                   <AvatarFallback>
                     {comment.user?.name
-                      .split(' ')
+                      .split(" ")
                       .map((n) => n[0])
-                      .join('')}
+                      .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col gap-1">
