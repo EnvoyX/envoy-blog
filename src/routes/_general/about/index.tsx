@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { motion, useScroll } from 'motion/react';
 
+import ExperiencesSection from '@/components/web/about/ExperiencesSection';
 import { HeaderSection } from '@/components/web/about/HeaderSection';
 import { IntroductionSection } from '@/components/web/about/IntroductionSection';
 import { LanguagesSection } from '@/components/web/about/LanguagesSection';
@@ -44,6 +45,7 @@ function RouteComponent() {
           <IntroductionSection />
           <WorksSection />
           <LanguagesSection />
+          <ExperiencesSection />
         </section>
       </main>
     </div>

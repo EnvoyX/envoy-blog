@@ -1,31 +1,31 @@
-import { QueryClient } from "@tanstack/query-core";
-import { aiDevtoolsPlugin } from "@tanstack/react-ai-devtools";
-import { TanStackDevtools } from "@tanstack/react-devtools";
-import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
-import { HotkeysProvider, useHotkey } from "@tanstack/react-hotkeys";
-import { hotkeysDevtoolsPlugin } from "@tanstack/react-hotkeys-devtools";
-import { pacerDevtoolsPlugin } from "@tanstack/react-pacer-devtools";
-import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
+import { QueryClient } from '@tanstack/query-core';
+import { aiDevtoolsPlugin } from '@tanstack/react-ai-devtools';
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
+import { HotkeysProvider, useHotkey } from '@tanstack/react-hotkeys';
+import { hotkeysDevtoolsPlugin } from '@tanstack/react-hotkeys-devtools';
+import { pacerDevtoolsPlugin } from '@tanstack/react-pacer-devtools';
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
   useRouter,
-} from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { LenisRef, ReactLenis } from "lenis/react";
-import { cancelFrame, frame } from "motion";
-import { useEffect, useRef } from "react";
+} from '@tanstack/react-router';
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
+import { LenisRef, ReactLenis } from 'lenis/react';
+import { cancelFrame, frame } from 'motion';
+import { useEffect, useRef } from 'react';
 
-import { Toaster } from "@/components/ui/sonner";
-import { QueryProvider } from "@/components/web/query-provider";
-import { getSession } from "@/data/session";
+import { Provider } from '@/components/ui/provider';
+import { Toaster } from '@/components/ui/sonner';
+import { QueryProvider } from '@/components/web/query-provider';
 
-import "lenis/dist/lenis.css";
-import { Session, User } from "@/generated/prisma/client";
-import { ThemeProvider } from "@/lib/theme-provider";
+import 'lenis/dist/lenis.css';
+import { getSession } from '@/data/session';
+import { Session, User } from '@/generated/prisma/client';
 
-import appCss from "../styles.css?url";
+import appCss from '../styles.css?url';
 
 export interface RouterContext {
   user: User | null;
@@ -51,11 +51,11 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       {
-        charSet: "utf-8",
+        charSet: 'utf-8',
       },
       {
-        name: "viewport",
-        content: "width=device-width, initial-scale=1",
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1',
       },
       {
         title: `Envoy Mindpalace`,
@@ -63,16 +63,16 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     ],
     links: [
       {
-        rel: "stylesheet",
+        rel: 'stylesheet',
         href: appCss,
       },
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap",
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap',
       },
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;500;600;700&display=swap",
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;500;600;700&display=swap',
       },
     ],
   }),
@@ -93,52 +93,52 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   }, []);
   // Hotkeys
   useHotkey(
-    "Alt+H",
+    'Alt+H',
     () => {
       void router.navigate({
-        to: "/",
+        to: '/',
       });
     },
     {
       meta: {
-        name: "Home Shortcut",
-        description: "Shortcut hotkeys to home page",
+        name: 'Home Shortcut',
+        description: 'Shortcut hotkeys to home page',
       },
     },
   );
   useHotkey(
-    "Alt+S",
+    'Alt+S',
     () => {
       void router.navigate({
-        to: "/dashboard",
+        to: '/dashboard',
       });
     },
     {
       meta: {
-        name: "Dashboard Shortcut",
-        description: "Shortcut hotkeys to dashboard page",
+        name: 'Dashboard Shortcut',
+        description: 'Shortcut hotkeys to dashboard page',
       },
     },
   );
   useHotkey(
-    "Alt+1",
+    'Alt+1',
     () => {
       void router.navigate({
-        to: "/dashboard/task-tracker",
+        to: '/dashboard/task-tracker',
       });
     },
     {
       meta: {
-        name: "Task Tracker Shortcut",
-        description: "Shortcut hotkeys to task tracker page",
+        name: 'Task Tracker Shortcut',
+        description: 'Shortcut hotkeys to task tracker page',
       },
     },
   );
   useHotkey(
-    "Alt+2",
+    'Alt+2',
     () => {
       void router.navigate({
-        to: "/dashboard/quran-tracker",
+        to: '/dashboard/quran-tracker',
       });
     },
     {
@@ -149,10 +149,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     },
   );
   useHotkey(
-    "Alt+3",
+    'Alt+3',
     () => {
       void router.navigate({
-        to: "/dashboard/blog",
+        to: '/dashboard/blog',
       });
     },
     {
@@ -163,10 +163,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     },
   );
   useHotkey(
-    "Alt+4",
+    'Alt+4',
     () => {
       void router.navigate({
-        to: "/blog",
+        to: '/blog',
       });
     },
     {
@@ -196,45 +196,45 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 timeout: 1500,
               },
               hotkeyRecorder: {
-                onCancel: () => console.warn("Recording cancelled"),
+                onCancel: () => console.warn('Recording cancelled'),
               },
             }}
           >
-            <ThemeProvider defaultTheme="dark">
-              <ReactLenis
-                root
-                options={{
-                  autoRaf: false,
-                  autoToggle: true,
-                  anchors: true,
-                  allowNestedScroll: true,
-                  naiveDimensions: true,
-                  stopInertiaOnNavigate: true,
-                }}
-                ref={lenisRef}
-              />
+            <ReactLenis
+              root
+              options={{
+                autoRaf: false,
+                autoToggle: true,
+                anchors: true,
+                allowNestedScroll: true,
+                naiveDimensions: true,
+                stopInertiaOnNavigate: true,
+              }}
+              ref={lenisRef}
+            />
+            <Provider>
               <main className="min-h-screen bg-linear-to-b from-slate-900 to-emerald-500/40 selection:bg-emerald-500/30 bg-fixed">
                 <div className="min-h-screen bg-linear-to-br from-slate-950 via-emerald-950/30 to-slate-950 antialiased">
                   {children}
                 </div>
               </main>
-              <Toaster closeButton position="top-center" />
-            </ThemeProvider>
+            </Provider>
+            <Toaster closeButton position="top-center" />
             <TanStackDevtools
               config={{
-                position: "bottom-right",
+                position: 'bottom-right',
                 defaultOpen: true,
                 hideUntilHover: true,
-                panelLocation: "bottom",
+                panelLocation: 'bottom',
               }}
               plugins={[
                 {
-                  name: "TanStack Query",
+                  name: 'TanStack Query',
                   render: <ReactQueryDevtoolsPanel />,
                   defaultOpen: true,
                 },
                 {
-                  name: "Tanstack Router",
+                  name: 'Tanstack Router',
                   render: <TanStackRouterDevtoolsPanel />,
                   defaultOpen: true,
                 },
