@@ -309,7 +309,7 @@ export function BulkAlbumDialog() {
                       .with('add', () => <>Import ({selectedIds.size})</>)
                       .with('remove', () => <>Remove ({selectedIds.size})</>)
                       .with('delete', () => <>Delete ({selectedIds.size})</>)
-                      .otherwise(() => null)}
+                      .exhaustive()}
                   </Button>
                   <Button
                     variant="default"
@@ -394,7 +394,8 @@ export function BulkAlbumDialog() {
                           {match(bulkMode)
                             .with('add', () => 'All your library images are already in this album.')
                             .with('remove', () => 'No images available to remove from this album')
-                            .otherwise(() => 'No images available to delete from this album')}
+                            .with('delete', () => 'No images available to delete from this album')
+                            .exhaustive()}
                         </EmptyDescription>
                       </EmptyHeader>
                     </Empty>

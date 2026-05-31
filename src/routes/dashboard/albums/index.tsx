@@ -47,7 +47,9 @@ function RouteComponent() {
     <div className="min-h-screen p-8">
       <div className="space-y-8 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 px-1">
-          <h2 className="text-4xl font-black tracking-tight text-white">Your Albums</h2>
+          <h2 className="text-4xl font-black tracking-tight text-white max-sm:text-center">
+            Your Albums
+          </h2>
           <Button
             size="lg"
             className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
