@@ -333,71 +333,75 @@ export function EditImagesDialog() {
                   )}
                 </div>
                 <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-400 scrollbar-track-emerald-900 max-h-125 relative border-t-2 border-b-2 border-emerald-400">
-                  {isPending ? (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="flex flex-col items-center gap-4">
-                        <Loader2 className="animate-spin size-10 text-emerald-500" />
-                        <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest animate-pulse">
-                          Loading Images...
-                        </p>
+                  {match({ isPending, hasImages: !!images?.length })
+                    .with({ isPending: true }, () => (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="flex flex-col items-center gap-4">
+                          <Loader2 className="animate-spin size-10 text-emerald-500" />
+                          <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest animate-pulse">
+                            Loading Images...
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ) : images?.length ? (
-                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {photos?.map((img) => {
-                        const isSelected = selectedIds.has(img.id);
-                        return (
-                          <div
-                            key={img.id}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              toggleSelection(img.id, e.shiftKey);
-                            }}
-                            className={`
-                              group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300
-                              ${
-                                isSelected
-                                  ? 'ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]'
-                                  : 'hover:scale-[1.02] border border-zinc-800'
-                              }
-                            `}
-                          >
-                            <img
-                              src={img.url}
-                              alt="Asset"
-                              className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
-                            />
-
-                            {/* selection overlay */}
+                    ))
+                    .with({ isPending: false, hasImages: true }, () => (
+                      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {photos?.map((img) => {
+                          const isSelected = selectedIds.has(img.id);
+                          return (
                             <div
-                              className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-emerald-500/10' : 'bg-transparent group-hover:bg-black/20'}`}
-                            />
-
-                            {/* status icon */}
-                            <div
-                              className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? 'bg-emerald-500 scale-100 shadow-lg' : 'bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50'}`}
+                              key={img.id}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                toggleSelection(img.id, e.shiftKey);
+                              }}
+                              className={`
+                                group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300
+                                ${
+                                  isSelected
+                                    ? 'ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]'
+                                    : 'hover:scale-[1.02] border border-zinc-800'
+                                }
+                              `}
                             >
-                              <CheckCircle2 className="size-4 text-white" />
+                              <img
+                                src={img.url}
+                                alt="Asset"
+                                className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
+                              />
+
+                              {/* selection overlay */}
+                              <div
+                                className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-emerald-500/10' : 'bg-transparent group-hover:bg-black/20'}`}
+                              />
+
+                              {/* status icon */}
+                              <div
+                                className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? 'bg-emerald-500 scale-100 shadow-lg' : 'bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50'}`}
+                              >
+                                <CheckCircle2 className="size-4 text-white" />
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="h-full flex items-center justify-center">
-                      <Empty className="border border-dashed border-zinc-800 bg-zinc-900/20 p-12 rounded-3xl">
-                        <EmptyHeader>
-                          <div className="mx-auto bg-zinc-800/50 p-4 rounded-full mb-4">
-                            <MousePointer2 className="size-8 text-zinc-600" />
-                          </div>
-                          <EmptyTitle className="text-zinc-300">No Images</EmptyTitle>
-                          <EmptyDescription className="text-zinc-500">
-                            No images available to edit
-                          </EmptyDescription>
-                        </EmptyHeader>
-                      </Empty>
-                    </div>
-                  )}
+                          );
+                        })}
+                      </div>
+                    ))
+                    .with({ isPending: false, hasImages: false }, () => (
+                      <div className="h-full flex items-center justify-center">
+                        <Empty className="border border-dashed border-zinc-800 bg-zinc-900/20 p-12 rounded-3xl">
+                          <EmptyHeader>
+                            <div className="mx-auto bg-zinc-800/50 p-4 rounded-full mb-4">
+                              <MousePointer2 className="size-8 text-zinc-600" />
+                            </div>
+                            <EmptyTitle className="text-zinc-300">No Images</EmptyTitle>
+                            <EmptyDescription className="text-zinc-500">
+                              No images available to edit
+                            </EmptyDescription>
+                          </EmptyHeader>
+                        </Empty>
+                      </div>
+                    ))
+                    .exhaustive()}
                 </div>
               </div>
               <div className="space-y-4">

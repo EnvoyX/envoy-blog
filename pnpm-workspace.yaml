@@ -8,3 +8,5 @@ allowBuilds:
   prisma: true
   protobufjs: true
   unrs-resolver: true
+minimumReleaseAgeExclude:
+  - shadcn@4.9.0

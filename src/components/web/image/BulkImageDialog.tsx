@@ -145,6 +145,7 @@ export function BulkImageDialog() {
                       .with('remove', () => 'Remove Photos')
                       .with('delete', () => 'Delete Photos')
                       .with('edit', () => 'Edit Photos')
+                      .with(null, () => 'Bulk Image Dialog')
                       .otherwise(() => 'Bulk Image Dialog')}
                   </DialogTitle>
                   <DialogDescription className="text-zinc-400">
@@ -167,6 +168,11 @@ export function BulkImageDialog() {
                       .with('edit', () => (
                         <>
                           Edit <span className="text-emerald-400 font-semibold">Images</span>
+                        </>
+                      ))
+                      .with(null, () => (
+                        <>
+                          Bulk Import <span className="text-emerald-400 font-semibold">Images</span>
                         </>
                       ))
                       .otherwise(() => (
@@ -199,6 +205,7 @@ export function BulkImageDialog() {
                       .with('remove', () => <>Remove ({selectedIds.size})</>)
                       .with('delete', () => <>Delete ({selectedIds.size})</>)
                       .with('edit', () => <>Edit ({selectedIds.size})</>)
+                      .with(null, () => null)
                       .otherwise(() => null)}
                   </Button>
                   <Button
