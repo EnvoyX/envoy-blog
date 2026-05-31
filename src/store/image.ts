@@ -15,7 +15,7 @@ export const useImageStore = create(
         imageId: '',
         imageUrl: '',
         albumId: '',
-        bulkMode: '' as 'add' | 'remove' | 'delete' | 'edit' | null,
+        bulkMode: null as 'add' | 'remove' | 'delete' | 'edit' | null,
         initialValues: null as {
           title: string;
           description: string;
