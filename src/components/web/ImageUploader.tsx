@@ -241,6 +241,7 @@ export function ImageUploader() {
       setError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
       void router.invalidate();
+      void queryClient.invalidateQueries({ queryKey: ['image-gallery'] });
       void queryClient.invalidateQueries({
         queryKey: [...imageGalleryOptions().queryKey],
       });

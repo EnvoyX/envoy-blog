@@ -100,7 +100,7 @@ export function BulkAlbumDialog() {
           toast.error(`Failed to import images`, {
             id: 'bulk-import',
           });
-          console.error(error);
+          console.error(error.message);
         }),
       ),
       Effect.ensuring(runCleanup),
@@ -242,45 +242,49 @@ export function BulkAlbumDialog() {
               <div className="max-sm:text-center">
                 <h3 className="text-lg max-sm:text-2xl font-bold text-zinc-100">
                   {' '}
-                  {bulkMode === 'add'
-                    ? 'Add Photos'
-                    : bulkMode === 'remove'
-                      ? 'Remove Photos'
-                      : 'Delete Photos'}
+                  {match(bulkMode)
+                    .with('add', () => 'Add Photos')
+                    .with('remove', () => 'Remove Photos')
+                    .with('delete', () => 'Delete Photos')
+                    .exhaustive()}
                 </h3>
                 <DialogHeader className="md:hidden">
                   <DialogDescription className="text-zinc-400">
-                    {bulkMode === 'add' ? (
-                      <>
-                        Adding to{' '}
-                        <span className="text-emerald-400 font-semibold">
-                          {initialValues?.name}
-                        </span>
-                      </>
-                    ) : bulkMode === 'remove' ? (
-                      <>
-                        Remove from{' '}
-                        <span className="text-emerald-400 font-semibold">
-                          {initialValues?.name}
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        Delete from{' '}
-                        <span className="text-emerald-400 font-semibold">
-                          {initialValues?.name}
-                        </span>
-                      </>
-                    )}
+                    {match(bulkMode)
+                      .with('add', () => (
+                        <>
+                          Adding to{' '}
+                          <span className="text-emerald-400 font-semibold">
+                            {initialValues?.name}
+                          </span>
+                        </>
+                      ))
+                      .with('delete', () => (
+                        <>
+                          Delete from{' '}
+                          <span className="text-emerald-400 font-semibold">
+                            {initialValues?.name}
+                          </span>
+                        </>
+                      ))
+                      .with('remove', () => (
+                        <>
+                          Remove from{' '}
+                          <span className="text-emerald-400 font-semibold">
+                            {initialValues?.name}
+                          </span>
+                        </>
+                      ))
+                      .exhaustive()}
                   </DialogDescription>
                 </DialogHeader>
                 <p className="text-xs text-zinc-500">
                   Select images to{' '}
-                  {bulkMode === 'add'
-                    ? 'add to'
-                    : bulkMode === 'remove'
-                      ? 'remove from'
-                      : 'delete from'}{' '}
+                  {match(bulkMode)
+                    .with('add', () => 'add to')
+                    .with('remove', () => 'remove from')
+                    .with('delete', () => 'delete from')
+                    .exhaustive()}{' '}
                   this album
                 </p>
               </div>

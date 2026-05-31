@@ -1,14 +1,19 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { FolderIcon, Plus } from "lucide-react";
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute } from '@tanstack/react-router';
+import { FolderIcon, Plus } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { AlbumCard } from "@/components/web/album/AlbumCard";
-import { useAlbumStore } from "@/store/album";
-import { dashboardAlbumsOptions } from "@/data/query-options/dashboardQueryOptions";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { Button } from '@/components/ui/button';
+import { AlbumCard } from '@/components/web/album/AlbumCard';
+import { dashboardAlbumsOptions } from '@/data/query-options/dashboardQueryOptions';
+import { useAlbumStore } from '@/store/album';
 
-export const Route = createFileRoute("/dashboard/albums/")({
+export const Route = createFileRoute('/dashboard/albums/')({
   component: RouteComponent,
+  beforeLoad: async ({ context }) => {
+    context.queryClient.invalidateQueries({
+      queryKey: [...dashboardAlbumsOptions().queryKey],
+    });
+  },
   loader: ({ context }) => {
     context.queryClient.prefetchQuery(dashboardAlbumsOptions());
   },
@@ -16,19 +21,19 @@ export const Route = createFileRoute("/dashboard/albums/")({
     meta: [
       { title: `My Albums | Envoy Mindpalace` },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
-      { property: "og:title", content: "My Albums | Envoy Mindpalace" },
+      { property: 'og:title', content: 'My Albums | Envoy Mindpalace' },
       {
-        property: "og:description",
-        content: "Create your own blog and write your thoughts!",
+        property: 'og:description',
+        content: 'Create your own blog and write your thoughts!',
       },
       {
-        property: "og:image",
-        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+        property: 'og:image',
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
 });
@@ -47,13 +52,13 @@ function RouteComponent() {
             size="lg"
             className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
             onClick={() => {
-              toggleDialog("open", "");
+              toggleDialog('open', '');
               setInitialValues({
-                coverImageUrl: "https://tanstack.com/images/logos/splash-dark.png",
-                description: "",
-                name: "",
+                coverImageUrl: 'https://tanstack.com/images/logos/splash-dark.png',
+                description: '',
+                name: '',
                 published: false,
-                type: "create",
+                type: 'create',
                 showPrivateToFollowers: false,
               });
             }}
@@ -71,13 +76,13 @@ function RouteComponent() {
           <button
             className="group flex flex-col gap-3 items-center justify-start text-left cursor-pointer"
             onClick={() => {
-              toggleDialog("open", "");
+              toggleDialog('open', '');
               setInitialValues({
-                coverImageUrl: "https://tanstack.com/images/logos/splash-dark.png",
-                description: "",
-                name: "",
+                coverImageUrl: 'https://tanstack.com/images/logos/splash-dark.png',
+                description: '',
+                name: '',
                 published: false,
-                type: "create",
+                type: 'create',
                 showPrivateToFollowers: false,
               });
             }}

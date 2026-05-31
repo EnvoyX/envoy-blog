@@ -1,6 +1,7 @@
 import { useForm } from '@tanstack/react-form';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
+import { Effect } from 'effect';
 import { ImageIcon, Loader2, MailboxIcon } from 'lucide-react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
@@ -69,28 +70,51 @@ export function ImageDialog() {
       onBlur: editImageSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
-      await editImageFn({
-        data: {
-          imageId,
-          title: value.title,
-          description: value.description,
-          imageUrl: value.imageUrl,
-          published: value.published,
-          showPrivateToFollowers: value.showPrivateToFollowers as boolean,
-        },
-      });
-      toast.success('Image edited successfully!');
-      form.reset();
-      void queryClient.invalidateQueries({
-        queryKey: [...imageGalleryOptions().queryKey],
-      });
-      if (initialValues?.albumId)
-        void queryClient.invalidateQueries({
-          queryKey: [...dashboardAlbumIdOptions(initialValues.albumId).queryKey],
+      const workflow = Effect.gen(function* () {
+        toast.loading('Editing image...', {
+          id: 'edit-image',
         });
-      void router.invalidate();
-      toggleDialog('close', '', '');
+        yield* Effect.tryPromise(() =>
+          editImageFn({
+            data: {
+              imageId,
+              title: value.title,
+              description: value.description,
+              imageUrl: value.imageUrl,
+              published: value.published,
+              showPrivateToFollowers: value.showPrivateToFollowers as boolean,
+            },
+          }),
+        );
+        toast.success('Image edited successfully!', {
+          id: 'edit-image',
+        });
+      }).pipe(
+        Effect.catchAll((error) =>
+          Effect.sync(() => {
+            toast.error('Failed to edit image', {
+              id: 'edit-image',
+            });
+            console.error(error.message);
+          }),
+        ),
+        Effect.ensuring(
+          Effect.sync(() => {
+            form.reset();
+            void queryClient.invalidateQueries({
+              queryKey: [...imageGalleryOptions().queryKey],
+            });
+            if (initialValues?.albumId)
+              void queryClient.invalidateQueries({
+                queryKey: [...dashboardAlbumIdOptions(initialValues.albumId).queryKey],
+              });
+            void router.invalidate();
+            toggleDialog('close', '', '');
+          }),
+        ),
+      );
+
+      await Effect.runPromise(workflow);
     },
   });
 

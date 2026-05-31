@@ -1,6 +1,8 @@
 import { useForm } from '@tanstack/react-form';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
+import { Effect } from 'effect';
+import { failureOption } from 'effect/Cause';
 import {
   CheckCircle2,
   ImageIcon,
@@ -87,46 +89,76 @@ export function AlbumDialog() {
       onBlur: albumSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
-      console.log('Initial values', initialValues);
-      if (initialValues?.type === 'edit') {
-        await editAlbumFn({
-          data: {
-            albumId: currentAlbumId,
-            name: value.name,
-            description: value.description,
-            published: value.published,
-            coverImageUrl: value.coverImageUrl,
-            showPrivateToFollowers: value.showPrivateToFollowers,
-          },
+      const modeConfig = {
+        create: {
+          action: () =>
+            Effect.tryPromise(() =>
+              createAlbumFn({
+                data: {
+                  name: value.name,
+                  description: value.description,
+                  published: value.published,
+                  coverImageUrl: value.coverImageUrl,
+                  showPrivateToFollowers: value.showPrivateToFollowers,
+                  imageIds: Array.from(selectedIds) ?? [],
+                },
+              }),
+            ),
+          msg: 'Creating album...',
+          successMsg: 'Album created successfully',
+          failedMsg: 'Failed to create album',
+        },
+        edit: {
+          action: () =>
+            Effect.tryPromise(() =>
+              editAlbumFn({
+                data: {
+                  albumId: currentAlbumId,
+                  name: value.name,
+                  description: value.description,
+                  published: value.published,
+                  coverImageUrl: value.coverImageUrl,
+                  showPrivateToFollowers: value.showPrivateToFollowers,
+                },
+              }),
+            ),
+          msg: 'Editing album...',
+          successMsg: 'Album edited successfully',
+          failedMsg: 'Failed to edit album',
+        },
+      };
+      const currentMode = modeConfig[initialValues?.type as keyof typeof modeConfig];
+      if (!currentMode) return;
+      const albumWorkflow = Effect.gen(function* () {
+        toast.loading(currentMode.msg, {
+          id: 'album-workflow',
         });
-        toast.success('Album edited successfully');
-        form.reset();
-        void router.invalidate();
-        void queryClient.invalidateQueries({
-          ...dashboardAlbumsOptions(),
+        yield* currentMode.action();
+        toast.success(currentMode.successMsg, {
+          id: 'album-workflow',
         });
-        setInitialValues(null);
-        toggleDialog('close', '');
-      } else if (initialValues?.type === 'create') {
-        await createAlbumFn({
-          data: {
-            name: value.name,
-            description: value.description,
-            published: value.published,
-            coverImageUrl: value.coverImageUrl,
-            showPrivateToFollowers: value.showPrivateToFollowers,
-            imageIds: Array.from(selectedIds) ?? [],
-          },
-        });
-        toast.success('Album created successfully');
-        form.reset();
-        void router.invalidate();
-        void queryClient.invalidateQueries({
-          ...dashboardAlbumsOptions(),
-        });
-        toggleDialog('close', '');
-      }
+      }).pipe(
+        Effect.catchAll((error) =>
+          Effect.sync(() => {
+            toast.error(currentMode.failedMsg, {
+              id: 'album-workflow',
+            });
+            console.error(error.message);
+          }),
+        ),
+        Effect.ensuring(
+          Effect.sync(() => {
+            form.reset();
+            void router.invalidate();
+            void queryClient.invalidateQueries({
+              ...dashboardAlbumsOptions(),
+            });
+            setInitialValues(null);
+            toggleDialog('close', '');
+          }),
+        ),
+      );
+      await Effect.runPromise(albumWorkflow);
     },
   });
 

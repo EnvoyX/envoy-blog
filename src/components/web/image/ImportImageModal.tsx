@@ -1,6 +1,7 @@
 import { useForm } from '@tanstack/react-form';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
+import { Effect } from 'effect';
 import { ImageIcon, Loader2, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -56,6 +57,54 @@ export function ImportImageModal() {
   });
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+
+  const importImageToAlbumEffect = (
+    albumId: string,
+    images: { url: string; title: string; description: string }[],
+    published: boolean,
+    showPrivateToFollowers: boolean,
+  ) =>
+    Effect.tryPromise(() =>
+      ImportImagesToAlbumFn({
+        data: {
+          albumId,
+          published,
+          showPrivateToFollowers,
+          image: images,
+        },
+      }),
+    );
+
+  const importImageEffect = (
+    images: { url: string; title: string; description: string }[],
+    published: boolean,
+    showPrivateToFollowers: boolean,
+  ) =>
+    Effect.tryPromise(() =>
+      ImportImagesFn({
+        data: {
+          image: images,
+          published,
+          showPrivateToFollowers,
+        },
+      }),
+    );
+
+  const runCleanup = Effect.sync(() => {
+    void queryClient.invalidateQueries({
+      queryKey: [...imageGalleryOptions().queryKey],
+    });
+    if (currentAlbumId) {
+      void queryClient.invalidateQueries({ queryKey: ['available-images', currentAlbumId] });
+      void queryClient.invalidateQueries({
+        queryKey: [...dashboardAlbumIdOptions(currentAlbumId).queryKey],
+      });
+    }
+    void router.invalidate();
+    form.reset();
+    toggleDialog('close', '');
+  });
+
   const form = useForm({
     defaultValues: {
       image: [] as { url: string; title: string; description: string }[],
@@ -68,49 +117,47 @@ export function ImportImageModal() {
       onBlur: imageSchema,
     },
     onSubmit: async ({ value }) => {
-      try {
-        console.log(value);
-        if (currentAlbumId) {
-          await ImportImagesToAlbumFn({
-            data: {
-              albumId: currentAlbumId,
-              image: value.image,
-              published: value.published,
-              showPrivateToFollowers: value.showPrivateToFollowers,
-            },
-          });
-          toast.success('Images imported successfully', {
-            description: `Album | ${album?.name}`,
-          });
-        } else if (!currentAlbumId) {
-          await ImportImagesFn({
-            data: {
-              image: value.image,
-              published: value.published,
-              showPrivateToFollowers: value.showPrivateToFollowers,
-            },
-          });
-          toast.success('Images imported successfully');
-        }
-      } catch (err) {
-        if (err instanceof Error) {
-          toast.error(err.message);
-          throw new Error(err.message);
-        } else {
-          toast.error('An unknown error occurred');
-          throw new Error('An unknown error occurred');
-        }
-      } finally {
-        void queryClient.invalidateQueries({
-          queryKey: [...imageGalleryOptions().queryKey],
+      const { published, showPrivateToFollowers, image } = value;
+      const images = image;
+      const modeConfig = {
+        importImage: {
+          action: () => importImageEffect(images, published, showPrivateToFollowers),
+          msg: `Importing ${images.length} images...`,
+          success: `Images imported successfully`,
+        },
+        importToAlbum: {
+          action: () =>
+            importImageToAlbumEffect(currentAlbumId, images, published, showPrivateToFollowers),
+          msg: `Importing ${images.length} images to ${album?.name}...`,
+          success: `Images imported successfully to ${album?.name}`,
+        },
+      };
+      const currentMode = currentAlbumId
+        ? modeConfig['importToAlbum' as keyof typeof modeConfig]
+        : modeConfig['importImage' as keyof typeof modeConfig];
+      if (!currentMode) return;
+      const importWorkflow = Effect.gen(function* () {
+        toast.loading(currentMode.msg, {
+          id: 'import-images',
         });
-        void queryClient.invalidateQueries({
-          queryKey: [...dashboardAlbumIdOptions(currentAlbumId).queryKey],
+        yield* currentMode.action();
+
+        toast.success(currentMode.success, {
+          id: 'import-images',
         });
-        void router.invalidate();
-        form.reset();
-        toggleDialog('close', '');
-      }
+      }).pipe(
+        Effect.catchAll((error) =>
+          Effect.sync(() => {
+            toast.error(`Failed to import images`, {
+              id: 'import-images',
+            });
+            console.error(error.message);
+          }),
+        ),
+        Effect.ensuring(runCleanup),
+      );
+
+      await Effect.runPromise(importWorkflow);
     },
   });
   useEffect(() => {

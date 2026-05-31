@@ -1,6 +1,7 @@
 import { IconAlbumOff } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useRouter } from '@tanstack/react-router';
+import { Effect } from 'effect';
 import { FolderIcon, ImageIcon, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -32,7 +33,8 @@ import { useImageStore } from '@/store/image';
 
 export function ImportToAlbumModal() {
   const queryClient = useQueryClient();
-  const { isImportToAlbumModalOpen, onOpenChangeDialog, imageId, imageUrl } = useImageStore();
+  const { isImportToAlbumModalOpen, onOpenChangeDialog, imageId, imageUrl, toggleDialog } =
+    useImageStore();
   const router = useRouter();
   const navigate = useNavigate();
   const { data: albums, isPending } = useQuery({
@@ -45,31 +47,50 @@ export function ImportToAlbumModal() {
   });
 
   async function handleImportToAlbum(albumId: string) {
-    toast.loading('Adding image to ablum...', {
-      description: `Album | ${albums?.find((album) => album.id === albumId)?.name}`,
-      id: 'add-album',
-    });
-    await ImportImageToAlbumFn({
-      data: {
-        albumId,
-        imageId,
-        imageUrl,
-      },
-    });
-    toast.dismiss('add-album');
-    toast.success('Image added to album successfully', {
-      description: `Album | ${albums?.find((album) => album.id === albumId)?.name}`,
-    });
-    void router.invalidate();
-    void queryClient.invalidateQueries({
-      queryKey: ['albums'],
-    });
-    void queryClient.invalidateQueries({
-      queryKey: [...imageGalleryOptions().queryKey],
-    });
-    void queryClient.invalidateQueries({
-      queryKey: [...dashboardAlbumIdOptions(albumId).queryKey],
-    });
+    const importFlow = Effect.gen(function* () {
+      toast.loading('Adding image to ablum...', {
+        description: `Album | ${albums?.find((album) => album.id === albumId)?.name}`,
+        id: 'add-album',
+      });
+      yield* Effect.tryPromise(() =>
+        ImportImageToAlbumFn({
+          data: {
+            albumId,
+            imageId,
+            imageUrl,
+          },
+        }),
+      );
+      toast.success('Image added to album successfully', {
+        id: 'add-album',
+        description: `Album | ${albums?.find((album) => album.id === albumId)?.name}`,
+      });
+    }).pipe(
+      Effect.catchAll((error) =>
+        Effect.sync(() => {
+          toast.error('Failed to add image to album', {
+            id: 'add-album',
+          });
+          console.error(error.message);
+        }),
+      ),
+      Effect.ensuring(
+        Effect.sync(() => {
+          toggleDialog('close');
+          void router.invalidate();
+          void queryClient.invalidateQueries({
+            queryKey: ['albums'],
+          });
+          void queryClient.invalidateQueries({
+            queryKey: [...imageGalleryOptions().queryKey],
+          });
+          void queryClient.invalidateQueries({
+            queryKey: [...dashboardAlbumIdOptions(albumId).queryKey],
+          });
+        }),
+      ),
+    );
+    await Effect.runPromise(importFlow);
   }
 
   const albumsNotOwnThisImage = albums?.filter((album) => {
@@ -117,7 +138,7 @@ export function ImportToAlbumModal() {
               <p className="text-xs font-medium text-slate-500  tracking-widest  text-center">
                 Select an album to save.
               </p>
-              {!albumsNotOwnThisImage?.length && (
+              {!albumsNotOwnThisImage?.length && !isPending && (
                 <Empty className="border border-dashed w-full mx-auto mt-3">
                   <EmptyHeader>
                     <EmptyMedia variant="icon">

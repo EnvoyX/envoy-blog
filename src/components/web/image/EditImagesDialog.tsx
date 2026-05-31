@@ -1,9 +1,11 @@
 import { useForm } from '@tanstack/react-form';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
+import { Effect } from 'effect';
 import { CheckCircle2, Loader2, MailboxIcon, MousePointer2, RotateCw, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { match } from 'ts-pattern';
 
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -42,6 +44,38 @@ export function EditImagesDialog() {
     },
     enabled: isBulkEditDialogOpen,
   });
+
+  const editImagesEffect = (
+    published: boolean,
+    showPrivateToFollowers: boolean,
+    images: {
+      id: string;
+      url: string;
+      title: string;
+      description: string;
+    }[],
+  ) =>
+    Effect.tryPromise(() =>
+      editImagesFn({
+        data: {
+          images,
+          published,
+          showPrivateToFollowers,
+        },
+      }),
+    );
+  const runCleanup = Effect.sync(() => {
+    form.reset();
+    void queryClient.invalidateQueries({
+      queryKey: [...imageGalleryOptions().queryKey],
+    });
+    if (albumId)
+      void queryClient.invalidateQueries({
+        queryKey: [...dashboardAlbumIdOptions(albumId).queryKey],
+      });
+    void router.invalidate();
+    toggleDialog('close');
+  });
   const form = useForm({
     defaultValues: {
       images: [] as { id: string; url: string; title: string; description: string }[],
@@ -57,29 +91,27 @@ export function EditImagesDialog() {
       onBlur: editImagesSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
-      toast.loading(`Updating ${value.images.length} images...`, {
-        id: 'edit-images',
-      });
-      await editImagesFn({
-        data: {
-          images: value.images,
-          published: value.published,
-          showPrivateToFollowers: value.showPrivateToFollowers,
-        },
-      });
-      toast.dismiss('edit-images');
-      toast.success(`Updated ${value.images.length} images successfully`);
-      toggleDialog('close');
-      form.reset();
-      void queryClient.invalidateQueries({
-        queryKey: [...imageGalleryOptions().queryKey],
-      });
-      if (albumId)
-        void queryClient.invalidateQueries({
-          queryKey: [...dashboardAlbumIdOptions(albumId).queryKey],
+      const workflow = Effect.gen(function* () {
+        toast.loading(`Updating ${value.images.length} images...`, {
+          id: 'edit-images',
         });
-      void router.invalidate();
+        yield* editImagesEffect(value.published, value.showPrivateToFollowers, value.images);
+        toast.success(`Updated ${value.images.length} images successfully`, {
+          id: 'edit-images',
+        });
+      }).pipe(
+        Effect.catchAll((error) =>
+          Effect.sync(() => {
+            toast.error(`Failed to update images`, {
+              id: 'edit-images',
+            });
+            console.error(error.message);
+          }),
+        ),
+        Effect.ensuring(runCleanup),
+      );
+
+      await Effect.runPromise(workflow);
     },
   });
   function toggleSelection(imgId: string, isShift: boolean = false) {
@@ -550,71 +582,75 @@ export function EditImagesDialog() {
               )}
             </div>
             <div className="flex-1 overflow-y-auto p-8 custom-scrollbar relative">
-              {isPending ? (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="animate-spin size-10 text-emerald-500" />
-                    <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest animate-pulse">
-                      Loading Images...
-                    </p>
+              {match({ isPending, hasImages: !!images?.length })
+                .with({ isPending: true }, () => (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-4">
+                      <Loader2 className="animate-spin size-10 text-emerald-500" />
+                      <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest animate-pulse">
+                        Loading Images...
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ) : images?.length ? (
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {photos?.map((img) => {
-                    const isSelected = selectedIds.has(img.id);
-                    return (
-                      <div
-                        key={img.id}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          toggleSelection(img.id, e.shiftKey);
-                        }}
-                        className={`
-                          group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300
-                          ${
-                            isSelected
-                              ? 'ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]'
-                              : 'hover:scale-[1.02] border border-zinc-800'
-                          }
-                        `}
-                      >
-                        <img
-                          src={img.url}
-                          alt="Asset"
-                          className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
-                        />
-
-                        {/* selection overlay */}
+                ))
+                .with({ isPending: false, hasImages: true }, () => (
+                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {photos?.map((img) => {
+                      const isSelected = selectedIds.has(img.id);
+                      return (
                         <div
-                          className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-emerald-500/10' : 'bg-transparent group-hover:bg-black/20'}`}
-                        />
-
-                        {/* status icon */}
-                        <div
-                          className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? 'bg-emerald-500 scale-100 shadow-lg' : 'bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50'}`}
+                          key={img.id}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            toggleSelection(img.id, e.shiftKey);
+                          }}
+                          className={`
+                            group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300
+                            ${
+                              isSelected
+                                ? 'ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]'
+                                : 'hover:scale-[1.02] border border-zinc-800'
+                            }
+                          `}
                         >
-                          <CheckCircle2 className="size-4 text-white" />
+                          <img
+                            src={img.url}
+                            alt="Asset"
+                            className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
+                          />
+
+                          {/* selection overlay */}
+                          <div
+                            className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-emerald-500/10' : 'bg-transparent group-hover:bg-black/20'}`}
+                          />
+
+                          {/* status icon */}
+                          <div
+                            className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? 'bg-emerald-500 scale-100 shadow-lg' : 'bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50'}`}
+                          >
+                            <CheckCircle2 className="size-4 text-white" />
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="h-full flex items-center justify-center">
-                  <Empty className="border border-dashed border-zinc-800 bg-zinc-900/20 p-12 rounded-3xl">
-                    <EmptyHeader>
-                      <div className="mx-auto bg-zinc-800/50 p-4 rounded-full mb-4">
-                        <MousePointer2 className="size-8 text-zinc-600" />
-                      </div>
-                      <EmptyTitle className="text-zinc-300">No Images</EmptyTitle>
-                      <EmptyDescription className="text-zinc-500">
-                        No images available to edit
-                      </EmptyDescription>
-                    </EmptyHeader>
-                  </Empty>
-                </div>
-              )}
+                      );
+                    })}
+                  </div>
+                ))
+                .with({ isPending: false, hasImages: false }, () => (
+                  <div className="h-full flex items-center justify-center">
+                    <Empty className="border border-dashed border-zinc-800 bg-zinc-900/20 p-12 rounded-3xl">
+                      <EmptyHeader>
+                        <div className="mx-auto bg-zinc-800/50 p-4 rounded-full mb-4">
+                          <MousePointer2 className="size-8 text-zinc-600" />
+                        </div>
+                        <EmptyTitle className="text-zinc-300">No Images</EmptyTitle>
+                        <EmptyDescription className="text-zinc-500">
+                          No images available to edit
+                        </EmptyDescription>
+                      </EmptyHeader>
+                    </Empty>
+                  </div>
+                ))
+                .exhaustive()}
             </div>
           </div>
         </div>

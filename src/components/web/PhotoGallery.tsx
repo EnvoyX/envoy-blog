@@ -2,6 +2,7 @@ import { IconDownload } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
+import { Effect } from 'effect';
 // import Slideshow from 'yet-another-react-lightbox/plugins/slideshow';
 import {
   AlbumIcon,
@@ -19,12 +20,12 @@ import { Masonry } from 'react-plock';
 import { toast } from 'sonner';
 import Lightbox from 'yet-another-react-lightbox';
 import { ZoomRef, ThumbnailsRef, FullscreenRef } from 'yet-another-react-lightbox';
-import Captions from 'yet-another-react-lightbox/plugins/captions';
 
 import 'yet-another-react-lightbox/styles.css';
 import 'yet-another-react-lightbox/plugins/counter.css';
 import 'yet-another-react-lightbox/plugins/thumbnails.css';
 import 'yet-another-react-lightbox/plugins/captions.css';
+import Captions from 'yet-another-react-lightbox/plugins/captions';
 import Counter from 'yet-another-react-lightbox/plugins/counter';
 import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
 import Share from 'yet-another-react-lightbox/plugins/share';
@@ -109,106 +110,128 @@ export default function PhotoGallery({
     ...photo,
     globalIndex: index,
   }));
-  async function handleAction(action: string, photoId: string) {
-    console.log(`Action: ${action} for Photo: ${photoId}`);
-    try {
-      if (action === 'public') {
-        toast.loading('Updating...', {
-          id: 'action',
-        });
-        await setPublicImageFn({
-          data: {
-            imageId: photoId,
-          },
-        });
-        toast.dismiss('action');
-        toast.success('Photo successfully set to public');
-      } else if (action === 'private') {
-        toast.loading('Updating...', {
-          id: 'action',
-        });
-        await setPrivateImageFn({
-          data: {
-            imageId: photoId,
-          },
-        });
-        toast.dismiss('action');
-        toast.success('Photo successfully set to private');
-      } else if (action === 'show-private-to-followers') {
-        toast.loading('Updating...', {
-          id: 'action',
-        });
-        await setShowPrivateImageToFollowersFn({
-          data: {
-            imageId: photoId,
-          },
-        });
-        toast.dismiss('action');
-        toast.success('This private photo is now visible to followers');
-      } else if (action === 'hide-private-to-followers') {
-        toast.loading('Updating...', {
-          id: 'action',
-        });
-        await setHidePrivateImageToFollowersFn({
-          data: {
-            imageId: photoId,
-          },
-        });
-        toast.dismiss('action');
-        toast.success('This private photo is now hidden to followers');
-      } else if (action === 'remove-image' && albumId) {
-        toast.loading('Updating...', {
-          id: 'action',
-        });
-        await removeImageFromAlbumFn({
-          data: {
-            imageId: photoId,
-            albumId: albumId,
-          },
-        });
-        photoGalleryStore.setState((prev) => {
-          return {
-            ...prev,
-            isOpen: false,
-          };
-        });
-        toast.dismiss('action');
-        toast.success('Photo remove from album successfully');
-      } else if (action === 'delete') {
-        toast.loading('Updating...', {
-          id: 'action',
-        });
-        await deleteImageFn({
-          data: {
-            imageId: photoId,
-          },
-        });
-        photoGalleryStore.setState((prev) => {
-          return {
-            ...prev,
-            isOpen: false,
-          };
-        });
-        toast.dismiss('action');
-        toast.success('Photo deleted successfully');
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-        throw new Error(error.message);
-      }
-      toast.error('Error has been occurred');
-      throw new Error('Error has been occurred');
-    } finally {
-      void router.invalidate();
+
+  const runCleanup = Effect.sync(() => {
+    void queryClient.invalidateQueries({
+      queryKey: [...imageGalleryOptions().queryKey],
+    });
+    if (albumId)
       void queryClient.invalidateQueries({
-        queryKey: [...imageGalleryOptions().queryKey],
+        queryKey: [...dashboardAlbumIdOptions(albumId).queryKey],
       });
-      if (albumId)
-        void queryClient.invalidateQueries({
-          queryKey: [...dashboardAlbumIdOptions(albumId).queryKey],
+    void router.invalidate();
+  });
+  async function handleAction(action: string, photoId: string) {
+    const actionConfig = {
+      public: {
+        action: () =>
+          Effect.tryPromise(() =>
+            setPublicImageFn({
+              data: {
+                imageId: photoId,
+              },
+            }),
+          ),
+        msg: `Updating photo to public...`,
+        success: `Photo successfully set to public`,
+        failed: `Failed to set photo to public`,
+      },
+      private: {
+        action: () =>
+          Effect.tryPromise(() =>
+            setPrivateImageFn({
+              data: {
+                imageId: photoId,
+              },
+            }),
+          ),
+        msg: `Updating photo to private...`,
+        success: `Photo successfully set to private`,
+        failed: `Failed to set photo to private`,
+      },
+      showPrivateToFollowers: {
+        action: () =>
+          Effect.tryPromise(() =>
+            setShowPrivateImageToFollowersFn({
+              data: {
+                imageId: photoId,
+              },
+            }),
+          ),
+        msg: `Updating photo visibility...`,
+        success: `This private photo is now visible to followers`,
+        failed: `Failed to update photo visibility`,
+      },
+      hidePrivateToFollowers: {
+        action: () =>
+          Effect.tryPromise(() =>
+            setHidePrivateImageToFollowersFn({
+              data: {
+                imageId: photoId,
+              },
+            }),
+          ),
+        msg: `Updating photo visibility...`,
+        success: `This private photo is now hidden from followers`,
+        failed: `Failed to update photo visibility`,
+      },
+      remove: {
+        action: () =>
+          Effect.tryPromise(() =>
+            removeImageFromAlbumFn({
+              data: {
+                imageId: photoId,
+                albumId: albumId as string,
+              },
+            }),
+          ),
+        msg: `Removing photo from album...`,
+        success: `Photo removed from album successfully`,
+        failed: `Failed to remove photo from album`,
+      },
+      delete: {
+        action: () =>
+          Effect.tryPromise(() =>
+            deleteImageFn({
+              data: {
+                imageId: photoId,
+              },
+            }),
+          ),
+        msg: `Deleting photo...`,
+        success: `Photo deleted successfully`,
+        failed: `Failed to delete photo`,
+      },
+    };
+    const actionMode = actionConfig[action as keyof typeof actionConfig];
+    if (!actionMode) return;
+    const actionWorkflow = Effect.gen(function* () {
+      toast.loading(actionMode.msg, {
+        id: `action-${photoId}`,
+      });
+      yield* actionMode.action();
+      toast.success(actionMode.success, {
+        id: `action-${photoId}`,
+      });
+      if (action === 'remove' || action === 'delete')
+        photoGalleryStore.setState((prev) => {
+          return {
+            ...prev,
+            isOpen: false,
+          };
         });
-    }
+    }).pipe(
+      Effect.catchAll((error) =>
+        Effect.sync(() => {
+          toast.error(actionMode.failed, {
+            id: `action-${photoId}`,
+          });
+          console.error(error.message);
+        }),
+      ),
+      Effect.ensuring(runCleanup),
+    );
+    await Effect.runPromise(actionWorkflow);
   }
   return (
     <div className="min-h-screen">
@@ -289,7 +312,7 @@ export default function PhotoGallery({
                 type="button"
                 variant={'destructive'}
                 className="cursor-pointer"
-                onClick={() => handleAction('remove-image', photos[index].id)}
+                onClick={() => handleAction('remove', photos[index].id)}
               >
                 Remove Image
               </Button>
@@ -401,7 +424,7 @@ export default function PhotoGallery({
                     )}
                     {!photos[index].published && !photos[index].showPrivateToFollowers && (
                       <DropdownMenuItem
-                        onClick={() => handleAction('show-private-to-followers', photos[index].id)}
+                        onClick={() => handleAction('showPrivateToFollowers', photos[index].id)}
                         className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
                       >
                         <Eye className="mr-2 h-4 w-4" />
@@ -410,7 +433,7 @@ export default function PhotoGallery({
                     )}
                     {!photos[index].published && photos[index].showPrivateToFollowers && (
                       <DropdownMenuItem
-                        onClick={() => handleAction('hide-private-to-followers', photos[index].id)}
+                        onClick={() => handleAction('hidePrivateToFollowers', photos[index].id)}
                         className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
                       >
                         <EyeOff className="mr-2 h-4 w-4" />
