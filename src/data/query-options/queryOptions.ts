@@ -1,19 +1,21 @@
-import { getFollowsByUserIdFn } from "@/data/follow";
-import { getGlobalFeedFn, getShortPostByIdFn } from "@/data/post";
-import { RouterContext } from "@/routes/__root";
-import { queryOptions } from "@tanstack/react-query";
-import { getPostFn, getPostsFn } from "../blog";
-import { getPublicProfileFn } from "../user";
-import { redirect } from "@tanstack/react-router";
-import { getAlbumByIdFn } from "../album";
+import { queryOptions } from '@tanstack/react-query';
+import { redirect } from '@tanstack/react-router';
+
+import { getFollowsByUserIdFn } from '@/data/follow';
+import { getAuthorFeedFn, getGlobalFeedFn, getShortPostByIdFn } from '@/data/post';
+import { RouterContext } from '@/routes/__root';
+
+import { getAlbumByIdFn } from '../album';
+import { getAuthorPostsFn, getPostFn, getPostsFn } from '../blog';
+import { getPublicProfileFn } from '../user';
 
 export function shortPostOptions({ context }: { context: RouterContext }) {
   return queryOptions({
-    queryKey: ["short-posts"],
+    queryKey: ['short-posts'],
     queryFn: async () => {
       const allPosts = await getGlobalFeedFn();
       const latestPosts = allPosts.filter(
-        (post) => post.author.email === "muhamadhanifhafizhan@gmail.com" && post.published,
+        (post) => post.author.email === 'muhamadhanifhafizhan@gmail.com' && post.published,
       );
       const publicPost = allPosts.filter((post) => post.published);
       if (context.user) {
@@ -45,10 +47,29 @@ export function shortPostOptions({ context }: { context: RouterContext }) {
     },
   });
 }
+export function authorPostOptions() {
+  return queryOptions({
+    queryKey: ['author-post'],
+    queryFn: async () => {
+      const authorPosts = await getAuthorFeedFn();
 
+      return authorPosts;
+    },
+  });
+}
+export function authorBlogOptions() {
+  return queryOptions({
+    queryKey: ['author-blog'],
+    queryFn: async () => {
+      const authorBlogs = await getAuthorPostsFn();
+
+      return authorBlogs;
+    },
+  });
+}
 export function blogOptions() {
   return queryOptions({
-    queryKey: ["blogs-public"],
+    queryKey: ['blogs-public'],
     queryFn: async () => {
       const allPosts = await getPostsFn();
       return {
@@ -60,7 +81,7 @@ export function blogOptions() {
 
 export function userProfileOptions(userId: string) {
   return queryOptions({
-    queryKey: ["profile", userId],
+    queryKey: ['profile', userId],
     queryFn: async () => {
       const user = await getPublicProfileFn({
         data: {
@@ -74,7 +95,7 @@ export function userProfileOptions(userId: string) {
 
 export function blogPostOptions(slug: string) {
   return queryOptions({
-    queryKey: ["blog-post", slug],
+    queryKey: ['blog-post', slug],
     queryFn: async () => {
       const post = await getPostFn({ data: slug });
       return post;
@@ -84,7 +105,7 @@ export function blogPostOptions(slug: string) {
 
 export function shortPostIdOptions(shortPostId: string) {
   return queryOptions({
-    queryKey: ["short-post", shortPostId],
+    queryKey: ['short-post', shortPostId],
     queryFn: async () => {
       const post = await getShortPostByIdFn({
         data: {
@@ -92,7 +113,7 @@ export function shortPostIdOptions(shortPostId: string) {
         },
       });
       if (!post) {
-        throw redirect({ to: "/post" });
+        throw redirect({ to: '/post' });
       }
       return post;
     },
@@ -101,7 +122,7 @@ export function shortPostIdOptions(shortPostId: string) {
 
 export function albumIdOptions(albumId: string) {
   return queryOptions({
-    queryKey: ["album-gallery", albumId],
+    queryKey: ['album-gallery', albumId],
     queryFn: async () => {
       const album = await getAlbumByIdFn({
         data: {
@@ -109,7 +130,7 @@ export function albumIdOptions(albumId: string) {
         },
       });
       if (!album) {
-        throw redirect({ to: "/dashboard/albums" });
+        throw redirect({ to: '/dashboard/albums' });
       }
       return album;
     },

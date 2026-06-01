@@ -28,7 +28,34 @@ export const getGlobalFeedFn = createServerFn({ method: 'GET' }).handler(async (
   });
 });
 
-console.log('Is authMiddleware defined?', !!authMiddleware);
+export const getAuthorFeedFn = createServerFn({ method: 'GET' }).handler(async () => {
+  return await db.shortPost.findMany({
+    where: {
+      author: {
+        email: 'muhamadhanifhafizhan@gmail.com',
+      },
+      published: true,
+    },
+    include: {
+      author: true,
+      imagesOnShortPosts: {
+        include: {
+          image: true,
+        },
+      },
+      comments: {
+        include: {
+          user: true,
+        },
+      },
+      likes: true,
+      _count: {
+        select: { likes: true, comments: true },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+});
 
 export const getShortPostsFn = createServerFn({ method: 'GET' })
   .middleware([authMiddleware])

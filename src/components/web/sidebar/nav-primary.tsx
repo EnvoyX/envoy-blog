@@ -13,6 +13,8 @@ import {
 import { UserSession } from '@/data/session';
 import { allowedRoles } from '@/lib/constants';
 
+import { navItemsAdmin } from '../NavItems';
+
 type NavPrimaryProps = {
   items: {
     title: string;
@@ -32,36 +34,25 @@ export function NavPrimary({ items, user }: NavPrimaryProps) {
         <SidebarMenu>
           {allowedRoles.includes(user?.role as string) && (
             <>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild size="sm">
-                  <Link
-                    to={'/dashboard/admin'}
-                    activeProps={{
-                      className: 'bg-primary/10! text-primary! border-r-2! border-primary!',
-                    }}
-                    className="flex items-center gap-3! px-3! py-3! text-sm! font-medium! rounded-lg! transition-colors! hover:bg-white/5!"
-                    activeOptions={{ exact: false }}
-                  >
-                    <Key />
-                    <span>Admin</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild size="sm">
-                  <Link
-                    to={'/dashboard/quran-tracker'}
-                    activeProps={{
-                      className: 'bg-primary/10! text-primary! border-r-2! border-primary!',
-                    }}
-                    className="flex items-center gap-3! px-3! py-3! text-sm! font-medium! rounded-lg! transition-colors! hover:bg-white/5!"
-                    activeOptions={{ exact: false }}
-                  >
-                    <BookMarkedIcon />
-                    <span>Qur'an Tracker</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {navItemsAdmin.map((item, index) => {
+                return (
+                  <SidebarMenuItem key={index}>
+                    <SidebarMenuButton asChild size="sm">
+                      <Link
+                        to={item.to}
+                        activeProps={{
+                          className: 'bg-primary/10! text-primary! border-r-2! border-primary!',
+                        }}
+                        className="flex items-center gap-3! px-3! py-3! text-sm! font-medium! rounded-lg! transition-colors! hover:bg-white/5!"
+                        activeOptions={item.activeOptions}
+                      >
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </>
           )}
           {items.map((item, index) => {

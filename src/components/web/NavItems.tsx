@@ -8,27 +8,29 @@ import {
   AlbumIcon,
   UploadIcon,
   Settings2,
+  BookMarkedIcon,
+  Key,
 } from 'lucide-react';
 
 import { NavPrimaryProps, NavProps } from '@/lib/types';
 
 export const navItemsMain: NavProps['items'] = linkOptions([
   {
-    title: 'Articles',
+    title: 'Article',
     to: '/article',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: 'Blogs',
+    title: 'Blog',
     to: '/blog',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: 'Posts',
+    title: 'Post',
     to: '/post',
     activeOptions: {
       exact: false,
@@ -119,27 +121,20 @@ export const navSecondayItems: NavPrimaryProps['items'] = linkOptions([
     },
   },
 ]);
-export const sidebarNavItems: NavPrimaryProps['items'] = linkOptions([
+
+export const navItemsAdmin: NavPrimaryProps['items'] = linkOptions([
   {
-    title: 'Profile',
-    icon: UserIcon,
-    to: '/dashboard/profile',
+    title: 'Admin Panel',
+    icon: Key,
+    to: '/dashboard/admin',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: 'Task Tracker',
-    icon: Check,
-    to: '/dashboard/task-tracker',
-    activeOptions: {
-      exact: false,
-    },
-  },
-  {
-    title: 'Blogs',
-    icon: Newspaper,
-    to: '/dashboard/blog',
+    title: `Qur'an Tracker`,
+    icon: BookMarkedIcon,
+    to: '/dashboard/quran-tracker',
     activeOptions: {
       exact: false,
     },

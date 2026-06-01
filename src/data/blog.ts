@@ -239,6 +239,19 @@ export const getPostsFn = createServerFn({ method: 'GET' }).handler(async () => 
   });
 });
 
+export const getAuthorPostsFn = createServerFn({ method: 'GET' }).handler(async () => {
+  return await db.post.findMany({
+    where: {
+      published: true,
+      author: {
+        email: 'muhamadhanifhafizhan@gmail.com',
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+    include: { author: true, likes: true, comments: true, _count: true },
+  });
+});
+
 export const deletePostFn = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({

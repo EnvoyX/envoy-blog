@@ -1,13 +1,14 @@
-import { createId } from "@paralleldrive/cuid2";
-import { useLiveQuery, eq } from "@tanstack/react-db";
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { intlFormat, intlFormatDistance } from "date-fns";
-import { ChevronDown, ChevronLeft, Heart, MessagesSquareIcon } from "lucide-react";
-import { v4 as uuidv4 } from "uuid";
+import { createId } from '@paralleldrive/cuid2';
+import { useLiveQuery, eq } from '@tanstack/react-db';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, Link, redirect } from '@tanstack/react-router';
+import { intlFormat, intlFormatDistance } from 'date-fns';
+import { ChevronDown, ChevronLeft, Heart, MessagesSquareIcon } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
 
-import { commentCollection, likeCollection } from "@/collections/blog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { commentCollection, likeCollection } from '@/collections/blog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,19 +17,18 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import CommentInput from "@/components/web/CommentInput";
-import { CommentItem } from "@/components/web/CommentItem";
-import { MarkdownRenderer } from "@/components/web/markdown/Markdown";
-import ScrollProgress from "@/components/web/ScrollProgress";
-import SideNav, { extractHeadings } from "@/components/web/SideNav";
-import { UserAvatar } from "@/components/web/user-profile";
-import { User } from "@/generated/prisma/browser";
-import { cn } from "@/lib/utils";
-import { dashboardBlogPostSlugOptions } from "@/data/query-options/dashboardQueryOptions";
-import { useSuspenseQuery } from "@tanstack/react-query";
+} from '@/components/ui/dropdown-menu';
+import CommentInput from '@/components/web/CommentInput';
+import { CommentItem } from '@/components/web/CommentItem';
+import { MarkdownRenderer } from '@/components/web/markdown/Markdown';
+import ScrollProgress from '@/components/web/ScrollProgress';
+import SideNav, { extractHeadings } from '@/components/web/SideNav';
+import { UserAvatar } from '@/components/web/user-profile';
+import { dashboardBlogPostSlugOptions } from '@/data/query-options/dashboardQueryOptions';
+import { User } from '@/generated/prisma/browser';
+import { cn } from '@/lib/utils';
 
-export const Route = createFileRoute("/dashboard/blog/$slug/")({
+export const Route = createFileRoute('/dashboard/blog/$slug/')({
   component: PostComponent,
   loader: async ({ params, context }) => {
     const post = await context.queryClient.ensureQueryData(
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/dashboard/blog/$slug/")({
     );
     if (!post?.published && context?.user?.id !== post?.authorId) {
       throw redirect({
-        to: "/dashboard/blog",
+        to: '/dashboard/blog',
       });
     }
     return {
@@ -50,22 +50,22 @@ export const Route = createFileRoute("/dashboard/blog/$slug/")({
     meta: [
       { title: `${loaderData?.post?.title} | Blog | Envoy Mindpalace` },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
       {
-        property: "og:title",
+        property: 'og:title',
         content: `${loaderData?.post?.title} | Envoy Blog`,
       },
       {
-        property: "og:description",
+        property: 'og:description',
         content: `${loaderData?.post?.description}`,
       },
       {
-        property: "og:image",
+        property: 'og:image',
         content: `${loaderData?.post?.image}`,
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
 });
@@ -83,7 +83,7 @@ function PostComponent() {
     q
       .from({ comment: commentCollection })
       .where(({ comment }) => eq(comment.postId, post?.id))
-      .orderBy(({ comment }) => comment.createdAt, "desc"),
+      .orderBy(({ comment }) => comment.createdAt, 'desc'),
   );
 
   const hasLiked = likes.find((like) => like.userId === session?.user?.id);
@@ -181,8 +181,8 @@ function PostComponent() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className="text-sm font-medium text-slate-500 truncate max-w-48 md:max-w-none flex gap-1 items-center group">
-                <ChevronDown className={cn("size-4 group-hover:text-emerald-500 shrink-0")} />
-                <span className={cn("group-hover:text-emerald-500")}>{post.title}</span>
+                <ChevronDown className={cn('size-4 group-hover:text-emerald-500 shrink-0')} />
+                <span className={cn('group-hover:text-emerald-500')}>{post.title}</span>
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="max-sm:w-48 w-64 bg-transparent backdrop-blur-lg!">
@@ -197,12 +197,12 @@ function PostComponent() {
                         href={`#${heading.id}`}
                         className={`block text-xs transition-all hover:text-white
 
-                          ${heading.level === 1 && "pl-2"}
-                          ${heading.level === 2 && "pl-4"}
-                          ${heading.level === 3 && "pl-6"}
-                          ${heading.level === 4 && "pl-8"}
-                          ${heading.level === 5 && "pl-10"}
-                          ${heading.level === 6 && "pl-12"}
+                          ${heading.level === 1 && 'pl-2'}
+                          ${heading.level === 2 && 'pl-4'}
+                          ${heading.level === 3 && 'pl-6'}
+                          ${heading.level === 4 && 'pl-8'}
+                          ${heading.level === 5 && 'pl-10'}
+                          ${heading.level === 6 && 'pl-12'}
 
                            hover:bg-slate-500/5`}
                       >
@@ -217,7 +217,7 @@ function PostComponent() {
         </div>
         <ScrollProgress
           height={2}
-          styleProp={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50 }}
+          styleProp={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50 }}
         />
       </nav>
 
@@ -227,8 +227,8 @@ function PostComponent() {
             <header className="mb-8">
               <div className="aspect-video w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 mb-8">
                 <img
-                  src={post.image ?? "https://tanstack.com/assets/og-C0HGjoLl.png"}
-                  alt={post.title ?? "Blog Thumbnail"}
+                  src={post.image ?? 'https://tanstack.com/assets/og-C0HGjoLl.png'}
+                  alt={post.title ?? 'Blog Thumbnail'}
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -256,9 +256,9 @@ function PostComponent() {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-slate-400">
                   <p className="flex items-center">
                     {intlFormat(new Date(post.createdAt), {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
                     })}
                   </p>
                   <span className="hidden sm:inline text-slate-700">•</span>
@@ -282,7 +282,7 @@ function PostComponent() {
               prose-pre:bg-slate-900
               prose-pre:border prose-pre:border-slate-800 mb-25"
             >
-              <MarkdownRenderer markdown={post.content || "*Nothing to preview...*"} />
+              <MarkdownRenderer markdown={post.content || '*Nothing to preview...*'} />
 
               <div className="mt-16 pt-8 border-t border-slate-800 space-y-12">
                 <section className="flex items-center justify-between max-sm:flex-col max-sm:justify-center bg-slate-900/40 p-6 rounded-2xl border border-slate-800">
@@ -300,11 +300,11 @@ function PostComponent() {
                       onClick={() => handleToggleLike()}
                       className={`p-3 rounded-full transition-all border cursor-pointer ${
                         hasLiked
-                          ? "bg-emerald-500/10 border-emerald-500 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
-                          : "bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white"
+                          ? 'bg-emerald-500/10 border-emerald-500 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                          : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
                       }`}
                     >
-                      <Heart className={`size-6 ${hasLiked && "fill-current"}`} />
+                      <Heart className={`size-6 ${hasLiked && 'fill-current'}`} />
                     </button>
                   </div>
                 </section>
@@ -330,13 +330,13 @@ function PostComponent() {
                       <Avatar className="h-10 w-10 shrink-0 items-center justify-center">
                         <AvatarImage src={session?.user?.image as string} />
                         <AvatarFallback>
-                          {" "}
+                          {' '}
                           {(session?.user?.name as string)
                             ? (session?.user?.name as string)
-                                .split(" ")
+                                .split(' ')
                                 .map((n) => n[0])
-                                .join("")
-                            : ""}
+                                .join('')
+                            : ''}
                         </AvatarFallback>
                       </Avatar>
                     </Link>

@@ -67,7 +67,6 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
       onSubmit: postSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
       if (initialData?.id) {
         await updatePostFn({
           data: {
@@ -80,7 +79,6 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
         });
         toast.success('Blog updated succesfully!');
       } else {
-        console.log(value);
         await createPostFn({ data: value });
         void queryClient.invalidateQueries({
           ...dashboardBlogPostsOptions(),
@@ -383,7 +381,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                   <form.Subscribe
                     selector={(state) => [state.values]}
                     children={([values]) => (
-                      <>
+                      <section className="overflow-auto max-h-screen scrollbar-none">
                         <h1 className="text-2xl font-bold mb-4">{values.title || 'Untitled'}</h1>
                         <h3>
                           {values.description || 'Some description that makes you flabbergasted...'}
@@ -399,7 +397,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                         <MarkdownRenderer
                           markdown={debouncedMarkdown || '*Nothing to preview...*'}
                         />
-                      </>
+                      </section>
                     )}
                   />
                 )}
@@ -423,13 +421,13 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
         )}
 
         {showPreview && (
-          <Card className="flex flex-col bg-slate-50/50 dark:bg-slate-900/50 border-dashed overflow-auto">
+          <Card className="flex flex-col border-dashed overflow-auto scrollbar-none">
             <CardHeader>
               <CardTitle className="text-sm font-medium uppercase text-muted-foreground">
                 Live Preview
               </CardTitle>
             </CardHeader>
-            <CardContent className="prose dark:prose-invert max-w-none">
+            <CardContent className="prose dark:prose-invert max-w-none max-h-screen">
               <form.Subscribe
                 selector={(state) => [state.values]}
                 children={([values]) => (

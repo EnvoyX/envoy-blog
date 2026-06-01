@@ -1,7 +1,7 @@
-import { Link } from "@tanstack/react-router";
-import { ArrowUpRight, Command, Zap } from "lucide-react";
+import { Link } from '@tanstack/react-router';
+import { ArrowUpRight, Command, Zap } from 'lucide-react';
 
-import { navItemsMain } from "./NavItems";
+import { navItemsMain } from './NavItems';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -87,20 +87,6 @@ export function Footer() {
                   </li>
                 );
               })}
-              {/*{session?.user &&
-                sidebarNavItems.map((item, idx) => {
-                  return (
-                    <li key={idx}>
-                      <Link
-                        to={item.to}
-                        className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
-                      >
-                        {item.title}{' '}
-                        <ArrowUpRight className="size-3 opacity-50" />
-                      </Link>
-                    </li>
-                  )
-                })}*/}
             </ul>
           </div>
 
