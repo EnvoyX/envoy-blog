@@ -206,16 +206,26 @@ function App() {
                       <LucideClockFading size={12} className="text-slate-500" />{' '}
                       {intlFormatDistance(new Date(article.updatedAt), new Date())}
                     </span>
-                    {/*<div className="ml-auto flex gap-1.5">
-                    {article.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 rounded-md bg-emerald-500/5 border border-emerald-500/10 text-[10px] font-medium text-emerald-400 uppercase tracking-wider"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>*/}
+                    <div className="sm:ml-auto flex flex-wrap gap-1.5">
+                      {article.tags
+                        .map((tag) => (
+                          <span
+                            key={tag.id}
+                            className="px-2 py-0.5 rounded-md bg-emerald-500/5 border border-emerald-500/10 text-[10px] font-medium text-emerald-400 uppercase tracking-wider"
+                          >
+                            {tag.name}
+                          </span>
+                        ))
+                        .slice(0, 3)}
+                      {article.tags.length > 3 && (
+                        <span
+                          key="more"
+                          className="px-2 py-0.5 rounded-md bg-emerald-500/5 border border-emerald-500/10 text-[10px] font-medium text-emerald-400 uppercase tracking-wider"
+                        >
+                          +{article.tags.length - 3}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <h3 className="text-lg font-bold text-slate-200 group-hover:text-emerald-400 transition-colors mb-2 line-clamp-1">

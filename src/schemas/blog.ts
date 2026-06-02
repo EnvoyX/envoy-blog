@@ -11,6 +11,7 @@ export const postSchema = z.object({
   showPrivateToFollowers: z.boolean({
     error: 'Private to followers status is required',
   }),
+  tags: z.array(z.string()).optional(),
 });
 
 export const postSearchSchema = z.object({

@@ -1,16 +1,17 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useNavigate } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
+import { zodValidator } from '@tanstack/zod-adapter';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShortPostCard } from "@/components/web/post/ShortPostCard";
-import { User } from "@/generated/prisma/client";
-import { postPageSearchParamsSchema } from "@/schemas/searchSchemas";
-import { shortPostOptions } from "@/data/query-options/queryOptions";
-import { RouterContext } from "../__root";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ShortPostCard } from '@/components/web/post/ShortPostCard';
+import { shortPostOptions } from '@/data/query-options/queryOptions';
+import { User } from '@/generated/prisma/client';
+import { postPageSearchParamsSchema } from '@/schemas/searchSchemas';
 
-export const Route = createFileRoute("/_general/post/")({
+import { RouterContext } from '../__root';
+
+export const Route = createFileRoute('/_general/post/')({
   component: RouteComponent,
   loader: ({ context }) => {
     context.queryClient.prefetchQuery(shortPostOptions({ context: context as RouterContext }));
@@ -18,21 +19,21 @@ export const Route = createFileRoute("/_general/post/")({
   validateSearch: zodValidator(postPageSearchParamsSchema),
   head: () => ({
     meta: [
-      { title: `Posts | Envoy Mindpalace` },
+      { title: `Post | Envoy Mindpalace` },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
-      { property: "og:title", content: "Posts | Envoy Mindpalace" },
+      { property: 'og:title', content: 'Post | Envoy Mindpalace' },
       {
-        property: "og:description",
-        content: "Create your own blog and write your thoughts!",
+        property: 'og:description',
+        content: 'Create your own blog and write your thoughts!',
       },
       {
-        property: "og:image",
-        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+        property: 'og:image',
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
 });
@@ -50,7 +51,7 @@ function RouteComponent() {
         onValueChange={(value) => {
           navigate({
             search: () => ({
-              currentTab: value as "latest-post" | "for-you" | "following-post",
+              currentTab: value as 'latest-post' | 'for-you' | 'following-post',
             }),
           });
         }}

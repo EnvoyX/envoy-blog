@@ -59,6 +59,26 @@ export function BlogCard({
             })}
           </div>
         </div>
+        <div className="flex flex-wrap gap-1.5 mb-0.5">
+          {post.tags
+            .map((tag) => (
+              <span
+                key={tag.id}
+                className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/10 text-[10px] font-medium text-emerald-400 uppercase tracking-wider"
+              >
+                {tag.name}
+              </span>
+            ))
+            .slice(0, 3)}
+          {post.tags.length > 3 && (
+            <span
+              key="more"
+              className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/10 text-[10px] font-medium text-emerald-400 uppercase tracking-wider"
+            >
+              +{post.tags.length - 3}
+            </span>
+          )}
+        </div>
         <h2 className="text-xl font-bold leading-tight group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
           {post.title}
         </h2>

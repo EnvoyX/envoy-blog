@@ -13,6 +13,7 @@ export const getPostFn = createServerFn({ method: 'GET' })
       where: { slug },
       include: {
         author: true,
+        tags: true,
         comments: {
           include: { user: true },
           orderBy: { createdAt: 'desc' },
@@ -169,6 +170,12 @@ export const createPostFn = createServerFn({ method: 'POST' })
         slug: finalSlug,
         authorId: context.user.id as string,
         showPrivateToFollowers: data.showPrivateToFollowers,
+        tags: {
+          connectOrCreate: data.tags?.map((tagName: string) => ({
+            where: { name: tagName },
+            create: { name: tagName },
+          })),
+        },
       },
     });
 
@@ -178,13 +185,8 @@ export const createPostFn = createServerFn({ method: 'POST' })
 export const updatePostFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(
-    z.object({
+    postSchema.extend({
       postId: z.string(),
-      title: z.string(),
-      description: z.string(),
-      image: z.string(),
-      content: z.string(),
-      published: z.boolean(),
     }),
   )
   .handler(async ({ data, context }) => {
@@ -217,6 +219,13 @@ export const updatePostFn = createServerFn({ method: 'POST' })
         content: data.content,
         slug: finalSlug,
         authorId: context.user.id as string,
+        tags: {
+          set: [],
+          connectOrCreate: data.tags?.map((tagName: string) => ({
+            where: { name: tagName },
+            create: { name: tagName },
+          })),
+        },
       },
     });
   });
@@ -227,7 +236,7 @@ export const getMyPostsFn = createServerFn({ method: 'GET' })
     return await db.post.findMany({
       where: { authorId: context.user.id as string },
       orderBy: { createdAt: 'desc' },
-      include: { author: true, likes: true, comments: true, _count: true },
+      include: { author: true, tags: true, likes: true, comments: true, _count: true },
     });
   });
 
@@ -235,7 +244,17 @@ export const getPostsFn = createServerFn({ method: 'GET' }).handler(async () => 
   return await db.post.findMany({
     where: { published: true },
     orderBy: { createdAt: 'desc' },
-    include: { author: true, likes: true, comments: true, _count: true },
+    include: {
+      author: true,
+      likes: true,
+      tags: true,
+      comments: {
+        include: {
+          user: true,
+        },
+      },
+      _count: { select: { likes: true, comments: true } },
+    },
   });
 });
 
@@ -248,7 +267,7 @@ export const getAuthorPostsFn = createServerFn({ method: 'GET' }).handler(async 
       },
     },
     orderBy: { createdAt: 'desc' },
-    include: { author: true, likes: true, comments: true, _count: true },
+    include: { author: true, likes: true, tags: true, comments: true, _count: true },
   });
 });
 

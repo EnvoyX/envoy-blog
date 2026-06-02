@@ -18,6 +18,7 @@ export const getPublicProfileFn = createServerFn({ method: 'GET' })
           include: {
             author: true,
             likes: true,
+            tags: true,
             comments: {
               include: {
                 user: true,

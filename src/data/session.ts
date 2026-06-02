@@ -64,6 +64,7 @@ export const getProfileData = createServerFn({ method: 'GET' }).handler(async ()
         include: {
           author: true,
           likes: true,
+          tags: true,
           comments: {
             include: {
               user: true,

@@ -44,6 +44,8 @@ export type ShortPostPublic = Prisma.ShortPostGetPayload<{
 export type BlogPostPublic = Prisma.PostGetPayload<{
   include: {
     author: true;
+    likes: true;
+    tags: true;
     comments: {
       include: { user: true };
       orderBy: { createdAt: 'desc' };
@@ -51,13 +53,19 @@ export type BlogPostPublic = Prisma.PostGetPayload<{
     _count: {
       select: { likes: true; comments: true };
     };
-    likes: true;
+  };
+}>;
+
+export type BlogPostWithTags = Prisma.PostGetPayload<{
+  include: {
+    tags: true;
   };
 }>;
 
 export type BlogPostUserPublic = Prisma.PostGetPayload<{
   include: {
     author: true;
+    tags: true;
     likes: true;
     comments: {
       include: { user: true };

@@ -67,12 +67,12 @@ export const Route = createFileRoute('/dashboard/blog/')({
   validateSearch: zodValidator(postSearchSchema),
   head: () => ({
     meta: [
-      { title: `My Blogs | Envoy Mindpalace` },
+      { title: `My Blog | Envoy Mindpalace` },
       {
         name: 'Envoy Mindpalace',
         content: 'Welcome to my TanStack Start playground!',
       },
-      { property: 'og:title', content: 'My Blogs | Envoy Mindpalace' },
+      { property: 'og:title', content: 'My Blog | Envoy Mindpalace' },
       {
         property: 'og:description',
         content: 'Create your own blog and write your thoughts!',
@@ -126,7 +126,7 @@ function BlogPageComponent() {
       <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col ">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black tracking-tight text-white">My Blogs</h1>
+            <h1 className="text-4xl font-black tracking-tight text-white">My Blog</h1>
             <p className="text-slate-400 mt-2">Manage and curate your digital thoughts.</p>
           </div>
           <Button
@@ -283,6 +283,26 @@ function BlogPageComponent() {
                   <p className="text-slate-400 text-sm line-clamp-3 leading-relaxed">
                     {post.description}
                   </p>
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    {post.tags
+                      .map((tag) => (
+                        <span
+                          key={tag.id}
+                          className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/10 text-[10px] font-medium text-emerald-400 uppercase tracking-wider"
+                        >
+                          {tag.name}
+                        </span>
+                      ))
+                      .slice(0, 3)}
+                    {post.tags.length > 3 && (
+                      <span
+                        key="more"
+                        className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/10 text-[10px] font-medium text-emerald-400 uppercase tracking-wider"
+                      >
+                        +{post.tags.length - 3}
+                      </span>
+                    )}
+                  </div>
                 </CardContent>
 
                 <CardFooter className="p-6 pt-0 flex flex-col justify-start items-start gap-1">

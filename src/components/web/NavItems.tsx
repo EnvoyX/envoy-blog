@@ -71,7 +71,7 @@ export const navItemsDashboard: NavPrimaryProps['items'] = linkOptions([
   },
 
   {
-    title: 'Blogs',
+    title: 'Blog',
     icon: Newspaper,
     to: '/dashboard/blog',
     activeOptions: {
@@ -79,7 +79,7 @@ export const navItemsDashboard: NavPrimaryProps['items'] = linkOptions([
     },
   },
   {
-    title: 'Posts',
+    title: 'Post',
     icon: MailboxIcon,
     to: '/dashboard/post',
     activeOptions: {

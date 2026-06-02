@@ -49,12 +49,12 @@ export const Route = createFileRoute('/dashboard/post/')({
   validateSearch: zodValidator(shortPostSearchSchema),
   head: () => ({
     meta: [
-      { title: `My Posts | Envoy Mindpalace` },
+      { title: `My Post | Envoy Mindpalace` },
       {
         name: 'Envoy Mindpalace',
         content: 'Welcome to my TanStack Start playground!',
       },
-      { property: 'og:title', content: 'My Posts | Envoy Mindpalace' },
+      { property: 'og:title', content: 'My Post | Envoy Mindpalace' },
       {
         property: 'og:description',
         content: 'Create your own blog and write your thoughts!',
@@ -115,7 +115,7 @@ function PostPageComponent() {
       <div className="max-w-7xl mx-auto max-sm:flex max-sm:flex-col ">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black tracking-tight text-white">My Posts</h1>
+            <h1 className="text-4xl font-black tracking-tight text-white">My Post</h1>
             <p className="text-slate-400 mt-2">Create and edit your posts here.</p>
           </div>
           <Button

@@ -1,3 +1,4 @@
+import { Span, TagsInput } from '@chakra-ui/react';
 import { useForm } from '@tanstack/react-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
@@ -33,12 +34,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { MarkdownRenderer } from '@/components/web/markdown/Markdown';
 import { createPostFn, updatePostFn } from '@/data/blog';
-import { dashboardBlogPostsOptions } from '@/data/query-options/dashboardQueryOptions';
+import {
+  dashboardBlogPostSlugOptions,
+  dashboardBlogPostsOptions,
+} from '@/data/query-options/dashboardQueryOptions';
 import { Post } from '@/generated/prisma/client';
 import { cn } from '@/lib/utils';
 import { postSchema } from '@/schemas/blog';
 
-export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
+export function BlogDashboardEditor({ initialData }: { initialData?: Post & { tags: string[] } }) {
   const [debouncedMarkdown, setDebouncedMarkdown] = useDebounceValue(
     () => initialData?.content ?? '',
     500,
@@ -62,8 +66,10 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
       image: initialData?.image || 'https://tanstack.com/assets/og-C0HGjoLl.png',
       published: initialData?.published || false,
       showPrivateToFollowers: initialData?.showPrivateToFollowers || false,
+      tags: initialData?.tags ?? [],
     },
     validators: {
+      // @ts-ignore just a error type
       onSubmit: postSchema,
     },
     onSubmit: async ({ value }) => {
@@ -77,7 +83,13 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
         void queryClient.invalidateQueries({
           ...dashboardBlogPostsOptions(),
         });
+        void queryClient.invalidateQueries({
+          ...dashboardBlogPostSlugOptions(initialData?.slug as string),
+        });
         toast.success('Blog updated succesfully!');
+        navigate({
+          to: '/dashboard/blog',
+        });
       } else {
         await createPostFn({ data: value });
         void queryClient.invalidateQueries({
@@ -223,6 +235,36 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                   }}
                 />
               );
+          }}
+        />
+      </div>
+      <div className="space-y-2">
+        <form.Field
+          name="tags"
+          children={(field) => {
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <>
+                <TagsInput.Root
+                  editable
+                  name={field.name}
+                  value={field.state.value}
+                  onValueChange={(details) => {
+                    field.handleChange(() => details.value);
+                  }}
+                >
+                  <TagsInput.Label>Tags</TagsInput.Label>
+                  <TagsInput.Control className="bg-transparent!">
+                    <TagsInput.Items className="bg-white/5! border rounded-xl" />
+                    <TagsInput.Input placeholder="Add tag..." />
+                  </TagsInput.Control>
+                  <Span textStyle="xs" color="fg.muted" ms="auto">
+                    Press Enter or Return to add tag
+                  </Span>
+                </TagsInput.Root>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </>
+            );
           }}
         />
       </div>
@@ -408,7 +450,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
       </main>
 
       {/* desktop */}
-      <main className="hidden md:grid grid-cols-1 gap-6 max-h-250 flex-1 ">
+      <main className="hidden md:grid grid-cols-1 gap-6 max-h-250 flex-1">
         {!showPreview && (
           <Card className="flex flex-col h-full bg-transparent!">
             <CardHeader>
@@ -416,7 +458,7 @@ export function BlogDashboardEditor({ initialData }: { initialData?: Post }) {
                 Editor
               </CardTitle>
             </CardHeader>
-            <CardContent>{EditorFields}</CardContent>
+            <CardContent className="max-h-screen">{EditorFields}</CardContent>
           </Card>
         )}
 

@@ -1,13 +1,14 @@
-import { db } from "@/lib/db";
-import { authMiddleware } from "@/middlewares/auth";
-import { createServerFn } from "@tanstack/react-start";
-import z from "zod";
+import { createServerFn } from '@tanstack/react-start';
+import z from 'zod';
 
-export const getAllFollowsFn = createServerFn({ method: "GET" }).handler(async () => {
+import { db } from '@/lib/db';
+import { authMiddleware } from '@/middlewares/auth';
+
+export const getAllFollowsFn = createServerFn({ method: 'GET' }).handler(async () => {
   return await db.follow.findMany();
 });
 
-export const getFollowsByUserIdFn = createServerFn({ method: "GET" })
+export const getFollowsByUserIdFn = createServerFn({ method: 'GET' })
   .inputValidator(
     z.object({
       userId: z.string(),
@@ -43,7 +44,7 @@ export const getFollowsByUserIdFn = createServerFn({ method: "GET" })
     };
   });
 
-export const toggleFollowFn = createServerFn({ method: "POST" })
+export const toggleFollowFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(z.object({ id: z.string(), targetUserId: z.string() }))
   .handler(async ({ data, context }) => {
