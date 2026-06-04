@@ -1,11 +1,22 @@
-import { chat, ChatMiddleware, toServerSentEventsResponse, summarize } from '@tanstack/ai';
-import { openRouterText, openRouterSummarize } from '@tanstack/ai-openrouter';
+import { chat, ChatMiddleware, toServerSentEventsResponse } from '@tanstack/ai';
+import { geminiText } from '@tanstack/ai-gemini';
+import { groqText } from '@tanstack/ai-groq';
+import { openRouterText } from '@tanstack/ai-openrouter';
 import { createFileRoute } from '@tanstack/react-router';
 
 import { db } from '@/lib/db';
 import { authRouteMiddleware } from '@/middlewares/auth';
 
-export const Route = createFileRoute('/api/chat-openrouter')({
+type Provider = 'gemini' | 'groq' | 'openrouter';
+
+const adapters = {
+  gemini: (requestedModel?: any) => geminiText(requestedModel ?? 'gemini-2.5-flash'),
+  groq: (requestedModel?: any) => groqText(requestedModel ?? 'llama-3.3-70b-versatile'),
+  openrouter: (requestedModel?: any) =>
+    openRouterText(requestedModel ?? 'google/gemma-4-31b-it:free'),
+};
+
+export const Route = createFileRoute('/api/chat')({
   server: {
     middleware: [authRouteMiddleware],
     handlers: {
@@ -21,7 +32,53 @@ export const Route = createFileRoute('/api/chat-openrouter')({
               headers: { 'Content-Type': 'application/json' },
             },
           );
+        } else if (!process.env.GEMINI_API_KEY) {
+          return new Response(
+            JSON.stringify({
+              error: 'GEMINI_API_KEY not configured',
+            }),
+            {
+              status: 500,
+              headers: { 'Content-Type': 'application/json' },
+            },
+          );
+        } else if (!process.env.GROQ_API_KEY) {
+          return new Response(
+            JSON.stringify({
+              error: 'GROQ_API_KEY not configured',
+            }),
+            {
+              status: 500,
+              headers: { 'Content-Type': 'application/json' },
+            },
+          );
         }
+
+        // middlewares
+        const usageTracker: ChatMiddleware = {
+          name: 'usage-tracker',
+          onUsage: (ctx, usage) => {
+            console.log(`Iteration ${ctx.iteration}: ${usage.totalTokens} tokens`);
+          },
+        };
+
+        const terminal: ChatMiddleware = {
+          name: 'terminal',
+          onFinish: async (ctx, info) => {
+            console.log(`Finished: ${info.finishReason}, ${info.duration}ms`);
+            console.log(`Content: ${info.content}`);
+            if (info.usage) {
+              console.log(`Tokens: ${info.usage.totalTokens}`);
+            }
+          },
+
+          onAbort: (ctx, info) => {
+            console.log(`Aborted: ${info.reason}, ${info.duration}ms`);
+          },
+          onError: (ctx, info) => {
+            console.error(`Error after ${info.duration}ms:`, info.error);
+          },
+        };
 
         const logger: ChatMiddleware = {
           name: 'logger',
@@ -36,7 +93,19 @@ export const Route = createFileRoute('/api/chat-openrouter')({
           },
         };
 
-        const { messages, conversationId, requestModel } = await request.json();
+        // metadata from client
+        const body = await request.json();
+        console.log('Body: ', body);
+        const messages = body.messages;
+        const bodyDataRequest = body.data;
+        const forwardedProvider = body.forwardedProps;
+        const provider: Provider = body.forwardedProps?.providerAdapter as Provider;
+        console.log('Body Data Request: ', bodyDataRequest);
+        console.log('Forwarded Provider: ', forwardedProvider);
+        console.log('Provider: ', provider);
+
+        // processing request
+        const { conversationId, requestModel } = bodyDataRequest;
         console.log('Requested Model: ', requestModel);
         console.log('ChatId/ConversationId from body request', conversationId);
         console.log('Messages: ', messages);
@@ -80,11 +149,14 @@ export const Route = createFileRoute('/api/chat-openrouter')({
                 id: chatId as string,
                 title: 'New Chat',
                 userId: context.user.id as string,
-                model: 'openrouter',
+                model: provider,
               },
             });
             console.log('Last chat saved:', saveConversation.id);
           }
+
+          console.log('Existing conversation:', existingConversation?.id);
+          console.log('Current chatId:', chatId);
 
           const savedUserMessage = await db.message.create({
             data: {
@@ -92,7 +164,7 @@ export const Route = createFileRoute('/api/chat-openrouter')({
               chatId: chatId,
               role: 'USER',
               content: lastUserMessage.parts[0].content,
-              model: 'openrouter',
+              model: provider,
               createdAt: lastUserMessage.createdAt,
               parts: lastUserMessage.parts,
             },
@@ -100,40 +172,12 @@ export const Route = createFileRoute('/api/chat-openrouter')({
 
           console.log('Last message saved:', savedUserMessage.id);
 
-          // Middlewares
-
-          const usageTracker: ChatMiddleware = {
-            name: 'usage-tracker',
-            onUsage: (ctx, usage) => {
-              console.log(`Iteration ${ctx.iteration}: ${usage.totalTokens} tokens`);
-            },
-          };
-
-          const terminal: ChatMiddleware = {
-            name: 'terminal',
-            onFinish: async (ctx, info) => {
-              console.log(`Finished: ${info.finishReason}, ${info.duration}ms`);
-              console.log(`Content: ${info.content}`);
-              if (info.usage) {
-                console.log(`Tokens: ${info.usage.totalTokens}`);
-              }
-            },
-
-            onAbort: (ctx, info) => {
-              console.log(`Aborted: ${info.reason}, ${info.duration}ms`);
-            },
-            onError: (ctx, info) => {
-              console.error(`Error after ${info.duration}ms:`, info.error);
-            },
-          };
-
           const stream = chat({
-            adapter: openRouterText(requestModel),
-            // adapter: openRouterText('google/gemma-4-31b-it:free'),
+            adapter: adapters[provider](requestModel),
             messages,
             middleware: [logger, usageTracker, terminal],
             conversationId: chatId,
-            debug: true,
+            // debug: true,
             context: {
               chatId: chatId,
             },

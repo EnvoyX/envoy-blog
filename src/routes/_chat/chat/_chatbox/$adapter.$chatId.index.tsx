@@ -1,30 +1,30 @@
-import { UIMessage } from "@tanstack/ai";
-import { fetchServerSentEvents, useChat } from "@tanstack/ai-react";
+import { UIMessage } from '@tanstack/ai';
+import { fetchServerSentEvents, useChat } from '@tanstack/ai-react';
 import {
   useMutation,
   useQuery,
   useQueryClient,
   // useSuspenseQuery,
-} from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
-import { Bot, Check, Copy, Loader, Loader2, RepeatIcon, User } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
-import z from "zod";
+} from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+import { zodValidator } from '@tanstack/zod-adapter';
+import { Bot, Check, Copy, Loader, Loader2, RepeatIcon, User } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import z from 'zod';
 
-import { ChatInput } from "@/components/ai-elements/ChatInput";
-import { Button } from "@/components/ui/button";
-import HeaderChat from "@/components/web/HeaderChat";
-import { MarkdownRenderer } from "@/components/web/markdown/Markdown";
-import { UserAvatar } from "@/components/web/user-profile";
-import { getChatHistoryFn, saveAssistantMessageFn } from "@/data/chat-ai";
-import { getUser } from "@/data/session";
-import { MODEL_CONFIG } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { ChatInput } from '@/components/ai-elements/ChatInput';
+import { Button } from '@/components/ui/button';
+import HeaderChat from '@/components/web/HeaderChat';
+import { MarkdownRenderer } from '@/components/web/markdown/Markdown';
+import { UserAvatar } from '@/components/web/user-profile';
+import { getChatHistoryFn, saveAssistantMessageFn } from '@/data/chat-ai';
+import { getUser } from '@/data/session';
+import { MODEL_CONFIG } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
-export const Route = createFileRoute("/_chat/chat/_chatbox/$adapter/$chatId/")({
+export const Route = createFileRoute('/_chat/chat/_chatbox/$adapter/$chatId/')({
   component: RouteComponent,
   loader: async ({ params }) => {
     const chatData = await getChatHistoryFn({
@@ -44,25 +44,25 @@ export const Route = createFileRoute("/_chat/chat/_chatbox/$adapter/$chatId/")({
   head: ({ params, loaderData }) => ({
     meta: [
       {
-        title: `Chat | ${loaderData?.chatData?.title ?? "New Chat"} | ${params.adapter.charAt(0).toUpperCase() + params.adapter.slice(1)} | Envoy Mindpalace`,
+        title: `Chat | ${loaderData?.chatData?.title ?? 'New Chat'} | ${params.adapter.charAt(0).toUpperCase() + params.adapter.slice(1)} | Envoy Mindpalace`,
       },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
       {
-        property: "og:title",
-        content: `Chat | ${loaderData?.chatData?.title ?? "New Chat"} | ${params.adapter.charAt(0).toUpperCase() + params.adapter.slice(1)} | Envoy Mindpalace`,
+        property: 'og:title',
+        content: `Chat | ${loaderData?.chatData?.title ?? 'New Chat'} | ${params.adapter.charAt(0).toUpperCase() + params.adapter.slice(1)} | Envoy Mindpalace`,
       },
       {
-        property: "og:description",
-        content: "Create your own blog and write your thoughts!",
+        property: 'og:description',
+        content: 'Create your own blog and write your thoughts!',
       },
       {
-        property: "og:image",
-        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
+        property: 'og:image',
+        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
 });
@@ -79,7 +79,7 @@ function CopyButton({ content }: { content: string }) {
   return (
     <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8 px-2 text-zinc-400">
       {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
-      <span className="ml-2 text-xs">{copied ? "Copied" : "Copy"}</span>
+      <span className="ml-2 text-xs">{copied ? 'Copied' : 'Copy'}</span>
     </Button>
   );
 }
@@ -93,14 +93,14 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const scrollRef = useRef<HTMLDivElement>(null);
   const { data } = useQuery({
-    queryKey: ["get-session"],
+    queryKey: ['get-session'],
     queryFn: async () => {
       const data = await getUser();
       return data;
     },
   });
   const { data: chatData, isLoading: isLoadingMessages } = useQuery({
-    queryKey: ["chat", chatId],
+    queryKey: ['chat', chatId],
     queryFn: () =>
       getChatHistoryFn({
         data: {
@@ -113,14 +113,14 @@ function RouteComponent() {
   });
   const { mutate } = useMutation({
     mutationFn: saveAssistantMessageFn,
-    mutationKey: ["saveAssistantMessage", chatId],
+    mutationKey: ['saveAssistantMessage', chatId],
     onError: (err) => {
-      console.error("Failed to sync parts:", err.message);
+      console.error('Failed to sync parts:', err.message);
     },
     onSettled: () => {
       // console.log('Assistant message synced with parts!')
-      void queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
-      void queryClient.invalidateQueries({ queryKey: ["chats"] });
+      void queryClient.invalidateQueries({ queryKey: ['chat', chatId] });
+      void queryClient.invalidateQueries({ queryKey: ['chats'] });
     },
   });
 
@@ -135,21 +135,28 @@ function RouteComponent() {
   const { messages, sendMessage, isLoading, setMessages } = useChat({
     id: chatId,
     connection: fetchServerSentEvents(
-      () => `/api/chat-${adapter}`,
+      () => `/api/chat`,
       async () => {
         // console.log(`[AI Engine]: Initiating ${currentModel}`)
         return {
           body: {
             conversationId: chatId,
             requestModel: currentModel,
+            providerAdapter: adapter, // provider e.g gemini, openrouter, groq
           },
         };
       },
     ),
+    forwardedProps: {
+      conversationId: chatId,
+      requestModel: currentModel,
+      providerAdapter: adapter, // provider e.g gemini, openrouter, groq
+    },
     onError(error) {
-      toast.error("Error has been occured", {
+      toast.error('Error has been occured', {
         description:
-          "Please try again or try use different model. The model you used may not available right now.",
+          error.message ??
+          'Please try again or try use different model. The model you used may not available right now.',
         duration: 5000,
       });
       console.error(error.message);
@@ -162,11 +169,11 @@ function RouteComponent() {
           messageId: message.id,
           parts: message.parts,
           role:
-            message.role === "assistant"
-              ? "ASSISTANT"
-              : message.role === "system"
-                ? "SYSTEM"
-                : "USER",
+            message.role === 'assistant'
+              ? 'ASSISTANT'
+              : message.role === 'system'
+                ? 'SYSTEM'
+                : 'USER',
           model: adapter,
           recentModel: currentModel,
         },
@@ -176,7 +183,7 @@ function RouteComponent() {
 
   function onSend(input: string) {
     if (!model) {
-      toast.error("Select the model first!");
+      toast.error('Select the model first!');
       return;
     }
     void sendMessage(input);
@@ -189,7 +196,7 @@ function RouteComponent() {
 
   useEffect(() => {
     setMessages([]);
-    void queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
+    void queryClient.invalidateQueries({ queryKey: ['chat', chatId] });
   }, [chatId]);
 
   useEffect(() => {
@@ -371,17 +378,17 @@ function RouteComponent() {
             <div
               key={message.id}
               className={`flex gap-4 group animate-in fade-in slide-in-from-bottom-2 duration-300 ${
-                message.role === "assistant" ? "items-start" : "items-start flex-row-reverse"
+                message.role === 'assistant' ? 'items-start' : 'items-start flex-row-reverse'
               }`}
             >
               <div
                 className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${
-                  message.role === "assistant"
-                    ? "bg-emerald-600/10 border-emerald-500/20 text-emerald-400"
-                    : "bg-zinc-800 border-zinc-700 text-zinc-300"
+                  message.role === 'assistant'
+                    ? 'bg-emerald-600/10 border-emerald-500/20 text-emerald-400'
+                    : 'bg-zinc-800 border-zinc-700 text-zinc-300'
                 }`}
               >
-                {message.role === "assistant" ? (
+                {message.role === 'assistant' ? (
                   <Bot size={16} />
                 ) : data?.user ? (
                   <UserAvatar src={data?.user.image as string} alt={data?.user.name as string} />
@@ -392,19 +399,19 @@ function RouteComponent() {
 
               <div
                 className={`flex flex-col max-w-[85%] space-y-2 ${
-                  message.role === "user" ? "items-end" : "items-start"
+                  message.role === 'user' ? 'items-end' : 'items-start'
                 }`}
               >
                 <div
                   className={`relative px-4 py-3 rounded-2xl border ${
-                    message.role === "assistant"
-                      ? "bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full"
-                      : "bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/10"
+                    message.role === 'assistant'
+                      ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full'
+                      : 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/10'
                   }`}
                 >
                   <div className="prose prose-invert prose-sm sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
                     {message.parts.map((part, idx) => {
-                      if (part.type === "thinking" && !targetMessageIds.has(message.id)) {
+                      if (part.type === 'thinking' && !targetMessageIds.has(message.id)) {
                         return (
                           <div
                             key={idx}
@@ -416,7 +423,7 @@ function RouteComponent() {
                         );
                       }
 
-                      if (part.type === "thinking" && targetMessageIds.has(message.id)) {
+                      if (part.type === 'thinking' && targetMessageIds.has(message.id)) {
                         return (
                           <div
                             key={idx}
@@ -424,7 +431,7 @@ function RouteComponent() {
                           >
                             <pre
                               className={cn(
-                                "whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800",
+                                'whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800',
                               )}
                             >
                               {part.content}
@@ -433,22 +440,22 @@ function RouteComponent() {
                         );
                       }
 
-                      if (part.type === "text" && !targetMessageIds.has(message.id)) {
+                      if (part.type === 'text' && !targetMessageIds.has(message.id)) {
                         return (
                           <MarkdownRenderer
-                            markdown={part.content || "*Nothing to preview...*"}
+                            markdown={part.content || '*Nothing to preview...*'}
                             key={idx}
                           />
                         );
                       }
 
-                      if (part.type === "text" && targetMessageIds.has(message.id)) {
+                      if (part.type === 'text' && targetMessageIds.has(message.id)) {
                         return (
                           <pre
                             className={cn(
-                              "whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800",
+                              'whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800',
                               {
-                                "bg-emerald-600 border-none": message.role === "user",
+                                'bg-emerald-600 border-none': message.role === 'user',
                               },
                             )}
                           >
@@ -460,37 +467,38 @@ function RouteComponent() {
                     })}
                   </div>
                 </div>
-                {message.role === "assistant" && !isLoading && (
-                  // note: add opacity-0 && group-hover:opacity-100 for better ui
-                  <div className="flex items-center gap-2 mt-2 transition-opacity">
-                    <CopyButton
-                      content={message.parts
-                        .map((part) => {
-                          if (part.type === "text") return part.content;
-                        })
-                        .join("")}
-                    />
+                {message.role === 'assistant' &&
+                  !isLoading && (
+                    // note: add opacity-0 && group-hover:opacity-100 for better ui
+                    <div className="flex items-center gap-2 mt-2 transition-opacity">
+                      <CopyButton
+                        content={message.parts
+                          .map((part) => {
+                            if (part.type === 'text') return part.content;
+                          })
+                          .join('')}
+                      />
 
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setTargetMessageIds((prev) => {
-                          const next = new Set(prev);
-                          if (next.has(message.id)) next.delete(message.id);
-                          else next.add(message.id);
-                          return next;
-                        });
-                      }}
-                      className="h-8 px-2 text-zinc-400"
-                    >
-                      <RepeatIcon size={14} />
-                      <span className="ml-2 text-xs">
-                        {targetMessageIds.has(message.id) ? `View Original` : `View Raw`}
-                      </span>
-                    </Button>
-                  </div>
-                )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setTargetMessageIds((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(message.id)) next.delete(message.id);
+                            else next.add(message.id);
+                            return next;
+                          });
+                        }}
+                        className="h-8 px-2 text-zinc-400"
+                      >
+                        <RepeatIcon size={14} />
+                        <span className="ml-2 text-xs">
+                          {targetMessageIds.has(message.id) ? `View Original` : `View Raw`}
+                        </span>
+                      </Button>
+                    </div>
+                  )}
               </div>
             </div>
           ))}

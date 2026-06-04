@@ -21,9 +21,7 @@ import { Route as ApiProxyImageRouteImport } from './routes/api/proxy-image'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as DashboardImagesRouteRouteImport } from './routes/dashboard/images/route'
 import { Route as DashboardAlbumsRouteRouteImport } from './routes/dashboard/albums/route'
-import { Route as ApiChatOpenrouterRouteRouteImport } from './routes/api/chat-openrouter/route'
-import { Route as ApiChatGroqRouteRouteImport } from './routes/api/chat-groq/route'
-import { Route as ApiChatGeminiRouteRouteImport } from './routes/api/chat-gemini/route'
+import { Route as ApiChatRouteRouteImport } from './routes/api/chat/route'
 import { Route as PostPostIdIndexRouteImport } from './routes/post/$postId.index'
 import { Route as DashboardTaskTrackerIndexRouteImport } from './routes/dashboard/task-tracker/index'
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
@@ -113,19 +111,9 @@ const DashboardAlbumsRouteRoute = DashboardAlbumsRouteRouteImport.update({
   path: '/albums',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const ApiChatOpenrouterRouteRoute = ApiChatOpenrouterRouteRouteImport.update({
-  id: '/api/chat-openrouter',
-  path: '/api/chat-openrouter',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatGroqRouteRoute = ApiChatGroqRouteRouteImport.update({
-  id: '/api/chat-groq',
-  path: '/api/chat-groq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatGeminiRouteRoute = ApiChatGeminiRouteRouteImport.update({
-  id: '/api/chat-gemini',
-  path: '/api/chat-gemini',
+const ApiChatRouteRoute = ApiChatRouteRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostPostIdIndexRoute = PostPostIdIndexRouteImport.update({
@@ -293,9 +281,7 @@ const ChatChatChatboxAdapterChatIdIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
-  '/api/chat-gemini': typeof ApiChatGeminiRouteRoute
-  '/api/chat-groq': typeof ApiChatGroqRouteRoute
-  '/api/chat-openrouter': typeof ApiChatOpenrouterRouteRoute
+  '/api/chat': typeof ApiChatRouteRoute
   '/dashboard/albums': typeof DashboardAlbumsRouteRouteWithChildren
   '/dashboard/images': typeof DashboardImagesRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
@@ -337,9 +323,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/api/chat-gemini': typeof ApiChatGeminiRouteRoute
-  '/api/chat-groq': typeof ApiChatGroqRouteRoute
-  '/api/chat-openrouter': typeof ApiChatOpenrouterRouteRoute
+  '/api/chat': typeof ApiChatRouteRoute
   '/api/$': typeof ApiSplatRoute
   '/api/proxy-image': typeof ApiProxyImageRoute
   '/api/uploadthing': typeof ApiUploadthingRoute
@@ -382,9 +366,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteRouteWithChildren
   '/_general': typeof GeneralRouteRouteWithChildren
   '/dashboard': typeof DashboardRouteRouteWithChildren
-  '/api/chat-gemini': typeof ApiChatGeminiRouteRoute
-  '/api/chat-groq': typeof ApiChatGroqRouteRoute
-  '/api/chat-openrouter': typeof ApiChatOpenrouterRouteRoute
+  '/api/chat': typeof ApiChatRouteRoute
   '/dashboard/albums': typeof DashboardAlbumsRouteRouteWithChildren
   '/dashboard/images': typeof DashboardImagesRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
@@ -429,9 +411,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
-    | '/api/chat-gemini'
-    | '/api/chat-groq'
-    | '/api/chat-openrouter'
+    | '/api/chat'
     | '/dashboard/albums'
     | '/dashboard/images'
     | '/api/$'
@@ -473,9 +453,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/api/chat-gemini'
-    | '/api/chat-groq'
-    | '/api/chat-openrouter'
+    | '/api/chat'
     | '/api/$'
     | '/api/proxy-image'
     | '/api/uploadthing'
@@ -517,9 +495,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/_general'
     | '/dashboard'
-    | '/api/chat-gemini'
-    | '/api/chat-groq'
-    | '/api/chat-openrouter'
+    | '/api/chat'
     | '/dashboard/albums'
     | '/dashboard/images'
     | '/api/$'
@@ -565,9 +541,7 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   GeneralRouteRoute: typeof GeneralRouteRouteWithChildren
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
-  ApiChatGeminiRouteRoute: typeof ApiChatGeminiRouteRoute
-  ApiChatGroqRouteRoute: typeof ApiChatGroqRouteRoute
-  ApiChatOpenrouterRouteRoute: typeof ApiChatOpenrouterRouteRoute
+  ApiChatRouteRoute: typeof ApiChatRouteRoute
   ApiSplatRoute: typeof ApiSplatRoute
   ApiProxyImageRoute: typeof ApiProxyImageRoute
   ApiUploadthingRoute: typeof ApiUploadthingRoute
@@ -666,25 +640,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAlbumsRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/api/chat-openrouter': {
-      id: '/api/chat-openrouter'
-      path: '/api/chat-openrouter'
-      fullPath: '/api/chat-openrouter'
-      preLoaderRoute: typeof ApiChatOpenrouterRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat-groq': {
-      id: '/api/chat-groq'
-      path: '/api/chat-groq'
-      fullPath: '/api/chat-groq'
-      preLoaderRoute: typeof ApiChatGroqRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat-gemini': {
-      id: '/api/chat-gemini'
-      path: '/api/chat-gemini'
-      fullPath: '/api/chat-gemini'
-      preLoaderRoute: typeof ApiChatGeminiRouteRouteImport
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/post/$postId/': {
@@ -1019,9 +979,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   GeneralRouteRoute: GeneralRouteRouteWithChildren,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
-  ApiChatGeminiRouteRoute: ApiChatGeminiRouteRoute,
-  ApiChatGroqRouteRoute: ApiChatGroqRouteRoute,
-  ApiChatOpenrouterRouteRoute: ApiChatOpenrouterRouteRoute,
+  ApiChatRouteRoute: ApiChatRouteRoute,
   ApiSplatRoute: ApiSplatRoute,
   ApiProxyImageRoute: ApiProxyImageRoute,
   ApiUploadthingRoute: ApiUploadthingRoute,

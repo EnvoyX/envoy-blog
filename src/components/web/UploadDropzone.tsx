@@ -1,6 +1,7 @@
 import { createId } from '@paralleldrive/cuid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
+import { Effect } from 'effect';
 import { motion } from 'motion/react';
 import { useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -63,8 +64,13 @@ export default function UploadDropzone() {
     }
     setError(null);
 
-    const srcs = await Promise.all(validFiles.map((file) => readFile(file)));
-    const newEntries: FileEntry[] = validFiles.map((file, i) => ({ file, src: srcs[i] }));
+    const srcsEffects = validFiles.map((file) => Effect.tryPromise(() => readFile(file)));
+    const srcs = await Effect.runPromise(
+      Effect.all(srcsEffects, {
+        concurrency: 10,
+      }),
+    );
+    const newEntries: FileEntry[] = validFiles.map((file, i) => ({ file, src: srcs[i] as string }));
     setEntries((prev) => [...prev, ...newEntries]);
     setFileProgress({});
   }
@@ -88,7 +94,7 @@ export default function UploadDropzone() {
 
     const base64 = entry.src.includes(',') ? entry.src.split(',')[1] : entry.src;
     const formData = new FormData();
-    formData.append('image', base64);
+    formData.append('image', base64 as string);
     formData.append('name', entry.file.name.replace(/\.[^.]+$/, ''));
 
     setProgress(30);

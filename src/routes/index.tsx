@@ -57,19 +57,19 @@ function App() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            Now in RC: TanStack Start
+            <p>Made with TanStack Start (RC)</p>
           </div>
           <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight mb-6 bg-linear-to-b from-white to-slate-400 bg-clip-text text-transparent">
             Envoy <br /> Mindpalace
           </h1>
-          <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto">
-            This is my own TanStack Start playground to learn and experiment with. Powered by
-            TanStack Router, Vite, and many other parts of TanStack's Ecosystem.
+          <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto font-mono">
+            My own TanStack Start playground to learn and experiment with. Powered by TanStack
+            Router, Vite, and many other parts of TanStack's Ecosystem.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/about"
-              className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105"
+              className="flex font-mono items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105"
             >
               About <ArrowRight size={18} />
             </Link>
@@ -77,7 +77,7 @@ function App() {
               href="https://github.com/EnvoyX"
               target="_blank"
               rel="noreferrer"
-              className="flex items-center justify-center gap-2 bg-slate-900 border border-slate-800 hover:border-slate-700 px-8 py-4 rounded-xl font-bold transition-all"
+              className="flex font-mono items-center justify-center gap-2 bg-slate-900 border border-slate-800 hover:border-slate-700 px-8 py-4 rounded-xl font-bold transition-all"
             >
               <Code2 size={18} /> Github
             </a>
@@ -88,7 +88,7 @@ function App() {
       <section className="max-w-5xl mx-auto px-8 py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 relative">
         <div className="lg:col-span-5 space-y-6">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-xl font-bold tracking-tight bg-linear-to-r from-white to-slate-400 bg-clip-text text-transparent">
+            <h2 className="text-xl font-bold tracking-tight text-white font-mono">
               Latest Thoughts
             </h2>
             {/*<span className="text-xs text-slate-500 font-medium px-2 py-1 bg-slate-900/50 rounded-md border border-slate-800">
@@ -96,7 +96,7 @@ function App() {
             </span>*/}
             <Link
               to="/post"
-              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors group"
+              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors group font-mono"
             >
               View all{' '}
               <ArrowUpRight
@@ -167,12 +167,12 @@ function App() {
 
         <div className="lg:col-span-7 space-y-6">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-xl font-bold tracking-tight bg-linear-to-r from-white to-slate-400 bg-clip-text text-transparent">
+            <h2 className="text-xl font-bold tracking-tight text-white font-mono">
               Recent Articles
             </h2>
             <Link
               to="/blog"
-              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors group"
+              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors group font-mono"
             >
               View all{' '}
               <ArrowUpRight

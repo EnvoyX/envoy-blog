@@ -34,13 +34,13 @@ function CopyButton({ content }: { content: string }) {
 
 export function Chat({
   apiRoute,
-  model,
+  providerAdapter,
   chatId,
   selectedModel,
   navigate,
 }: {
   apiRoute: string;
-  model: 'openrouter' | 'gemini' | 'groq';
+  providerAdapter: 'openrouter' | 'gemini' | 'groq';
   chatId: string;
   selectedModel: string | undefined;
   navigate: UseNavigateResult<'/chat/$adapter/'>;
@@ -69,7 +69,7 @@ export function Chat({
       void navigate({
         to: '/chat/$adapter/$chatId',
         params: {
-          adapter: model,
+          adapter: providerAdapter,
           chatId: `chat-${chatId}`,
         },
         search: {
@@ -97,10 +97,16 @@ export function Chat({
           body: {
             conversationId: `chat-${chatId}`,
             requestModel: currentModel,
+            providerAdapter, // provider e.g gemini, openrouter, groq
           },
         };
       },
     ),
+    forwardedProps: {
+      conversationId: `chat-${chatId}`,
+      requestModel: currentModel,
+      providerAdapter, // provider e.g gemini, openrouter, groq
+    },
     onError(error) {
       toast.error('Error has been occured', {
         description:
@@ -111,7 +117,7 @@ export function Chat({
       void navigate({
         to: '/chat/$adapter/$chatId',
         params: {
-          adapter: model,
+          adapter: providerAdapter,
           chatId: `chat-${chatId}`,
         },
         search: {
@@ -121,6 +127,7 @@ export function Chat({
     },
     onFinish: (message) => {
       // console.log('Message from Client: ', message)
+      console.log('Adapter', providerAdapter);
       mutate({
         data: {
           chatId: `chat-${chatId}`,
@@ -132,7 +139,7 @@ export function Chat({
               : message.role === 'system'
                 ? 'SYSTEM'
                 : 'USER',
-          model: model,
+          model: providerAdapter,
           recentModel: currentModel,
         },
       });
@@ -156,8 +163,8 @@ export function Chat({
     <div className="flex flex-col h-screen bg-[#09090b] text-zinc-100 selection:bg-blue-500/30">
       <HeaderChat
         currentModel={currentModel as string}
-        model={model}
-        provider={model}
+        model={providerAdapter}
+        provider={providerAdapter}
         onModelChange={onModelChange}
       />
       <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-hide space-y-8 py-8 px-4">
@@ -253,37 +260,38 @@ export function Chat({
                     })}
                   </div>
                 </div>
-                {message.role === 'assistant' && !isLoading && (
-                  // note: add opacity-0 && group-hover:opacity-100 for better ui
-                  <div className="flex items-center gap-2 mt-2 transition-opacity">
-                    <CopyButton
-                      content={message.parts
-                        .map((part) => {
-                          if (part.type === 'text') return part.content;
-                        })
-                        .join('')}
-                    />
+                {message.role === 'assistant' &&
+                  !isLoading && (
+                    // note: add opacity-0 && group-hover:opacity-100 for better ui
+                    <div className="flex items-center gap-2 mt-2 transition-opacity">
+                      <CopyButton
+                        content={message.parts
+                          .map((part) => {
+                            if (part.type === 'text') return part.content;
+                          })
+                          .join('')}
+                      />
 
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setTargetMessageIds((prev) => {
-                          const next = new Set(prev);
-                          if (next.has(message.id)) next.delete(message.id);
-                          else next.add(message.id);
-                          return next;
-                        });
-                      }}
-                      className="h-8 px-2 text-zinc-400"
-                    >
-                      <RepeatIcon size={14} />
-                      <span className="ml-2 text-xs">
-                        {targetMessageIds.has(message.id) ? `View Original` : `View Raw`}
-                      </span>
-                    </Button>
-                  </div>
-                )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setTargetMessageIds((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(message.id)) next.delete(message.id);
+                            else next.add(message.id);
+                            return next;
+                          });
+                        }}
+                        className="h-8 px-2 text-zinc-400"
+                      >
+                        <RepeatIcon size={14} />
+                        <span className="ml-2 text-xs">
+                          {targetMessageIds.has(message.id) ? `View Original` : `View Raw`}
+                        </span>
+                      </Button>
+                    </div>
+                  )}
               </div>
             </div>
           ))}

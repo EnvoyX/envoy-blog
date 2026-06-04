@@ -1,4 +1,5 @@
 import { createServerFn } from '@tanstack/react-start';
+import { Effect } from 'effect';
 import { z } from 'zod';
 
 import { db } from '@/lib/db';
@@ -153,8 +154,8 @@ export const createShortPostFn = createServerFn({ method: 'POST' })
 
         // update metadata of images picked from gallery
         if (existingImagesData.length > 0) {
-          await Promise.all(
-            existingImagesData.map((img) =>
+          const updateEffects = existingImagesData.map((img) =>
+            Effect.tryPromise(() =>
               ctx.image.update({
                 where: { id: img.id },
                 data: {
@@ -166,6 +167,11 @@ export const createShortPostFn = createServerFn({ method: 'POST' })
                 },
               }),
             ),
+          );
+          await Effect.runPromise(
+            Effect.all(updateEffects, {
+              concurrency: 10, // processes 10 updates at a time, if set to "unbounded" processes all updates concurrently
+            }),
           );
         }
 
@@ -233,8 +239,8 @@ export const editShortPostFn = createServerFn({ method: 'POST' })
 
         // update metadata of images picked from gallery
         if (existingImagesData.length > 0) {
-          await Promise.all(
-            existingImagesData.map((img) =>
+          const updateEffects = existingImagesData.map((img) =>
+            Effect.tryPromise(() =>
               tx.image.update({
                 where: { id: img.id },
                 data: {
@@ -246,6 +252,11 @@ export const editShortPostFn = createServerFn({ method: 'POST' })
                 },
               }),
             ),
+          );
+          await Effect.runPromise(
+            Effect.all(updateEffects, {
+              concurrency: 10, // processes 10 updates at a time, if set to "unbounded" processes all updates concurrently
+            }),
           );
         }
 
