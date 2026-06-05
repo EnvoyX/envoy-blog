@@ -173,7 +173,7 @@ export function BulkAlbumDialog() {
                   .with('add', () => 'Add Photos')
                   .with('remove', () => 'Remove Photos')
                   .with('delete', () => 'Delete Photos')
-                  .exhaustive()}
+                  .otherwise(() => null)}
               </DialogTitle>
               <DialogDescription className="text-zinc-400">
                 {match(bulkMode)
@@ -195,7 +195,7 @@ export function BulkAlbumDialog() {
                       <span className="text-emerald-400 font-semibold">{initialValues?.name}</span>
                     </>
                   ))
-                  .exhaustive()}
+                  .otherwise(() => null)}
               </DialogDescription>
             </DialogHeader>
 
@@ -246,7 +246,7 @@ export function BulkAlbumDialog() {
                     .with('add', () => 'Add Photos')
                     .with('remove', () => 'Remove Photos')
                     .with('delete', () => 'Delete Photos')
-                    .exhaustive()}
+                    .otherwise(() => null)}
                 </h3>
                 <DialogHeader className="md:hidden">
                   <DialogDescription className="text-zinc-400">
@@ -275,7 +275,7 @@ export function BulkAlbumDialog() {
                           </span>
                         </>
                       ))
-                      .exhaustive()}
+                      .otherwise(() => null)}
                   </DialogDescription>
                 </DialogHeader>
                 <p className="text-xs text-zinc-500">
@@ -284,7 +284,7 @@ export function BulkAlbumDialog() {
                     .with('add', () => 'add to')
                     .with('remove', () => 'remove from')
                     .with('delete', () => 'delete from')
-                    .exhaustive()}{' '}
+                    .otherwise(() => null)}{' '}
                   this album
                 </p>
               </div>
@@ -309,7 +309,7 @@ export function BulkAlbumDialog() {
                       .with('add', () => <>Import ({selectedIds.size})</>)
                       .with('remove', () => <>Remove ({selectedIds.size})</>)
                       .with('delete', () => <>Delete ({selectedIds.size})</>)
-                      .exhaustive()}
+                      .otherwise(() => null)}
                   </Button>
                   <Button
                     variant="default"
@@ -395,7 +395,7 @@ export function BulkAlbumDialog() {
                             .with('add', () => 'All your library images are already in this album.')
                             .with('remove', () => 'No images available to remove from this album')
                             .with('delete', () => 'No images available to delete from this album')
-                            .exhaustive()}
+                            .otherwise(() => null)}
                         </EmptyDescription>
                       </EmptyHeader>
                     </Empty>
