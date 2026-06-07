@@ -230,7 +230,9 @@ export function EditImagesDialog() {
                         </span>
                       </Label>
                       <p className="text-xs text-zinc-500">
-                        Change images visibility to all users in the app
+                        {field.state.value
+                          ? 'images are visible to all users'
+                          : 'images are hidden to all users'}
                       </p>
                     </div>
                     <Switch
@@ -265,7 +267,9 @@ export function EditImagesDialog() {
                                 </span>
                               </Label>
                               <p className="text-xs text-zinc-500">
-                                Show whether images are visible to followers
+                                {field.state.value
+                                  ? 'images are visible to followers'
+                                  : 'images are hidden to followers'}
                               </p>
                             </div>
                             <Switch

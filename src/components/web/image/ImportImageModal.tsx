@@ -232,7 +232,11 @@ export function ImportImageModal() {
                           {field.state.value ? 'Public' : 'Private'}
                         </span>
                       </Label>
-                      <p className="text-xs text-zinc-500">Visible to all users in the gallery</p>
+                      <p className="text-xs text-zinc-500">
+                        {field.state.value
+                          ? 'Images are visible to all users'
+                          : 'Images are hidden to all users'}
+                      </p>
                     </div>
                     <Switch
                       checked={field.state.value}
@@ -266,7 +270,9 @@ export function ImportImageModal() {
                                 </span>
                               </Label>
                               <p className="text-xs text-zinc-500">
-                                Show this images to follower even if private
+                                {field.state.value
+                                  ? 'Images are visible to followers'
+                                  : 'Images are hidden to followers'}
                               </p>
                             </div>
                             <Switch

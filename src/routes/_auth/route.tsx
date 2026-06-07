@@ -9,7 +9,7 @@ export const Route = createFileRoute('/_auth')({
 
 function RouteComponent() {
   return (
-    <div className="min-h-screen bg-linear-to-b from-slate-950 to-emerald-500/30 linear text-slate-50 selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-linear-to-b from-slate-950 to-emerald-500/30 linear text-slate-50 selection:bg-emerald-500/30 font-mono">
       <div className="absolute top-8 left-8">
         <Link to="/" className={buttonVariants({ variant: 'default' })}>
           <ArrowLeft className="size-4" />

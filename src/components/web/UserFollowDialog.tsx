@@ -3,17 +3,36 @@ import { VirtualOrigin } from '@tanstack/react-db';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
-import { Loader2 } from 'lucide-react';
+import { Loader2, MoreHorizontal, UserX } from 'lucide-react';
+import { match } from 'ts-pattern';
+import { useMediaQuery } from 'usehooks-ts';
 
 import { followColection } from '@/collections/follow';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getFollowsByUserIdFn } from '@/data/follow';
 import { UserRole } from '@/generated/prisma/enums';
 import { followDialogStore } from '@/store/profile';
 
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '../ui/drawer';
 type FollowDialogProps = {
   follows: {
     id: string;
@@ -116,6 +135,7 @@ function UserList({
   currentUserId: string;
 } & FollowDialogProps) {
   const queryClient = useQueryClient();
+  const isMobile = useMediaQuery('(max-width: 640px)');
   const { data, isLoading } = useQuery({
     queryKey: ['user-following-followers', currentUserId],
     queryFn: async () => {
@@ -141,16 +161,16 @@ function UserList({
         followingId: targetUserId,
         followerId: session?.user.id as string,
       });
-      queryClient.invalidateQueries({
-        queryKey: ['user-following-followers', currentUserId],
-      });
     } else {
       // optimistic delete follow
       followColection.delete(existingFollow.id);
-      queryClient.invalidateQueries({
-        queryKey: ['user-following-followers', currentUserId],
-      });
     }
+    void queryClient.invalidateQueries({
+      queryKey: ['user-following-followers', currentUserId],
+    });
+    void queryClient.invalidateQueries({
+      queryKey: ['followsData'],
+    });
   }
 
   function getUsersByType(type: 'followers' | 'following') {
@@ -187,6 +207,9 @@ function UserList({
         const hasFollowed = follows.find(
           (follow) => follow.followerId === session?.user?.id && follow.followingId === user.id,
         );
+        const followerData = follows.find(
+          (follow) => follow.followerId === user.id && follow.followingId === session?.user?.id,
+        );
         return (
           <Link
             to={'/user/$userId'}
@@ -215,17 +238,123 @@ function UserList({
               </div>
             </div>
             {session.user && session.user?.id !== user.id && (
-              <>
+              <div className="flex items-center gap-3 ">
                 {hasFollowed ? (
-                  <Button className="cursor-pointer" onClick={() => handleToggleFollow(user.id)}>
+                  <Button
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleToggleFollow(user.id);
+                    }}
+                  >
                     Unfollow
                   </Button>
                 ) : (
-                  <Button className="cursor-pointer" onClick={() => handleToggleFollow(user.id)}>
+                  <Button
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleToggleFollow(user.id);
+                    }}
+                  >
                     Follow
                   </Button>
                 )}{' '}
-              </>
+                {session.user.id === currentUserId && (
+                  <section
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  >
+                    {type === 'followers' &&
+                      match(isMobile)
+                        .with(true, () => (
+                          <Drawer>
+                            <DrawerTrigger asChild>
+                              <Button variant="ghost" className="cursor-pointer">
+                                <MoreHorizontal />
+                              </Button>
+                            </DrawerTrigger>
+                            <DrawerContent>
+                              <DrawerHeader>
+                                <DrawerTitle>{user.name}</DrawerTitle>
+                                <DrawerDescription>{user.email}</DrawerDescription>
+                              </DrawerHeader>
+                              <DrawerFooter>
+                                <Button
+                                  variant="destructive"
+                                  className="cursor-pointer"
+                                  onClick={() => {
+                                    followDialogStore.setState((prev) => ({
+                                      ...prev,
+                                      isConfirmDialogOpen: true,
+                                      confirmData: {
+                                        followId: followerData?.id as string,
+                                        followerId: user.id,
+                                        followerImage: user.image ?? (user.defaultImage as string),
+                                        followerName: user.name,
+                                        followerEmail: user.email,
+                                      },
+                                    }));
+                                  }}
+                                >
+                                  Remove this Follower
+                                </Button>
+                                <DrawerClose>
+                                  <Button variant="outline" className="w-full cursor-pointer">
+                                    Cancel
+                                  </Button>
+                                </DrawerClose>
+                              </DrawerFooter>
+                            </DrawerContent>
+                          </Drawer>
+                        ))
+                        .with(false, () => (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                className="cursor-pointer"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                }}
+                              >
+                                <MoreHorizontal />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuGroup>
+                                <DropdownMenuItem
+                                  variant="destructive"
+                                  className="cursor-pointer flex items-center gap-2"
+                                  onClick={() => {
+                                    followDialogStore.setState((prev) => ({
+                                      ...prev,
+                                      isConfirmDialogOpen: true,
+                                      confirmData: {
+                                        followId: followerData?.id as string,
+                                        followerId: user.id,
+                                        followerImage: user.image ?? (user.defaultImage as string),
+                                        followerName: user.name,
+                                        followerEmail: user.email,
+                                      },
+                                    }));
+                                  }}
+                                >
+                                  <UserX />
+                                  <span>Remove this Follower</span>
+                                </DropdownMenuItem>
+                              </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        ))
+                        .exhaustive()}
+                  </section>
+                )}
+              </div>
             )}
           </Link>
         );

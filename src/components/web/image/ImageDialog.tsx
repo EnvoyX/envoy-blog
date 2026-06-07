@@ -173,7 +173,11 @@ export function ImageDialog() {
                           {field.state.value ? 'Public' : 'Private'}
                         </span>
                       </Label>
-                      <p className="text-xs text-zinc-500">Visible to all users in the app</p>
+                      <p className="text-xs text-zinc-500">
+                        {field.state.value
+                          ? 'Image is visible to all users'
+                          : 'Image is hidden to all users'}
+                      </p>
                     </div>
                     <Switch
                       checked={field.state.value}
@@ -207,7 +211,9 @@ export function ImageDialog() {
                                 </span>
                               </Label>
                               <p className="text-xs text-zinc-500">
-                                Show this image to follower even if private
+                                {field.state.value
+                                  ? 'Image is visible to followers'
+                                  : 'Image is hidden to followers'}
                               </p>
                             </div>
                             <Switch

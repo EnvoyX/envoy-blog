@@ -75,3 +75,18 @@ export const toggleFollowFn = createServerFn({ method: 'POST' })
 
     return { followed: true };
   });
+
+export const removeFollowerFn = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .inputValidator(z.object({ followId: z.string(), followerId: z.string() }))
+  .handler(async ({ data, context }) => {
+    await db.follow.delete({
+      where: {
+        id: data.followId,
+        followerId_followingId: {
+          followerId: data.followerId,
+          followingId: context.user.id as string, // session's user Id
+        },
+      },
+    });
+  });

@@ -4,12 +4,30 @@ import { combine, persist } from 'zustand/middleware';
 
 export const followDialogStore = createStore<{
   isOpen: boolean;
+  isConfirmDialogOpen: boolean;
+  isLoading: boolean;
   initialTab: 'followers' | 'following';
   currentUserId: string;
+  confirmData: {
+    followId: string;
+    followerId: string;
+    followerImage: string;
+    followerName: string;
+    followerEmail: string;
+  };
 }>({
   isOpen: false,
+  isConfirmDialogOpen: false,
+  isLoading: false,
   initialTab: 'followers',
   currentUserId: '',
+  confirmData: {
+    followId: '',
+    followerId: '',
+    followerImage: '',
+    followerName: '',
+    followerEmail: '',
+  },
 });
 
 export const useProfileStore = create(

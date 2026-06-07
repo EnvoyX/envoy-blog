@@ -134,6 +134,7 @@
     "uploadthing": "^7.7.4",
     "usehooks-ts": "^3.1.1",
     "uuid": "^14.0.0",
+    "vaul": "^1.1.2",
     "vite-tsconfig-paths": "^6.1.1",
     "xlsx": "^0.18.5",
     "yet-another-react-lightbox": "^3.32.0",

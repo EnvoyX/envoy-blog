@@ -1,14 +1,14 @@
-import { createId } from "@paralleldrive/cuid2";
-import { useLiveQuery } from "@tanstack/react-db";
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
-import { CheckCheck, Eye, ImageIcon, ImagesIcon, Mail, UserIcon, Users } from "lucide-react";
-import { useState } from "react";
+import { createId } from '@paralleldrive/cuid2';
+import { useLiveQuery } from '@tanstack/react-db';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { zodValidator } from '@tanstack/zod-adapter';
+import { CheckCheck, Eye, ImageIcon, ImagesIcon, Mail, UserIcon, Users } from 'lucide-react';
+import { useState } from 'react';
 
-import { followColection } from "@/collections/follow";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { followColection } from '@/collections/follow';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,20 +17,21 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AlbumCard } from "@/components/web/album/AlbumCard";
-import { BlogCard } from "@/components/web/BlogCard";
-import PhotoGallery from "@/components/web/PhotoGallery";
-import { ShortPostCard } from "@/components/web/post/ShortPostCard";
-import { UserFollowDialog } from "@/components/web/UserFollowDialog";
-import { User } from "@/generated/prisma/client";
-import { profilePageSearchParamsSchema } from "@/schemas/searchSchemas";
-import { followDialogStore } from "@/store/profile";
-import { UserSession } from "@/data/session";
-import { userProfileOptions } from "@/data/query-options/queryOptions";
+} from '@/components/ui/dropdown-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AlbumCard } from '@/components/web/album/AlbumCard';
+import { BlogCard } from '@/components/web/BlogCard';
+import ConfirmDialog from '@/components/web/ConfirmDialog';
+import PhotoGallery from '@/components/web/PhotoGallery';
+import { ShortPostCard } from '@/components/web/post/ShortPostCard';
+import { UserFollowDialog } from '@/components/web/UserFollowDialog';
+import { userProfileOptions } from '@/data/query-options/queryOptions';
+import { UserSession } from '@/data/session';
+import { User } from '@/generated/prisma/client';
+import { profilePageSearchParamsSchema } from '@/schemas/searchSchemas';
+import { followDialogStore } from '@/store/profile';
 
-export const Route = createFileRoute("/_general/user/$userId")({
+export const Route = createFileRoute('/_general/user/$userId')({
   component: PublicProfileComponent,
   loader: async ({ params, context }) => {
     const user = await context.queryClient.ensureQueryData(userProfileOptions(params.userId));
@@ -46,22 +47,22 @@ export const Route = createFileRoute("/_general/user/$userId")({
     meta: [
       { title: `${loaderData?.user?.name} | Profile | Envoy Mindpalace` },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to my TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to my TanStack Start playground!',
       },
       {
-        property: "og:title",
+        property: 'og:title',
         content: `${loaderData?.user?.name} | Profile | Envoy Mindpalace`,
       },
       {
-        property: "og:description",
+        property: 'og:description',
         content: `${loaderData?.user?.biodata}`,
       },
       {
-        property: "og:image",
+        property: 'og:image',
         content: `${loaderData?.user?.image}`,
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
     ],
   }),
 });
@@ -75,11 +76,11 @@ function PublicProfileComponent() {
     ...userProfileOptions(userId),
   });
   const { data: follows } = useLiveQuery((q) => q.from({ follow: followColection }));
-  const [viewMode, setViewMode] = useState<"all" | "public" | "showToFollowers">("public");
+  const [viewMode, setViewMode] = useState<'all' | 'public' | 'showToFollowers'>('public');
   const queryClient = useQueryClient();
-  const viewAll = viewMode === "all";
-  const viewPublic = viewMode === "public";
-  const viewOnlyFollowers = viewMode === "showToFollowers";
+  const viewAll = viewMode === 'all';
+  const viewPublic = viewMode === 'public';
+  const viewOnlyFollowers = viewMode === 'showToFollowers';
   const isOwnProfile = userId === session?.user?.id;
   const followerUserIds = new Set(
     user?.followers.map((follow) => follow.follower).map((follower) => follower.id),
@@ -160,16 +161,16 @@ function PublicProfileComponent() {
         followingId: userId,
         followerId: session?.user.id as string,
       });
-      queryClient.invalidateQueries({
-        queryKey: ["user-following-followers", userId],
-      });
     } else {
       // optimistic delete follow
       followColection.delete(existingFollow.id);
-      queryClient.invalidateQueries({
-        queryKey: ["user-following-followers", userId],
-      });
     }
+    void queryClient.invalidateQueries({
+      queryKey: ['user-following-followers', userId],
+    });
+    void queryClient.invalidateQueries({
+      queryKey: ['followsData'],
+    });
   }
 
   return (
@@ -183,20 +184,20 @@ function PublicProfileComponent() {
                   src={(user?.image as string) ?? (user?.defaultImage as string)}
                   alt={user?.name}
                   onError={(e) => {
-                    e.currentTarget.src = "";
-                    e.currentTarget.className = "hidden";
+                    e.currentTarget.src = '';
+                    e.currentTarget.className = 'hidden';
                   }}
                   className="w-full h-full object-cover object-center rounded-lg"
                 />
 
                 <AvatarFallback className="w-full h-full object-cover object-center rounded-lg text-3xl">
-                  {" "}
+                  {' '}
                   {(user?.name as string)
                     ? user?.name
-                        .split(" ")
+                        .split(' ')
                         .map((n) => n[0])
-                        .join("")
-                    : ""}
+                        .join('')
+                    : ''}
                 </AvatarFallback>
               </Avatar>
             ) : (
@@ -216,10 +217,11 @@ function PublicProfileComponent() {
               <p
                 className="flex items-center gap-1 cursor-pointer"
                 onClick={() => {
-                  followDialogStore.setState(() => ({
+                  followDialogStore.setState((prev) => ({
+                    ...prev,
                     isOpen: true,
                     currentUserId: userId,
-                    initialTab: "followers",
+                    initialTab: 'followers',
                   }));
                 }}
               >
@@ -231,10 +233,11 @@ function PublicProfileComponent() {
               <p
                 className="flex items-center gap-1 cursor-pointer"
                 onClick={() => {
-                  followDialogStore.setState(() => ({
+                  followDialogStore.setState((prev) => ({
+                    ...prev,
                     isOpen: true,
                     currentUserId: userId,
-                    initialTab: "following",
+                    initialTab: 'following',
                   }));
                 }}
               >
@@ -268,14 +271,14 @@ function PublicProfileComponent() {
         </div>
         {isOwnProfile && (
           <div className="flex items-center gap-2 sm:justify-end sm:ml-auto sm:mb-auto max-md:mx-auto">
-            <Link to="/dashboard/profile" className={buttonVariants({ variant: "default" })}>
+            <Link to="/dashboard/profile" className={buttonVariants({ variant: 'default' })}>
               Edit Profile
             </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="cursor-pointer flex items-center">
-                  {viewPublic ? "View Public Only" : viewAll ? "View All" : "Followers Only"}
+                  {viewPublic ? 'View Public Only' : viewAll ? 'View All' : 'Followers Only'}
                   {viewPublic ? (
                     <Eye className="size-4" />
                   ) : viewAll ? (
@@ -291,7 +294,7 @@ function PublicProfileComponent() {
                   <DropdownMenuRadioGroup
                     value={viewMode}
                     onValueChange={(value) => {
-                      setViewMode(value as "all" | "public" | "showToFollowers");
+                      setViewMode(value as 'all' | 'public' | 'showToFollowers');
                     }}
                   >
                     <DropdownMenuRadioItem value="all" className="cursor-pointer">
@@ -329,7 +332,7 @@ function PublicProfileComponent() {
         onValueChange={(value) => {
           navigate({
             search: () => ({
-              currentTab: value as "blogs" | "posts" | "images" | "albums",
+              currentTab: value as 'blogs' | 'posts' | 'images' | 'albums',
             }),
           });
         }}
@@ -417,6 +420,7 @@ function PublicProfileComponent() {
         </TabsContent>
       </Tabs>
       <UserFollowDialog follows={follows} session={session as UserSession} />
+      <ConfirmDialog />
     </main>
   );
 }

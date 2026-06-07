@@ -266,7 +266,11 @@ export function PostDialog() {
                           {field.state.value ? 'Public' : 'Private'}
                         </span>
                       </Label>
-                      <p className="text-xs text-zinc-500">Visible to all users in the app</p>
+                      <p className="text-xs text-zinc-500">
+                        {field.state.value
+                          ? 'Post is visible to all users'
+                          : 'Post is hidden to all users'}
+                      </p>
                     </div>
                     <Switch
                       checked={field.state.value}
@@ -300,7 +304,9 @@ export function PostDialog() {
                                 </span>
                               </Label>
                               <p className="text-xs text-zinc-500">
-                                Show this private post and related content to follower
+                                {field.state.value
+                                  ? 'Post is visible to followers'
+                                  : 'Post is hidden to followers'}
                               </p>
                             </div>
                             <Switch

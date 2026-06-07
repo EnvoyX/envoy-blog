@@ -280,7 +280,11 @@ export function AlbumDialog() {
                           {field.state.value ? 'Public' : 'Private'}
                         </span>
                       </Label>
-                      <p className="text-xs text-zinc-500">Visible to all users in the app</p>
+                      <p className="text-xs text-zinc-500">
+                        {field.state.value
+                          ? 'Album is visible to all users'
+                          : 'Album is hidden to all users'}
+                      </p>
                     </div>
                     <Switch
                       checked={field.state.value}
@@ -314,7 +318,9 @@ export function AlbumDialog() {
                                 </span>
                               </Label>
                               <p className="text-xs text-zinc-500">
-                                Show this album to follower even if private
+                                {field.state.value
+                                  ? 'Album is visible to followers'
+                                  : 'Album is hidden to followers'}
                               </p>
                             </div>
                             <Switch
