@@ -82,7 +82,7 @@ export function Navbar() {
   };
   return (
     <motion.nav
-      className="sticky top-0 z-50 border-b bg-transparent backdrop-blur"
+      className="sticky top-0 z-50 border-b bg-transparent backdrop-blur font-mono"
       animate={{
         y: hidden ? -140 : 0,
         opacity: hidden ? 0 : 1,
