@@ -82,7 +82,7 @@ export function Navbar() {
   };
   return (
     <motion.nav
-      className="sticky top-0 z-50 border-b bg-transparent backdrop-blur font-mono"
+      className="sticky top-0 z-50 border-b bg-transparent backdrop-blur"
       animate={{
         y: hidden ? -140 : 0,
         opacity: hidden ? 0 : 1,
@@ -103,7 +103,7 @@ export function Navbar() {
             className="size-12"
           />
         </Link>
-        <ul className="hidden sm:flex items-center gap-3 font-bold ">
+        <ul className="hidden sm:flex items-center gap-3 font-bold font-mono">
           {navItemsMain.map((item, index) => {
             // If the menu items can be reordered, don't use index but unique value for
             // for the key
@@ -140,7 +140,7 @@ export function Navbar() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="end"
-                    className="w-56 bg-background/25 backdrop-blur-xl border-white/25 "
+                    className="w-56 bg-background/25 backdrop-blur-xl border-white/25 font-mono"
                   >
                     <div className="p-2 px-3">
                       <p className="text-sm font-medium truncate">{session.data?.user.name}</p>
@@ -181,7 +181,10 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/login" className={buttonVariants({ variant: 'default' })}>
+                <Link
+                  to="/login"
+                  className={buttonVariants({ variant: 'default', className: 'font-mono' })}
+                >
                   Login
                 </Link>
               </>
@@ -198,7 +201,7 @@ export function Navbar() {
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="w-75 bg-transparent! backdrop-blur-2xl border-l border-white/10 p-0 flex flex-col"
+            className="w-75 bg-transparent! backdrop-blur-2xl border-l border-white/10 p-0 flex flex-col font-mono"
           >
             <SheetHeader className="p-6 text-left border-b border-white/5">
               <SheetTitle className="flex items-center gap-2">
