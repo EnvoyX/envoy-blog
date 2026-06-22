@@ -21,3 +21,4 @@ minimumReleaseAgeExclude:
   - '@tanstack/openai-base@0.7.0'
   - '@tanstack/ai-devtools-core@0.4.7'
   - '@tanstack/react-ai-devtools@0.2.50'
+  - cnfast@0.0.8
