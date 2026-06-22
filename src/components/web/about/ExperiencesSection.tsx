@@ -140,8 +140,6 @@ export default function ExperiencesSection() {
                   <section className="space-y-4 relative border-l-2 border-slate-700/60 pl-4 ml-1">
                     {item.positions.map((pos, pIdx) => (
                       <div key={pIdx} className="relative group">
-                        <div className="absolute left-[-20.5px] top-2 w-2 h-2 rounded-full bg-slate-600 group-hover:bg-emerald-500 transition-colors" />
-
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
                           <h4 className="text-sm font-semibold text-slate-300 group-hover:text-emerald-400 transition-colors">
                             {pos.role}

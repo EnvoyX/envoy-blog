@@ -26,7 +26,7 @@ export function AppSidebar({ user }: UserSession) {
       <SidebarHeader className="bg-emerald-950/50!">
         <SidebarMenu className="bg-emerald-950/50! rounded-lg">
           <SidebarMenuButton size="lg" asChild className="">
-            <Link to="/" className="flex items-center hover:bg-emerald-500/30! ">
+            <Link to="/" className="flex items-center hover:bg-emerald-500/30! font-mono">
               <div className="flex items-center justify-center aspect-square size-8">
                 <img
                   src="https://tanstack.com/images/logos/logo-color-600.png"
@@ -35,17 +35,16 @@ export function AppSidebar({ user }: UserSession) {
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="font-bold">Envoy Mindpalace</span>
-                <span className="text-xs">TanStack Ecosystem Playground</span>
               </div>
             </Link>
           </SidebarMenuButton>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent className="bg-emerald-950/50!">
+      <SidebarContent className="bg-emerald-950/50! font-mono">
         <NavPrimary items={navItemsDashboard} user={user} />
         <NavSecondary items={navSecondayItems} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter className="bg-emerald-950/50!">
+      <SidebarFooter className="bg-emerald-950/50! font-mono">
         <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
