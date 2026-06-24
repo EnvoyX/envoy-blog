@@ -135,7 +135,7 @@ function BlogPageComponent() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mx-auto">
           {filteredPosts.map((post) => {
-            return <BlogCard post={post} session={session as UserSession} />;
+            return <BlogCard key={post.id} post={post} session={session as UserSession} />;
           })}
         </div>
         <Dialog

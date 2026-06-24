@@ -1,16 +1,17 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import z from "zod";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldGroup } from "@/components/ui/field";
-import { authClient } from "@/lib/auth-client";
+import { createFileRoute, redirect } from '@tanstack/react-router';
+import { zodValidator } from '@tanstack/zod-adapter';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import z from 'zod';
 
-export const Route = createFileRoute("/_auth/login/")({
-  beforeLoad: ({ context }) => {
-    if (context?.user) throw redirect({ to: "/dashboard" });
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Field, FieldGroup } from '@/components/ui/field';
+import { authClient } from '@/lib/auth-client';
+
+export const Route = createFileRoute('/_auth/login/')({
+  beforeLoad: async ({ context }) => {
+    if (context?.user) throw redirect({ to: '/dashboard' });
     return;
   },
   loader: ({ context }) => {
@@ -18,20 +19,20 @@ export const Route = createFileRoute("/_auth/login/")({
   },
   validateSearch: zodValidator(
     z.object({
-      callbackUrl: z.string().optional().default("/dashboard"),
+      callbackUrl: z.string().optional().default('/dashboard'),
     }),
   ),
   head: () => ({
     meta: [
-      { title: "Login | Envoy Mindpalace" },
+      { title: 'Login | Envoy Mindpalace' },
       {
-        name: "Envoy Mindpalace",
-        content: "Welcome to TanStack Start playground!",
+        name: 'Envoy Mindpalace',
+        content: 'Welcome to TanStack Start playground!',
       },
-      { property: "og:title", content: "Login | Envoy Mindpalace" },
-      { property: "og:description", content: "Login to your account in Envoy Mindpalace" },
-      { property: "og:image", content: "https://tanstack.com/assets/og-C0HGjoLl.png" },
-      { property: "og:type", content: "website" },
+      { property: 'og:title', content: 'Login | Envoy Mindpalace' },
+      { property: 'og:description', content: 'Login to your account in Envoy Mindpalace' },
+      { property: 'og:image', content: 'https://tanstack.com/assets/og-C0HGjoLl.png' },
+      { property: 'og:type', content: 'website' },
     ],
   }),
   component: RouteComponent,
@@ -42,7 +43,7 @@ function RouteComponent() {
   const { user } = Route.useLoaderData();
   const [isPending, setIsPending] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
-  async function handleLogin(provider: "github" | "google" | "discord") {
+  async function handleLogin(provider: 'github' | 'google' | 'discord') {
     setIsPending(true);
     await authClient.signIn.social({
       provider: provider,
@@ -50,18 +51,18 @@ function RouteComponent() {
       fetchOptions: {
         onRequest() {
           toast.loading(`Logging in with ${provider.toUpperCase()}...`, {
-            id: "login-oauth",
+            id: 'login-oauth',
           });
         },
         onSuccess: () => {
-          toast.dismiss("login-oauth");
+          toast.dismiss('login-oauth');
           toast.success(`Logged in with ${provider.toUpperCase()} successfully`);
           setIsRedirecting(true);
           setIsPending(false);
         },
 
         onError: ({ error }) => {
-          toast.dismiss("login-oauth");
+          toast.dismiss('login-oauth');
           toast.error(`Failed to login with ${provider.toUpperCase()}`, {
             description: error.message,
           });
@@ -101,56 +102,52 @@ function RouteComponent() {
         <CardDescription>Sign in to continue</CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
-          <FieldGroup>
-            <Field>
-              <>
-                <Button
-                  onClick={async () => {
-                    await handleLogin("google");
-                  }}
-                  variant="outline"
-                  type="button"
-                  className="cursor-pointer"
-                  disabled={isPending}
-                >
-                  <p className="flex items-center  gap-1">
-                    <span className="icon-[material-icon-theme--google] size-5" />
-                    <span>{isPending ? "Logging in..." : "Continue with Google"}</span>
-                  </p>
-                </Button>
-                <Button
-                  onClick={async () => {
-                    await handleLogin("github");
-                  }}
-                  variant="outline"
-                  type="button"
-                  className="cursor-pointer"
-                  disabled={isPending}
-                >
-                  <p className="flex items-center gap-1">
-                    <span className="icon-[mdi--github] size-6" />
-                    <span>{isPending ? "Logging in..." : "Continue with Github"}</span>
-                  </p>
-                </Button>
-                <Button
-                  onClick={async () => {
-                    await handleLogin("discord");
-                  }}
-                  variant="outline"
-                  type="button"
-                  className="cursor-pointer"
-                  disabled={isPending}
-                >
-                  <p className="flex items-center gap-1">
-                    <span className="icon-[ic--baseline-discord] size-6" />
-                    <span>{isPending ? "Logging in..." : "Continue with Discord"}</span>
-                  </p>
-                </Button>
-              </>
-            </Field>
-          </FieldGroup>
-        </form>
+        <FieldGroup>
+          <Field>
+            <Button
+              onClick={async () => {
+                await handleLogin('google');
+              }}
+              variant="outline"
+              type="button"
+              className="cursor-pointer"
+              disabled={isPending}
+            >
+              <p className="flex items-center  gap-1">
+                <span className="icon-[material-icon-theme--google] size-5" />
+                <span>{isPending ? 'Logging in...' : 'Continue with Google'}</span>
+              </p>
+            </Button>
+            <Button
+              onClick={async () => {
+                await handleLogin('github');
+              }}
+              variant="outline"
+              type="button"
+              className="cursor-pointer"
+              disabled={isPending}
+            >
+              <p className="flex items-center gap-1">
+                <span className="icon-[mdi--github] size-6" />
+                <span>{isPending ? 'Logging in...' : 'Continue with Github'}</span>
+              </p>
+            </Button>
+            <Button
+              onClick={async () => {
+                await handleLogin('discord');
+              }}
+              variant="outline"
+              type="button"
+              className="cursor-pointer"
+              disabled={isPending}
+            >
+              <p className="flex items-center gap-1">
+                <span className="icon-[ic--baseline-discord] size-6" />
+                <span>{isPending ? 'Logging in...' : 'Continue with Discord'}</span>
+              </p>
+            </Button>
+          </Field>
+        </FieldGroup>
       </CardContent>
     </Card>
   );
