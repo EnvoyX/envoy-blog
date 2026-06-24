@@ -5,7 +5,7 @@ import { db } from '@/lib/db';
 import { authMiddleware } from '@/middlewares/auth';
 
 export const getPublicProfileFn = createServerFn({ method: 'GET' })
-  .inputValidator(
+  .validator(
     z.object({
       userId: z.string(),
     }),
@@ -78,7 +78,7 @@ export const getPublicProfileFn = createServerFn({ method: 'GET' })
 
 export const updateProfile = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       id: z.string(),
       name: z.string().min(2),

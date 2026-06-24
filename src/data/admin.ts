@@ -35,7 +35,7 @@ export const getSessionsFn = createServerFn()
 
 export const deleteAccountFn = createServerFn()
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       accountId: z.string(),
     }),
@@ -48,7 +48,7 @@ export const deleteAccountFn = createServerFn()
 
 export const deleteAccountsByManyFn = createServerFn()
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       accountIds: z.array(z.string()),
     }),
@@ -65,7 +65,7 @@ export const deleteAccountsByManyFn = createServerFn()
 
 export const deleteSessionFn = createServerFn()
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       sessionId: z.string(),
     }),
@@ -78,7 +78,7 @@ export const deleteSessionFn = createServerFn()
 
 export const deleteSessionsByManyFn = createServerFn()
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       sessionIds: z.array(z.string()),
     }),
@@ -95,7 +95,7 @@ export const deleteSessionsByManyFn = createServerFn()
 
 export const updateUserRoleFn = createServerFn()
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       userId: z.string(),
       role: z.enum(['USER', 'ADMIN', 'SUPERADMIN']),
@@ -115,7 +115,7 @@ export const updateUserRoleFn = createServerFn()
 
 export const updateUserRoleByManyFn = createServerFn()
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       userIds: z.array(z.string()),
       role: z.enum(['USER', 'ADMIN', 'SUPERADMIN']),
@@ -142,7 +142,7 @@ export const updateUserRoleByManyFn = createServerFn()
 
 export const deleteUserFn = createServerFn()
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       userId: z.string(),
       role: z.enum(['USER', 'ADMIN', 'SUPERADMIN']),
@@ -171,7 +171,7 @@ export const deleteUserFn = createServerFn()
 
 export const deleteUsersByManyFn = createServerFn()
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       userIds: z.array(z.string()),
       roles: z.array(z.enum(['USER', 'ADMIN', 'SUPERADMIN'])),

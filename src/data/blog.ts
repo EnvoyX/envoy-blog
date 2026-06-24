@@ -7,7 +7,7 @@ import { authMiddleware } from '@/middlewares/auth';
 import { postSchema } from '@/schemas/blog';
 
 export const getPostFn = createServerFn({ method: 'GET' })
-  .inputValidator((slug: string) => slug)
+  .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
     return await db.post.findUnique({
       where: { slug },
@@ -39,7 +39,7 @@ export const getAllComments = createServerFn({ method: 'GET' }).handler(async ()
 });
 
 export const getPostLikesFn = createServerFn({ method: 'GET' })
-  .inputValidator(
+  .validator(
     z.object({
       postId: z.string(),
       slug: z.string(),
@@ -55,7 +55,7 @@ export const getPostLikesFn = createServerFn({ method: 'GET' })
   });
 
 export const getPostCommentsFn = createServerFn({ method: 'GET' })
-  .inputValidator(
+  .validator(
     z.object({
       postId: z.string(),
       slug: z.string(),
@@ -75,7 +75,7 @@ export const getPostCommentsFn = createServerFn({ method: 'GET' })
 
 export const toggleLikeFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ id: z.string(), postId: z.string(), slug: z.string() }))
+  .validator(z.object({ id: z.string(), postId: z.string(), slug: z.string() }))
   .handler(async ({ data, context }) => {
     const userId = context.user.id;
 
@@ -109,7 +109,7 @@ export const toggleLikeFn = createServerFn({ method: 'POST' })
 
 export const createCommentFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       id: z.string(),
       postId: z.string(),
@@ -133,7 +133,7 @@ export const createCommentFn = createServerFn({ method: 'POST' })
 
 export const updateCommentFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ commentId: z.string(), content: z.string().min(1) }))
+  .validator(z.object({ commentId: z.string(), content: z.string().min(1) }))
   .handler(async ({ data, context }) => {
     return await db.comment.update({
       where: { id: data.commentId, userId: context.user.id },
@@ -143,7 +143,7 @@ export const updateCommentFn = createServerFn({ method: 'POST' })
 
 export const deleteCommentFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ commentId: z.string() }))
+  .validator(z.object({ commentId: z.string() }))
   .handler(async ({ data }) => {
     await db.comment.delete({
       where: { id: data.commentId },
@@ -153,7 +153,7 @@ export const deleteCommentFn = createServerFn({ method: 'POST' })
 
 export const createPostFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(postSchema)
+  .validator(postSchema)
   .handler(async ({ data, context }) => {
     const slug = slugify(data.title, { lower: true });
 
@@ -184,7 +184,7 @@ export const createPostFn = createServerFn({ method: 'POST' })
 
 export const updatePostFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     postSchema.extend({
       postId: z.string(),
     }),
@@ -272,7 +272,7 @@ export const getAuthorPostsFn = createServerFn({ method: 'GET' }).handler(async 
 });
 
 export const deletePostFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       postId: z.string(),
     }),

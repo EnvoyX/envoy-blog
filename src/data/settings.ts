@@ -19,7 +19,7 @@ export const getUserSettings = createServerFn({ method: "GET" })
 
 export const updateUserSettings = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       showFollowStats: z.boolean(),
     }),

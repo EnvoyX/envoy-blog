@@ -7,7 +7,7 @@ export type MessageRole = 'user' | 'assistant' | 'system'
 
 export const getChatHistoryFn = createServerFn({ method: 'GET' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       chatId: z.string(),
     }),
@@ -68,7 +68,7 @@ export const getChatListFn = createServerFn({ method: 'GET' })
 
 export const saveAssistantMessageFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       messageId: z.string(),
       chatId: z.string(),
@@ -117,7 +117,7 @@ export const saveAssistantMessageFn = createServerFn({ method: 'POST' })
   })
 
 export const updateChatTitleFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       chatId: z.string(),
       title: z.string(),
@@ -131,7 +131,7 @@ export const updateChatTitleFn = createServerFn({ method: 'POST' })
   })
 
 export const deleteChatFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       chatId: z.string(),
     }),

@@ -79,7 +79,7 @@ export const getShortPostsFn = createServerFn({ method: 'GET' })
   });
 
 export const getShortPostByIdFn = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ shortPostId: z.string() }))
+  .validator(z.object({ shortPostId: z.string() }))
   .handler(async ({ data }) => {
     return await db.shortPost.findUnique({
       where: { id: data.shortPostId },
@@ -114,7 +114,7 @@ export const getShortPostByIdFn = createServerFn({ method: 'GET' })
   });
 
 export const createShortPostFn = createServerFn({ method: 'POST' })
-  .inputValidator(shortPostSchema)
+  .validator(shortPostSchema)
   .middleware([authMiddleware])
   .handler(async ({ context, data }) => {
     await db.$transaction(
@@ -194,7 +194,7 @@ export const createShortPostFn = createServerFn({ method: 'POST' })
   });
 
 export const editShortPostFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     shortPostSchema.extend({
       postId: z.string(),
     }),
@@ -298,7 +298,7 @@ export const editShortPostFn = createServerFn({ method: 'POST' })
     );
   });
 export const deleteShortPostFn = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ shortPostId: z.string() }))
+  .validator(z.object({ shortPostId: z.string() }))
   .middleware([authMiddleware])
   .handler(async ({ context, data }) => {
     const userId = context.user.id as string;
@@ -325,7 +325,7 @@ export const getAllComments = createServerFn({ method: 'GET' }).handler(async ()
 });
 
 export const getShortPostLikesFn = createServerFn({ method: 'GET' })
-  .inputValidator(
+  .validator(
     z.object({
       shortPostId: z.string(),
     }),
@@ -339,7 +339,7 @@ export const getShortPostLikesFn = createServerFn({ method: 'GET' })
   });
 
 export const getPostCommentsFn = createServerFn({ method: 'GET' })
-  .inputValidator(
+  .validator(
     z.object({
       shortPostId: z.string(),
     }),
@@ -357,7 +357,7 @@ export const getPostCommentsFn = createServerFn({ method: 'GET' })
 
 export const toggleLikeFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ id: z.string(), shortPostId: z.string() }))
+  .validator(z.object({ id: z.string(), shortPostId: z.string() }))
   .handler(async ({ data, context }) => {
     const userId = context.user.id;
 
@@ -388,7 +388,7 @@ export const toggleLikeFn = createServerFn({ method: 'POST' })
 
 export const createCommentFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       id: z.string(),
       shortPostId: z.string(),
@@ -410,7 +410,7 @@ export const createCommentFn = createServerFn({ method: 'POST' })
 
 export const updateCommentFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ commentId: z.string(), content: z.string().min(1) }))
+  .validator(z.object({ commentId: z.string(), content: z.string().min(1) }))
   .handler(async ({ data, context }) => {
     return await db.comment.update({
       where: { id: data.commentId, userId: context.user.id },
@@ -420,7 +420,7 @@ export const updateCommentFn = createServerFn({ method: 'POST' })
 
 export const deleteCommentFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ commentId: z.string() }))
+  .validator(z.object({ commentId: z.string() }))
   .handler(async ({ data }) => {
     await db.comment.delete({
       where: { id: data.commentId },

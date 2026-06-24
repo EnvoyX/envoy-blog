@@ -25,7 +25,9 @@ import 'lenis/dist/lenis.css';
 import { getSession } from '@/data/session';
 import { Session, User } from '@/generated/prisma/client';
 
-import appCss from '../styles.css?url';
+
+// @ts-ignore stupid css
+import globalCss from '../styles.css?.url';
 
 export interface RouterContext {
   user: User | null;
@@ -64,7 +66,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     links: [
       {
         rel: 'stylesheet',
-        href: appCss,
+        href: globalCss ?? '../styles.css?.url',
       },
       {
         rel: 'stylesheet',

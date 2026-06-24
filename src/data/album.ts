@@ -21,7 +21,7 @@ export const getAlbumsFn = createServerFn({ method: 'GET' })
   });
 
 export const getAlbumByIdFn = createServerFn({ method: 'GET' })
-  .inputValidator(
+  .validator(
     z.object({
       albumId: z.string(),
     }),
@@ -46,7 +46,7 @@ export const getAlbumByIdFn = createServerFn({ method: 'GET' })
   });
 
 export const ImportImagesToAlbumFn = createServerFn({ method: 'POST' })
-  .inputValidator(imageSchema.extend({ albumId: z.string() }))
+  .validator(imageSchema.extend({ albumId: z.string() }))
   .middleware([authMiddleware])
   .handler(async ({ context, data }) => {
     await db.$transaction(async (ctx) => {
@@ -72,7 +72,7 @@ export const ImportImagesToAlbumFn = createServerFn({ method: 'POST' })
   });
 
 export const addExistingImagesToAlbumFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       albumId: z.string(),
       imageIds: z.array(z.string()),
@@ -99,7 +99,7 @@ export const addExistingImagesToAlbumFn = createServerFn({ method: 'POST' })
   });
 
 export const removeExistingImagesToAlbumFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       albumId: z.string(),
       imageIds: z.array(z.string()),
@@ -126,7 +126,7 @@ export const removeExistingImagesToAlbumFn = createServerFn({ method: 'POST' })
   });
 
 export const createAlbumFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     albumSchema.extend({
       imageIds: z.array(z.string()).optional(),
     }),
@@ -162,7 +162,7 @@ export const createAlbumFn = createServerFn({ method: 'POST' })
   });
 
 export const editAlbumFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     albumSchema.extend({
       albumId: z.string(),
     }),
@@ -183,7 +183,7 @@ export const editAlbumFn = createServerFn({ method: 'POST' })
   });
 
 export const deleteAlbumFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       albumId: z.string(),
     }),
@@ -215,7 +215,7 @@ export const deleteAlbumFn = createServerFn({ method: 'POST' })
   });
 
 export const changeAlbumCoverFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       albumId: z.string(),
       imageUrl: z.string(),

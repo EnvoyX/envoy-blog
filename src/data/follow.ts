@@ -9,7 +9,7 @@ export const getAllFollowsFn = createServerFn({ method: "GET" }).handler(async (
 });
 
 export const getFollowsByUserIdFn = createServerFn({ method: "GET" })
-  .inputValidator(
+  .validator(
     z.object({
       userId: z.string(),
     }),
@@ -46,7 +46,7 @@ export const getFollowsByUserIdFn = createServerFn({ method: "GET" })
 
 export const toggleFollowFn = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ id: z.string(), targetUserId: z.string() }))
+  .validator(z.object({ id: z.string(), targetUserId: z.string() }))
   .handler(async ({ data, context }) => {
     const userId = context.user.id;
 
@@ -78,7 +78,7 @@ export const toggleFollowFn = createServerFn({ method: "POST" })
 
 export const removeFollowerFn = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ followId: z.string(), followerId: z.string() }))
+  .validator(z.object({ followId: z.string(), followerId: z.string() }))
   .handler(async ({ data, context }) => {
     await db.follow.delete({
       where: {

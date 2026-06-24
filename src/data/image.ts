@@ -44,7 +44,7 @@ import { editImageSchema, editImagesSchema, imageSchema } from '@/schemas/image'
 
 export const saveImageUrl = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       id: z.string().optional(),
       url: z.string(),
@@ -130,7 +130,7 @@ export const getPublicImagesFn = createServerFn({ method: 'GET' }).handler(async
 });
 
 export const getImagesByIdFn = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ userId: z.string() }))
+  .validator(z.object({ userId: z.string() }))
   .middleware([authMiddleware])
   .handler(async ({ data }) => {
     return await db.image.findMany({
@@ -140,7 +140,7 @@ export const getImagesByIdFn = createServerFn({ method: 'GET' })
   });
 
 export const ImportImagesFn = createServerFn({ method: 'POST' })
-  .inputValidator(imageSchema)
+  .validator(imageSchema)
   .middleware([authMiddleware])
   .handler(async ({ context, data }) => {
     await db.image.createMany({
@@ -157,7 +157,7 @@ export const ImportImagesFn = createServerFn({ method: 'POST' })
   });
 
 export const ImportImageToAlbumFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       imageUrl: z.url(),
       albumId: z.string(),
@@ -189,7 +189,7 @@ export const ImportImageToAlbumFn = createServerFn({ method: 'POST' })
   });
 
 export const ImportImagesToAlbumFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       published: z.boolean(),
       images: z.array(z.string()),
@@ -226,7 +226,7 @@ export const ImportImagesToAlbumFn = createServerFn({ method: 'POST' })
   });
 
 export const editImageFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     editImageSchema.extend({
       imageId: z.string(),
     }),
@@ -252,7 +252,7 @@ export const editImageFn = createServerFn({ method: 'POST' })
   });
 
 export const editImagesFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     editImagesSchema.extend({
       albumId: z.string().optional(),
     }),
@@ -288,7 +288,7 @@ export const editImagesFn = createServerFn({ method: 'POST' })
   });
 
 export const removeImageFromAlbumFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       imageId: z.string(),
       albumId: z.string(),
@@ -312,7 +312,7 @@ export const removeImageFromAlbumFn = createServerFn({ method: 'POST' })
   });
 
 export const deleteImageFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       imageId: z.string(),
     }),
@@ -328,7 +328,7 @@ export const deleteImageFn = createServerFn({ method: 'POST' })
   });
 
 export const deleteImagesFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       imageIds: z.array(z.string()),
     }),
@@ -349,7 +349,7 @@ export const deleteImagesFn = createServerFn({ method: 'POST' })
   });
 
 export const setPrivateImageFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       imageId: z.string(),
     }),
@@ -368,7 +368,7 @@ export const setPrivateImageFn = createServerFn({ method: 'POST' })
   });
 
 export const setShowPrivateImageToFollowersFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       imageId: z.string(),
     }),
@@ -387,7 +387,7 @@ export const setShowPrivateImageToFollowersFn = createServerFn({ method: 'POST' 
   });
 
 export const setHidePrivateImageToFollowersFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       imageId: z.string(),
     }),
@@ -406,7 +406,7 @@ export const setHidePrivateImageToFollowersFn = createServerFn({ method: 'POST' 
   });
 
 export const setPublicImageFn = createServerFn({ method: 'POST' })
-  .inputValidator(
+  .validator(
     z.object({
       imageId: z.string(),
     }),

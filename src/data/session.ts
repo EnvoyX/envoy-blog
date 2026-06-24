@@ -30,7 +30,7 @@ export const getUser = createServerFn({ method: 'GET' }).handler(async () => {
 export type UserSession = Awaited<ReturnType<typeof getUser>>;
 
 export const getUserSessionDataFn = createServerFn({ method: 'GET' })
-  .inputValidator(
+  .validator(
     z.object({
       userId: z.string(),
     }),

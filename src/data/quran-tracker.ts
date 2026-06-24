@@ -8,7 +8,7 @@ import { quranTrackSchema } from '@/schemas/quran-tracker';
 
 export const savedQuranProgressFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(quranTrackSchema)
+  .validator(quranTrackSchema)
   .handler(async ({ data, context }) => {
     const existingProgress = await db.quranTrack.findUnique({
       where: {

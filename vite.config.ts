@@ -16,6 +16,9 @@ const config = defineConfig({
     },
     tsconfigPaths: true,
   },
+  server:{
+    port: 3000,
+  },
   plugins: [
     devtools(),
     // Outputs build to dist/client

@@ -12,7 +12,7 @@ import z from 'zod'
 
 export const createTaskListFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(taskListSchema)
+  .validator(taskListSchema)
   .handler(async ({ data, context }) => {
     await db.taskList.create({
       data: {
@@ -25,7 +25,7 @@ export const createTaskListFn = createServerFn({ method: 'POST' })
 
 export const updateTaskListFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(updateTaskListSchema)
+  .validator(updateTaskListSchema)
   .handler(async ({ data, context }) => {
     await db.taskList.update({
       where: {
@@ -41,7 +41,7 @@ export const updateTaskListFn = createServerFn({ method: 'POST' })
 
 export const deleteTaskListFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       taskListId: z.string(),
     }),
@@ -71,7 +71,7 @@ export const fetchTaskListsFn = createServerFn({ method: 'GET' })
 
 export const fetchTaskListByIdFn = createServerFn({ method: 'GET' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       taskListId: z.string(),
     }),
@@ -91,7 +91,7 @@ export const fetchTaskListByIdFn = createServerFn({ method: 'GET' })
 
 export const createTaskFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(taskSchema)
+  .validator(taskSchema)
   .handler(async ({ data, context }) => {
     await db.task.create({
       data: {
@@ -115,7 +115,7 @@ export const createTaskFn = createServerFn({ method: 'POST' })
   })
 export const updateTaskFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       title: z.string(),
       description: z.string().optional(),
@@ -152,7 +152,7 @@ export const updateTaskFn = createServerFn({ method: 'POST' })
 
 export const updateTaskStatusFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       taskId: z.string(),
       listId: z.string(),
@@ -180,7 +180,7 @@ export const updateTaskStatusFn = createServerFn({ method: 'POST' })
 
 export const deleteTaskFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       taskId: z.string(),
       listId: z.string(),
@@ -206,7 +206,7 @@ export const setStatusTaskListFn = createServerFn({
   method: 'POST',
 })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       taskId: z.string(),
       status: z.enum(['ACTIVE', 'INACTIVE']),
