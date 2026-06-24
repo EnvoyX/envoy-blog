@@ -1,6 +1,6 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { formatDistanceToNow, intlFormatDistance, intlFormat } from 'date-fns';
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { formatDistanceToNow, intlFormatDistance, intlFormat } from "date-fns";
 import {
   ArrowRight,
   Code2,
@@ -10,34 +10,38 @@ import {
   Calendar,
   ArrowUpRight,
   LucideClockFading,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Footer } from '@/components/web/footer';
-import { Navbar } from '@/components/web/navbar';
-import { authorBlogOptions, authorPostOptions } from '@/data/query-options/queryOptions';
+import { Footer } from "@/components/web/footer";
+import { Navbar } from "@/components/web/navbar";
+import { authorBlogOptions, authorPostOptions } from "@/data/query-options/queryOptions";
+import { User } from "@/generated/prisma/client";
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   loader: ({ context }) => {
     context.queryClient.prefetchQuery(authorPostOptions());
     context.queryClient.prefetchQuery(authorBlogOptions());
+    return {
+      user: context.user,
+    };
   },
   head: () => ({
     meta: [
-      { title: 'Home | Envoy Mindpalace' },
+      { title: "Home | Envoy Mindpalace" },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
-      { property: 'og:title', content: 'Home | Envoy Mindpalace' },
+      { property: "og:title", content: "Home | Envoy Mindpalace" },
       {
-        property: 'og:description',
-        content: 'Welcome to my TanStack Start playground',
+        property: "og:description",
+        content: "Welcome to my TanStack Start playground",
       },
       {
-        property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
   component: App,
@@ -46,9 +50,10 @@ export const Route = createFileRoute('/')({
 function App() {
   const { data: authorPosts } = useSuspenseQuery(authorPostOptions());
   const { data: authorBlogs } = useSuspenseQuery(authorBlogOptions());
+  const { user } = Route.useLoaderData();
   return (
     <main className="text-slate-100 min-h-screen">
-      <Navbar />
+      <Navbar user={user as User} />
       <section className="relative pt-24 pb-20 px-8 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-125 bg-emerald-500/10 blur-[120px] rounded-full -z-10" />
         <div className="max-w-4xl mx-auto text-center">
@@ -98,7 +103,7 @@ function App() {
               to="/post"
               className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors group font-mono"
             >
-              View all{' '}
+              View all{" "}
               <ArrowUpRight
                 size={14}
                 className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
@@ -121,7 +126,7 @@ function App() {
                   >
                     <header className="flex items-center gap-3 mb-3">
                       <img
-                        src={post.author.image ?? ''}
+                        src={post.author.image ?? ""}
                         alt={post.author.name}
                         className="w-9 h-9 rounded-full object-cover border border-slate-800"
                       />
@@ -174,7 +179,7 @@ function App() {
               to="/blog"
               className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors group font-mono"
             >
-              View all{' '}
+              View all{" "}
               <ArrowUpRight
                 size={14}
                 className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
@@ -194,16 +199,16 @@ function App() {
                 <article className="group relative bg-linear-to-b from-slate-900/60 to-slate-900/20 border border-slate-900 hover:border-emerald-500/40 p-6 rounded-2xl transition-all duration-300 overflow-hidden">
                   <div className="flex flex-wrap items-center gap-3 mb-4 text-xs text-slate-400">
                     <span className="flex items-center gap-1">
-                      <Calendar size={12} className="text-slate-500" />{' '}
+                      <Calendar size={12} className="text-slate-500" />{" "}
                       {intlFormat(new Date(article.createdAt), {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
                       })}
                     </span>
                     <span className="text-slate-700">•</span>
                     <span className="flex items-center gap-1">
-                      <LucideClockFading size={12} className="text-slate-500" />{' '}
+                      <LucideClockFading size={12} className="text-slate-500" />{" "}
                       {intlFormatDistance(new Date(article.updatedAt), new Date())}
                     </span>
                     <div className="sm:ml-auto flex flex-wrap gap-1.5">
@@ -237,7 +242,7 @@ function App() {
                   </p>
 
                   <div className="flex items-center gap-1 text-xs font-bold text-slate-400 group-hover:text-emerald-400 transition-colors">
-                    Read Article{' '}
+                    Read Article{" "}
                     <ArrowRight
                       size={14}
                       className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"

@@ -1,13 +1,13 @@
-import { ReturnType } from '@sinclair/typebox';
+import { ReturnType } from "@sinclair/typebox";
 // import { redirect } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
-import { getRequestHeaders } from '@tanstack/react-start/server';
-import z from 'zod';
+import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeaders } from "@tanstack/react-start/server";
+import z from "zod";
 
-import { auth } from '@/lib/auth';
-import { db } from '@/lib/db';
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
 
-export const getSession = createServerFn({ method: 'GET' }).handler(async () => {
+export const getSession = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
   // if (!session) {
@@ -16,7 +16,7 @@ export const getSession = createServerFn({ method: 'GET' }).handler(async () => 
   return session;
 });
 
-export const getUser = createServerFn({ method: 'GET' }).handler(async () => {
+export const getUser = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
   // if (!session) {
@@ -29,7 +29,7 @@ export const getUser = createServerFn({ method: 'GET' }).handler(async () => {
 
 export type UserSession = Awaited<ReturnType<typeof getUser>>;
 
-export const getUserSessionDataFn = createServerFn({ method: 'GET' })
+export const getUserSessionDataFn = createServerFn({ method: "GET" })
   .validator(
     z.object({
       userId: z.string(),
@@ -47,7 +47,7 @@ export const getUserSessionDataFn = createServerFn({ method: 'GET' })
     });
   });
 
-export const getProfileData = createServerFn({ method: 'GET' }).handler(async () => {
+export const getProfileData = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
   // if (!session) {
@@ -72,7 +72,7 @@ export const getProfileData = createServerFn({ method: 'GET' }).handler(async ()
           },
           _count: { select: { likes: true, comments: true } },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
       },
       shortPosts: {
         include: {
@@ -94,10 +94,10 @@ export const getProfileData = createServerFn({ method: 'GET' }).handler(async ()
             },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
       },
       images: {
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
       },
       albums: {
         include: {
@@ -105,7 +105,7 @@ export const getProfileData = createServerFn({ method: 'GET' }).handler(async ()
           images: true,
           _count: { select: { images: true } },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
       },
       followers: {
         include: {
@@ -127,7 +127,7 @@ export const getProfileData = createServerFn({ method: 'GET' }).handler(async ()
 
 export type ProfileData = Awaited<ReturnType<typeof getProfileData>>;
 
-export const getUserData = createServerFn({ method: 'GET' }).handler(async () => {
+export const getUserData = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
   return {

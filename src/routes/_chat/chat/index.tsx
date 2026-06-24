@@ -1,65 +1,72 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { Zap, Globe, Bot } from 'lucide-react'; // Optional: Install lucide-react for icons
+import { createFileRoute } from "@tanstack/react-router";
+import { Zap, Globe, Bot } from "lucide-react"; // Optional: Install lucide-react for icons
 
-import { Navbar } from '@/components/web/navbar';
+import { Navbar } from "@/components/web/navbar";
+import { User } from "@/generated/prisma/client";
 
-export const Route = createFileRoute('/_chat/chat/')({
+export const Route = createFileRoute("/_chat/chat/")({
   component: RouteComponent,
+  loader: ({ context }) => {
+    return {
+      user: context.user,
+    };
+  },
   head: () => ({
     meta: [
       { title: `Chat | Envoy Mindpalace` },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to my TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to my TanStack Start playground!",
       },
-      { property: 'og:title', content: 'Chat | Envoy Mindpalace' },
+      { property: "og:title", content: "Chat | Envoy Mindpalace" },
       {
-        property: 'og:description',
-        content: 'Create your own blog and write your thoughts!',
+        property: "og:description",
+        content: "Create your own blog and write your thoughts!",
       },
       {
-        property: 'og:image',
-        content: 'https://tanstack.com/assets/og-C0HGjoLl.png',
+        property: "og:image",
+        content: "https://tanstack.com/assets/og-C0HGjoLl.png",
       },
-      { property: 'og:type', content: 'website' },
+      { property: "og:type", content: "website" },
     ],
   }),
 });
 
 function RouteComponent() {
+  const { user } = Route.useLoaderData();
   const models = [
     {
-      id: 'gemini',
-      name: 'Gemini',
+      id: "gemini",
+      name: "Gemini",
       description:
-        'Google’s multimodal powerhouse. Features 1M+ context window and native video/audio processing.',
+        "Google’s multimodal powerhouse. Features 1M+ context window and native video/audio processing.",
       icon: <Bot className="w-6 h-6 text-blue-400" />,
-      color: 'border-blue-500/20 hover:border-blue-500/50',
-      defaultModel: 'gemini-2.5-flash',
+      color: "border-blue-500/20 hover:border-blue-500/50",
+      defaultModel: "gemini-2.5-flash",
     },
     {
-      id: 'groq',
-      name: 'Groq',
+      id: "groq",
+      name: "Groq",
       description:
-        'Insane inference speeds powered by LPU hardware. Ideal for real-time, ultra-fast chat responses.',
+        "Insane inference speeds powered by LPU hardware. Ideal for real-time, ultra-fast chat responses.",
       icon: <Zap className="w-6 h-6 text-orange-400" />,
-      color: 'border-orange-500/20 hover:border-orange-500/50',
-      defaultModel: 'llama-3.3-70b-versatile',
+      color: "border-orange-500/20 hover:border-orange-500/50",
+      defaultModel: "llama-3.3-70b-versatile",
     },
     {
-      id: 'openrouter',
-      name: 'OpenRouter',
+      id: "openrouter",
+      name: "OpenRouter",
       description:
-        'A unified gateway to every model imaginable. Compare prices and switch models on the fly.',
+        "A unified gateway to every model imaginable. Compare prices and switch models on the fly.",
       icon: <Globe className="w-6 h-6 text-cyan-400" />,
-      color: 'border-cyan-500/20 hover:border-cyan-500/50',
-      defaultModel: 'google/gemma-4-31b-it:free',
+      color: "border-cyan-500/20 hover:border-cyan-500/50",
+      defaultModel: "google/gemma-4-31b-it:free",
     },
   ];
 
   return (
     <section className="flex flex-col justify-center w-full ">
-      <Navbar />
+      <Navbar user={user as User} />
       <main className="min-h-screen w-full flex flex-col gap-4 items-center justify-center px-16 max-sm:px-8 md:p-12 overflow-y-auto">
         <div className="relative z-10 text-center mt-16 mb-16 space-y-4">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-emerald-600">

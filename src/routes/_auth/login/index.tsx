@@ -1,45 +1,44 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import { zodValidator } from '@tanstack/zod-adapter';
-import { useEffect, useRef, useState, useTransition } from 'react';
-import { toast } from 'sonner';
-import z from 'zod';
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import z from "zod";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Field,
   //   FieldDescription,
   //   FieldError,
   FieldGroup,
   //   FieldLabel,
-} from '@/components/ui/field';
-import { authClient } from '@/lib/auth-client';
+} from "@/components/ui/field";
+import { authClient } from "@/lib/auth-client";
 
-export const Route = createFileRoute('/_auth/login/')({
+export const Route = createFileRoute("/_auth/login/")({
   beforeLoad: ({ context }) => {
-    if (context?.user) throw redirect({ to: '/dashboard' });
+    if (context?.user) throw redirect({ to: "/dashboard" });
     return;
   },
   loader: ({ context }) => {
-    if (context?.user) throw redirect({ to: '/dashboard' });
     return { user: context?.user };
   },
   validateSearch: zodValidator(
     z.object({
-      callbackUrl: z.string().optional().default('/dashboard'),
+      callbackUrl: z.string().optional().default("/dashboard"),
     }),
   ),
   head: () => ({
     meta: [
-      { title: 'Login | Envoy Mindpalace' },
+      { title: "Login | Envoy Mindpalace" },
       {
-        name: 'Envoy Mindpalace',
-        content: 'Welcome to TanStack Start playground!',
+        name: "Envoy Mindpalace",
+        content: "Welcome to TanStack Start playground!",
       },
-      { property: 'og:title', content: 'Login | Envoy Mindpalace' },
-      { property: 'og:description', content: 'Login to your account in Envoy Mindpalace' },
-      { property: 'og:image', content: 'https://tanstack.com/assets/og-C0HGjoLl.png' },
-      { property: 'og:type', content: 'website' },
+      { property: "og:title", content: "Login | Envoy Mindpalace" },
+      { property: "og:description", content: "Login to your account in Envoy Mindpalace" },
+      { property: "og:image", content: "https://tanstack.com/assets/og-C0HGjoLl.png" },
+      { property: "og:type", content: "website" },
     ],
   }),
   component: RouteComponent,
@@ -48,41 +47,37 @@ export const Route = createFileRoute('/_auth/login/')({
 function RouteComponent() {
   const { callbackUrl } = Route.useSearch();
   const { user } = Route.useLoaderData();
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
-  const hasInitialized = useRef(false);
-  function handleLogin(provider: 'github' | 'google' | 'discord') {
-    startTransition(async () => {
-      await authClient.signIn.social({
-        provider: provider,
-        callbackURL: callbackUrl,
-        fetchOptions: {
-          onRequest() {
-            toast.loading(`Logging in with ${provider.toUpperCase()}...`, {
-              id: 'login-oauth',
-            });
-          },
-          onSuccess: () => {
-            toast.dismiss('login-oauth');
-            toast.success(`Logged in with ${provider.toUpperCase()} successfully`);
-            setIsRedirecting(true);
-          },
-
-          onError: ({ error }) => {
-            toast.dismiss('login-oauth');
-            toast.error(`Failed to login with ${provider.toUpperCase()}`, {
-              description: error.message,
-            });
-          },
+  async function handleLogin(provider: "github" | "google" | "discord") {
+    setIsPending(true);
+    await authClient.signIn.social({
+      provider: provider,
+      callbackURL: callbackUrl,
+      fetchOptions: {
+        onRequest() {
+          toast.loading(`Logging in with ${provider.toUpperCase()}...`, {
+            id: "login-oauth",
+          });
         },
-      });
+        onSuccess: () => {
+          toast.dismiss("login-oauth");
+          toast.success(`Logged in with ${provider.toUpperCase()} successfully`);
+          setIsRedirecting(true);
+          setIsPending(false);
+        },
+
+        onError: ({ error }) => {
+          toast.dismiss("login-oauth");
+          toast.error(`Failed to login with ${provider.toUpperCase()}`, {
+            description: error.message,
+          });
+          setIsPending(false);
+        },
+      },
     });
   }
-  useEffect(() => {
-    if (hasInitialized.current) return;
 
-    hasInitialized.current = true;
-  });
   useEffect(() => {
     if (!user) {
       setIsRedirecting(false);
@@ -118,8 +113,9 @@ function RouteComponent() {
             <Field>
               <>
                 <Button
-                  onClick={() => {
-                    handleLogin('google');
+                  onClick={async () => {
+                    console.log("Google login clicked");
+                    await handleLogin("google");
                   }}
                   variant="outline"
                   type="button"
@@ -128,12 +124,13 @@ function RouteComponent() {
                 >
                   <p className="flex items-center  gap-1">
                     <span className="icon-[material-icon-theme--google] size-5" />
-                    <span>{isPending ? 'Logging in...' : 'Continue with Google'}</span>
+                    <span>{isPending ? "Logging in..." : "Continue with Google"}</span>
                   </p>
                 </Button>
                 <Button
-                  onClick={() => {
-                    handleLogin('github');
+                  onClick={async () => {
+                    console.log("Github login clicked");
+                    await handleLogin("github");
                   }}
                   variant="outline"
                   type="button"
@@ -142,12 +139,13 @@ function RouteComponent() {
                 >
                   <p className="flex items-center gap-1">
                     <span className="icon-[mdi--github] size-6" />
-                    <span>{isPending ? 'Logging in...' : 'Continue with Github'}</span>
+                    <span>{isPending ? "Logging in..." : "Continue with Github"}</span>
                   </p>
                 </Button>
                 <Button
-                  onClick={() => {
-                    handleLogin('discord');
+                  onClick={async () => {
+                    console.log("Discord login clicked");
+                    await handleLogin("discord");
                   }}
                   variant="outline"
                   type="button"
@@ -156,7 +154,7 @@ function RouteComponent() {
                 >
                   <p className="flex items-center gap-1">
                     <span className="icon-[ic--baseline-discord] size-6" />
-                    <span>{isPending ? 'Logging in...' : 'Continue with Discord'}</span>
+                    <span>{isPending ? "Logging in..." : "Continue with Discord"}</span>
                   </p>
                 </Button>
               </>
