@@ -25,8 +25,7 @@ import 'lenis/dist/lenis.css';
 import { getSession } from '@/data/session';
 import { Session, User } from '@/generated/prisma/client';
 
-
-import globalCss from '../styles.css';
+import '../styles.css';
 
 export interface RouterContext {
   user: User | null;
@@ -63,10 +62,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
     ],
     links: [
-      {
-        rel: 'stylesheet',
-        href: globalCss as unknown as string,
-      },
       {
         rel: 'stylesheet',
         href: 'https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap',
