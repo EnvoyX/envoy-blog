@@ -3,16 +3,9 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Field,
-  //   FieldDescription,
-  //   FieldError,
-  FieldGroup,
-  //   FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldGroup } from "@/components/ui/field";
 import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_auth/login/")({
@@ -114,7 +107,6 @@ function RouteComponent() {
               <>
                 <Button
                   onClick={async () => {
-                    console.log("Google login clicked");
                     await handleLogin("google");
                   }}
                   variant="outline"
@@ -129,7 +121,6 @@ function RouteComponent() {
                 </Button>
                 <Button
                   onClick={async () => {
-                    console.log("Github login clicked");
                     await handleLogin("github");
                   }}
                   variant="outline"
@@ -144,7 +135,6 @@ function RouteComponent() {
                 </Button>
                 <Button
                   onClick={async () => {
-                    console.log("Discord login clicked");
                     await handleLogin("discord");
                   }}
                   variant="outline"
