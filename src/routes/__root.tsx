@@ -26,8 +26,7 @@ import { getSession } from '@/data/session';
 import { Session, User } from '@/generated/prisma/client';
 
 
-// @ts-ignore stupid css
-import globalCss from '../styles.css?.url';
+import globalCss from '../styles.css';
 
 export interface RouterContext {
   user: User | null;
@@ -66,7 +65,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     links: [
       {
         rel: 'stylesheet',
-        href: globalCss ?? '../styles.css?.url',
+        href: globalCss as unknown as string,
       },
       {
         rel: 'stylesheet',
