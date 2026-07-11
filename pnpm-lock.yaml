@@ -363,9 +363,6 @@ importers:
         specifier: ^5.0.14
         version: 5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
     devDependencies:
-      '@effect/language-service':
-        specifier: ^0.86.6
-        version: 0.86.6
       '@iconify/json':
         specifier: ^2.2.498
         version: 2.2.498
@@ -789,10 +786,6 @@ packages:
 
   '@dotenvx/primitives@0.8.0':
     resolution: {integrity: sha512-VYJy0uhFm9zTJ1TxBaW/pA8bjbOM/OttaNMwZ1RHG4JKyRG7DhSdiqD1ipQoAyoD22olUtxbP78W9xY3Wd11bg==}
-
-  '@effect/language-service@0.86.6':
-    resolution: {integrity: sha512-uwXbp+lWzt60bZnm6lG6S5DWy0m6TthUzV2hcQoiS6NzieEDm07tuBakscxOXoO+AU9+yTH+0TSIa9mEDt9dFA==}
-    hasBin: true
 
   '@effect/platform@0.90.3':
     resolution: {integrity: sha512-XvQ37yzWQKih4Du2CYladd1i/MzqtgkTPNCaN6Ku6No4CK83hDtXIV/rP03nEoBg2R3Pqgz6gGWmE2id2G81HA==}
@@ -8464,8 +8457,6 @@ snapshots:
       yocto-spinner: 1.2.0
 
   '@dotenvx/primitives@0.8.0': {}
-
-  '@effect/language-service@0.86.6': {}
 
   '@effect/platform@0.90.3(effect@3.17.7)':
     dependencies:
