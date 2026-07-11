@@ -6,7 +6,6 @@
     "dev": "vite dev --port 3000",
     "build": "vite build",
     "preview": "vite preview",
-    "prepare": "effect-language-service patch",
     "test": "vitest run",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
