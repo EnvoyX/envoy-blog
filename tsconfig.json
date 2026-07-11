@@ -20,10 +20,10 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "plugins": [
-      {
-        "name": "@effect/language-service",
-        "allowedDuplicatedPackages": ["effect"]
-      }
+      // {
+      //   "name": "@effect/language-service",
+      //   "allowedDuplicatedPackages": ["effect"]
+      // }
     ],
     "paths": {
       "@/*": ["./src/*", "./*"]
