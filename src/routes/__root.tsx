@@ -35,7 +35,6 @@ export interface RouterContext {
 export const Route = createRootRouteWithContext<RouterContext>()({
   beforeLoad: async () => {
     const data = await getSession();
-
     if (!data) {
       return {
         user: null,
@@ -176,10 +175,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
-        {/*<script
-                    crossOrigin="anonymous"
-                    src="//unpkg.com/react-scan/dist/auto.global.js"
-                ></script>*/}
       </head>
       <body>
         <QueryProvider>

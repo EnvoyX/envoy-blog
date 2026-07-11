@@ -1,8 +1,8 @@
-import { useScroll, useTransform, motion, useSpring } from 'motion/react';
-import { useRef } from 'react';
-import { useMediaQuery } from 'usehooks-ts';
+import { useScroll, useTransform, motion, useSpring } from "motion/react";
+import { useRef } from "react";
+import { useMediaQuery } from "usehooks-ts";
 
-import { ScrollCircle } from '../ScrollProgressCircle';
+import { ScrollCircle } from "../ScrollProgressCircle";
 
 interface ProjectProps {
   title: string;
@@ -56,44 +56,44 @@ function ProjectCard({ title, description, tags, imageUrl, projectUrl }: Project
 
 export function WorksSection() {
   const containerRef = useRef(null);
-  const isMobile = useMediaQuery('(max-width: 640px)');
+  const isMobile = useMediaQuery("(max-width: 640px)");
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     // "start start" = starts when top of element hits top of viewport
     // "end end" = ends when bottom of element hits bottom of viewport
-    offset: ['start start', 'end end'],
+    offset: ["start start", "end end"],
   });
   const projects: ProjectProps[] = [
     {
-      title: 'Mechanical Festival 2026',
+      title: "Mechanical Festival 2026",
       description:
-        'An official website for registering events and competitions in annual event of Mechanical Festival, brought by HMM ITB.',
-      tags: ['React', 'Next.js', 'TypeScript', 'tRPC', 'Tailwind'],
-      imageUrl: 'https://i.ibb.co.com/sxXHVQr/Screenshot-2026-05-15-173618.png',
-      projectUrl: 'https://mfest-itb.com/',
+        "An official website for registering events and competitions in annual event of Mechanical Festival, brought by HMM ITB.",
+      tags: ["React", "Next.js", "TypeScript", "tRPC", "Tailwind"],
+      imageUrl: "https://i.ibb.co.com/sxXHVQr/Screenshot-2026-05-15-173618.png",
+      projectUrl: "https://m-fest-xi.vercel.app",
     },
     {
-      title: 'HMM ITB',
+      title: "HMM ITB",
       description:
-        'A website for HMM ITB, the student organization of the Institute of Technology Bandung, and LMS for students of HMM ITB.',
-      tags: ['React', 'Next.js', 'TypeScript', 'tRPC', 'Tailwind'],
-      imageUrl: 'https://i.ibb.co.com/YT81f1GQ/Screenshot-2026-05-15-083113.png',
-      projectUrl: 'https://www.hmmitb.com/',
+        "A website for HMM ITB, the student organization of the Institute of Technology Bandung, and LMS for students of HMM ITB.",
+      tags: ["React", "Next.js", "TypeScript", "tRPC", "Tailwind"],
+      imageUrl: "https://i.ibb.co.com/YT81f1GQ/Screenshot-2026-05-15-083113.png",
+      projectUrl: "https://www.hmmitb.com/",
     },
     {
-      title: 'GIM ITB',
-      description: 'A website for GIM ITB, the student club of Game Development based in ITB.',
-      tags: ['React', 'Tailwind', 'Next.js', 'TypeScript'],
-      imageUrl: 'https://i.ibb.co.com/WNqB7zzm/Screenshot-2026-05-15-083053.png',
-      projectUrl: 'https://gimitb.com/',
+      title: "GIM ITB",
+      description: "A website for GIM ITB, the student club of Game Development based in ITB.",
+      tags: ["React", "Tailwind", "Next.js", "TypeScript"],
+      imageUrl: "https://i.ibb.co.com/WNqB7zzm/Screenshot-2026-05-15-083053.png",
+      projectUrl: "https://gimitb.com/",
     },
     {
-      title: 'Envoy Mindpalace',
-      description: 'My personal website built with various TanStack Libraries.',
-      tags: ['React', 'Tailwind', 'TanStack Start', 'TypeScript'],
-      imageUrl: 'https://i.ibb.co.com/nNm7tG1T/Screenshot-2026-05-15-095522.png',
-      projectUrl: 'https://envoy-mindpalace.vercel.app/',
+      title: "Envoy Mindpalace",
+      description: "My personal website built with various TanStack Libraries.",
+      tags: ["React", "Tailwind", "TanStack Start", "TypeScript"],
+      imageUrl: "https://i.ibb.co.com/nNm7tG1T/Screenshot-2026-05-15-095522.png",
+      projectUrl: "https://envoy-mindpalace.vercel.app/",
     },
   ];
 
@@ -101,7 +101,7 @@ export function WorksSection() {
     scrollYProgress,
     [0, 1],
     [
-      '100vw',
+      "100vw",
       `${isMobile ? `-${250 / projects.length + 200}vw` : `-${100 / projects.length + 100}vw`}`,
     ],
   );
