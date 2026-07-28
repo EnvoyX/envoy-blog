@@ -61,7 +61,7 @@ function RouteComponent() {
           setIsPending(false);
         },
 
-        onError: ({ error }) => {
+        onError: ({ error }: { error: Error }) => {
           toast.dismiss('login-oauth');
           toast.error(`Failed to login with ${provider.toUpperCase()}`, {
             description: error.message,
