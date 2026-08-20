@@ -1,117 +1,61 @@
-import * as React from 'react'
-import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  type SortingState,
-  useReactTable,
-  type VisibilityState,
-} from '@tanstack/react-table'
-import {
-  BadgeCheckIcon,
-  Clock,
-  ListFilter,
-  Loader2,
-  MoreHorizontal,
-  RefreshCw,
-} from 'lucide-react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
+import { type ColumnDef } from '@tanstack/react-table';
+import { MoreHorizontal } from 'lucide-react';
+import * as React from 'react';
+import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DataTable } from '@/components/ui/data-table';
+import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { DataTableFeatures } from '@/components/ui/data-table-features';
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { cn } from '@/lib/utils'
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
-import { DataTablePagination } from '@/components/ui/data-table-pagination'
-import { DataTableViewOptions } from '@/components/ui/data-table-view-options'
-import { toast } from 'sonner'
-import { IconFileExport, IconTableExport } from '@tabler/icons-react'
-import {
-  exportAllToXlsx,
-  exportCurrentPageToXlsx,
-  exportFilteredRowsToXlsx,
-} from '@/utils/xlsx'
-import { authClient } from '@/lib/auth-client'
-import {
-  deleteUserFn,
-  deleteUsersByManyFn,
-  getUsersFn,
-  updateUserRoleByManyFn,
-  updateUserRoleFn,
-} from '@/data/admin'
-import { UserAvatar } from '../user-profile'
-import { UserRole } from '@/generated/prisma/enums'
-import { Link } from '@tanstack/react-router'
+} from '@/components/ui/dropdown-menu';
+import { deleteUserFn, getUsersFn, updateUserRoleFn } from '@/data/admin';
+import { UserRole } from '@/generated/prisma/enums';
+import { authClient } from '@/lib/auth-client';
 
-const userRoles = ['ADMIN', 'SUPERADMIN', 'USER']
+import { UserAvatar } from '../user-profile';
+
+const userRoles = ['ADMIN', 'SUPERADMIN', 'USER'];
 
 export function UsersDataTable() {
-  const {
-    data: session,
-    isFetched,
-    isPending,
-  } = useQuery({
+  const { data: session } = useQuery({
     queryKey: ['session-user'],
     queryFn: async () => {
-      const data = await authClient.getSession()
-      if (data) return data.data
-      return null
+      const data = await authClient.getSession();
+      if (data) return data.data;
+      return null;
     },
-  })
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  )
-  const [filterColumn, setFilterColumn] = React.useState<string>('email')
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
-  const queryClient = useQueryClient()
-  const {
-    data: users,
-    isLoading,
-    isFetching,
-  } = useQuery({
+  });
+  const queryClient = useQueryClient();
+  const { data: users } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const data = await getUsersFn()
-      return data
+      const data = await getUsersFn();
+      return data;
     },
-  })
+  });
   const unified = React.useMemo(() => {
-    if (!users) return []
+    if (!users) return [];
 
-    return users
-  }, [users])
+    return users;
+  }, [users]);
 
   // type of array
   // type Unified = typeof unified
 
   // type of one array element
-  type Unified = (typeof unified)[number]
+  type Unified = (typeof unified)[number];
 
-  const columns: ColumnDef<Unified>[] = [
+  const columns: ColumnDef<DataTableFeatures, Unified>[] = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -136,7 +80,7 @@ export function UsersDataTable() {
       id: 'actions',
       enableHiding: false,
       cell: ({ row }) => {
-        const item = row.original
+        const item = row.original;
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -145,10 +89,7 @@ export function UsersDataTable() {
                 <MoreHorizontal />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="bg-transparent! backdrop-glass-lg"
-              align="end"
-            >
+            <DropdownMenuContent className="bg-transparent! backdrop-glass-lg" align="end">
               <DropdownMenuLabel>
                 Actions for <span className="font-bold">{item.name}</span>
               </DropdownMenuLabel>
@@ -156,8 +97,8 @@ export function UsersDataTable() {
               <DropdownMenuItem
                 className="cursor-pointer hover:bg-white/20!"
                 onClick={() => {
-                  navigator.clipboard.writeText(item.id)
-                  toast.success('User ID copied to clipboard')
+                  navigator.clipboard.writeText(item.id);
+                  toast.success('User ID copied to clipboard');
                 }}
               >
                 Copy user ID
@@ -165,36 +106,35 @@ export function UsersDataTable() {
               <DropdownMenuItem
                 className="cursor-pointer hover:bg-white/20!"
                 onClick={() => {
-                  navigator.clipboard.writeText(item.email)
-                  toast.success('Email copied to clipboard')
+                  navigator.clipboard.writeText(item.email);
+                  toast.success('Email copied to clipboard');
                 }}
               >
                 Copy email
               </DropdownMenuItem>
 
-              {session?.user?.role === 'SUPERADMIN' &&
-                item.role !== 'SUPERADMIN' && (
-                  <>
-                    {userRoles
-                      .filter((role) => role !== item.role)
-                      .map((role) => (
-                        <DropdownMenuItem
-                          key={role}
-                          className="cursor-pointer text-yellow-500 hover:text-yellow-500! hover:bg-yellow-900/60!"
-                          onClick={() =>
-                            updateUserRole.mutate({
-                              data: {
-                                userId: item.id,
-                                role: role as UserRole,
-                              },
-                            })
-                          }
-                        >
-                          Update role to {role}
-                        </DropdownMenuItem>
-                      ))}
-                  </>
-                )}
+              {session?.user?.role === 'SUPERADMIN' && item.role !== 'SUPERADMIN' && (
+                <>
+                  {userRoles
+                    .filter((role) => role !== item.role)
+                    .map((role) => (
+                      <DropdownMenuItem
+                        key={role}
+                        className="cursor-pointer text-yellow-500 hover:text-yellow-500! hover:bg-yellow-900/60!"
+                        onClick={() =>
+                          updateUserRole.mutate({
+                            data: {
+                              userId: item.id,
+                              role: role as UserRole,
+                            },
+                          })
+                        }
+                      >
+                        Update role to {role}
+                      </DropdownMenuItem>
+                    ))}
+                </>
+              )}
               <DropdownMenuItem
                 className="cursor-pointer text-red-500"
                 onClick={() =>
@@ -208,9 +148,7 @@ export function UsersDataTable() {
                 variant="destructive"
                 disabled={item.id === session?.user.id}
               >
-                {item.id === session?.user.id
-                  ? 'You cannot delete yourself'
-                  : 'Delete User'}
+                {item.id === session?.user.id ? 'You cannot delete yourself' : 'Delete User'}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer hover:bg-white/20!">
@@ -227,31 +165,29 @@ export function UsersDataTable() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        )
+        );
       },
     },
     {
       accessorKey: 'id',
       accessorFn: (row) => {
-        const user = users?.find((user) => user.id === row.id)
-        return user?.id ?? ''
+        const user = users?.find((user) => user.id === row.id);
+        return user?.id ?? '';
       },
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="User Id" />
+        return <DataTableColumnHeader column={column} title="User Id" />;
       },
-      cell: ({ row }) => (
-        <span className="capitalize">{row.getValue('id')}</span>
-      ),
+      cell: ({ row }) => <span className="capitalize">{row.getValue('id')}</span>,
       filterFn: 'includesString',
     },
     {
       accessorKey: 'role',
       accessorFn: (row) => {
-        const user = users?.find((user) => user.id === row.id)
-        return user?.role ?? ''
+        const user = users?.find((user) => user.id === row.id);
+        return user?.role ?? '';
       },
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Role" />
+        return <DataTableColumnHeader column={column} title="Role" />;
       },
       cell: ({ row }) => <span>{row.getValue('role')}</span>,
       filterFn: 'includesString',
@@ -259,35 +195,31 @@ export function UsersDataTable() {
     {
       accessorKey: 'name',
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Name" />
+        return <DataTableColumnHeader column={column} title="Name" />;
       },
-      cell: ({ row }) => (
-        <span className="capitalize">{row.getValue('name')}</span>
-      ),
+      cell: ({ row }) => <span className="capitalize">{row.getValue('name')}</span>,
       filterFn: 'includesString',
     },
     {
       accessorKey: 'email',
       accessorFn: (row) => {
-        const user = users?.find((user) => user.id === row.id)
-        return user?.email ?? ''
+        const user = users?.find((user) => user.id === row.id);
+        return user?.email ?? '';
       },
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Email" />
+        return <DataTableColumnHeader column={column} title="Email" />;
       },
-      cell: ({ row }) => (
-        <span className="lowercase">{row.getValue('email')}</span>
-      ),
+      cell: ({ row }) => <span className="lowercase">{row.getValue('email')}</span>,
       filterFn: 'includesString',
     },
     {
       accessorKey: 'emailVerified',
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Email Verified" />
+        return <DataTableColumnHeader column={column} title="Email Verified" />;
       },
       accessorFn: (row) => {
-        const user = users?.find((user) => user.id === row.id)
-        return user?.emailVerified ? 'Verified' : 'Not Verified'
+        const user = users?.find((user) => user.id === row.id);
+        return user?.emailVerified ? 'Verified' : 'Not Verified';
       },
       cell: ({ row }) => <span>{row.getValue('emailVerified')}</span>,
       filterFn: 'includesString',
@@ -295,14 +227,14 @@ export function UsersDataTable() {
     {
       accessorKey: 'image',
       accessorFn: (row) => {
-        const user = users?.find((user) => user.id === row.id)
-        return user?.image ?? ''
+        const user = users?.find((user) => user.id === row.id);
+        return user?.image ?? '';
       },
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Image" />
+        return <DataTableColumnHeader column={column} title="Image" />;
       },
       cell: ({ row }) => {
-        const imageUrl = row.getValue('image') as string
+        const imageUrl = row.getValue('image') as string;
         return (
           <>
             {imageUrl ? (
@@ -315,48 +247,29 @@ export function UsersDataTable() {
               <div className="w-10 h-10 rounded-full bg-gray-300" />
             )}
           </>
-        )
+        );
       },
     },
     {
       accessorKey: 'createdAt',
       accessorFn: (row) => {
-        const user = users?.find((user) => user.id === row.id)
+        const user = users?.find((user) => user.id === row.id);
         return user?.createdAt
           ? new Date(user.createdAt).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
             })
-          : 'Not set'
+          : 'Not set';
       },
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Created At" />
+        return <DataTableColumnHeader column={column} title="Created At" />;
       },
       cell: ({ row }) => {
-        return <span>{row.getValue('createdAt')}</span>
+        return <span>{row.getValue('createdAt')}</span>;
       },
     },
-  ]
-
-  const table = useReactTable({
-    data: unified ?? [],
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  })
+  ];
 
   const updateUserRole = useMutation({
     mutationKey: ['update-user-role'],
@@ -364,54 +277,26 @@ export function UsersDataTable() {
     onMutate: () => {
       toast.loading('Updating user role...', {
         id: 'update-user-role',
-      })
+      });
     },
     onError: (error) => {
-      toast.dismiss('update-user-role')
+      toast.dismiss('update-user-role');
       toast.error('Failed to update user role', {
         description: error.message,
-      })
+      });
       // console.log(error.message);
     },
     onSuccess() {
       toast.success('User role updated successfully', {
         id: 'update-user-role',
-      })
+      });
     },
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ['users'],
-      })
+      });
     },
-  })
-  const updateUserRoleByMany = useMutation({
-    mutationKey: ['update-user-role-by-many'],
-    mutationFn: updateUserRoleByManyFn,
-    onMutate: () => {
-      toast.loading('Updating users role...', {
-        id: 'update-user-role',
-      })
-    },
-    onError: (error) => {
-      toast.dismiss('update-user-role')
-      toast.error('Failed to update users role', {
-        description: error.message,
-      })
-      // console.log(error.message);
-    },
-    onSuccess(data, variables) {
-      toast.dismiss('update-user-role')
-      toast.success(
-        `User role updated successfully for ${variables.data.userIds.length} users`,
-      )
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['users'],
-      })
-      table.resetRowSelection()
-    },
-  })
+  });
 
   const deleteUser = useMutation({
     mutationKey: ['delete-user'],
@@ -419,355 +304,30 @@ export function UsersDataTable() {
     onMutate: () => {
       toast.loading('Deleting user...', {
         id: 'delete-user',
-      })
+      });
     },
 
     onError: (error) => {
-      toast.dismiss('delete-user')
+      toast.dismiss('delete-user');
       toast.error('Failed to delete user', {
         description: error.message,
-      })
+      });
       // console.log(error.message);
     },
     onSuccess() {
-      toast.dismiss('delete-user')
-      toast.success(`User deleted successfully`)
+      toast.dismiss('delete-user');
+      toast.success(`User deleted successfully`);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ['users'],
-      })
+      });
     },
-  })
-
-  const deleteUserByMany = useMutation({
-    mutationKey: ['delete-users'],
-    mutationFn: deleteUsersByManyFn,
-    onMutate: () => {
-      toast.loading('Deleting users...', {
-        id: 'delete-user',
-      })
-    },
-    onError: (error) => {
-      toast.dismiss('delete-user')
-      toast.error('Failed to delete users', {
-        description: error.message,
-      })
-      // console.log(error.message);
-    },
-    onSuccess(data, variables) {
-      toast.dismiss('delete-user')
-      toast.success(
-        `Deleted ${variables.data.userIds.length} users successfully`,
-      )
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['users'],
-      })
-      table.resetRowSelection()
-    },
-  })
+  });
 
   return (
     <div className="w-full">
-      <div className="flex flex-wrap sm:flex-nowrap gap-3 items-center py-4">
-        <div className="flex flex-wrap sm:flex-nowrap gap-2 w-full md:w-auto">
-          <Input
-            placeholder="Filter..."
-            value={
-              (table.getColumn(filterColumn)?.getFilterValue() as string) ?? ''
-            }
-            onChange={(event) =>
-              table.getColumn(filterColumn)?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm w-full"
-          />
-          <div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-fit cursor-pointer">
-                  <ListFilter />
-                  <span className="">Filter:</span>
-                  <span className="capitalize">{filterColumn}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="bg-transparent! backdrop-glass-lg"
-                align="end"
-              >
-                <DropdownMenuLabel>Columns</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    setFilterColumn('id')
-                    table.getColumn('id')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  User Id
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    setFilterColumn('name')
-                    table.getColumn('name')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  Name
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    setFilterColumn('email')
-                    table.getColumn('email')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  Email
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    setFilterColumn('role')
-                    table.getColumn('role')?.setFilterValue('')
-                    table.resetColumnFilters()
-                  }}
-                >
-                  Role
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-          <Button
-            variant="outline"
-            className={cn(
-              'cursor-pointer w-fit',
-              isFetching && 'cursor-not-allowed',
-            )}
-            disabled={isFetching}
-            onClick={() => queryClient.invalidateQueries()}
-          >
-            <RefreshCw
-              className={cn('w-4 h-4', {
-                'animate-spin': isFetching,
-              })}
-            />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="relative cursor-pointer"
-                disabled={isFetching}
-              >
-                <IconTableExport />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="bg-transparent backdrop-glass-lg"
-              align="end"
-            >
-              <DropdownMenuItem
-                className="cursor-pointer hover:bg-white/20!"
-                onClick={() => {
-                  exportCurrentPageToXlsx(table, 'users.xlsx')
-                }}
-              >
-                <IconFileExport />
-                Export current rows to .xlsx
-              </DropdownMenuItem>
-              {table.getFilteredSelectedRowModel().rows.length ? (
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    exportFilteredRowsToXlsx(table, 'users.xlsx')
-                  }}
-                >
-                  <IconFileExport />
-                  Export selected to .xlsx
-                </DropdownMenuItem>
-              ) : null}
-              <DropdownMenuItem
-                className="cursor-pointer hover:bg-white/20!"
-                onClick={() => {
-                  exportAllToXlsx(table, 'users.xlsx')
-                }}
-              >
-                <IconFileExport />
-                Export all rows to .xlsx
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          {table.getFilteredSelectedRowModel().rows.length ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="relative cursor-pointer"
-                  disabled={isFetching}
-                >
-                  <div
-                    className={cn(
-                      'absolute -top-1 -right-1 w-4 h-4 border rounded-full bg-white text-black flex justify-center items-center',
-                      {
-                        'w-6':
-                          table.getFilteredSelectedRowModel().rows.length > 9,
-                        'w-7':
-                          table.getFilteredSelectedRowModel().rows.length > 99,
-                      },
-                    )}
-                  >
-                    <p>{table.getFilteredSelectedRowModel().rows.length}</p>
-                  </div>
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="bg-transparent backdrop-glass-lg"
-                align="end"
-              >
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-white/20!"
-                  onClick={() => {
-                    exportFilteredRowsToXlsx(table, 'users.xlsx')
-                  }}
-                >
-                  <IconFileExport />
-                  Export selected to .xlsx
-                </DropdownMenuItem>
-                {session?.user.role === 'SUPERADMIN' && (
-                  <>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        const userIds = table
-                          .getFilteredSelectedRowModel()
-                          .rows.map((row) => row.original.id)
-                        updateUserRoleByMany.mutate({
-                          data: {
-                            userIds,
-                            role: 'USER',
-                          },
-                        })
-                      }}
-                      className="cursor-pointer text-yellow-500 hover:text-yellow-500! hover:bg-yellow-900/60!"
-                    >
-                      Update {table.getFilteredSelectedRowModel().rows.length}{' '}
-                      user&apos;ss role to USER
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        const userIds = table
-                          .getFilteredSelectedRowModel()
-                          .rows.map((row) => row.original.id)
-                        updateUserRoleByMany.mutate({
-                          data: {
-                            userIds,
-                            role: 'ADMIN',
-                          },
-                        })
-                      }}
-                      className="cursor-pointer text-yellow-500 hover:text-yellow-500! hover:bg-yellow-900/60!"
-                    >
-                      Update {table.getFilteredSelectedRowModel().rows.length}{' '}
-                      user&apos;ss role to ADMIN
-                    </DropdownMenuItem>
-                  </>
-                )}
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => {
-                    const userIds = table
-                      .getFilteredSelectedRowModel()
-                      .rows.map((row) => row.original.id)
-                    const roles = table
-                      .getFilteredSelectedRowModel()
-                      .rows.map((row) => row.original.role)
-                    deleteUserByMany.mutate({
-                      data: {
-                        userIds,
-                        roles,
-                      },
-                    })
-                  }}
-                  className="cursor-pointer"
-                >
-                  Delete {table.getFilteredSelectedRowModel().rows.length} users
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : null}
-        </div>
-
-        <DataTableViewOptions table={table} />
-      </div>
-      <div className="w-full overflow-x-auto rounded-md border mb-2">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : isLoading ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  <span className="flex justify-center items-center">
-                    <Loader2 className="animate-spin w-6 h-6" />
-                  </span>
-                </TableCell>
-              </TableRow>
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <DataTablePagination table={table} />
+      <DataTable columns={columns} data={unified || []} />
     </div>
-  )
+  );
 }

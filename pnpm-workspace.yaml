@@ -71,3 +71,7 @@ minimumReleaseAgeExclude:
   - '@oxlint/binding-win32-x64-msvc@1.76.0'
   - oxfmt@0.61.0
   - oxlint@1.76.0
+  - '@tanstack/devtools-event-bus@0.4.3'
+  - '@tanstack/devtools-ui@0.7.1'
+  - '@tanstack/devtools@0.14.1'
+  - '@tanstack/react-devtools@0.10.11'
