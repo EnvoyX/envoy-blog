@@ -327,7 +327,7 @@ export function UsersDataTable() {
 
   return (
     <div className="w-full">
-      <DataTable columns={columns} data={unified || []} />
+      <DataTable key="users-table" columns={columns} data={unified || []} />
     </div>
   );
 }

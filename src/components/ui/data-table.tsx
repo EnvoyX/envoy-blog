@@ -8,6 +8,7 @@ import {
   type ColumnFiltersState,
   type ColumnVisibilityState,
 } from '@tanstack/react-table';
+import { useTanStackTableDevtools } from '@tanstack/react-table-devtools';
 import * as React from 'react';
 
 import {
@@ -27,18 +28,21 @@ interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<DataTableFeatures, TData>[];
   data: TData[];
   defaultFilterColumn?: string;
+  key?: string;
 }
 
 export function DataTable<TData extends RowData>({
   columns,
   data,
   defaultFilterColumn,
+  key,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const table = useTable({
+    key,
     features,
     data,
     columns,
@@ -52,6 +56,10 @@ export function DataTable<TData extends RowData>({
       columnVisibility,
       rowSelection,
     },
+  });
+
+  useTanStackTableDevtools(table, {
+    enabled: true,
   });
 
   return (

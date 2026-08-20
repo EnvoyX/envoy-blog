@@ -310,7 +310,7 @@ export default function AccountsDataTable() {
 
   return (
     <div className="w-full">
-      <DataTable columns={columns} data={unified || []} />
+      <DataTable key="accounts-table" columns={columns} data={unified || []} />
     </div>
   );
 }

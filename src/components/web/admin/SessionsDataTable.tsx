@@ -281,7 +281,7 @@ export default function SessionsDataTable() {
 
   return (
     <div className="w-full">
-      <DataTable columns={columns} data={unified || []} />
+      <DataTable key="sessions-table" columns={columns} data={unified || []} />
     </div>
   );
 }
