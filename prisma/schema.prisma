@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -256,8 +257,10 @@ model Like {
   shortPost   ShortPost? @relation(fields: [shortPostId], references: [id], onDelete: Cascade)
   shortPostId String?
 
-  @@unique([userId, postId]) // prevents same user liking post twice
-  @@index([userId, postId, shortPostId]) // composite index for faster queries
+  // prevents same user liking post twice
+  // composite index for faster queries
+  @@unique([userId, postId])
+  @@index([userId, postId, shortPostId])
 }
 
 model Comment {
@@ -328,6 +331,7 @@ model Session {
 
   @@unique([token])
   @@map("session")
+  @@index([userId])
 }
 
 model Account {
@@ -346,7 +350,11 @@ model Account {
   createdAt             DateTime
   updatedAt             DateTime
 
+  issuer String
+
   @@map("account")
+  @@unique([issuer, accountId], map: "account_issuer_accountId_uidx")
+  @@index([userId])
 }
 
 model Verification {
@@ -358,4 +366,5 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+  @@index([identifier])
 }

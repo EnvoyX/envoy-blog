@@ -74,7 +74,7 @@
     "@uidotdev/usehooks": "^2.4.1",
     "@uiw/react-md-editor": "^4.1.1",
     "@uploadthing/react": "^7.3.3",
-    "better-auth": "^1.6.23",
+    "better-auth": "^1.7.1",
     "class-variance-authority": "^0.7.1",
     "cnfast": "^0.1.0",
     "date-fns": "^4.4.0",
@@ -164,5 +164,5 @@
     "vitest": "^4.1.10",
     "web-vitals": "^5.2.0"
   },
-  "packageManager": "pnpm@11.9.0"
+  "packageManager": "pnpm@11.22.0"
 }
