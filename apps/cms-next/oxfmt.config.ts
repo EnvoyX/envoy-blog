@@ -1,4 +1,4 @@
-import { defineConfig } from 'oxfmt'
+import { defineConfig } from "oxfmt";
 
 export default defineConfig({
   printWidth: 100,
@@ -7,7 +7,7 @@ export default defineConfig({
 
   // Style Preferences (matching original prettier config)
   singleQuote: true,
-  trailingComma: 'all',
+  trailingComma: "all",
   semi: false,
   bracketSpacing: true,
 
@@ -16,30 +16,30 @@ export default defineConfig({
   sortPackageJson: true,
 
   // Tailwind CSS Native Support
-  tailwindAttributes: ['className', 'class', 'containerClassName'],
-  tailwindFunctions: ['clsx', 'twMerge', 'cn'],
+  tailwindAttributes: ["className", "class", "containerClassName"],
+  tailwindFunctions: ["clsx", "twMerge", "cn"],
 
   // JSDoc Formatting
   jsdoc: {
-    commentLineStrategy: 'singleLine',
     addDefaultToDescription: true,
+    commentLineStrategy: "singleLine",
     verticalAlignment: true,
   },
 
   // Ignore patterns (matching original .prettierignore)
   ignorePatterns: [
-    '**/payload-types.ts',
-    '.tmp',
-    '**/.git',
-    '**/.hg',
-    '**/.pnp.*',
-    '**/.svn',
-    '**/.yarn/**',
-    '**/build',
-    '**/dist/**',
-    '**/node_modules',
-    '**/temp',
-    '**/docs/**',
-    'tsconfig.json',
+    "**/payload-types.ts",
+    ".tmp",
+    "**/.git",
+    "**/.hg",
+    "**/.pnp.*",
+    "**/.svn",
+    "**/.yarn/**",
+    "**/build",
+    "**/dist/**",
+    "**/node_modules",
+    "**/temp",
+    "**/docs/**",
+    "tsconfig.json",
   ],
-})
+});
