@@ -1,10 +1,10 @@
 {
   "name": "envoy-mindpalace-monorepo",
   "private": true,
-  "packageManager": "pnpm@11.22.0",
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "build:webpack": "turbo build:webpack",
     "test": "turbo test",
     "lint": "turbo lint",
     "lint:fix": "turbo lint:fix",
@@ -16,6 +16,8 @@
     "db:studio": "turbo db:studio",
     "db:seed": "turbo db:seed",
     "clean": "turbo clean",
+    "generate:types": "turbo generate:types",
+    "generate:importmap": "turbo generate:importmap",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "turbo build --filter=@envoy-mindpalace/web && changeset publish"
@@ -25,5 +27,6 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "packageManager": "pnpm@11.22.0"
 }

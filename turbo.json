@@ -4,7 +4,9 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".output/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".output/**"],
+      "env": ["NODE_OPTIONS"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
     },
     "dev": {
       "cache": false,
@@ -44,6 +46,19 @@
     },
     "clean": {
       "cache": false
+    },
+    "generate:types": {
+      "outputs": ["src/payload-types.ts", "src/payload-generated-schema.ts"],
+      "cache": false
+    },
+    "generate:importmap": {
+      "outputs": ["importmap.json"],
+      "cache": false
+    },
+    "build:webpack": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".output/**"],
+      "env": ["NODE_OPTIONS"]
     }
   }
 }

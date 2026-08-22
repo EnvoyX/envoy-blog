@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "web-tanstack-start",
   "private": true,
   "type": "module",
   "scripts": {
@@ -160,9 +160,9 @@
     "oxfmt": "^0.61.0",
     "oxlint": "^1.76.0",
     "prisma": "^7.8.0",
+    "rimraf": "^6.0.1",
     "tsx": "^4.23.1",
     "turbo": "^2.10.11",
-    "rimraf": "^6.0.1",
     "typescript": "^7.0.2",
     "vite": "^8.1.0",
     "vitest": "^4.1.10",
