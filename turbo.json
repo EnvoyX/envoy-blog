@@ -1,11 +1,35 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL",
+    "DIRECT_URL",
+    "BETTER_AUTH_SECRET",
+    "BETTER_AUTH_URL",
+    "VITE_BASE_URL",
+    "PAYLOAD_SECRET",
+    "NEXT_PUBLIC_SERVER_URL"
+  ],
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", ".output/**"],
-      "env": ["NODE_OPTIONS"],
+      "env": [
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "FIRECRAWL_API_KEY",
+        "OPENROUTER_API_KEY",
+        "GEMINI_API_KEY",
+        "GROQ_API_KEY",
+        "OLLAMA_API_KEY",
+        "VITE_IMGBB_API_KEY",
+        "UPLOADTHING_TOKEN",
+        "UPLOADTHING_SECRET",
+        "UPLOADTHING_APP_ID",
+        "DISCORD_CLIENT_ID",
+        "DISCORD_CLIENT_SECRET"
+      ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"]
     },
     "dev": {
@@ -58,7 +82,22 @@
     "build:webpack": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", ".output/**"],
-      "env": ["NODE_OPTIONS"]
+      "env": [
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "FIRECRAWL_API_KEY",
+        "OPENROUTER_API_KEY",
+        "GEMINI_API_KEY",
+        "GROQ_API_KEY",
+        "OLLAMA_API_KEY",
+        "VITE_IMGBB_API_KEY",
+        "UPLOADTHING_TOKEN",
+        "UPLOADTHING_SECRET",
+        "UPLOADTHING_APP_ID",
+        "DISCORD_CLIENT_ID",
+        "DISCORD_CLIENT_SECRET"
+      ],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
     }
   }
 }
