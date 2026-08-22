@@ -1,0 +1,103 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL",
+    "DIRECT_URL",
+    "BETTER_AUTH_SECRET",
+    "BETTER_AUTH_URL",
+    "VITE_BASE_URL",
+    "PAYLOAD_SECRET",
+    "NEXT_PUBLIC_SERVER_URL"
+  ],
+  "globalDependencies": ["**/.env.*local"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".output/**"],
+      "env": [
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "FIRECRAWL_API_KEY",
+        "OPENROUTER_API_KEY",
+        "GEMINI_API_KEY",
+        "GROQ_API_KEY",
+        "OLLAMA_API_KEY",
+        "VITE_IMGBB_API_KEY",
+        "UPLOADTHING_TOKEN",
+        "UPLOADTHING_SECRET",
+        "UPLOADTHING_APP_ID",
+        "DISCORD_CLIENT_ID",
+        "DISCORD_CLIENT_SECRET"
+      ],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "lint:fix": {
+      "outputs": []
+    },
+    "fmt": {
+      "outputs": []
+    },
+    "fmt:check": {
+      "outputs": []
+    },
+    "db:generate": {
+      "outputs": ["node_modules/.prisma/**"]
+    },
+    "db:push": {
+      "cache": false
+    },
+    "db:migrate": {
+      "cache": false
+    },
+    "db:studio": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:seed": {
+      "cache": false
+    },
+    "clean": {
+      "cache": false
+    },
+    "generate:types": {
+      "outputs": ["src/payload-types.ts", "src/payload-generated-schema.ts"],
+      "cache": false
+    },
+    "generate:importmap": {
+      "outputs": ["importmap.json"],
+      "cache": false
+    },
+    "build:webpack": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".output/**"],
+      "env": [
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "FIRECRAWL_API_KEY",
+        "OPENROUTER_API_KEY",
+        "GEMINI_API_KEY",
+        "GROQ_API_KEY",
+        "OLLAMA_API_KEY",
+        "VITE_IMGBB_API_KEY",
+        "UPLOADTHING_TOKEN",
+        "UPLOADTHING_SECRET",
+        "UPLOADTHING_APP_ID",
+        "DISCORD_CLIENT_ID",
+        "DISCORD_CLIENT_SECRET"
+      ],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
+    }
+  }
+}
