@@ -1,14 +1,14 @@
-import { createServerFn } from '@tanstack/react-start';
-import z from 'zod';
+import { createServerFn } from "@tanstack/react-start";
+import z from "zod";
 
-import { db } from '@/lib/db';
-import { authMiddleware } from '@/middlewares/auth';
+import { db } from "@/lib/db";
+import { authMiddleware } from "@/middlewares/auth";
 
-export const getAllFollowsFn = createServerFn({ method: 'GET' }).handler(async () => {
+export const getAllFollowsFn = createServerFn({ method: "GET" }).handler(async () => {
   return await db.follow.findMany();
 });
 
-export const getFollowsByUserIdFn = createServerFn({ method: 'GET' })
+export const getFollowsByUserIdFn = createServerFn({ method: "GET" })
   .validator(
     z.object({
       userId: z.string(),
@@ -44,7 +44,7 @@ export const getFollowsByUserIdFn = createServerFn({ method: 'GET' })
     };
   });
 
-export const toggleFollowFn = createServerFn({ method: 'POST' })
+export const toggleFollowFn = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(z.object({ id: z.string(), targetUserId: z.string() }))
   .handler(async ({ data, context }) => {
@@ -76,7 +76,7 @@ export const toggleFollowFn = createServerFn({ method: 'POST' })
     return { followed: true };
   });
 
-export const removeFollowerFn = createServerFn({ method: 'POST' })
+export const removeFollowerFn = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(z.object({ followId: z.string(), followerId: z.string() }))
   .handler(async ({ data, context }) => {

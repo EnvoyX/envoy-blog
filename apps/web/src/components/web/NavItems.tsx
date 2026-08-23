@@ -23,6 +23,13 @@ export const navItemsMain: NavProps["items"] = linkOptions([
     },
   },
   {
+    title: "Posts",
+    to: "/posts",
+    activeOptions: {
+      exact: false,
+    },
+  },
+  {
     title: "Post",
     to: "/post",
     activeOptions: {

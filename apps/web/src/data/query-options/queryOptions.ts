@@ -6,7 +6,13 @@ import { getAuthorFeedFn, getGlobalFeedFn, getShortPostByIdFn } from '@/data/pos
 import { RouterContext } from '@/routes/__root';
 
 import { getAlbumByIdFn } from '../album';
-import { getAuthorPostsFn, getPostFn, getPostsFn } from '../blog';
+import {
+  getAuthorPostsFn,
+  getPostFn,
+  getPostsFn,
+  getPayloadPostsFn,
+  getPayloadPostBySlugFn,
+} from '../blog';
 import { getPublicProfileFn } from '../user';
 
 export function shortPostOptions({ context }: { context: RouterContext }) {
@@ -133,6 +139,59 @@ export function albumIdOptions(albumId: string) {
         throw redirect({ to: '/dashboard/albums' });
       }
       return album;
+    },
+  });
+}
+
+// Payload CMS
+export type SerializablePost = {
+  id: number;
+  title: string;
+  slug: string;
+  content: string; // JSON string of Lexical content
+  meta: {
+    title?: string | null;
+    description?: string | null;
+    image?: string | null;
+  } | null;
+  heroImage: string | null;
+  categories: Array<{
+    id: number;
+    title: string;
+    slug: string;
+  }>;
+  publishedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  populatedAuthors: Array<{
+    id?: string | null;
+    name?: string | null;
+  }>;
+  relatedPosts: Array<{
+    id: number;
+    title: string;
+    slug: string;
+  }>;
+};
+
+export function payloadPostsOptions(limit: number = 10, page: number = 1, draft: boolean = false) {
+  return queryOptions({
+    queryKey: ['payload-posts', limit, page, draft],
+    queryFn: async () => {
+      const posts = await getPayloadPostsFn({
+        data: { limit, page, draft },
+      });
+      return posts;
+    },
+  });
+}
+
+export function payloadPostBySlugOptions(slug: string) {
+  return queryOptions({
+    queryKey: ['payload-post', slug],
+    queryFn: async () => {
+      const post = await getPayloadPostBySlugFn({ data: { slug } });
+      return post;
     },
   });
 }
