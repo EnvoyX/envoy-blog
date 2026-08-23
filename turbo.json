@@ -8,12 +8,16 @@
     "BETTER_AUTH_URL",
     "VITE_BASE_URL",
     "PAYLOAD_SECRET",
-    "NEXT_PUBLIC_SERVER_URL"
+    "NEXT_PUBLIC_SERVER_URL",
+    "BLOB_READ_WRITE_TOKEN",
+    "BLOB_STORE_ID",
+    "BLOB_WEBHOOK_PUBLIC_KEY",
+    "CMS_URL"
   ],
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "^generate:types"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", ".output/**"],
       "env": [
         "GOOGLE_CLIENT_ID",

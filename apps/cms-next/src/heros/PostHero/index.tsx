@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Media } from "@/components/Media";
-import type { Post } from "@/payload-types";
+import type { Post } from "@repo/payload-cms-types";
 import { formatAuthors } from "@/utilities/formatAuthors";
 import { formatDateTime } from "@/utilities/formatDateTime";
 
@@ -64,6 +64,9 @@ export const PostHero: React.FC<{
       <div className="min-h-[80vh] select-none">
         {heroImage && typeof heroImage !== "string" && (
           <Media fill priority imgClassName="-z-10 object-cover" resource={heroImage} />
+        )}
+        {heroImage && typeof heroImage === "object" && (
+          <Media fill priority imgClassName="-z-10 object-cover" resource={heroImage.externalURL} />
         )}
         <div className="absolute pointer-events-none left-0 bottom-0 w-full h-1/2 bg-linear-to-t from-black to-transparent" />
       </div>
