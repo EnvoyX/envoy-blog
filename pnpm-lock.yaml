@@ -44,9 +44,12 @@ importers:
       '@payloadcms/richtext-lexical':
         specifier: 3.88.0
         version: 3.88.0(@faceless-ui/modal@3.0.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@payloadcms/next@3.88.0(@types/react@19.2.14)(graphql@16.14.2)(monaco-editor@0.56.0)(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(payload@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@7.2.0)(typescript@7.0.2))(@types/react@19.2.14)(monaco-editor@0.56.0)(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(payload@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@7.2.0)(typescript@7.0.2)(yjs@13.6.32)
-      '@payloadcms/storage-uploadthing':
+      '@payloadcms/storage-s3':
         specifier: ^3.88.0
-        version: 3.88.0(@types/react@19.2.14)(express@5.2.1(supports-color@7.2.0))(monaco-editor@0.56.0)(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(payload@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@7.2.0)(tailwindcss@4.3.3)(typescript@7.0.2)
+        version: 3.88.0(@types/react@19.2.14)(monaco-editor@0.56.0)(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(payload@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@7.2.0)(typescript@7.0.2)
+      '@payloadcms/storage-vercel-blob':
+        specifier: ^3.88.0
+        version: 3.88.0(@types/react@19.2.14)(monaco-editor@0.56.0)(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(payload@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@7.2.0)(typescript@7.0.2)
       '@payloadcms/ui':
         specifier: 3.88.0
         version: 3.88.0(@types/react@19.2.14)(monaco-editor@0.56.0)(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(payload@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@7.2.0)(typescript@7.0.2)
@@ -62,6 +65,9 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.0.2
         version: 1.3.0(@types/react@19.2.14)(react@19.2.6)
+      '@repo/payload-cms-types':
+        specifier: workspace:*
+        version: link:../../packages/payload-cms
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -213,12 +219,18 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^3.3.0
         version: 3.3.0
+      '@payloadcms/sdk':
+        specifier: ^3.88.0
+        version: 3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2)
       '@prisma/adapter-pg':
         specifier: ^7.8.0
         version: 7.8.0
       '@prisma/client':
         specifier: ^7.8.0
         version: 7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2))(typescript@7.0.2)
+      '@repo/payload-cms-types':
+        specifier: workspace:*
+        version: link:../../packages/payload-cms
       '@shikijs/rehype':
         specifier: ^4.0.2
         version: 4.2.0
@@ -413,7 +425,7 @@ importers:
         version: 0.4.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       nitro:
         specifier: npm:nitro-nightly@3.0.1-20260429-111606-bc1dd9dc
-        version: nitro-nightly@3.0.1-20260429-111606-bc1dd9dc(@electric-sql/pglite@0.4.1)(chokidar@5.0.0)(dotenv@17.4.2)(drizzle-orm@0.45.2(@electric-sql/pglite@0.4.1)(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2))(typescript@7.0.2))(@types/pg@8.20.0)(kysely@0.29.2)(mysql2@3.15.3)(pg@8.22.0)(postgres@3.4.7)(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2)))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(mysql2@3.15.3)(rollup@4.62.5)(uploadthing@7.7.4(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(tailwindcss@4.3.2))(vite@8.1.0(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.77.4)(tsx@4.23.1)(yaml@2.9.0))
+        version: nitro-nightly@3.0.1-20260429-111606-bc1dd9dc(@electric-sql/pglite@0.4.1)(@vercel/blob@2.3.1)(chokidar@5.0.0)(dotenv@17.4.2)(drizzle-orm@0.45.2(@electric-sql/pglite@0.4.1)(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2))(typescript@7.0.2))(@types/pg@8.20.0)(kysely@0.29.2)(mysql2@3.15.3)(pg@8.22.0)(postgres@3.4.7)(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2)))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(mysql2@3.15.3)(rollup@4.62.5)(uploadthing@7.7.4(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(tailwindcss@4.3.2))(vite@8.1.0(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.77.4)(tsx@4.23.1)(yaml@2.9.0))
       openapi-types:
         specifier: ^12.1.3
         version: 12.1.3
@@ -614,6 +626,16 @@ importers:
         specifier: ^5.2.0
         version: 5.3.0
 
+  packages/payload-cms:
+    dependencies:
+      payload:
+        specifier: 3.88.0
+        version: 3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2)
+    devDependencies:
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
 packages:
 
   '@acemir/cssom@0.9.31':
@@ -659,6 +681,88 @@ packages:
 
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
+
+  '@aws-sdk/checksums@3.1000.29':
+    resolution: {integrity: sha512-Dtu0gr4dnATZAPwEYbpCsG+MpLM7OAliy2gTepEFQwl1vZ6DL3QMH2FveMa3HLvPsOdhJsPRB3KtxVhph9T75A==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/client-s3@3.1116.0':
+    resolution: {integrity: sha512-UKRl9qSVW0rZpvSOauQNpYAy8+ONBAVYnpfKVtCyOF+FZVT1tl6MunYuHvuarCrroD2/YJs+tHTALYNgAlec3Q==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/core@3.977.9':
+    resolution: {integrity: sha512-reqPFEQrZxDZpeGj4PFMepBeR5LGYHRqq/L0motTzgFkCRBA4rFdaVXDSLYyGHhxVz7sT2PDnPN9CluGSfgyJA==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/credential-provider-env@3.972.70':
+    resolution: {integrity: sha512-H404B7dJl2mCrBqahDEYsanB0xhdDp6tXnXcTUnXmmpy2Q3J0Ho0bUajZ2jr/RdwzCyS59Gi8xXIFwPLGBl6Uw==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/credential-provider-http@3.972.72':
+    resolution: {integrity: sha512-X98zYOrVOeuosCX+6ktf29FC2N2GHPLia7qv6mzPzTc+RPAuHWCDS++Z6JK7eGYqb/v6uaW7bAXaOvDBfol+0w==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/credential-provider-ini@3.973.15':
+    resolution: {integrity: sha512-Rykg6s5ceBuynMOGWgoowO4N+27JfnqXAnVaSunZl0hOO1XodSrxGNz6sCEbnmS0lAfQZDKyb3fbr46gSuv6Sg==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/credential-provider-login@3.972.77':
+    resolution: {integrity: sha512-Jb59xfEISoN5mmbnA+HYqdtrSX3CgCtJoof+V5D8/TgUI56W63GEEd5Y58WijU3Ou6+WEgaLD1feVzaRXV5IDQ==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/credential-provider-node@3.972.81':
+    resolution: {integrity: sha512-Rml+WitoFvXmv6JZ18U/xGdGDGGvB/mOin0ya0lTnTrdC0Z1lrVxTYh7iNklZBcvcRMrs4DoEf6xy1KWyrLQQw==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/credential-provider-process@3.972.70':
+    resolution: {integrity: sha512-2ry03fGRJr4sV3jI+ocjj5JqALnFD6ymM5KiNCDZMvq8bX2GSbE0vji4aM43TVCl2nXqqLRZaUxdq/KeWRAY4Q==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/credential-provider-sso@3.973.14':
+    resolution: {integrity: sha512-jkhg/8ocAAoc0RFyLMhCw+/zZh7gystQgd4F4hznNa8P4Cc501PQmxd+jGLiMHodPJ+7Zv/3znM62gZojyasmA==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/credential-provider-web-identity@3.972.76':
+    resolution: {integrity: sha512-d3AGyVu759PGr35mEB2s22xxlNEA5rpdxtSPJthfPFJvoQ8dt357iVPECqWfUxXp1toJAvKmbtcIYVGigaGsCA==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/lib-storage@3.1116.0':
+    resolution: {integrity: sha512-40z1NyzCbRX9bD6g3dJ6E4WDbYPDod6XHTIbNZPnGDYMYH2TPIj6LyRZ94fWPKGYnJpO0Q0Uhi2lSnn2E7PIdg==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      '@aws-sdk/client-s3': ^3.1116.0
+
+  '@aws-sdk/middleware-sdk-s3@3.972.75':
+    resolution: {integrity: sha512-wMIsNumRVKaNMKhvU/s9VrdEwE8S6gSzXp4RygFG5BEMnGkkXf8cjh8zf7cKJBpUDpqTWqwbz5isEgp9rH6Lng==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/nested-clients@3.997.44':
+    resolution: {integrity: sha512-NhEgryjlBF9w38ZXqGymQV28IhkYa1mKhlbYnqIis57AYwWGVYfUPgg/qC2rLRqOUfblxx++irvju10kVTa8Vw==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/s3-request-presigner@3.1116.0':
+    resolution: {integrity: sha512-WwaaVpvrZyML5L8SNY7sUGsYlMeCHzQ/8A/ms7dz/7sfYRvPn+qf0OasUWk+zuT8qGwjsYhILD0WVtlqUU08pQ==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/signature-v4-multi-region@3.996.46':
+    resolution: {integrity: sha512-L+2xZTye/2T96f3lwCws0Zw6GG2JHZW9e8FpVgGBeeExSKyeoZ6CWRpBml/7DNiK/O26jrgPM9F+Ay8VkgzUWQ==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/token-providers@3.1116.0':
+    resolution: {integrity: sha512-ygIivKqh8aHzNkucOCXHyIBgBpLPfrSI0mCqXF+vLBsPTUKqj0VSqAY0GFPe7lQl4HntjOcQ+KSyS7oUV2C54Q==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/types@3.974.5':
+    resolution: {integrity: sha512-LkwLL2BLbC6wNNm4JaH9mbEqBMdOZCct6VAYqhdN4U1xrWM+fUJQEfbHwQgDypapOWTRtlk25akb5afM0P8CIQ==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/xml-builder@3.972.40':
+    resolution: {integrity: sha512-wlFmCIGUlwF4zx/kncw+bmxTQh1HeSJq4mYV/V5cZUSJadDP3kXvGW8Rn21cimj/7y9ju+47oYWXi97vF7czaA==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws/lambda-invoke-store@0.3.0':
+    resolution: {integrity: sha512-sl4Bm6yiMNYrZKkqqDFWN0UfnWhlS8ivKxrYl+6t0gCLrqr8y3B2IqZZbFRkfaVVp7C/baApyh71P+LeE1A2sQ==}
+    engines: {node: '>=18.0.0'}
 
   '@babel/code-frame@7.27.1':
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
@@ -1036,11 +1140,6 @@ packages:
 
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
-
-  '@effect/platform@0.69.8':
-    resolution: {integrity: sha512-zhBhg0c1MHMMo+grOc/6wC2/3UETLroruwrYNZ89uDtXl6EOcP5alFP+vW3NToKDA2o0hRh22KNqq4aixA7xXg==}
-    peerDependencies:
-      effect: ^3.10.3
 
   '@effect/platform@0.90.3':
     resolution: {integrity: sha512-XvQ37yzWQKih4Du2CYladd1i/MzqtgkTPNCaN6Ku6No4CK83hDtXIV/rP03nEoBg2R3Pqgz6gGWmE2id2G81HA==}
@@ -2749,8 +2848,17 @@ packages:
       react: ^19.0.1 || ^19.1.2 || ^19.2.1
       react-dom: ^19.0.1 || ^19.1.2 || ^19.2.1
 
-  '@payloadcms/storage-uploadthing@3.88.0':
-    resolution: {integrity: sha512-5PHmPXrU+mUCFs9ns2VakNKAS33TQ7CVJ6jsD6ZFSjpBI5pmFIEWNxqtNzrYhjQfbTMLtXrQh2RR89JZtCJSRA==}
+  '@payloadcms/sdk@3.88.0':
+    resolution: {integrity: sha512-nDAbAYtqb6KlEkjqZOMPbvXnl3S0j/H7ZiCYBqaodGlkdtCyUSfpjz0jgb0bDOs0seVKetVLlFUEYmTjJqOISQ==}
+
+  '@payloadcms/storage-s3@3.88.0':
+    resolution: {integrity: sha512-+35JRD4y7ImnIJuPSBhECHGGml0A+xju9BT/zW+lRUycDvvA0cqZNP+t95OVoZrxIB6V75Vg8GKPvAaRAmgOEw==}
+    engines: {node: ^18.20.2 || >=20.9.0}
+    peerDependencies:
+      payload: 3.88.0
+
+  '@payloadcms/storage-vercel-blob@3.88.0':
+    resolution: {integrity: sha512-zTvf/YxKjtJGVeJC+iHt8fKY9FDFIMqZBABbr7TGMRQorNv7UGuXgWPoKdDA9TeSRLPVz6c2vFpkpBq2gZ3rvg==}
     engines: {node: ^18.20.2 || >=20.9.0}
     peerDependencies:
       payload: 3.88.0
@@ -3933,6 +4041,30 @@ packages:
   '@sindresorhus/merge-streams@4.0.0':
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
+
+  '@smithy/core@3.33.3':
+    resolution: {integrity: sha512-CsOeKq/9kA3y6VJHt+/+VTCtBaxJ4OTFpgrjIUhPpDIKxBci1k2bJaQASF2h/ELWrulGp+t97DZ0mevfAD8idg==}
+    engines: {node: '>=18.0.0'}
+
+  '@smithy/credential-provider-imds@4.5.2':
+    resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
+    engines: {node: '>=18.0.0'}
+
+  '@smithy/fetch-http-handler@5.7.2':
+    resolution: {integrity: sha512-nZyWTmSpJEXl6VtWVMBJve/7x12DZu6sIX1z1a+ZMaHlQQRs9Zpu6NbTe/gmxYXVRpkjxyDYpZ5gx2IM6f/Wkw==}
+    engines: {node: '>=18.0.0'}
+
+  '@smithy/node-http-handler@4.11.3':
+    resolution: {integrity: sha512-2jY1tSpERfPfWqyBV2pH+iGFaghVsIJszJNsT7hxtQYhVJpWDyc0LqOWI+nXOxOAHaEfZ4PXXtp1wW1TGpHhkA==}
+    engines: {node: '>=18.0.0'}
+
+  '@smithy/signature-v4@5.7.3':
+    resolution: {integrity: sha512-7ImGm+FkHRLcBaRttIAMZ6bzJZWb2cJGoYjq46F2UjycujWzrL9GEN9h4w7eQyXJYnltrUhxbbieBAIRrdqpow==}
+    engines: {node: '>=18.0.0'}
+
+  '@smithy/types@4.17.2':
+    resolution: {integrity: sha512-FOKpVZob9MPTn2znRzGrnsMHv7BOsKVw3XiP/cOyYLDVZ9qKp4nifIiSCuUU/fIj5Vu0UOAxCFr+qRAtG0NUkA==}
+    engines: {node: '>=18.0.0'}
 
   '@solid-primitives/event-listener@2.4.5':
     resolution: {integrity: sha512-nwRV558mIabl4yVAhZKY8cb6G+O1F0M6Z75ttTu5hk+SxdOnKSGj+eetDIu7Oax1P138ZdUU01qnBPR8rnxaEA==}
@@ -5221,9 +5353,6 @@ packages:
   '@ungap/structured-clone@1.3.1':
     resolution: {integrity: sha512-mUFwbeTqrVgDQxFveS+df2yfap6iuP20NAKAsBt5jDEoOTDew+zwLAOilHCeQJOVSvmgCX4ogqIrA0mnyr08yQ==}
 
-  '@uploadthing/mime-types@0.3.2':
-    resolution: {integrity: sha512-WP/K75S/649lM0GUcd9jq4RjeTIc/0bO2UmLx4+usTSNy/x0K8gV0JdLWeUUbmTQtJoHd4ZTSvAdG7ZQgcmXvA==}
-
   '@uploadthing/mime-types@0.3.6':
     resolution: {integrity: sha512-t3tTzgwFV9+1D7lNDYc7Lr7kBwotHaX0ZsvoCGe7xGnXKo9z0jG2Sjl/msll12FeoLj77nyhsxevXyGpQDBvLg==}
 
@@ -5237,14 +5366,15 @@ packages:
       next:
         optional: true
 
-  '@uploadthing/shared@7.1.1':
-    resolution: {integrity: sha512-Nem3jZ6G9AJEBzzDVvwSKV/wLdpADz8LDg+woo9diJTHj1FOjWNzCwb8wMxpEFLM88TWv5Tq8Z1mQepNmC5WIQ==}
-
   '@uploadthing/shared@7.1.10':
     resolution: {integrity: sha512-R/XSA3SfCVnLIzFpXyGaKPfbwlYlWYSTuGjTFHuJhdAomuBuhopAHLh2Ois5fJibAHzi02uP1QCKbgTAdmArqg==}
 
   '@upsetjs/venn.js@2.0.0':
     resolution: {integrity: sha512-WbBhLrooyePuQ1VZxrJjtLvTc4NVfpOyKx0sKqioq9bX1C1m7Jgykkn8gLrtwumBioXIqam8DLxp88Adbue6Hw==}
+
+  '@vercel/blob@2.3.1':
+    resolution: {integrity: sha512-6f9oWC+DbWxIgBLOdqjjn2/REpFrPDB7y5B5HA1ptYkzZaBgL6E34kWrptJvJ7teApJdbAs3I1a5A7z1y8SDHw==}
+    engines: {node: '>=20.0.0'}
 
   '@vitejs/plugin-react@4.5.2':
     resolution: {integrity: sha512-QNVT3/Lxx99nMQWJWF7K4N6apUEuT0KlZA3mx/mVaoGj3smm/8rc8ezz15J1pcbcjDK0V15rpHetVfya08r76Q==}
@@ -5659,6 +5789,9 @@ packages:
     resolution: {integrity: sha512-LElXdjswlqjWrPpJFg1Fx4wpkOCxj1TDHlSV4PlaRxHGWko024xICaa97ZkMfs6DRKlCguiAI+rbXv5GWwXIkg==}
     hasBin: true
 
+  async-retry@1.3.3:
+    resolution: {integrity: sha512-wfr/jstw9xNi/0teMHrRW7dsz3Lt5ARhYNZ2ewpadnhaIp5mbALhOAP+EAdsC7t4Z6wqsDVv9+W6gm1Dk9mEyw==}
+
   atomic-sleep@1.0.0:
     resolution: {integrity: sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==}
     engines: {node: '>=8.0.0'}
@@ -5796,6 +5929,9 @@ packages:
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
 
+  bowser@2.14.1:
+    resolution: {integrity: sha512-tzPjzCxygAKWFOJP011oxFHs57HzIhOEracIgAePE4pqB3LikALKnSzUyU4MGs9/iCEUuHlAJTjTc5M+u7YEGg==}
+
   brace-expansion@5.0.6:
     resolution: {integrity: sha512-kLpxurY4Z4r9sgMsyG0Z9uzsBlgiU/EFKhj/h91/8yHu0edo7XuixOIH3VcJ8kkxs6/jPzoI6U9Vj3WqbMQ94g==}
     engines: {node: 18 || 20 || >=22}
@@ -5826,6 +5962,9 @@ packages:
   buffer-image-size@0.6.4:
     resolution: {integrity: sha512-nEh+kZOPY1w+gcCMobZ6ETUp9WfibndnosbpwB1iJk/8Gt5ZF2bhS6+B6bPYz424KtwsR6Rflc3tCz1/ghX2dQ==}
     engines: {node: '>=4.0'}
+
+  buffer@5.6.0:
+    resolution: {integrity: sha512-/gDYp/UtU0eA1ys8bOs9J6a+E/KWIY+DZ+Q2WESNUA0jFRsJOc0SNUO6xJ5SGA1xueg3NL65W6s+NY5l9cunuw==}
 
   bundle-name@4.1.0:
     resolution: {integrity: sha512-tjwM5exMg6BGRI+kNmTntNsvdZS1X8BFYS6tnJ2hdH0kVxM6/eVZ2xy+FqStSWvYmtfFMDLIxurorHwDKfDz5Q==}
@@ -6609,9 +6748,6 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  effect@3.10.3:
-    resolution: {integrity: sha512-+Z5bUhzTeqYlfoPsfXMZG1pYadqLBKARD3xwMIoEAESsOhKFOrUsHHNCy2ZZW3/6oa4wokgT01k1zavA4BAQ4w==}
-
   effect@3.17.7:
     resolution: {integrity: sha512-dpt0ONUn3zzAuul6k4nC/coTTw27AL5nhkORXgTi6NfMPzqWYa1M05oKmOMTxpVSTKepqXVcW9vIwkuaaqx9zA==}
 
@@ -6823,6 +6959,10 @@ packages:
   etag@1.8.1:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
+
+  events@3.3.0:
+    resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
+    engines: {node: '>=0.8.x'}
 
   eventsource-parser@3.1.0:
     resolution: {integrity: sha512-kJezFj9YFAMLeORyi7aCLxLbD5/qWMQnoMVlVPyHIll7lgRJCc3JVln9Vgl9nwQi0YkMnhdGTMNn7CkRRAptMg==}
@@ -7426,6 +7566,10 @@ packages:
   is-buffer@1.1.6:
     resolution: {integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==}
 
+  is-buffer@2.0.5:
+    resolution: {integrity: sha512-i2R6zNFDwgEHJyQUtJEk0XFi1i0dPFn/oqjK3/vPCcDeJvW5NQ83V8QbicfF1SupOaB0h8ntgBC2YiE7dfyctQ==}
+    engines: {node: '>=4'}
+
   is-core-module@2.16.2:
     resolution: {integrity: sha512-evOr8xfXKxE6qSR0hSXL2r3sd7ALj8+7jQEUvPYcm5sgZFdJ+AYzT6yNmJenvIYQBgIGwfwz08sL8zoL7yq2BA==}
     engines: {node: '>= 0.4'}
@@ -7470,6 +7614,9 @@ packages:
   is-interactive@2.0.0:
     resolution: {integrity: sha512-qP1vozQRI+BMOPcjFzrjXuQvdak2pHNUMZoeG2eRbiSqyvbEf/wQtEOTOX1guk6E3t36RkaqiSt8A/6YElNxLQ==}
     engines: {node: '>=12'}
+
+  is-node-process@1.2.0:
+    resolution: {integrity: sha512-Vg4o6/fqPxIjtxgUH5QLJhwZ7gW5diGCVlXpuUfELC62CuxM1iHcRe51f2W1FDy04Ai4KJkagKjx3XaqyfRKXw==}
 
   is-number@7.0.0:
     resolution: {integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==}
@@ -8957,6 +9104,10 @@ packages:
   readable-stream@2.3.8:
     resolution: {integrity: sha512-8p0AUk4XODgIewSi0l8Epjs+EVnWiK7NoDIEGU0HhE7+ZyY8D1IMY7odu5lRrFXGg71L15KG8QrPmum45RTtdA==}
 
+  readable-stream@3.6.2:
+    resolution: {integrity: sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==}
+    engines: {node: '>= 6'}
+
   readdirp@3.6.0:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
     engines: {node: '>=8.10.0'}
@@ -9438,6 +9589,9 @@ packages:
     resolution: {integrity: sha512-UhDfHmA92YAlNnCfhmq0VeNL5bDbiZGg7sZ2IvPsXubGkiNa9EC+tUTsjBRsYUAz87btI6/1wf4XoVvQ3uRnmQ==}
     engines: {node: '>=18'}
 
+  stream-browserify@3.0.0:
+    resolution: {integrity: sha512-H73RAHsVBapbim0tU2JwwOiXUj+fikfiaoYAKHF3VJfA0pe2BCzkhAHBlLG6REzE+2WNZcxOXjK7lkso+9euLA==}
+
   streamdown@2.5.0:
     resolution: {integrity: sha512-/tTnURfIOxZK/pqJAxsfCvETG/XCJHoWnk3jq9xLcuz6CSpnjjuxSRBTTL4PKGhxiZQf0lqPxGhImdpwcZ2XwA==}
     peerDependencies:
@@ -9566,6 +9720,10 @@ packages:
 
   thread-stream@3.2.0:
     resolution: {integrity: sha512-zLBvqpwr4Esa0kRjcrzGU6zL25lePWaCLMx0RQFrmteozIfeNdaMLpG5U7PeHzvlFkAWaRKA9/KVW4F60iB+qw==}
+
+  throttleit@2.1.0:
+    resolution: {integrity: sha512-nt6AMGKW1p/70DF/hGBdJB57B8Tspmbp5gfJ8ilhLnt7kkr2ye7hzD6NVG8GGErk2HWF34igrL2CXmNIkzKqKw==}
+    engines: {node: '>=18'}
 
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
@@ -9712,6 +9870,10 @@ packages:
   undici-types@8.3.0:
     resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
 
+  undici@6.28.0:
+    resolution: {integrity: sha512-LIY910g9TI13YS95lrMFrs8Rm/u/irgHeTWoKCoteeJ04CUJ92eEfj0rVn+7VKMPBpUPiUoBKfhNyLI23EE/KA==}
+    engines: {node: '>=18.17'}
+
   undici@7.28.0:
     resolution: {integrity: sha512-cRZYrTDwWznlnRiPjggAGxZXanty6M8RV1ff8Wm4LWXBp7/IG8v5DnOm74DtUBp9OONpK75YlPnIjQqX0dBDtA==}
     engines: {node: '>=20.18.1'}
@@ -9857,27 +10019,6 @@ packages:
     hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
-
-  uploadthing@7.3.0:
-    resolution: {integrity: sha512-ALZCOI5m5XyDD9YHCewCrhLFnELeI8xRJfJC4PvGdh9u6PcAyv851UT92JC6BLtJdgB2Fi/o9gPOXMpZkD5pSw==}
-    engines: {node: '>=18.13.0'}
-    peerDependencies:
-      express: '*'
-      fastify: '*'
-      h3: '*'
-      next: '*'
-      tailwindcss: '*'
-    peerDependenciesMeta:
-      express:
-        optional: true
-      fastify:
-        optional: true
-      h3:
-        optional: true
-      next:
-        optional: true
-      tailwindcss:
-        optional: true
 
   uploadthing@7.7.4:
     resolution: {integrity: sha512-rlK/4JWHW5jP30syzWGBFDDXv3WJDdT8gn9OoxRJmXLoXi94hBmyyjxihGlNrKhBc81czyv8TkzMioe/OuKGfA==}
@@ -10488,6 +10629,190 @@ snapshots:
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
+  '@aws-sdk/checksums@3.1000.29':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/client-s3@3.1116.0':
+    dependencies:
+      '@aws-sdk/checksums': 3.1000.29
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/credential-provider-node': 3.972.81
+      '@aws-sdk/middleware-sdk-s3': 3.972.75
+      '@aws-sdk/signature-v4-multi-region': 3.996.46
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/fetch-http-handler': 5.7.2
+      '@smithy/node-http-handler': 4.11.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/core@3.977.9':
+    dependencies:
+      '@aws-sdk/types': 3.974.5
+      '@aws-sdk/xml-builder': 3.972.40
+      '@aws/lambda-invoke-store': 0.3.0
+      '@smithy/core': 3.33.3
+      '@smithy/signature-v4': 5.7.3
+      '@smithy/types': 4.17.2
+      bowser: 2.14.1
+      tslib: 2.8.1
+
+  '@aws-sdk/credential-provider-env@3.972.70':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/credential-provider-http@3.972.72':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/fetch-http-handler': 5.7.2
+      '@smithy/node-http-handler': 4.11.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/credential-provider-ini@3.973.15':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/credential-provider-env': 3.972.70
+      '@aws-sdk/credential-provider-http': 3.972.72
+      '@aws-sdk/credential-provider-login': 3.972.77
+      '@aws-sdk/credential-provider-process': 3.972.70
+      '@aws-sdk/credential-provider-sso': 3.973.14
+      '@aws-sdk/credential-provider-web-identity': 3.972.76
+      '@aws-sdk/nested-clients': 3.997.44
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/credential-provider-imds': 4.5.2
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/credential-provider-login@3.972.77':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/nested-clients': 3.997.44
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/credential-provider-node@3.972.81':
+    dependencies:
+      '@aws-sdk/credential-provider-env': 3.972.70
+      '@aws-sdk/credential-provider-http': 3.972.72
+      '@aws-sdk/credential-provider-ini': 3.973.15
+      '@aws-sdk/credential-provider-process': 3.972.70
+      '@aws-sdk/credential-provider-sso': 3.973.14
+      '@aws-sdk/credential-provider-web-identity': 3.972.76
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/credential-provider-imds': 4.5.2
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/credential-provider-process@3.972.70':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/credential-provider-sso@3.973.14':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/nested-clients': 3.997.44
+      '@aws-sdk/token-providers': 3.1116.0
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/credential-provider-web-identity@3.972.76':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/nested-clients': 3.997.44
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/lib-storage@3.1116.0(@aws-sdk/client-s3@3.1116.0)':
+    dependencies:
+      '@aws-sdk/client-s3': 3.1116.0
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      buffer: 5.6.0
+      events: 3.3.0
+      stream-browserify: 3.0.0
+      tslib: 2.8.1
+
+  '@aws-sdk/middleware-sdk-s3@3.972.75':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/signature-v4-multi-region': 3.996.46
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/nested-clients@3.997.44':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/signature-v4-multi-region': 3.996.46
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/fetch-http-handler': 5.7.2
+      '@smithy/node-http-handler': 4.11.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/s3-request-presigner@3.1116.0':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/signature-v4-multi-region': 3.996.46
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/signature-v4-multi-region@3.996.46':
+    dependencies:
+      '@aws-sdk/types': 3.974.5
+      '@smithy/signature-v4': 5.7.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/token-providers@3.1116.0':
+    dependencies:
+      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/nested-clients': 3.997.44
+      '@aws-sdk/types': 3.974.5
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/types@3.974.5':
+    dependencies:
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/xml-builder@3.972.40':
+    dependencies:
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws/lambda-invoke-store@0.3.0': {}
+
   '@babel/code-frame@7.27.1':
     dependencies:
       '@babel/helper-validator-identifier': 7.29.7
@@ -10911,12 +11236,6 @@ snapshots:
   '@dotenvx/primitives@0.8.0': {}
 
   '@drizzle-team/brocli@0.10.2': {}
-
-  '@effect/platform@0.69.8(effect@3.10.3)':
-    dependencies:
-      effect: 3.10.3
-      find-my-way-ts: 0.1.6
-      multipasta: 0.2.7
 
   '@effect/platform@0.90.3(effect@3.17.7)':
     dependencies:
@@ -12449,22 +12768,46 @@ snapshots:
       - utf-8-validate
       - yjs
 
-  '@payloadcms/storage-uploadthing@3.88.0(@types/react@19.2.14)(express@5.2.1(supports-color@7.2.0))(monaco-editor@0.56.0)(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(payload@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@7.2.0)(tailwindcss@4.3.3)(typescript@7.0.2)':
+  '@payloadcms/sdk@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2)':
     dependencies:
+      payload: 3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2)
+      qs-esm: 8.0.1
+      ts-essentials: 10.0.3(typescript@7.0.2)
+    transitivePeerDependencies:
+      - bufferutil
+      - graphql
+      - supports-color
+      - typescript
+      - utf-8-validate
+
+  '@payloadcms/storage-s3@3.88.0(@types/react@19.2.14)(monaco-editor@0.56.0)(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(payload@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@7.2.0)(typescript@7.0.2)':
+    dependencies:
+      '@aws-sdk/client-s3': 3.1116.0
+      '@aws-sdk/lib-storage': 3.1116.0(@aws-sdk/client-s3@3.1116.0)
+      '@aws-sdk/s3-request-presigner': 3.1116.0
       '@payloadcms/plugin-cloud-storage': 3.88.0(@types/react@19.2.14)(monaco-editor@0.56.0)(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(payload@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@7.2.0)(typescript@7.0.2)
       payload: 3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2)
-      uploadthing: 7.3.0(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(tailwindcss@4.3.3)
     transitivePeerDependencies:
       - '@types/react'
-      - express
-      - fastify
-      - h3
       - monaco-editor
       - next
       - react
       - react-dom
       - supports-color
-      - tailwindcss
+      - typescript
+
+  '@payloadcms/storage-vercel-blob@3.88.0(@types/react@19.2.14)(monaco-editor@0.56.0)(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(payload@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@7.2.0)(typescript@7.0.2)':
+    dependencies:
+      '@payloadcms/plugin-cloud-storage': 3.88.0(@types/react@19.2.14)(monaco-editor@0.56.0)(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(payload@3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@7.2.0)(typescript@7.0.2)
+      '@vercel/blob': 2.3.1
+      payload: 3.88.0(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2)
+    transitivePeerDependencies:
+      - '@types/react'
+      - monaco-editor
+      - next
+      - react
+      - react-dom
+      - supports-color
       - typescript
 
   '@payloadcms/translations@3.88.0':
@@ -13974,6 +14317,39 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
+  '@smithy/core@3.33.3':
+    dependencies:
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@smithy/credential-provider-imds@4.5.2':
+    dependencies:
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@smithy/fetch-http-handler@5.7.2':
+    dependencies:
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@smithy/node-http-handler@4.11.3':
+    dependencies:
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@smithy/signature-v4@5.7.3':
+    dependencies:
+      '@smithy/core': 3.33.3
+      '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@smithy/types@4.17.2':
+    dependencies:
+      tslib: 2.8.1
+
   '@solid-primitives/event-listener@2.4.5(solid-js@1.9.15)':
     dependencies:
       '@solid-primitives/utils': 6.4.0(solid-js@1.9.15)
@@ -15347,8 +15723,6 @@ snapshots:
 
   '@ungap/structured-clone@1.3.1': {}
 
-  '@uploadthing/mime-types@0.3.2': {}
-
   '@uploadthing/mime-types@0.3.6': {}
 
   '@uploadthing/react@7.3.3(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(react@19.2.7)(uploadthing@7.7.4(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(tailwindcss@4.3.2))':
@@ -15360,12 +15734,6 @@ snapshots:
     optionalDependencies:
       next: 16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4)
 
-  '@uploadthing/shared@7.1.1':
-    dependencies:
-      '@uploadthing/mime-types': 0.3.2
-      effect: 3.10.3
-      sqids: 0.3.0
-
   '@uploadthing/shared@7.1.10':
     dependencies:
       '@uploadthing/mime-types': 0.3.6
@@ -15376,6 +15744,14 @@ snapshots:
     optionalDependencies:
       d3-selection: 3.0.0
       d3-transition: 3.0.1(d3-selection@3.0.0)
+
+  '@vercel/blob@2.3.1':
+    dependencies:
+      async-retry: 1.3.3
+      is-buffer: 2.0.5
+      is-node-process: 1.2.0
+      throttleit: 2.1.0
+      undici: 6.28.0
 
   '@vitejs/plugin-react@4.5.2(supports-color@7.2.0)(vite@7.3.6(@types/node@22.19.9)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.77.4)(tsx@4.22.4)(yaml@2.9.0))':
     dependencies:
@@ -16121,6 +16497,10 @@ snapshots:
 
   astring@1.9.0: {}
 
+  async-retry@1.3.3:
+    dependencies:
+      retry: 0.13.1
+
   atomic-sleep@1.0.0: {}
 
   atomically@1.7.0: {}
@@ -16234,6 +16614,8 @@ snapshots:
 
   boolbase@1.0.0: {}
 
+  bowser@2.14.1: {}
+
   brace-expansion@5.0.6:
     dependencies:
       balanced-match: 4.0.4
@@ -16267,6 +16649,11 @@ snapshots:
   buffer-image-size@0.6.4:
     dependencies:
       '@types/node': 26.1.1
+
+  buffer@5.6.0:
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
 
   bundle-name@4.1.0:
     dependencies:
@@ -16938,10 +17325,6 @@ snapshots:
 
   ee-first@1.1.1: {}
 
-  effect@3.10.3:
-    dependencies:
-      fast-check: 3.23.2
-
   effect@3.17.7:
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -17201,6 +17584,8 @@ snapshots:
       '@types/estree': 1.0.9
 
   etag@1.8.1: {}
+
+  events@3.3.0: {}
 
   eventsource-parser@3.1.0: {}
 
@@ -17949,6 +18334,8 @@ snapshots:
 
   is-buffer@1.1.6: {}
 
+  is-buffer@2.0.5: {}
+
   is-core-module@2.16.2:
     dependencies:
       hasown: 2.0.4
@@ -17976,6 +18363,8 @@ snapshots:
       is-docker: 3.0.0
 
   is-interactive@2.0.0: {}
+
+  is-node-process@1.2.0: {}
 
   is-number@7.0.0: {}
 
@@ -19113,7 +19502,7 @@ snapshots:
 
   nf3@0.3.17: {}
 
-  nitro-nightly@3.0.1-20260429-111606-bc1dd9dc(@electric-sql/pglite@0.4.1)(chokidar@5.0.0)(dotenv@17.4.2)(drizzle-orm@0.45.2(@electric-sql/pglite@0.4.1)(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2))(typescript@7.0.2))(@types/pg@8.20.0)(kysely@0.29.2)(mysql2@3.15.3)(pg@8.22.0)(postgres@3.4.7)(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2)))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(mysql2@3.15.3)(rollup@4.62.5)(uploadthing@7.7.4(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(tailwindcss@4.3.2))(vite@8.1.0(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.77.4)(tsx@4.23.1)(yaml@2.9.0)):
+  nitro-nightly@3.0.1-20260429-111606-bc1dd9dc(@electric-sql/pglite@0.4.1)(@vercel/blob@2.3.1)(chokidar@5.0.0)(dotenv@17.4.2)(drizzle-orm@0.45.2(@electric-sql/pglite@0.4.1)(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2))(typescript@7.0.2))(@types/pg@8.20.0)(kysely@0.29.2)(mysql2@3.15.3)(pg@8.22.0)(postgres@3.4.7)(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2)))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(mysql2@3.15.3)(rollup@4.62.5)(uploadthing@7.7.4(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(tailwindcss@4.3.2))(vite@8.1.0(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.77.4)(tsx@4.23.1)(yaml@2.9.0)):
     dependencies:
       consola: 3.4.2
       crossws: 0.4.6(srvx@0.11.17)
@@ -19128,7 +19517,7 @@ snapshots:
       rolldown: 1.1.2
       srvx: 0.11.17
       unenv: 2.0.0-rc.24
-      unstorage: 2.0.0-alpha.7(chokidar@5.0.0)(db0@0.3.4(@electric-sql/pglite@0.4.1)(drizzle-orm@0.45.2(@electric-sql/pglite@0.4.1)(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2))(typescript@7.0.2))(@types/pg@8.20.0)(kysely@0.29.2)(mysql2@3.15.3)(pg@8.22.0)(postgres@3.4.7)(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2)))(mysql2@3.15.3))(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3)(uploadthing@7.7.4(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(tailwindcss@4.3.2))
+      unstorage: 2.0.0-alpha.7(@vercel/blob@2.3.1)(chokidar@5.0.0)(db0@0.3.4(@electric-sql/pglite@0.4.1)(drizzle-orm@0.45.2(@electric-sql/pglite@0.4.1)(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2))(typescript@7.0.2))(@types/pg@8.20.0)(kysely@0.29.2)(mysql2@3.15.3)(pg@8.22.0)(postgres@3.4.7)(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2)))(mysql2@3.15.3))(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3)(uploadthing@7.7.4(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(tailwindcss@4.3.2))
     optionalDependencies:
       dotenv: 17.4.2
       giget: 3.3.0
@@ -20029,6 +20418,12 @@ snapshots:
       string_decoder: 1.1.1
       util-deprecate: 1.0.2
 
+  readable-stream@3.6.2:
+    dependencies:
+      inherits: 2.0.4
+      string_decoder: 1.1.1
+      util-deprecate: 1.0.2
+
   readdirp@3.6.0:
     dependencies:
       picomatch: 2.3.2
@@ -20781,6 +21176,11 @@ snapshots:
 
   stdin-discarder@0.2.2: {}
 
+  stream-browserify@3.0.0:
+    dependencies:
+      inherits: 2.0.4
+      readable-stream: 3.6.2
+
   streamdown@2.5.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(supports-color@7.2.0):
     dependencies:
       clsx: 2.1.1
@@ -20920,6 +21320,8 @@ snapshots:
   thread-stream@3.2.0:
     dependencies:
       real-require: 0.2.0
+
+  throttleit@2.1.0: {}
 
   tiny-invariant@1.3.3: {}
 
@@ -21067,6 +21469,8 @@ snapshots:
 
   undici-types@8.3.0: {}
 
+  undici@6.28.0: {}
+
   undici@7.28.0: {}
 
   undici@7.29.0: {}
@@ -21146,8 +21550,9 @@ snapshots:
       picomatch: 4.0.4
       webpack-virtual-modules: 0.6.2
 
-  unstorage@2.0.0-alpha.7(chokidar@5.0.0)(db0@0.3.4(@electric-sql/pglite@0.4.1)(drizzle-orm@0.45.2(@electric-sql/pglite@0.4.1)(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2))(typescript@7.0.2))(@types/pg@8.20.0)(kysely@0.29.2)(mysql2@3.15.3)(pg@8.22.0)(postgres@3.4.7)(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2)))(mysql2@3.15.3))(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3)(uploadthing@7.7.4(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(tailwindcss@4.3.2)):
+  unstorage@2.0.0-alpha.7(@vercel/blob@2.3.1)(chokidar@5.0.0)(db0@0.3.4(@electric-sql/pglite@0.4.1)(drizzle-orm@0.45.2(@electric-sql/pglite@0.4.1)(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2))(typescript@7.0.2))(@types/pg@8.20.0)(kysely@0.29.2)(mysql2@3.15.3)(pg@8.22.0)(postgres@3.4.7)(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2)))(mysql2@3.15.3))(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3)(uploadthing@7.7.4(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(tailwindcss@4.3.2)):
     optionalDependencies:
+      '@vercel/blob': 2.3.1
       chokidar: 5.0.0
       db0: 0.3.4(@electric-sql/pglite@0.4.1)(drizzle-orm@0.45.2(@electric-sql/pglite@0.4.1)(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2))(typescript@7.0.2))(@types/pg@8.20.0)(kysely@0.29.2)(mysql2@3.15.3)(pg@8.22.0)(postgres@3.4.7)(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@7.0.2)))(mysql2@3.15.3)
       lru-cache: 11.5.1
@@ -21165,17 +21570,6 @@ snapshots:
       browserslist: 4.28.8
       escalade: 3.2.0
       picocolors: 1.1.1
-
-  uploadthing@7.3.0(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4))(tailwindcss@4.3.3):
-    dependencies:
-      '@effect/platform': 0.69.8(effect@3.10.3)
-      '@uploadthing/mime-types': 0.3.2
-      '@uploadthing/shared': 7.1.1
-      effect: 3.10.3
-    optionalDependencies:
-      express: 5.2.1(supports-color@7.2.0)
-      next: 16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.77.4)
-      tailwindcss: 4.3.3
 
   uploadthing@7.7.4(express@5.2.1(supports-color@7.2.0))(next@16.3.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(tailwindcss@4.3.2):
     dependencies:

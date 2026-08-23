@@ -1,22 +1,21 @@
-import configPromise from '@payload-config'
-import type { Metadata } from 'next/types'
-import { getPayload } from 'payload'
-import React from 'react'
+import configPromise from "@payload-config";
+import type { Metadata } from "next/types";
+import { getPayload } from "payload";
 
-import { CollectionArchive } from '@/components/CollectionArchive'
-import { PageRange } from '@/components/PageRange'
-import { Pagination } from '@/components/Pagination'
+import { CollectionArchive } from "@/components/CollectionArchive";
+import { PageRange } from "@/components/PageRange";
+import { Pagination } from "@/components/Pagination";
 
-import PageClient from './page.client'
+import PageClient from "./page.client";
 
-export const dynamic = 'force-static'
-export const revalidate = 600
+export const dynamic = "force-static";
+export const revalidate = 600;
 
 export default async function Page() {
-  const payload = await getPayload({ config: configPromise })
+  const payload = await getPayload({ config: configPromise });
 
   const posts = await payload.find({
-    collection: 'posts',
+    collection: "posts",
     depth: 1,
     limit: 12,
     overrideAccess: false,
@@ -26,7 +25,7 @@ export default async function Page() {
       categories: true,
       meta: true,
     },
-  })
+  });
 
   return (
     <div className="pt-24 pb-24">
@@ -54,11 +53,11 @@ export default async function Page() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 export function generateMetadata(): Metadata {
   return {
     title: `Payload Website Template Posts`,
-  }
+  };
 }

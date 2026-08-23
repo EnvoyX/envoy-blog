@@ -1,4 +1,4 @@
-import { defineConfig } from "oxfmt";
+import { defineConfig } from 'oxfmt';
 
 export default defineConfig({
   printWidth: 100,
@@ -7,7 +7,7 @@ export default defineConfig({
 
   // Style Preferences
   singleQuote: true,
-  trailingComma: "all",
+  trailingComma: 'all',
   semi: true,
   bracketSpacing: true,
 
@@ -16,12 +16,12 @@ export default defineConfig({
   sortPackageJson: true,
 
   // Tailwind CSS Native Support
-  tailwindAttributes: ["className", "class", "containerClassName"],
-  tailwindFunctions: ["clsx", "twMerge", "cn"],
+  tailwindAttributes: ['className', 'class', 'containerClassName'],
+  tailwindFunctions: ['clsx', 'twMerge', 'cn'],
 
   // JSDoc Formatting
   jsdoc: {
-    commentLineStrategy: "singleLine",
+    commentLineStrategy: 'singleLine',
     addDefaultToDescription: true,
     verticalAlignment: true,
   },

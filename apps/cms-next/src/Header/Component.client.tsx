@@ -1,10 +1,10 @@
 'use client'
+import type { Header } from '@repo/payload-cms-types'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 import { Logo } from '@/components/Logo/Logo'
-import type { Header } from '@/payload-types'
 import { useHeaderTheme } from '@/providers/HeaderTheme'
 
 import { HeaderNav } from './Nav'
@@ -21,12 +21,10 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
 
   useEffect(() => {
     setHeaderTheme(null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
   useEffect(() => {
     if (headerTheme && headerTheme !== theme) setTheme(headerTheme)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headerTheme])
 
   return (
