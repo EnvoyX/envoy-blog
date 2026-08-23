@@ -12,7 +12,9 @@
     "BLOB_READ_WRITE_TOKEN",
     "BLOB_STORE_ID",
     "BLOB_WEBHOOK_PUBLIC_KEY",
-    "CMS_URL"
+    "CMS_URL",
+    "CRON_SECRET",
+    "PREVIEW_SECRET"
   ],
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
