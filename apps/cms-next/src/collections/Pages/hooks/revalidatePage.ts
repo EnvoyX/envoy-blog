@@ -1,6 +1,7 @@
-import type { Page } from '@repo/payload-cms-types'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
+
+import type { Page } from '@/payload-types'
 
 export const revalidatePage: CollectionAfterChangeHook<Page> = ({
   doc,

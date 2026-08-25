@@ -1,57 +1,57 @@
-import { RequiredDataFromCollectionSlug } from "payload";
+import { RequiredDataFromCollectionSlug } from 'payload'
 
-import type { Form } from "@repo/payload-cms-types";
+import type { Form } from '@/payload-types'
 
 type ContactArgs = {
-  contactForm: Form;
-};
+  contactForm: Form
+}
 
-export const contact: (args: ContactArgs) => RequiredDataFromCollectionSlug<"pages"> = ({
+export const contact: (args: ContactArgs) => RequiredDataFromCollectionSlug<'pages'> = ({
   contactForm,
 }) => {
   return {
-    slug: "contact",
-    _status: "published",
+    slug: 'contact',
+    _status: 'published',
     hero: {
-      type: "none",
+      type: 'none',
     },
     layout: [
       {
-        blockType: "formBlock",
+        blockType: 'formBlock',
         enableIntro: true,
         form: contactForm,
         introContent: {
           root: {
-            type: "root",
+            type: 'root',
             children: [
               {
-                type: "heading",
+                type: 'heading',
                 children: [
                   {
-                    type: "text",
+                    type: 'text',
                     detail: 0,
                     format: 0,
-                    mode: "normal",
-                    style: "",
-                    text: "Example contact form:",
+                    mode: 'normal',
+                    style: '',
+                    text: 'Example contact form:',
                     version: 1,
                   },
                 ],
-                direction: "ltr",
-                format: "",
+                direction: 'ltr',
+                format: '',
                 indent: 0,
-                tag: "h3",
+                tag: 'h3',
                 version: 1,
               },
             ],
-            direction: "ltr",
-            format: "",
+            direction: 'ltr',
+            format: '',
             indent: 0,
             version: 1,
           },
         },
       },
     ],
-    title: "Contact",
-  };
-};
+    title: 'Contact',
+  }
+}

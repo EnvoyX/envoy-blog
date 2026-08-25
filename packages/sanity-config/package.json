@@ -1,0 +1,20 @@
+{
+  "name": "@repo/sanity-config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./client": "./src/client.ts",
+    "./types": "./src/types.ts"
+  },
+  "dependencies": {
+    "@sanity/client": "^8.2.0",
+    "@sanity/image-url": "^2.1.1",
+    "groq": "^5.1.0"
+  },
+  "devDependencies": {
+    "@sanity/codegen": "^8.0.0",
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
+  }
+}

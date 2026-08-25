@@ -22,8 +22,8 @@ import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as DashboardImagesRouteRouteImport } from './routes/dashboard/images/route'
 import { Route as DashboardAlbumsRouteRouteImport } from './routes/dashboard/albums/route'
 import { Route as ApiChatRouteRouteImport } from './routes/api/chat/route'
-import { Route as PostsSlugIndexRouteImport } from './routes/posts/$slug.index'
 import { Route as PostPostIdIndexRouteImport } from './routes/post/$postId.index'
+import { Route as EnvologsSlugIndexRouteImport } from './routes/envologs/$slug.index'
 import { Route as DashboardTaskTrackerIndexRouteImport } from './routes/dashboard/task-tracker/index'
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
 import { Route as DashboardQuranTrackerIndexRouteImport } from './routes/dashboard/quran-tracker/index'
@@ -33,10 +33,12 @@ import { Route as DashboardImageUploadIndexRouteImport } from './routes/dashboar
 import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
 import { Route as DashboardAlbumsIndexRouteImport } from './routes/dashboard/albums/index'
 import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
+import { Route as BlogpostsSlugIndexRouteImport } from './routes/blogposts/$slug.index'
 import { Route as BlogSlugIndexRouteImport } from './routes/blog/$slug.index'
 import { Route as AlbumAlbumIdIndexRouteImport } from './routes/album/$albumId.index'
-import { Route as GeneralPostsIndexRouteImport } from './routes/_general/posts.index'
 import { Route as GeneralPostIndexRouteImport } from './routes/_general/post.index'
+import { Route as GeneralEnvologsIndexRouteImport } from './routes/_general/envologs.index'
+import { Route as GeneralBlogpostsIndexRouteImport } from './routes/_general/blogposts.index'
 import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog.index'
 import { Route as GeneralArticleIndexRouteImport } from './routes/_general/article.index'
 import { Route as GeneralAboutIndexRouteImport } from './routes/_general/about/index'
@@ -118,14 +120,14 @@ const ApiChatRouteRoute = ApiChatRouteRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PostsSlugIndexRoute = PostsSlugIndexRouteImport.update({
-  id: '/posts/$slug/',
-  path: '/posts/$slug/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PostPostIdIndexRoute = PostPostIdIndexRouteImport.update({
   id: '/post/$postId/',
   path: '/post/$postId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnvologsSlugIndexRoute = EnvologsSlugIndexRouteImport.update({
+  id: '/envologs/$slug/',
+  path: '/envologs/$slug/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardTaskTrackerIndexRoute =
@@ -176,6 +178,11 @@ const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const BlogpostsSlugIndexRoute = BlogpostsSlugIndexRouteImport.update({
+  id: '/blogposts/$slug/',
+  path: '/blogposts/$slug/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugIndexRoute = BlogSlugIndexRouteImport.update({
   id: '/blog/$slug/',
   path: '/blog/$slug/',
@@ -186,14 +193,19 @@ const AlbumAlbumIdIndexRoute = AlbumAlbumIdIndexRouteImport.update({
   path: '/album/$albumId/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GeneralPostsIndexRoute = GeneralPostsIndexRouteImport.update({
-  id: '/posts/',
-  path: '/posts/',
-  getParentRoute: () => GeneralRouteRoute,
-} as any)
 const GeneralPostIndexRoute = GeneralPostIndexRouteImport.update({
   id: '/post/',
   path: '/post/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
+const GeneralEnvologsIndexRoute = GeneralEnvologsIndexRouteImport.update({
+  id: '/envologs/',
+  path: '/envologs/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
+const GeneralBlogpostsIndexRoute = GeneralBlogpostsIndexRouteImport.update({
+  id: '/blogposts/',
+  path: '/blogposts/',
   getParentRoute: () => GeneralRouteRoute,
 } as any)
 const GeneralBlogIndexRoute = GeneralBlogIndexRouteImport.update({
@@ -311,10 +323,12 @@ export interface FileRoutesByFullPath {
   '/about/': typeof GeneralAboutIndexRoute
   '/article/': typeof GeneralArticleIndexRoute
   '/blog/': typeof GeneralBlogIndexRoute
+  '/blogposts/': typeof GeneralBlogpostsIndexRoute
+  '/envologs/': typeof GeneralEnvologsIndexRoute
   '/post/': typeof GeneralPostIndexRoute
-  '/posts/': typeof GeneralPostsIndexRoute
   '/album/$albumId/': typeof AlbumAlbumIdIndexRoute
   '/blog/$slug/': typeof BlogSlugIndexRoute
+  '/blogposts/$slug/': typeof BlogpostsSlugIndexRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/albums/': typeof DashboardAlbumsIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
@@ -324,8 +338,8 @@ export interface FileRoutesByFullPath {
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
+  '/envologs/$slug/': typeof EnvologsSlugIndexRoute
   '/post/$postId/': typeof PostPostIdIndexRoute
-  '/posts/$slug/': typeof PostsSlugIndexRoute
   '/dashboard/albums/$albumId/': typeof DashboardAlbumsAlbumIdIndexRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
@@ -352,10 +366,12 @@ export interface FileRoutesByTo {
   '/about': typeof GeneralAboutIndexRoute
   '/article': typeof GeneralArticleIndexRoute
   '/blog': typeof GeneralBlogIndexRoute
+  '/blogposts': typeof GeneralBlogpostsIndexRoute
+  '/envologs': typeof GeneralEnvologsIndexRoute
   '/post': typeof GeneralPostIndexRoute
-  '/posts': typeof GeneralPostsIndexRoute
   '/album/$albumId': typeof AlbumAlbumIdIndexRoute
   '/blog/$slug': typeof BlogSlugIndexRoute
+  '/blogposts/$slug': typeof BlogpostsSlugIndexRoute
   '/dashboard/admin': typeof DashboardAdminIndexRoute
   '/dashboard/albums': typeof DashboardAlbumsIndexRoute
   '/dashboard/blog': typeof DashboardBlogIndexRoute
@@ -365,8 +381,8 @@ export interface FileRoutesByTo {
   '/dashboard/quran-tracker': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/settings': typeof DashboardSettingsIndexRoute
   '/dashboard/task-tracker': typeof DashboardTaskTrackerIndexRoute
+  '/envologs/$slug': typeof EnvologsSlugIndexRoute
   '/post/$postId': typeof PostPostIdIndexRoute
-  '/posts/$slug': typeof PostsSlugIndexRoute
   '/dashboard/albums/$albumId': typeof DashboardAlbumsAlbumIdIndexRoute
   '/dashboard/blog/$slug': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog': typeof DashboardBlogCreateBlogIndexRoute
@@ -400,10 +416,12 @@ export interface FileRoutesById {
   '/_general/about/': typeof GeneralAboutIndexRoute
   '/_general/article/': typeof GeneralArticleIndexRoute
   '/_general/blog/': typeof GeneralBlogIndexRoute
+  '/_general/blogposts/': typeof GeneralBlogpostsIndexRoute
+  '/_general/envologs/': typeof GeneralEnvologsIndexRoute
   '/_general/post/': typeof GeneralPostIndexRoute
-  '/_general/posts/': typeof GeneralPostsIndexRoute
   '/album/$albumId/': typeof AlbumAlbumIdIndexRoute
   '/blog/$slug/': typeof BlogSlugIndexRoute
+  '/blogposts/$slug/': typeof BlogpostsSlugIndexRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/albums/': typeof DashboardAlbumsIndexRoute
   '/dashboard/blog/': typeof DashboardBlogIndexRoute
@@ -413,8 +431,8 @@ export interface FileRoutesById {
   '/dashboard/quran-tracker/': typeof DashboardQuranTrackerIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
   '/dashboard/task-tracker/': typeof DashboardTaskTrackerIndexRoute
+  '/envologs/$slug/': typeof EnvologsSlugIndexRoute
   '/post/$postId/': typeof PostPostIdIndexRoute
-  '/posts/$slug/': typeof PostsSlugIndexRoute
   '/dashboard/albums/$albumId/': typeof DashboardAlbumsAlbumIdIndexRoute
   '/dashboard/blog/$slug/': typeof DashboardBlogSlugIndexRoute
   '/dashboard/blog/create-blog/': typeof DashboardBlogCreateBlogIndexRoute
@@ -447,10 +465,12 @@ export interface FileRouteTypes {
     | '/about/'
     | '/article/'
     | '/blog/'
+    | '/blogposts/'
+    | '/envologs/'
     | '/post/'
-    | '/posts/'
     | '/album/$albumId/'
     | '/blog/$slug/'
+    | '/blogposts/$slug/'
     | '/dashboard/admin/'
     | '/dashboard/albums/'
     | '/dashboard/blog/'
@@ -460,8 +480,8 @@ export interface FileRouteTypes {
     | '/dashboard/quran-tracker/'
     | '/dashboard/settings/'
     | '/dashboard/task-tracker/'
+    | '/envologs/$slug/'
     | '/post/$postId/'
-    | '/posts/$slug/'
     | '/dashboard/albums/$albumId/'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
@@ -488,10 +508,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/article'
     | '/blog'
+    | '/blogposts'
+    | '/envologs'
     | '/post'
-    | '/posts'
     | '/album/$albumId'
     | '/blog/$slug'
+    | '/blogposts/$slug'
     | '/dashboard/admin'
     | '/dashboard/albums'
     | '/dashboard/blog'
@@ -501,8 +523,8 @@ export interface FileRouteTypes {
     | '/dashboard/quran-tracker'
     | '/dashboard/settings'
     | '/dashboard/task-tracker'
+    | '/envologs/$slug'
     | '/post/$postId'
-    | '/posts/$slug'
     | '/dashboard/albums/$albumId'
     | '/dashboard/blog/$slug'
     | '/dashboard/blog/create-blog'
@@ -535,10 +557,12 @@ export interface FileRouteTypes {
     | '/_general/about/'
     | '/_general/article/'
     | '/_general/blog/'
+    | '/_general/blogposts/'
+    | '/_general/envologs/'
     | '/_general/post/'
-    | '/_general/posts/'
     | '/album/$albumId/'
     | '/blog/$slug/'
+    | '/blogposts/$slug/'
     | '/dashboard/admin/'
     | '/dashboard/albums/'
     | '/dashboard/blog/'
@@ -548,8 +572,8 @@ export interface FileRouteTypes {
     | '/dashboard/quran-tracker/'
     | '/dashboard/settings/'
     | '/dashboard/task-tracker/'
+    | '/envologs/$slug/'
     | '/post/$postId/'
-    | '/posts/$slug/'
     | '/dashboard/albums/$albumId/'
     | '/dashboard/blog/$slug/'
     | '/dashboard/blog/create-blog/'
@@ -575,8 +599,9 @@ export interface RootRouteChildren {
   ChatChatIndexRoute: typeof ChatChatIndexRoute
   AlbumAlbumIdIndexRoute: typeof AlbumAlbumIdIndexRoute
   BlogSlugIndexRoute: typeof BlogSlugIndexRoute
+  BlogpostsSlugIndexRoute: typeof BlogpostsSlugIndexRoute
+  EnvologsSlugIndexRoute: typeof EnvologsSlugIndexRoute
   PostPostIdIndexRoute: typeof PostPostIdIndexRoute
-  PostsSlugIndexRoute: typeof PostsSlugIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -672,18 +697,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/posts/$slug/': {
-      id: '/posts/$slug/'
-      path: '/posts/$slug'
-      fullPath: '/posts/$slug/'
-      preLoaderRoute: typeof PostsSlugIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/post/$postId/': {
       id: '/post/$postId/'
       path: '/post/$postId'
       fullPath: '/post/$postId/'
       preLoaderRoute: typeof PostPostIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/envologs/$slug/': {
+      id: '/envologs/$slug/'
+      path: '/envologs/$slug'
+      fullPath: '/envologs/$slug/'
+      preLoaderRoute: typeof EnvologsSlugIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/task-tracker/': {
@@ -749,6 +774,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/blogposts/$slug/': {
+      id: '/blogposts/$slug/'
+      path: '/blogposts/$slug'
+      fullPath: '/blogposts/$slug/'
+      preLoaderRoute: typeof BlogpostsSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug/': {
       id: '/blog/$slug/'
       path: '/blog/$slug'
@@ -763,18 +795,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlbumAlbumIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_general/posts/': {
-      id: '/_general/posts/'
-      path: '/posts'
-      fullPath: '/posts/'
-      preLoaderRoute: typeof GeneralPostsIndexRouteImport
-      parentRoute: typeof GeneralRouteRoute
-    }
     '/_general/post/': {
       id: '/_general/post/'
       path: '/post'
       fullPath: '/post/'
       preLoaderRoute: typeof GeneralPostIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
+    }
+    '/_general/envologs/': {
+      id: '/_general/envologs/'
+      path: '/envologs'
+      fullPath: '/envologs/'
+      preLoaderRoute: typeof GeneralEnvologsIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
+    }
+    '/_general/blogposts/': {
+      id: '/_general/blogposts/'
+      path: '/blogposts'
+      fullPath: '/blogposts/'
+      preLoaderRoute: typeof GeneralBlogpostsIndexRouteImport
       parentRoute: typeof GeneralRouteRoute
     }
     '/_general/blog/': {
@@ -916,8 +955,9 @@ interface GeneralRouteRouteChildren {
   GeneralAboutIndexRoute: typeof GeneralAboutIndexRoute
   GeneralArticleIndexRoute: typeof GeneralArticleIndexRoute
   GeneralBlogIndexRoute: typeof GeneralBlogIndexRoute
+  GeneralBlogpostsIndexRoute: typeof GeneralBlogpostsIndexRoute
+  GeneralEnvologsIndexRoute: typeof GeneralEnvologsIndexRoute
   GeneralPostIndexRoute: typeof GeneralPostIndexRoute
-  GeneralPostsIndexRoute: typeof GeneralPostsIndexRoute
 }
 
 const GeneralRouteRouteChildren: GeneralRouteRouteChildren = {
@@ -925,8 +965,9 @@ const GeneralRouteRouteChildren: GeneralRouteRouteChildren = {
   GeneralAboutIndexRoute: GeneralAboutIndexRoute,
   GeneralArticleIndexRoute: GeneralArticleIndexRoute,
   GeneralBlogIndexRoute: GeneralBlogIndexRoute,
+  GeneralBlogpostsIndexRoute: GeneralBlogpostsIndexRoute,
+  GeneralEnvologsIndexRoute: GeneralEnvologsIndexRoute,
   GeneralPostIndexRoute: GeneralPostIndexRoute,
-  GeneralPostsIndexRoute: GeneralPostsIndexRoute,
 }
 
 const GeneralRouteRouteWithChildren = GeneralRouteRoute._addFileChildren(
@@ -1030,8 +1071,9 @@ const rootRouteChildren: RootRouteChildren = {
   ChatChatIndexRoute: ChatChatIndexRoute,
   AlbumAlbumIdIndexRoute: AlbumAlbumIdIndexRoute,
   BlogSlugIndexRoute: BlogSlugIndexRoute,
+  BlogpostsSlugIndexRoute: BlogpostsSlugIndexRoute,
+  EnvologsSlugIndexRoute: EnvologsSlugIndexRoute,
   PostPostIdIndexRoute: PostPostIdIndexRoute,
-  PostsSlugIndexRoute: PostsSlugIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
