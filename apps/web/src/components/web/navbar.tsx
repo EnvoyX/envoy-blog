@@ -1,8 +1,8 @@
-import { Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, Menu } from "lucide-react";
-import { useMotionValueEvent, useScroll, motion } from "motion/react";
-import { useState, useTransition } from "react";
-import { toast } from "sonner";
+import { Link, useNavigate } from '@tanstack/react-router';
+import { LogOut, Menu } from 'lucide-react';
+import { useMotionValueEvent, useScroll, motion } from 'motion/react';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
 
 import {
   DropdownMenu,
@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Sheet,
   SheetClose,
@@ -20,13 +20,13 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { authClient } from "@/lib/auth-client";
+} from '@/components/ui/sheet';
+import { User } from '@/generated/prisma/client';
+import { authClient } from '@/lib/auth-client';
 
-import { Button, buttonVariants } from "../ui/button";
-import { navItemsDashboard, navItemsMain } from "./NavItems";
-import { UserAvatar } from "./user-profile";
-import { User } from "@/generated/prisma/client";
+import { Button, buttonVariants } from '../ui/button';
+import { navItemsDashboard, navItemsMain } from './NavItems';
+import { UserAvatar } from './user-profile';
 
 export function Navbar({ user }: { user: User | null }) {
   const [hidden, setHidden] = useState(false);
@@ -34,7 +34,7 @@ export function Navbar({ user }: { user: User | null }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isTransition, startTransition] = useTransition();
   const { scrollY } = useScroll();
-  useMotionValueEvent(scrollY, "change", (current) => {
+  useMotionValueEvent(scrollY, 'change', (current) => {
     const previous = scrollY.getPrevious() ?? 0;
     if (current > previous && current > 150) {
       setHidden(true);
@@ -48,24 +48,24 @@ export function Navbar({ user }: { user: User | null }) {
       await authClient.signOut({
         fetchOptions: {
           onRequest: () => {
-            toast.loading("Logging out...", {
-              id: "logout",
+            toast.loading('Logging out...', {
+              id: 'logout',
             });
             setIsLoading(true);
           },
           onError: ({ error }) => {
             setIsLoading(false);
-            toast.dismiss("logout");
-            toast.error("Failed to log out", {
+            toast.dismiss('logout');
+            toast.error('Failed to log out', {
               description: error.message,
             });
           },
           onSuccess: () => {
             setIsLoading(false);
-            toast.dismiss("logout");
-            toast.success("Logged out successfully");
+            toast.dismiss('logout');
+            toast.success('Logged out successfully');
             void navigate({
-              to: "/login",
+              to: '/login',
               reloadDocument: true,
             });
           },
@@ -80,13 +80,13 @@ export function Navbar({ user }: { user: User | null }) {
         y: hidden ? -140 : 0,
         opacity: hidden ? 0 : 1,
       }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <div className="mx-auto flex h-16 items-center justify-between px-4">
         <Link
           to="/"
           activeProps={{
-            className: "bg-primary/10 text-primary border-b-2 border-primary",
+            className: 'bg-primary/10 text-primary border-b-2 border-primary',
           }}
           className="flex items-center gap-3 text-sm font-medium rounded-lg transition-colors hover:bg-white/10"
         >
@@ -104,7 +104,7 @@ export function Navbar({ user }: { user: User | null }) {
               <Link
                 to={item.to}
                 activeProps={{
-                  className: "bg-primary/10 text-primary border-b-2 border-primary",
+                  className: 'bg-primary/10 text-primary border-b-2 border-primary',
                 }}
                 activeOptions={item.activeOptions}
                 key={index}
@@ -144,7 +144,7 @@ export function Navbar({ user }: { user: User | null }) {
                           <Link
                             to={item.to}
                             activeProps={{
-                              "data-active": true,
+                              'data-active': true,
                             }}
                             activeOptions={item.activeOptions}
                             className="cursor-pointer hover:bg-primary/10! hover:text-primary! hover:border-r-2! hover:border-primary!"
@@ -163,7 +163,7 @@ export function Navbar({ user }: { user: User | null }) {
                       className="text-destructive focus:bg-destructive/10 cursor-pointer"
                     >
                       <LogOut className="text-white mr-2 size-4" />
-                      {isLoading || isTransition ? "Logging out..." : "Logout"}
+                      {isLoading || isTransition ? 'Logging out...' : 'Logout'}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -172,7 +172,7 @@ export function Navbar({ user }: { user: User | null }) {
               <>
                 <Link
                   to="/login"
-                  className={buttonVariants({ variant: "default", className: "font-mono" })}
+                  className={buttonVariants({ variant: 'default', className: 'font-mono' })}
                 >
                   Login
                 </Link>
@@ -228,7 +228,7 @@ export function Navbar({ user }: { user: User | null }) {
                       <Link
                         to={item.to}
                         activeProps={{
-                          className: "bg-primary/10 text-primary border-r-2 border-primary",
+                          className: 'bg-primary/10 text-primary border-r-2 border-primary',
                         }}
                         className="flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors hover:bg-white/5"
                       >
@@ -251,7 +251,7 @@ export function Navbar({ user }: { user: User | null }) {
                           <Link
                             to={item.to}
                             activeProps={{
-                              className: "bg-primary/10 text-primary border-r-2 border-primary",
+                              className: 'bg-primary/10 text-primary border-r-2 border-primary',
                             }}
                             className="flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors hover:bg-white/5"
                           >
@@ -278,7 +278,7 @@ export function Navbar({ user }: { user: User | null }) {
                 </Button>
               ) : (
                 <SheetClose asChild>
-                  <Link to="/login" className={buttonVariants({ className: "w-full" })}>
+                  <Link to="/login" className={buttonVariants({ className: 'w-full' })}>
                     Login
                   </Link>
                 </SheetClose>

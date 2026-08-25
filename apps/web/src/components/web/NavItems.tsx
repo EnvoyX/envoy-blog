@@ -1,4 +1,4 @@
-import { linkOptions } from "@tanstack/react-router";
+import { linkOptions } from '@tanstack/react-router';
 import {
   Check,
   Newspaper,
@@ -10,111 +10,111 @@ import {
   Settings2,
   BookMarkedIcon,
   Key,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { NavPrimaryProps, NavProps } from "@/lib/types";
+import { NavPrimaryProps, NavProps } from '@/lib/types';
 
-export const navItemsMain: NavProps["items"] = linkOptions([
+export const navItemsMain: NavProps['items'] = linkOptions([
   {
-    title: "Blog",
-    to: "/blog",
+    title: 'Blog',
+    to: '/blog',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: "Posts",
-    to: "/posts",
+    title: 'Envologs',
+    to: '/envologs',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: "Post",
-    to: "/post",
+    title: 'Post',
+    to: '/post',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: "Chat",
-    to: "/chat",
+    title: 'Chat',
+    to: '/chat',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: "About",
-    to: "/about",
+    title: 'About',
+    to: '/about',
     activeOptions: {
       exact: false,
     },
   },
 ]);
 
-export const navItemsDashboard: NavPrimaryProps["items"] = linkOptions([
+export const navItemsDashboard: NavPrimaryProps['items'] = linkOptions([
   {
-    title: "Profile",
+    title: 'Profile',
     icon: UserIcon,
-    to: "/dashboard/profile",
+    to: '/dashboard/profile',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: "Task Tracker",
+    title: 'Task Tracker',
     icon: Check,
-    to: "/dashboard/task-tracker",
+    to: '/dashboard/task-tracker',
     activeOptions: {
       exact: false,
     },
   },
 
   {
-    title: "Blog",
+    title: 'Blog',
     icon: Newspaper,
-    to: "/dashboard/blog",
+    to: '/dashboard/blog',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: "Post",
+    title: 'Post',
     icon: MailboxIcon,
-    to: "/dashboard/post",
+    to: '/dashboard/post',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: "Upload Image",
+    title: 'Upload Image',
     icon: UploadIcon,
-    to: "/dashboard/image-upload",
+    to: '/dashboard/image-upload',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: "Albums",
+    title: 'Albums',
     icon: AlbumIcon,
-    to: "/dashboard/albums",
+    to: '/dashboard/albums',
     activeOptions: {
       exact: false,
     },
   },
   {
-    title: "Images",
+    title: 'Images',
     icon: ImagesIcon,
-    to: "/dashboard/images",
+    to: '/dashboard/images',
     activeOptions: {
       exact: false,
     },
   },
 ]);
-export const navSecondayItems: NavPrimaryProps["items"] = linkOptions([
+export const navSecondayItems: NavPrimaryProps['items'] = linkOptions([
   {
-    title: "Settings",
-    to: "/dashboard/settings",
+    title: 'Settings',
+    to: '/dashboard/settings',
     icon: Settings2,
     activeOptions: {
       exact: true,
@@ -122,11 +122,11 @@ export const navSecondayItems: NavPrimaryProps["items"] = linkOptions([
   },
 ]);
 
-export const navItemsAdmin: NavPrimaryProps["items"] = linkOptions([
+export const navItemsAdmin: NavPrimaryProps['items'] = linkOptions([
   {
-    title: "Admin Panel",
+    title: 'Admin Panel',
     icon: Key,
-    to: "/dashboard/admin",
+    to: '/dashboard/admin',
     activeOptions: {
       exact: false,
     },
@@ -134,7 +134,7 @@ export const navItemsAdmin: NavPrimaryProps["items"] = linkOptions([
   {
     title: `Qur'an Tracker`,
     icon: BookMarkedIcon,
-    to: "/dashboard/quran-tracker",
+    to: '/dashboard/quran-tracker',
     activeOptions: {
       exact: false,
     },

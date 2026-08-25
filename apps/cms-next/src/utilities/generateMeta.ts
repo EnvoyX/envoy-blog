@@ -1,5 +1,6 @@
-import type { Media, Page, Post, Config } from '@repo/payload-cms-types'
 import type { Metadata } from 'next'
+
+import type { Media, Page, Post, Config } from '@/payload-types'
 
 import { getServerSideURL } from './getURL'
 import { mergeOpenGraph } from './mergeOpenGraph'
