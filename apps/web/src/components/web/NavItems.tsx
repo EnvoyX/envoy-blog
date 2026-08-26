@@ -36,13 +36,13 @@ export const navItemsMain: NavProps['items'] = linkOptions([
       exact: false,
     },
   },
-  {
-    title: 'Chat',
-    to: '/chat',
-    activeOptions: {
-      exact: false,
-    },
-  },
+  // {
+  //   title: 'Chat',
+  //   to: '/chat',
+  //   activeOptions: {
+  //     exact: false,
+  //   },
+  // },
   {
     title: 'About',
     to: '/about',
