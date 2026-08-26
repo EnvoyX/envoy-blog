@@ -88,7 +88,7 @@ function App() {
               <Code2 size={18} /> Github
             </a>
           </div>
-          {user?.role !== 'USER' && (
+          {user && user.role !== 'USER' && (
             <div className="sm:flex gap-4 justify-center my-4">
               <Link
                 to="/blogposts"
