@@ -23,7 +23,14 @@ const config = defineConfig({
     // Disabled nitro if using netlify to deploy
     // Outputs build to .output (using it on Vercel runs fine)
     devtools(),
-    nitro(),
+    nitro({
+      /**
+       * FIXME: invalid ssr_exports from build, remove this once the Rolldown fix is out
+       *
+       * @see https://github.com/TanStack/router/issues/8031
+       */
+      inlineDynamicImports: true,
+    }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),
