@@ -28,6 +28,7 @@ const config = defineConfig({
        * FIXME: invalid ssr_exports from build, remove this once the Rolldown fix is out
        *
        * @see https://github.com/TanStack/router/issues/8031
+       * @see https://github.com/nitrojs/nitro/issues/4533
        */
       inlineDynamicImports: true,
     }),

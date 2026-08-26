@@ -9,95 +9,70 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
-import { Route as GeneralRouteRouteImport } from './routes/_general/route'
-import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
-import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
-import { Route as ArticleSlugRouteImport } from './routes/article/$slug'
-import { Route as ApiUploadthingRouteImport } from './routes/api/uploadthing'
-import { Route as ApiProxyImageRouteImport } from './routes/api/proxy-image'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as GeneralRouteRouteImport } from './routes/_general/route'
+import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
-import { Route as DashboardImagesRouteRouteImport } from './routes/dashboard/images/route'
-import { Route as DashboardAlbumsRouteRouteImport } from './routes/dashboard/albums/route'
 import { Route as ApiChatRouteRouteImport } from './routes/api/chat/route'
-import { Route as PostPostIdIndexRouteImport } from './routes/post/$postId.index'
-import { Route as EnvologsSlugIndexRouteImport } from './routes/envologs/$slug.index'
-import { Route as DashboardTaskTrackerIndexRouteImport } from './routes/dashboard/task-tracker/index'
-import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
-import { Route as DashboardQuranTrackerIndexRouteImport } from './routes/dashboard/quran-tracker/index'
-import { Route as DashboardPostIndexRouteImport } from './routes/dashboard/post/index'
-import { Route as DashboardImagesIndexRouteImport } from './routes/dashboard/images/index'
-import { Route as DashboardImageUploadIndexRouteImport } from './routes/dashboard/image-upload/index'
-import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
-import { Route as DashboardAlbumsIndexRouteImport } from './routes/dashboard/albums/index'
-import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
-import { Route as BlogpostsSlugIndexRouteImport } from './routes/blogposts/$slug.index'
-import { Route as BlogSlugIndexRouteImport } from './routes/blog/$slug.index'
-import { Route as AlbumAlbumIdIndexRouteImport } from './routes/album/$albumId.index'
-import { Route as GeneralPostIndexRouteImport } from './routes/_general/post.index'
-import { Route as GeneralEnvologsIndexRouteImport } from './routes/_general/envologs.index'
-import { Route as GeneralBlogpostsIndexRouteImport } from './routes/_general/blogposts.index'
-import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog.index'
-import { Route as GeneralArticleIndexRouteImport } from './routes/_general/article.index'
-import { Route as GeneralAboutIndexRouteImport } from './routes/_general/about/index'
-import { Route as ChatChatIndexRouteImport } from './routes/_chat/chat/index'
+import { Route as ApiProxyImageRouteImport } from './routes/api/proxy-image'
+import { Route as ApiUploadthingRouteImport } from './routes/api/uploadthing'
+import { Route as ArticleSlugRouteImport } from './routes/article/$slug'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardAlbumsRouteRouteImport } from './routes/dashboard/albums/route'
+import { Route as DashboardImagesRouteRouteImport } from './routes/dashboard/images/route'
+import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
-import { Route as DashboardTaskTrackerTaskListIdRouteImport } from './routes/dashboard/task-tracker/$taskListId'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as GeneralUserUserIdRouteImport } from './routes/_general/user/$userId'
+import { Route as ChatChatIndexRouteImport } from './routes/_chat/chat/index'
 import { Route as ChatChatChatboxRouteRouteImport } from './routes/_chat/chat/_chatbox/route'
-import { Route as DashboardBlogMdEditorIndexRouteImport } from './routes/dashboard/blog/md-editor/index'
-import { Route as DashboardBlogCreateBlogIndexRouteImport } from './routes/dashboard/blog/create-blog/index'
-import { Route as DashboardBlogSlugIndexRouteImport } from './routes/dashboard/blog/$slug.index'
+import { Route as GeneralAboutIndexRouteImport } from './routes/_general/about/index'
+import { Route as GeneralArticleIndexRouteImport } from './routes/_general/article.index'
+import { Route as GeneralBlogIndexRouteImport } from './routes/_general/blog.index'
+import { Route as GeneralBlogpostsIndexRouteImport } from './routes/_general/blogposts.index'
+import { Route as GeneralEnvologsIndexRouteImport } from './routes/_general/envologs.index'
+import { Route as GeneralPostIndexRouteImport } from './routes/_general/post.index'
+import { Route as GeneralUserUserIdRouteImport } from './routes/_general/user/$userId'
+import { Route as AlbumAlbumIdIndexRouteImport } from './routes/album/$albumId.index'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as BlogSlugIndexRouteImport } from './routes/blog/$slug.index'
+import { Route as BlogpostsSlugIndexRouteImport } from './routes/blogposts/$slug.index'
+import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
+import { Route as DashboardAlbumsIndexRouteImport } from './routes/dashboard/albums/index'
+import { Route as DashboardBlogIndexRouteImport } from './routes/dashboard/blog/index'
+import { Route as DashboardImageUploadIndexRouteImport } from './routes/dashboard/image-upload/index'
+import { Route as DashboardImagesIndexRouteImport } from './routes/dashboard/images/index'
+import { Route as DashboardPostIndexRouteImport } from './routes/dashboard/post/index'
+import { Route as DashboardQuranTrackerIndexRouteImport } from './routes/dashboard/quran-tracker/index'
+import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
+import { Route as DashboardTaskTrackerIndexRouteImport } from './routes/dashboard/task-tracker/index'
+import { Route as DashboardTaskTrackerTaskListIdRouteImport } from './routes/dashboard/task-tracker/$taskListId'
+import { Route as EnvologsSlugIndexRouteImport } from './routes/envologs/$slug.index'
+import { Route as PostPostIdIndexRouteImport } from './routes/post/$postId.index'
 import { Route as DashboardAlbumsAlbumIdIndexRouteImport } from './routes/dashboard/albums/$albumId.index'
-import { Route as DashboardBlogSlugEditIndexRouteImport } from './routes/dashboard/blog/$slug.edit.index'
+import { Route as DashboardBlogSlugIndexRouteImport } from './routes/dashboard/blog/$slug.index'
+import { Route as DashboardBlogCreateBlogIndexRouteImport } from './routes/dashboard/blog/create-blog/index'
+import { Route as DashboardBlogMdEditorIndexRouteImport } from './routes/dashboard/blog/md-editor/index'
 import { Route as ChatChatChatboxAdapterIndexRouteImport } from './routes/_chat/chat/_chatbox/$adapter.index'
+import { Route as DashboardBlogSlugEditIndexRouteImport } from './routes/dashboard/blog/$slug.edit.index'
 import { Route as DashboardBlogSlugEditMdEditorRouteImport } from './routes/dashboard/blog/$slug.edit.md-editor'
 import { Route as ChatChatChatboxAdapterChatIdIndexRouteImport } from './routes/_chat/chat/_chatbox/$adapter.$chatId.index'
 
-const DashboardRouteRoute = DashboardRouteRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GeneralRouteRoute = GeneralRouteRouteImport.update({
-  id: '/_general',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const GeneralRouteRoute = GeneralRouteRouteImport.update({
+  id: '/_general',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardProfileRoute = DashboardProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const ArticleSlugRoute = ArticleSlugRouteImport.update({
-  id: '/article/$slug',
-  path: '/article/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiUploadthingRoute = ApiUploadthingRouteImport.update({
-  id: '/api/uploadthing',
-  path: '/api/uploadthing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiProxyImageRoute = ApiProxyImageRouteImport.update({
-  id: '/api/proxy-image',
-  path: '/api/proxy-image',
+const DashboardRouteRoute = DashboardRouteRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
@@ -105,9 +80,29 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardImagesRouteRoute = DashboardImagesRouteRouteImport.update({
-  id: '/images',
-  path: '/images',
+const ApiChatRouteRoute = ApiChatRouteRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiProxyImageRoute = ApiProxyImageRouteImport.update({
+  id: '/api/proxy-image',
+  path: '/api/proxy-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUploadthingRoute = ApiUploadthingRouteImport.update({
+  id: '/api/uploadthing',
+  path: '/api/uploadthing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticleSlugRoute = ArticleSlugRouteImport.update({
+  id: '/article/$slug',
+  path: '/article/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
 const DashboardAlbumsRouteRoute = DashboardAlbumsRouteRouteImport.update({
@@ -115,30 +110,115 @@ const DashboardAlbumsRouteRoute = DashboardAlbumsRouteRouteImport.update({
   path: '/albums',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const ApiChatRouteRoute = ApiChatRouteRouteImport.update({
-  id: '/api/chat',
-  path: '/api/chat',
+const DashboardImagesRouteRoute = DashboardImagesRouteRouteImport.update({
+  id: '/images',
+  path: '/images',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardProfileRoute = DashboardProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const ChatChatIndexRoute = ChatChatIndexRouteImport.update({
+  id: '/_chat/chat/',
+  path: '/chat/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PostPostIdIndexRoute = PostPostIdIndexRouteImport.update({
-  id: '/post/$postId/',
-  path: '/post/$postId/',
+const ChatChatChatboxRouteRoute = ChatChatChatboxRouteRouteImport.update({
+  id: '/_chat/chat/_chatbox',
+  path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EnvologsSlugIndexRoute = EnvologsSlugIndexRouteImport.update({
-  id: '/envologs/$slug/',
-  path: '/envologs/$slug/',
+const GeneralAboutIndexRoute = GeneralAboutIndexRouteImport.update({
+  id: '/about/',
+  path: '/about/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
+const GeneralArticleIndexRoute = GeneralArticleIndexRouteImport.update({
+  id: '/article/',
+  path: '/article/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
+const GeneralBlogIndexRoute = GeneralBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
+const GeneralBlogpostsIndexRoute = GeneralBlogpostsIndexRouteImport.update({
+  id: '/blogposts/',
+  path: '/blogposts/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
+const GeneralEnvologsIndexRoute = GeneralEnvologsIndexRouteImport.update({
+  id: '/envologs/',
+  path: '/envologs/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
+const GeneralPostIndexRoute = GeneralPostIndexRouteImport.update({
+  id: '/post/',
+  path: '/post/',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
+const GeneralUserUserIdRoute = GeneralUserUserIdRouteImport.update({
+  id: '/user/$userId',
+  path: '/user/$userId',
+  getParentRoute: () => GeneralRouteRoute,
+} as any)
+const AlbumAlbumIdIndexRoute = AlbumAlbumIdIndexRouteImport.update({
+  id: '/album/$albumId/',
+  path: '/album/$albumId/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardTaskTrackerIndexRoute =
-  DashboardTaskTrackerIndexRouteImport.update({
-    id: '/task-tracker/',
-    path: '/task-tracker/',
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugIndexRoute = BlogSlugIndexRouteImport.update({
+  id: '/blog/$slug/',
+  path: '/blog/$slug/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogpostsSlugIndexRoute = BlogpostsSlugIndexRouteImport.update({
+  id: '/blogposts/$slug/',
+  path: '/blogposts/$slug/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardAlbumsIndexRoute = DashboardAlbumsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardAlbumsRouteRoute,
+} as any)
+const DashboardBlogIndexRoute = DashboardBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardImageUploadIndexRoute =
+  DashboardImageUploadIndexRouteImport.update({
+    id: '/image-upload/',
+    path: '/image-upload/',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
-const DashboardSettingsIndexRoute = DashboardSettingsIndexRouteImport.update({
-  id: '/settings/',
-  path: '/settings/',
+const DashboardImagesIndexRoute = DashboardImagesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardImagesRouteRoute,
+} as any)
+const DashboardPostIndexRoute = DashboardPostIndexRouteImport.update({
+  id: '/post/',
+  path: '/post/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
 const DashboardQuranTrackerIndexRoute =
@@ -147,129 +227,32 @@ const DashboardQuranTrackerIndexRoute =
     path: '/quran-tracker/',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
-const DashboardPostIndexRoute = DashboardPostIndexRouteImport.update({
-  id: '/post/',
-  path: '/post/',
+const DashboardSettingsIndexRoute = DashboardSettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const DashboardImagesIndexRoute = DashboardImagesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardImagesRouteRoute,
-} as any)
-const DashboardImageUploadIndexRoute =
-  DashboardImageUploadIndexRouteImport.update({
-    id: '/image-upload/',
-    path: '/image-upload/',
+const DashboardTaskTrackerIndexRoute =
+  DashboardTaskTrackerIndexRouteImport.update({
+    id: '/task-tracker/',
+    path: '/task-tracker/',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
-const DashboardBlogIndexRoute = DashboardBlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardAlbumsIndexRoute = DashboardAlbumsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardAlbumsRouteRoute,
-} as any)
-const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const BlogpostsSlugIndexRoute = BlogpostsSlugIndexRouteImport.update({
-  id: '/blogposts/$slug/',
-  path: '/blogposts/$slug/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogSlugIndexRoute = BlogSlugIndexRouteImport.update({
-  id: '/blog/$slug/',
-  path: '/blog/$slug/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AlbumAlbumIdIndexRoute = AlbumAlbumIdIndexRouteImport.update({
-  id: '/album/$albumId/',
-  path: '/album/$albumId/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GeneralPostIndexRoute = GeneralPostIndexRouteImport.update({
-  id: '/post/',
-  path: '/post/',
-  getParentRoute: () => GeneralRouteRoute,
-} as any)
-const GeneralEnvologsIndexRoute = GeneralEnvologsIndexRouteImport.update({
-  id: '/envologs/',
-  path: '/envologs/',
-  getParentRoute: () => GeneralRouteRoute,
-} as any)
-const GeneralBlogpostsIndexRoute = GeneralBlogpostsIndexRouteImport.update({
-  id: '/blogposts/',
-  path: '/blogposts/',
-  getParentRoute: () => GeneralRouteRoute,
-} as any)
-const GeneralBlogIndexRoute = GeneralBlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
-  getParentRoute: () => GeneralRouteRoute,
-} as any)
-const GeneralArticleIndexRoute = GeneralArticleIndexRouteImport.update({
-  id: '/article/',
-  path: '/article/',
-  getParentRoute: () => GeneralRouteRoute,
-} as any)
-const GeneralAboutIndexRoute = GeneralAboutIndexRouteImport.update({
-  id: '/about/',
-  path: '/about/',
-  getParentRoute: () => GeneralRouteRoute,
-} as any)
-const ChatChatIndexRoute = ChatChatIndexRouteImport.update({
-  id: '/_chat/chat/',
-  path: '/chat/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
-  id: '/login/',
-  path: '/login/',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
 const DashboardTaskTrackerTaskListIdRoute =
   DashboardTaskTrackerTaskListIdRouteImport.update({
     id: '/task-tracker/$taskListId',
     path: '/task-tracker/$taskListId',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
+const EnvologsSlugIndexRoute = EnvologsSlugIndexRouteImport.update({
+  id: '/envologs/$slug/',
+  path: '/envologs/$slug/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GeneralUserUserIdRoute = GeneralUserUserIdRouteImport.update({
-  id: '/user/$userId',
-  path: '/user/$userId',
-  getParentRoute: () => GeneralRouteRoute,
-} as any)
-const ChatChatChatboxRouteRoute = ChatChatChatboxRouteRouteImport.update({
-  id: '/_chat/chat/_chatbox',
-  path: '/chat',
+const PostPostIdIndexRoute = PostPostIdIndexRouteImport.update({
+  id: '/post/$postId/',
+  path: '/post/$postId/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardBlogMdEditorIndexRoute =
-  DashboardBlogMdEditorIndexRouteImport.update({
-    id: '/blog/md-editor/',
-    path: '/blog/md-editor/',
-    getParentRoute: () => DashboardRouteRoute,
-  } as any)
-const DashboardBlogCreateBlogIndexRoute =
-  DashboardBlogCreateBlogIndexRouteImport.update({
-    id: '/blog/create-blog/',
-    path: '/blog/create-blog/',
-    getParentRoute: () => DashboardRouteRoute,
-  } as any)
-const DashboardBlogSlugIndexRoute = DashboardBlogSlugIndexRouteImport.update({
-  id: '/blog/$slug/',
-  path: '/blog/$slug/',
-  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const DashboardAlbumsAlbumIdIndexRoute =
   DashboardAlbumsAlbumIdIndexRouteImport.update({
@@ -277,10 +260,21 @@ const DashboardAlbumsAlbumIdIndexRoute =
     path: '/$albumId/',
     getParentRoute: () => DashboardAlbumsRouteRoute,
   } as any)
-const DashboardBlogSlugEditIndexRoute =
-  DashboardBlogSlugEditIndexRouteImport.update({
-    id: '/blog/$slug/edit/',
-    path: '/blog/$slug/edit/',
+const DashboardBlogSlugIndexRoute = DashboardBlogSlugIndexRouteImport.update({
+  id: '/blog/$slug/',
+  path: '/blog/$slug/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardBlogCreateBlogIndexRoute =
+  DashboardBlogCreateBlogIndexRouteImport.update({
+    id: '/blog/create-blog/',
+    path: '/blog/create-blog/',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
+const DashboardBlogMdEditorIndexRoute =
+  DashboardBlogMdEditorIndexRouteImport.update({
+    id: '/blog/md-editor/',
+    path: '/blog/md-editor/',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
 const ChatChatChatboxAdapterIndexRoute =
@@ -288,6 +282,12 @@ const ChatChatChatboxAdapterIndexRoute =
     id: '/$adapter/',
     path: '/$adapter/',
     getParentRoute: () => ChatChatChatboxRouteRoute,
+  } as any)
+const DashboardBlogSlugEditIndexRoute =
+  DashboardBlogSlugEditIndexRouteImport.update({
+    id: '/blog/$slug/edit/',
+    path: '/blog/$slug/edit/',
+    getParentRoute: () => DashboardRouteRoute,
   } as any)
 const DashboardBlogSlugEditMdEditorRoute =
   DashboardBlogSlugEditMdEditorRouteImport.update({
@@ -606,18 +606,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_general': {
-      id: '/_general'
-      path: ''
+    '/': {
+      id: '/'
+      path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof GeneralRouteRouteImport
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -627,46 +620,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
+    '/_general': {
+      id: '/_general'
+      path: ''
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof GeneralRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/profile': {
-      id: '/dashboard/profile'
-      path: '/profile'
-      fullPath: '/dashboard/profile'
-      preLoaderRoute: typeof DashboardProfileRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/article/$slug': {
-      id: '/article/$slug'
-      path: '/article/$slug'
-      fullPath: '/article/$slug'
-      preLoaderRoute: typeof ArticleSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/uploadthing': {
-      id: '/api/uploadthing'
-      path: '/api/uploadthing'
-      fullPath: '/api/uploadthing'
-      preLoaderRoute: typeof ApiUploadthingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/proxy-image': {
-      id: '/api/proxy-image'
-      path: '/api/proxy-image'
-      fullPath: '/api/proxy-image'
-      preLoaderRoute: typeof ApiProxyImageRouteImport
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/$': {
@@ -676,11 +641,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/images': {
-      id: '/dashboard/images'
-      path: '/images'
-      fullPath: '/dashboard/images'
-      preLoaderRoute: typeof DashboardImagesRouteRouteImport
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/proxy-image': {
+      id: '/api/proxy-image'
+      path: '/api/proxy-image'
+      fullPath: '/api/proxy-image'
+      preLoaderRoute: typeof ApiProxyImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/uploadthing': {
+      id: '/api/uploadthing'
+      path: '/api/uploadthing'
+      fullPath: '/api/uploadthing'
+      preLoaderRoute: typeof ApiUploadthingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/article/$slug': {
+      id: '/article/$slug'
+      path: '/article/$slug'
+      fullPath: '/article/$slug'
+      preLoaderRoute: typeof ArticleSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/albums': {
@@ -690,137 +683,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAlbumsRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/api/chat': {
-      id: '/api/chat'
-      path: '/api/chat'
-      fullPath: '/api/chat'
-      preLoaderRoute: typeof ApiChatRouteRouteImport
+    '/dashboard/images': {
+      id: '/dashboard/images'
+      path: '/images'
+      fullPath: '/dashboard/images'
+      preLoaderRoute: typeof DashboardImagesRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/profile': {
+      id: '/dashboard/profile'
+      path: '/profile'
+      fullPath: '/dashboard/profile'
+      preLoaderRoute: typeof DashboardProfileRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/_auth/login/': {
+      id: '/_auth/login/'
+      path: '/login'
+      fullPath: '/login/'
+      preLoaderRoute: typeof AuthLoginIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_chat/chat/': {
+      id: '/_chat/chat/'
+      path: '/chat'
+      fullPath: '/chat/'
+      preLoaderRoute: typeof ChatChatIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/post/$postId/': {
-      id: '/post/$postId/'
-      path: '/post/$postId'
-      fullPath: '/post/$postId/'
-      preLoaderRoute: typeof PostPostIdIndexRouteImport
+    '/_chat/chat/_chatbox': {
+      id: '/_chat/chat/_chatbox'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatChatChatboxRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/envologs/$slug/': {
-      id: '/envologs/$slug/'
-      path: '/envologs/$slug'
-      fullPath: '/envologs/$slug/'
-      preLoaderRoute: typeof EnvologsSlugIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/task-tracker/': {
-      id: '/dashboard/task-tracker/'
-      path: '/task-tracker'
-      fullPath: '/dashboard/task-tracker/'
-      preLoaderRoute: typeof DashboardTaskTrackerIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/settings/': {
-      id: '/dashboard/settings/'
-      path: '/settings'
-      fullPath: '/dashboard/settings/'
-      preLoaderRoute: typeof DashboardSettingsIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/quran-tracker/': {
-      id: '/dashboard/quran-tracker/'
-      path: '/quran-tracker'
-      fullPath: '/dashboard/quran-tracker/'
-      preLoaderRoute: typeof DashboardQuranTrackerIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/post/': {
-      id: '/dashboard/post/'
-      path: '/post'
-      fullPath: '/dashboard/post/'
-      preLoaderRoute: typeof DashboardPostIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/images/': {
-      id: '/dashboard/images/'
-      path: '/'
-      fullPath: '/dashboard/images/'
-      preLoaderRoute: typeof DashboardImagesIndexRouteImport
-      parentRoute: typeof DashboardImagesRouteRoute
-    }
-    '/dashboard/image-upload/': {
-      id: '/dashboard/image-upload/'
-      path: '/image-upload'
-      fullPath: '/dashboard/image-upload/'
-      preLoaderRoute: typeof DashboardImageUploadIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/blog/': {
-      id: '/dashboard/blog/'
-      path: '/blog'
-      fullPath: '/dashboard/blog/'
-      preLoaderRoute: typeof DashboardBlogIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/albums/': {
-      id: '/dashboard/albums/'
-      path: '/'
-      fullPath: '/dashboard/albums/'
-      preLoaderRoute: typeof DashboardAlbumsIndexRouteImport
-      parentRoute: typeof DashboardAlbumsRouteRoute
-    }
-    '/dashboard/admin/': {
-      id: '/dashboard/admin/'
-      path: '/admin'
-      fullPath: '/dashboard/admin/'
-      preLoaderRoute: typeof DashboardAdminIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/blogposts/$slug/': {
-      id: '/blogposts/$slug/'
-      path: '/blogposts/$slug'
-      fullPath: '/blogposts/$slug/'
-      preLoaderRoute: typeof BlogpostsSlugIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/$slug/': {
-      id: '/blog/$slug/'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug/'
-      preLoaderRoute: typeof BlogSlugIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/album/$albumId/': {
-      id: '/album/$albumId/'
-      path: '/album/$albumId'
-      fullPath: '/album/$albumId/'
-      preLoaderRoute: typeof AlbumAlbumIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_general/post/': {
-      id: '/_general/post/'
-      path: '/post'
-      fullPath: '/post/'
-      preLoaderRoute: typeof GeneralPostIndexRouteImport
-      parentRoute: typeof GeneralRouteRoute
-    }
-    '/_general/envologs/': {
-      id: '/_general/envologs/'
-      path: '/envologs'
-      fullPath: '/envologs/'
-      preLoaderRoute: typeof GeneralEnvologsIndexRouteImport
-      parentRoute: typeof GeneralRouteRoute
-    }
-    '/_general/blogposts/': {
-      id: '/_general/blogposts/'
-      path: '/blogposts'
-      fullPath: '/blogposts/'
-      preLoaderRoute: typeof GeneralBlogpostsIndexRouteImport
-      parentRoute: typeof GeneralRouteRoute
-    }
-    '/_general/blog/': {
-      id: '/_general/blog/'
-      path: '/blog'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof GeneralBlogIndexRouteImport
+    '/_general/about/': {
+      id: '/_general/about/'
+      path: '/about'
+      fullPath: '/about/'
+      preLoaderRoute: typeof GeneralAboutIndexRouteImport
       parentRoute: typeof GeneralRouteRoute
     }
     '/_general/article/': {
@@ -830,40 +732,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GeneralArticleIndexRouteImport
       parentRoute: typeof GeneralRouteRoute
     }
-    '/_general/about/': {
-      id: '/_general/about/'
-      path: '/about'
-      fullPath: '/about/'
-      preLoaderRoute: typeof GeneralAboutIndexRouteImport
+    '/_general/blog/': {
+      id: '/_general/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof GeneralBlogIndexRouteImport
       parentRoute: typeof GeneralRouteRoute
     }
-    '/_chat/chat/': {
-      id: '/_chat/chat/'
-      path: '/chat'
-      fullPath: '/chat/'
-      preLoaderRoute: typeof ChatChatIndexRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_general/blogposts/': {
+      id: '/_general/blogposts/'
+      path: '/blogposts'
+      fullPath: '/blogposts/'
+      preLoaderRoute: typeof GeneralBlogpostsIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
     }
-    '/_auth/login/': {
-      id: '/_auth/login/'
-      path: '/login'
-      fullPath: '/login/'
-      preLoaderRoute: typeof AuthLoginIndexRouteImport
-      parentRoute: typeof AuthRouteRoute
+    '/_general/envologs/': {
+      id: '/_general/envologs/'
+      path: '/envologs'
+      fullPath: '/envologs/'
+      preLoaderRoute: typeof GeneralEnvologsIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
     }
-    '/dashboard/task-tracker/$taskListId': {
-      id: '/dashboard/task-tracker/$taskListId'
-      path: '/task-tracker/$taskListId'
-      fullPath: '/dashboard/task-tracker/$taskListId'
-      preLoaderRoute: typeof DashboardTaskTrackerTaskListIdRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_general/post/': {
+      id: '/_general/post/'
+      path: '/post'
+      fullPath: '/post/'
+      preLoaderRoute: typeof GeneralPostIndexRouteImport
+      parentRoute: typeof GeneralRouteRoute
     }
     '/_general/user/$userId': {
       id: '/_general/user/$userId'
@@ -872,18 +767,130 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GeneralUserUserIdRouteImport
       parentRoute: typeof GeneralRouteRoute
     }
-    '/_chat/chat/_chatbox': {
-      id: '/_chat/chat/_chatbox'
-      path: '/chat'
-      fullPath: '/chat'
-      preLoaderRoute: typeof ChatChatChatboxRouteRouteImport
+    '/album/$albumId/': {
+      id: '/album/$albumId/'
+      path: '/album/$albumId'
+      fullPath: '/album/$albumId/'
+      preLoaderRoute: typeof AlbumAlbumIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/blog/md-editor/': {
-      id: '/dashboard/blog/md-editor/'
-      path: '/blog/md-editor'
-      fullPath: '/dashboard/blog/md-editor/'
-      preLoaderRoute: typeof DashboardBlogMdEditorIndexRouteImport
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug/': {
+      id: '/blog/$slug/'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug/'
+      preLoaderRoute: typeof BlogSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blogposts/$slug/': {
+      id: '/blogposts/$slug/'
+      path: '/blogposts/$slug'
+      fullPath: '/blogposts/$slug/'
+      preLoaderRoute: typeof BlogpostsSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/admin/': {
+      id: '/dashboard/admin/'
+      path: '/admin'
+      fullPath: '/dashboard/admin/'
+      preLoaderRoute: typeof DashboardAdminIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/albums/': {
+      id: '/dashboard/albums/'
+      path: '/'
+      fullPath: '/dashboard/albums/'
+      preLoaderRoute: typeof DashboardAlbumsIndexRouteImport
+      parentRoute: typeof DashboardAlbumsRouteRoute
+    }
+    '/dashboard/blog/': {
+      id: '/dashboard/blog/'
+      path: '/blog'
+      fullPath: '/dashboard/blog/'
+      preLoaderRoute: typeof DashboardBlogIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/image-upload/': {
+      id: '/dashboard/image-upload/'
+      path: '/image-upload'
+      fullPath: '/dashboard/image-upload/'
+      preLoaderRoute: typeof DashboardImageUploadIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/images/': {
+      id: '/dashboard/images/'
+      path: '/'
+      fullPath: '/dashboard/images/'
+      preLoaderRoute: typeof DashboardImagesIndexRouteImport
+      parentRoute: typeof DashboardImagesRouteRoute
+    }
+    '/dashboard/post/': {
+      id: '/dashboard/post/'
+      path: '/post'
+      fullPath: '/dashboard/post/'
+      preLoaderRoute: typeof DashboardPostIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/quran-tracker/': {
+      id: '/dashboard/quran-tracker/'
+      path: '/quran-tracker'
+      fullPath: '/dashboard/quran-tracker/'
+      preLoaderRoute: typeof DashboardQuranTrackerIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/settings/': {
+      id: '/dashboard/settings/'
+      path: '/settings'
+      fullPath: '/dashboard/settings/'
+      preLoaderRoute: typeof DashboardSettingsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/task-tracker/': {
+      id: '/dashboard/task-tracker/'
+      path: '/task-tracker'
+      fullPath: '/dashboard/task-tracker/'
+      preLoaderRoute: typeof DashboardTaskTrackerIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/task-tracker/$taskListId': {
+      id: '/dashboard/task-tracker/$taskListId'
+      path: '/task-tracker/$taskListId'
+      fullPath: '/dashboard/task-tracker/$taskListId'
+      preLoaderRoute: typeof DashboardTaskTrackerTaskListIdRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/envologs/$slug/': {
+      id: '/envologs/$slug/'
+      path: '/envologs/$slug'
+      fullPath: '/envologs/$slug/'
+      preLoaderRoute: typeof EnvologsSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/post/$postId/': {
+      id: '/post/$postId/'
+      path: '/post/$postId'
+      fullPath: '/post/$postId/'
+      preLoaderRoute: typeof PostPostIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/albums/$albumId/': {
+      id: '/dashboard/albums/$albumId/'
+      path: '/$albumId'
+      fullPath: '/dashboard/albums/$albumId/'
+      preLoaderRoute: typeof DashboardAlbumsAlbumIdIndexRouteImport
+      parentRoute: typeof DashboardAlbumsRouteRoute
+    }
+    '/dashboard/blog/$slug/': {
+      id: '/dashboard/blog/$slug/'
+      path: '/blog/$slug'
+      fullPath: '/dashboard/blog/$slug/'
+      preLoaderRoute: typeof DashboardBlogSlugIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/blog/create-blog/': {
@@ -893,25 +900,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardBlogCreateBlogIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/dashboard/blog/$slug/': {
-      id: '/dashboard/blog/$slug/'
-      path: '/blog/$slug'
-      fullPath: '/dashboard/blog/$slug/'
-      preLoaderRoute: typeof DashboardBlogSlugIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/albums/$albumId/': {
-      id: '/dashboard/albums/$albumId/'
-      path: '/$albumId'
-      fullPath: '/dashboard/albums/$albumId/'
-      preLoaderRoute: typeof DashboardAlbumsAlbumIdIndexRouteImport
-      parentRoute: typeof DashboardAlbumsRouteRoute
-    }
-    '/dashboard/blog/$slug/edit/': {
-      id: '/dashboard/blog/$slug/edit/'
-      path: '/blog/$slug/edit'
-      fullPath: '/dashboard/blog/$slug/edit/'
-      preLoaderRoute: typeof DashboardBlogSlugEditIndexRouteImport
+    '/dashboard/blog/md-editor/': {
+      id: '/dashboard/blog/md-editor/'
+      path: '/blog/md-editor'
+      fullPath: '/dashboard/blog/md-editor/'
+      preLoaderRoute: typeof DashboardBlogMdEditorIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/_chat/chat/_chatbox/$adapter/': {
@@ -920,6 +913,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/chat/$adapter/'
       preLoaderRoute: typeof ChatChatChatboxAdapterIndexRouteImport
       parentRoute: typeof ChatChatChatboxRouteRoute
+    }
+    '/dashboard/blog/$slug/edit/': {
+      id: '/dashboard/blog/$slug/edit/'
+      path: '/blog/$slug/edit'
+      fullPath: '/dashboard/blog/$slug/edit/'
+      preLoaderRoute: typeof DashboardBlogSlugEditIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/blog/$slug/edit/md-editor': {
       id: '/dashboard/blog/$slug/edit/md-editor'
