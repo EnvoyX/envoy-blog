@@ -20,7 +20,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build", "^generate:types"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".output/**"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".output/**", ".vercel/output/**"],
       "env": [
         "GOOGLE_CLIENT_ID",
         "GOOGLE_CLIENT_SECRET",

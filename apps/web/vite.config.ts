@@ -16,6 +16,21 @@ const config = defineConfig({
     },
     tsconfigPaths: true,
   },
+  build: {
+    rolldownOptions: {
+      output: {
+        codeSplitting: false,
+      },
+    },
+  },
+  ssr: {
+    noExternal: [
+      '@portabletext/react',
+      '@uiw/react-md-editor',
+      '@uiw/react-markdown-preview',
+      'next-themes',
+    ],
+  },
   plugins: [
     // contentCollections(),
     // Outputs build to dist/client
