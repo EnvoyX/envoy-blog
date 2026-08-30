@@ -173,5 +173,5 @@
     "vitest": "^4.1.10",
     "web-vitals": "^5.2.0"
   },
-  "packageManager": "pnpm@12.0.0"
+  "packageManager": "pnpm@11.24.0"
 }
