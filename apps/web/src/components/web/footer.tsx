@@ -100,6 +100,12 @@ export function Footer() {
                 <span>Powered by TanStack Libraries</span>
               </div>
             </div>
+            <iframe
+              src="https://envoy-mindpalace.betteruptime.com/badge?theme=dark"
+              width="250"
+              height="30"
+              style={{ colorScheme: 'normal' }}
+            ></iframe>
           </div>
         </div>
 

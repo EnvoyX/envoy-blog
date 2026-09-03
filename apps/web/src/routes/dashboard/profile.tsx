@@ -7,6 +7,7 @@ import {
   Calendar,
   CheckCheck,
   Eye,
+  HeartPulse,
   ImageIcon,
   ImagesIcon,
   Mail,
@@ -30,6 +31,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlbumCard } from '@/components/web/album/AlbumCard';
 import { BlogCard } from '@/components/web/BlogCard';
@@ -261,9 +263,9 @@ function RouteComponent() {
               </h2>
               <div className="space-y-4 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground flex items-center gap-2 text-sm">
-                    <ShieldCheck className="size-4" /> Status
-                  </span>
+                  <p className="text-muted-foreground flex items-center gap-2 text-sm">
+                    <ShieldCheck className="size-4 shrink-0" /> <span>Status</span>
+                  </p>
                   <span
                     className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${user?.emailVerified ? 'bg-emerald-500/10 text-emerald-500' : 'bg-emerald-500/10 text-emerald-500'}`}
                   >
@@ -271,21 +273,36 @@ function RouteComponent() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground flex items-center gap-2 text-sm">
-                    <Calendar className="size-4" /> Joined
-                  </span>
+                  <p className="text-muted-foreground flex items-center gap-2 text-sm">
+                    <Calendar className="size-4 shrink-0" /> <span>Joined</span>
+                  </p>
                   <span className="text-sm font-medium">
                     {user?.createdAt ? new Date(user?.createdAt).toLocaleDateString() : 'N/A'}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground flex items-center gap-2 text-sm">
-                    <User className="size-4" />
-                  </span>
-                  <span className="text-muted-foreground">User ID</span>
+                <div className="flex items-center justify-between">
+                  <p className="text-muted-foreground flex items-center gap-2 text-sm">
+                    <User className="size-4 shrink-0" /> User ID
+                  </p>
                   <code className="text-xs truncate">{user?.id}</code>
                 </div>
+                <Separator />
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-600 mb-4">
+                  System Details
+                </h2>
                 <div className="flex items-center justify-between">
+                  <p className="text-muted-foreground flex items-center gap-2 text-sm">
+                    <HeartPulse className="size-4 shrink-0" />{' '}
+                    <span className="text-muted-foreground">System Uptime</span>
+                  </p>
+                  <iframe
+                    src="https://envoy-mindpalace.betteruptime.com/badge?theme=dark"
+                    width="250"
+                    height="30"
+                    style={{ colorScheme: 'normal' }}
+                  ></iframe>
+                </div>
+                {/*<div className="flex items-center justify-between">
                   <p className="flex items-center gap-2 text-sm">
                     <span className="text-muted-foreground flex items-center gap-2 text-sm">
                       <Users className="size-4" />
@@ -295,7 +312,7 @@ function RouteComponent() {
                   <span className="font-medium truncate">
                     {user?.accounts.map((account) => account.providerId.toUpperCase()).join(' | ')}
                   </span>
-                </div>
+                </div>*/}
               </div>
             </div>
           </div>

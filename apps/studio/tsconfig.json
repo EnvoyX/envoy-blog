@@ -9,6 +9,7 @@
     "module": "Preserve",
     "moduleDetection": "force",
     "isolatedModules": true,
+    "types": ["node"],
     "jsx": "preserve",
     "incremental": true
   },
