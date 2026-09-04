@@ -196,7 +196,7 @@ export function Navbar({ user }: { user: User | null }) {
                   className="flex items-center gap-3 text-sm font-medium rounded-lg transition-colors"
                 >
                   <img
-                    src="/tanstack-emblem-white@2x.png"
+                    src="/android-chrome-512x512.png"
                     alt="TanStack Start logo"
                     className="size-8 object-contain"
                   />

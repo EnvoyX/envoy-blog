@@ -28,7 +28,7 @@ export function AppSidebar({ user }: UserSession) {
           <SidebarMenuButton size="lg" asChild className="">
             <Link to="/" className="flex items-center hover:bg-sidebar-accent! font-mono gap-3">
               <div className="flex items-center justify-center aspect-square size-8">
-                <img src="/tanstack-emblem-white@2x.png" alt="TanStack Start logo" />
+                <img src="/android-chrome-512x512.png" alt="TanStack Start logo" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="font-bold">Envoy Mindpalace</span>
