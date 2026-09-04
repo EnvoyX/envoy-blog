@@ -163,7 +163,7 @@ function RouteComponent() {
     <main className="w-full max-w-7xl mx-auto py-12 px-6">
       <header className="mb-10 flex flex-col md:flex-row items-center gap-6">
         <div className="relative group">
-          <div className="size-40 rounded-2xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1">
+          <div className="size-40 rounded-2xl overflow-hidden bg-linear-to-br from-zinc-700 to-zinc-900 p-1 border border-zinc-800">
             <div className="w-full h-full rounded-2xl bg-background flex items-center justify-center overflow-hidden">
               {user?.image || user?.defaultImage ? (
                 <Avatar className="size-40 shrink-0 after:border-none!">
@@ -192,7 +192,7 @@ function RouteComponent() {
               )}
             </div>
           </div>
-          {/*<button className="absolute -bottom-2 -right-2 p-2 bg-surface border border-border rounded-full shadow-lg hover:text-emerald-500 transition-colors">
+          {/*<button className="absolute -bottom-2 -right-2 p-2 bg-surface border border-border rounded-full shadow-lg hover:text-primary transition-colors">
             <Camera className="size-4" />
           </button>*/}
         </div>
@@ -239,17 +239,17 @@ function RouteComponent() {
             {!user?.showFollowStats && <span className="text-slate-400">(Hidden)</span>}
           </div>
           <div className="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
-            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium">
+            <span className="px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-medium">
               {userBlogs?.length} Blogs
             </span>
-            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium">
+            <span className="px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-medium">
               {userPosts?.length} Posts
             </span>
-            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium flex items-center gap-1">
+            <span className="px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-medium flex items-center gap-1">
               <ImagesIcon className="size-4" />
               <p>{userImages?.length} Images</p>
             </span>
-            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium flex items-center gap-1">
+            <span className="px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-medium flex items-center gap-1">
               <ImageIcon className="size-4" />
               <p>{userAlbums?.length} Albums</p>
             </span>
@@ -258,7 +258,7 @@ function RouteComponent() {
         <div className="flex items-center gap-2 sm:justify-end sm:ml-auto max-md:mx-auto">
           <div className="grid grid-cols-1 gap-6">
             <div className="p-6 rounded-xl border border-border bg-card/50 backdrop-blur-sm">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-600 mb-4">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
                 Account Details
               </h2>
               <div className="space-y-4 text-sm">
@@ -267,7 +267,7 @@ function RouteComponent() {
                     <ShieldCheck className="size-4 shrink-0" /> <span>Status</span>
                   </p>
                   <span
-                    className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${user?.emailVerified ? 'bg-emerald-500/10 text-emerald-500' : 'bg-emerald-500/10 text-emerald-500'}`}
+                    className={`text-xs font-medium px-2.5 py-0.5 rounded-full border ${user?.emailVerified ? 'bg-primary/10 text-primary border-primary/20' : 'bg-muted text-muted-foreground border-border'}`}
                   >
                     {user?.emailVerified ? 'Verified' : 'Pending Verification'}
                   </span>
@@ -319,7 +319,7 @@ function RouteComponent() {
         </div>
       </header>
 
-      <div className="mt-6 mb-12 pb-6 border-b border-border flex max-sm:flex-col overflow-auto gap-4 scrollbar-thin scrollbar-thumb-emerald-800">
+      <div className="mt-6 mb-12 pb-6 border-b border-border flex max-sm:flex-col overflow-auto gap-4 scrollbar-thin scrollbar-thumb-zinc-700">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="cursor-pointer flex items-center">
@@ -374,7 +374,7 @@ function RouteComponent() {
               isUploadThingDialogOpen: true,
             }))
           }
-          className="px-5 py-2.5 bg-background border border-border font-medium rounded-lg hover:bg-muted transition-colors text-emerald-500 cursor-pointer"
+          className="px-5 py-2.5 bg-background border border-border font-medium rounded-lg hover:bg-muted transition-colors cursor-pointer"
         >
           <User />
           Upload Profile Image

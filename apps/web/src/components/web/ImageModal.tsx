@@ -1,5 +1,5 @@
-import { X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import {
   Carousel,
@@ -8,10 +8,10 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@/components/ui/carousel';
-import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
-import { Image } from '@/generated/prisma/client';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/carousel";
+import { Dialog, DialogContent, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Image } from "@/generated/prisma/client";
+import { cn } from "@/lib/utils";
 
 export function ImageModal({
   imageUrl,
@@ -34,7 +34,7 @@ export function ImageModal({
     }
     // setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
-    api.on('select', () => {
+    api.on("select", () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
@@ -42,13 +42,13 @@ export function ImageModal({
     <Dialog>
       <DialogTrigger asChild>
         <img
-          src={imageUrl ?? 'https://placehold.co/600x400?text=No+Image'}
-          alt={alt ?? 'Post image content'}
+          src={imageUrl ?? "https://placehold.co/600x400?text=No+Image"}
+          alt={alt ?? "Post image content"}
           className={`${className} cursor-zoom-in`}
           loading="lazy"
           onClick={(e) => e.stopPropagation()}
           onError={(e) => {
-            (e.target as HTMLImageElement).src = 'https://placehold.co/400?text=Invalid+Image';
+            (e.target as HTMLImageElement).src = "https://placehold.co/400?text=Invalid+Image";
           }}
         />
       </DialogTrigger>
@@ -94,15 +94,15 @@ export function ImageModal({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="cursor-pointer ml-3 absolute top-1/2 left-0 bg-emerald-500! text-slate-900!" />
-            <CarouselNext className="cursor-pointer mr-3 absolute top-1/2 right-0 bg-emerald-500! text-slate-900!" />
+            <CarouselPrevious className="cursor-pointer ml-3 absolute top-1/2 left-0 bg-primary-500! text-slate-900!" />
+            <CarouselNext className="cursor-pointer mr-3 absolute top-1/2 right-0 bg-primary-500! text-slate-900!" />
             <div className="py-2 text-center flex items-center gap-2 font-bold absolute bottom-0">
               {images?.map((_, index) => {
                 return (
                   <span
                     key={index}
-                    className={cn('rounded-full w-2 h-2 bg-emerald-500/50', {
-                      'bg-emerald-500': index + 1 === current,
+                    className={cn("rounded-full w-2 h-2 bg-primary-500/50", {
+                      "bg-primary-500": index + 1 === current,
                     })}
                   />
                 );

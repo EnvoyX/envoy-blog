@@ -179,16 +179,16 @@ export default function UploadDropzone() {
         onDrop={onDrop}
         onDragOver={(e) => e.preventDefault()}
         onClick={() => fileInputRef.current?.click()}
-        className="relative border-2 border-dashed border-emerald-700 rounded-2xl p-14 text-center cursor-pointer
-                            hover:border-emerald-400 hover:bg-emerald-950/30 transition-all duration-300 group"
+        className="relative border-2 border-dashed border-zinc-800 rounded-2xl p-14 text-center cursor-pointer
+                            hover:border-zinc-600 hover:bg-zinc-900/50 transition-all duration-300 group"
       >
         <div className="flex flex-col items-center gap-3 pointer-events-none select-none">
           <div
-            className="w-16 h-16 rounded-2xl bg-emerald-900/60 flex items-center justify-center
-                                   group-hover:scale-110 transition-transform duration-300 ring-1 ring-emerald-700"
+            className="w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center
+                                   group-hover:scale-110 transition-transform duration-300 ring-1 ring-zinc-800"
           >
             <svg
-              className="w-8 h-8 text-emerald-400"
+              className="w-8 h-8 text-zinc-200"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -202,7 +202,7 @@ export default function UploadDropzone() {
             </svg>
           </div>
           <div>
-            <p className="text-emerald-300 font-semibold">Drop or Upload images here</p>
+            <p className="text-zinc-200 font-semibold">Drop or Upload images here</p>
             <p className="text-slate-500 text-sm mt-1">
               or click to browse · PNG, JPG, GIF, WebP up to 32 MB
             </p>
@@ -298,13 +298,13 @@ export default function UploadDropzone() {
                         {typeof progress === 'number' && (
                           <div className="w-full bg-slate-700 rounded-full h-1">
                             <div
-                              className="bg-emerald-500 h-1 rounded-full transition-all duration-300"
+                              className="bg-primary h-1 rounded-full transition-all duration-300"
                               style={{ width: `${progress}%` }}
                             />
                           </div>
                         )}
                         {progress === 'done' && (
-                          <p className="text-emerald-400 text-xs">Uploaded ✓</p>
+                          <p className="text-zinc-200 text-xs">Uploaded ✓</p>
                         )}
                         {progress === 'error' && <p className="text-red-400 text-xs">Failed ✗</p>}
                       </div>
@@ -356,7 +356,7 @@ export default function UploadDropzone() {
                         delay: i * 0.1,
                       }}
                     >
-                      <div className="overflow-hidden transition-all relative aspect-square w-full rounded-2xl  group-hover:shadow-2xl group-hover:shadow-emerald-500/10 group-focus:ring-2 group-focus:ring-emerald-500 group cursor-pointer">
+                      <div className="overflow-hidden transition-all relative aspect-square w-full rounded-2xl group-hover:shadow-2xl group-hover:shadow-white/5 group-focus:ring-2 group-focus:ring-white group cursor-pointer">
                         <img
                           src={entry.src}
                           alt={entry.file.name}
@@ -384,13 +384,13 @@ export default function UploadDropzone() {
                         {typeof progress === 'number' && (
                           <div className="w-full bg-slate-700 rounded-full h-1">
                             <div
-                              className="bg-emerald-500 h-1 rounded-full transition-all duration-300"
+                              className="bg-primary h-1 rounded-full transition-all duration-300"
                               style={{ width: `${progress}%` }}
                             />
                           </div>
                         )}
                         {progress === 'done' && (
-                          <p className="text-emerald-400 text-xs text-center">Uploaded ✓</p>
+                          <p className="text-zinc-200 text-xs text-center">Uploaded ✓</p>
                         )}
                         {progress === 'error' && (
                           <p className="text-red-400 text-xs text-center">Failed ✗</p>
@@ -409,9 +409,9 @@ export default function UploadDropzone() {
         <button
           disabled={uploading}
           onClick={() => void onUploadAll()}
-          className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed
-                     text-white font-semibold rounded-xl py-2.5 transition-colors
-                     shadow-[0_0_20px_rgba(52,211,153,0.2)] cursor-pointer"
+          className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed
+                     text-primary-foreground font-semibold rounded-xl py-2.5 transition-colors
+                     shadow-sm cursor-pointer"
         >
           {uploading
             ? `Uploading…`

@@ -1,8 +1,8 @@
-import { IconDownload } from '@tabler/icons-react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from '@tanstack/react-router';
-import { useSelector } from '@tanstack/react-store';
-import { Effect } from 'effect';
+import { IconDownload } from "@tabler/icons-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "@tanstack/react-router";
+import { useSelector } from "@tanstack/react-store";
+import { Effect } from "effect";
 // import Slideshow from 'yet-another-react-lightbox/plugins/slideshow';
 import {
   AlbumIcon,
@@ -13,26 +13,26 @@ import {
   MoreVertical,
   Trash2,
   Unlock,
-} from 'lucide-react';
-import { motion } from 'motion/react';
-import { useRef, useState } from 'react';
-import { Masonry } from 'react-plock';
-import { toast } from 'sonner';
-import Lightbox from 'yet-another-react-lightbox';
-import { ZoomRef, ThumbnailsRef, FullscreenRef } from 'yet-another-react-lightbox';
+} from "lucide-react";
+import { motion } from "motion/react";
+import { useRef, useState } from "react";
+import { Masonry } from "react-plock";
+import { toast } from "sonner";
+import Lightbox from "yet-another-react-lightbox";
+import { ZoomRef, ThumbnailsRef, FullscreenRef } from "yet-another-react-lightbox";
 
-import 'yet-another-react-lightbox/styles.css';
-import 'yet-another-react-lightbox/plugins/counter.css';
-import 'yet-another-react-lightbox/plugins/thumbnails.css';
-import 'yet-another-react-lightbox/plugins/captions.css';
-import Captions from 'yet-another-react-lightbox/plugins/captions';
-import Counter from 'yet-another-react-lightbox/plugins/counter';
-import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
-import Share from 'yet-another-react-lightbox/plugins/share';
-import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
-import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/counter.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import "yet-another-react-lightbox/plugins/captions.css";
+import Captions from "yet-another-react-lightbox/plugins/captions";
+import Counter from "yet-another-react-lightbox/plugins/counter";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+import Share from "yet-another-react-lightbox/plugins/share";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -41,15 +41,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { getAlbumByIdFn } from '@/data/album';
+} from "@/components/ui/dropdown-menu";
+import { getAlbumByIdFn } from "@/data/album";
 import {
   deleteImageFn,
   removeImageFromAlbumFn,
@@ -57,15 +57,15 @@ import {
   setPrivateImageFn,
   setPublicImageFn,
   setShowPrivateImageToFollowersFn,
-} from '@/data/image';
+} from "@/data/image";
 import {
   dashboardAlbumIdOptions,
   imageGalleryOptions,
-} from '@/data/query-options/dashboardQueryOptions';
-import { Image } from '@/generated/prisma/client';
-import { useImageStore } from '@/store/image';
-import { photoGalleryStore } from '@/store/photoGallery';
-import { downloadExternalFile } from '@/utils/utils';
+} from "@/data/query-options/dashboardQueryOptions";
+import { Image } from "@/generated/prisma/client";
+import { useImageStore } from "@/store/image";
+import { photoGalleryStore } from "@/store/photoGallery";
+import { downloadExternalFile } from "@/utils/utils";
 
 export default function PhotoGallery({
   images,
@@ -73,7 +73,7 @@ export default function PhotoGallery({
   albumId,
 }: {
   images: Image[];
-  type?: 'public' | 'private';
+  type?: "public" | "private";
   albumId?: string;
 }) {
   const queryClient = useQueryClient();
@@ -95,11 +95,11 @@ export default function PhotoGallery({
   const zoomRef = useRef<ZoomRef>(null);
   const router = useRouter();
   const { data: album } = useQuery({
-    queryKey: ['album-gallery', albumId],
+    queryKey: ["album-gallery", albumId],
     queryFn: async () => {
       const album = await getAlbumByIdFn({
         data: {
-          albumId: albumId ?? '',
+          albumId: albumId ?? "",
         },
       });
       return album;
@@ -121,7 +121,8 @@ export default function PhotoGallery({
       });
     void router.invalidate();
   });
-  async function handleAction(action: string, photoId: string) {
+  async function handleAction(action: string, photoId: string | undefined) {
+    if (!photoId) return;
     const actionConfig = {
       public: {
         action: () =>
@@ -213,7 +214,7 @@ export default function PhotoGallery({
       toast.success(actionMode.success, {
         id: `action-${photoId}`,
       });
-      if (action === 'remove' || action === 'delete')
+      if (action === "remove" || action === "delete")
         photoGalleryStore.setState((prev) => {
           return {
             ...prev,
@@ -254,8 +255,8 @@ export default function PhotoGallery({
               }}
             >
               <motion.img
-                initial={{ opacity: 0, filter: 'blur(16px)' }}
-                whileInView={{ opacity: 1, filter: 'blur(0px)' }}
+                initial={{ opacity: 0, filter: "blur(16px)" }}
+                whileInView={{ opacity: 1, filter: "blur(0px)" }}
                 viewport={{ once: true, amount: 0.2 }} // animation only plays the first time an element scrolls into view
                 whileHover={{ scale: 1.05 }}
                 whileTap={{
@@ -264,7 +265,7 @@ export default function PhotoGallery({
                     duration: 0.3,
                   },
                 }}
-                transition={{ ease: 'easeOut', duration: 0.5 }}
+                transition={{ ease: "easeOut", duration: 0.5 }}
                 src={photo.url}
                 alt={photo.id}
                 className="w-full h-auto display:block"
@@ -296,8 +297,8 @@ export default function PhotoGallery({
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             {albumId ? (
               <DialogDescription>
-                This action cannot be undone. This will permanently remove the image from album:{' '}
-                <span className="text-emerald-500 font-bold">{album?.name}</span>
+                This action cannot be undone. This will permanently remove the image from album:{" "}
+                <span className="text-primary font-bold">{album?.name}</span>
               </DialogDescription>
             ) : (
               <DialogDescription>
@@ -310,18 +311,18 @@ export default function PhotoGallery({
             {albumId ? (
               <Button
                 type="button"
-                variant={'destructive'}
+                variant={"destructive"}
                 className="cursor-pointer"
-                onClick={() => handleAction('remove', photos[index].id)}
+                onClick={() => handleAction("remove", photos[index]?.id)}
               >
                 Remove Image
               </Button>
             ) : (
               <Button
                 type="button"
-                variant={'destructive'}
+                variant={"destructive"}
                 className="cursor-pointer"
-                onClick={() => handleAction('delete', photos[index].id)}
+                onClick={() => handleAction("delete", photos[index]?.id)}
               >
                 Delete Image
               </Button>
@@ -344,97 +345,97 @@ export default function PhotoGallery({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button type="button" className="yarl__button outline-none">
-                  <MoreVertical className="text-emerald-500" />
+                  <MoreVertical className="text-primary" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="z-[9999]! w-48 bg-emerald-900/50 backdrop-blur-md border-white/10 text-white"
+                className="z-[9999]! w-48 bg-zinc-900/50 backdrop-blur-md border-white/10 text-white"
               >
                 <DropdownMenuItem
                   onClick={toggleCounter}
-                  className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
+                  className="focus:bg-primary/20 focus:text-primary cursor-pointer"
                 >
                   {isCounterVisible ? (
                     <EyeOff className="mr-2 h-4 w-4" />
                   ) : (
                     <Eye className="mr-2 h-4 w-4" />
                   )}
-                  {isCounterVisible ? 'Hide slide counter' : 'Show slide counter'}
+                  {isCounterVisible ? "Hide slide counter" : "Show slide counter"}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={toggleCaptions}
-                  className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
+                  className="focus:bg-primary/20 focus:text-primary cursor-pointer"
                 >
                   {isCaptionVisible ? (
                     <EyeOff className="mr-2 h-4 w-4" />
                   ) : (
                     <Eye className="mr-2 h-4 w-4" />
                   )}
-                  {isCaptionVisible ? 'Hide captions' : 'Show captions'}
+                  {isCaptionVisible ? "Hide captions" : "Show captions"}
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => downloadExternalFile(photos[index].url, photos[index].id)}
-                  className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
+                  onClick={() => downloadExternalFile(photos[index]?.url, photos[index]?.id)}
+                  className="focus:bg-primary/20 focus:text-primary cursor-pointer"
                 >
                   <IconDownload className="mr-2 h-4 w-4" />
                   <span>Download</span>
                 </DropdownMenuItem>
-                {type === 'private' && (
+                {type === "private" && (
                   <>
                     <DropdownMenuItem
-                      onClick={() => toggleDialog('open', photos[index].id, photos[index].url)}
-                      className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
+                      onClick={() => toggleDialog("open", photos[index]?.id, photos[index]?.url)}
+                      className="focus:bg-primary/20 focus:text-primary cursor-pointer"
                     >
                       <AlbumIcon className="mr-2 h-4 w-4" />
                       <span>Import to album</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => {
-                        toggleDialog('edit', photos[index].id, photos[index].url);
+                        toggleDialog("edit", photos[index]?.id, photos[index]?.url);
                         setInitialValues({
-                          title: photos[index].title ?? '',
-                          description: photos[index].description ?? '',
-                          published: photos[index].published ?? false,
-                          albumId: albumId ?? '',
-                          showPrivateToFollowers: photos[index].showPrivateToFollowers ?? false,
+                          title: photos[index]?.title ?? "",
+                          description: photos[index]?.description ?? "",
+                          published: photos[index]?.published ?? false,
+                          albumId: albumId ?? "",
+                          showPrivateToFollowers: photos[index]?.showPrivateToFollowers ?? false,
                         });
                       }}
-                      className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
+                      className="focus:bg-primary/20 focus:text-primary cursor-pointer"
                     >
                       <ImageIcon className="mr-2 h-4 w-4" />
                       <span>Edit Image</span>
                     </DropdownMenuItem>
-                    {photos[index].published ? (
+                    {photos[index]?.published ? (
                       <DropdownMenuItem
-                        onClick={() => handleAction('private', photos[index].id)}
-                        className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
+                        onClick={() => handleAction("private", photos[index]?.id)}
+                        className="focus:bg-primary/20 focus:text-primary cursor-pointer"
                       >
                         <Lock className="mr-2 h-4 w-4" />
                         <span>Set to Private</span>
                       </DropdownMenuItem>
                     ) : (
                       <DropdownMenuItem
-                        onClick={() => handleAction('public', photos[index].id)}
-                        className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
+                        onClick={() => handleAction("public", photos[index]?.id)}
+                        className="focus:bg-primary/20 focus:text-primary cursor-pointer"
                       >
                         <Unlock className="mr-2 h-4 w-4" />
                         <span>Set to Public</span>
                       </DropdownMenuItem>
                     )}
-                    {!photos[index].published && !photos[index].showPrivateToFollowers && (
+                    {!photos[index]?.published && !photos[index]?.showPrivateToFollowers && (
                       <DropdownMenuItem
-                        onClick={() => handleAction('showPrivateToFollowers', photos[index].id)}
-                        className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
+                        onClick={() => handleAction("showPrivateToFollowers", photos[index]?.id)}
+                        className="focus:bg-primary/20 focus:text-primary cursor-pointer"
                       >
                         <Eye className="mr-2 h-4 w-4" />
                         <span>Show to Followers</span>
                       </DropdownMenuItem>
                     )}
-                    {!photos[index].published && photos[index].showPrivateToFollowers && (
+                    {!photos[index]?.published && photos[index]?.showPrivateToFollowers && (
                       <DropdownMenuItem
-                        onClick={() => handleAction('hidePrivateToFollowers', photos[index].id)}
-                        className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
+                        onClick={() => handleAction("hidePrivateToFollowers", photos[index]?.id)}
+                        className="focus:bg-primary/20 focus:text-primary cursor-pointer"
                       >
                         <EyeOff className="mr-2 h-4 w-4" />
                         <span>Hide from Followers</span>
@@ -447,7 +448,7 @@ export default function PhotoGallery({
                           e.preventDefault();
                           photoGalleryStore.setState(() => {
                             return {
-                              photoId: photos[index].id,
+                              photoId: photos[index]?.id || "",
                               isOpen: true,
                               albumId,
                             };
@@ -465,7 +466,7 @@ export default function PhotoGallery({
                         photoGalleryStore.setState((prev) => {
                           return {
                             ...prev,
-                            photoId: photos[index].id,
+                            photoId: photos[index]?.id || "",
                             isOpen: true,
                           };
                         });
@@ -479,7 +480,7 @@ export default function PhotoGallery({
                 )}
               </DropdownMenuContent>
             </DropdownMenu>,
-            'close',
+            "close",
           ],
         }}
         on={{
@@ -498,85 +499,80 @@ export default function PhotoGallery({
           showToggle: true,
           hidden: true,
           vignette: false,
-          borderColor: 'transparent',
+          borderColor: "transparent",
         }}
         zoom={{ ref: zoomRef, maxZoomPixelRatio: 10, scrollToZoom: true }}
         counter={{
           container: {
             style: {
-              top: 'unset',
-              bottom: '-25px',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              color: 'oklch(69.6% 0.17 162.48)',
-              display: isZoom ? 'none' : isCounterVisible ? '' : 'none',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: 'fit-content',
+              top: "unset",
+              bottom: "-25px",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              display: isZoom ? "none" : isCounterVisible ? "" : "none",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "fit-content",
             },
           },
         }}
         captions={{
-          descriptionTextAlign: 'start',
+          descriptionTextAlign: "start",
         }}
         styles={{
           root: {
-            backgroundColor: 'transparent',
-            backdropFilter: 'blur(24px)',
+            backgroundColor: "transparent",
+            backdropFilter: "blur(24px)",
           },
           container: {
-            backgroundColor: 'transparent',
-            backdropFilter: 'blur(24px)',
-          },
-          button: {
-            color: 'oklch(69.6% 0.17 162.48)',
+            backgroundColor: "transparent",
+            backdropFilter: "blur(24px)",
           },
           thumbnailsContainer: {
-            backgroundColor: 'transparent',
-            backdropFilter: 'blur(24px)',
+            backgroundColor: "transparent",
+            backdropFilter: "blur(24px)",
           },
           thumbnailsTrack: {
-            backgroundColor: 'transparent',
+            backgroundColor: "transparent",
           },
           thumbnail: {
-            backgroundColor: 'transparent',
+            backgroundColor: "transparent",
           },
           captionsTitle: {
-            display: isZoom ? 'none' : isCaptionVisible ? '' : 'none',
-            color: 'oklch(69.6% 0.17 162.48)',
+            display: isZoom ? "none" : isCaptionVisible ? "" : "none",
             fontWeight: 700,
-            fontSize: '1.125rem',
-            textShadow: '0px 1px 4px rgba(0, 0, 0, 0.8)',
+            fontSize: "1.125rem",
+            textShadow: "0px 1px 4px rgba(0, 0, 0, 0.8)",
           },
           captionsDescription: {
-            display: isZoom ? 'none' : isCaptionVisible ? '' : 'none',
-            color: 'white',
-            fontSize: '1rem',
-            textShadow: '0px 1px 3px rgba(0, 0, 0, 0.8)',
+            display: isZoom ? "none" : isCaptionVisible ? "" : "none",
+            color: "white",
+            fontSize: "1rem",
+            textShadow: "0px 1px 3px rgba(0, 0, 0, 0.8)",
           },
           captionsTitleContainer: {
-            backgroundColor: 'transparent',
+            backgroundColor: "transparent",
           },
           captionsDescriptionContainer: {
-            backgroundColor: 'transparent',
+            backgroundColor: "transparent",
           },
           toolbar: {
-            display: isZoom ? 'none' : '',
+            display: isZoom ? "none" : "",
           },
           navigationNext: {
-            display: isZoom ? 'none' : '',
+            display: isZoom ? "none" : "",
           },
           navigationPrev: {
-            display: isZoom ? 'none' : '',
+            display: isZoom ? "none" : "",
           },
         }}
         slides={photos.map((photo) => {
           return {
             src: photo.url,
             alt: photo.id,
-            title: photo.title ?? '',
-            description: photo.description ?? '',
+            title: photo.title ?? "",
+            description: photo.description ?? "",
           };
         })}
       />

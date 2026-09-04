@@ -204,11 +204,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               }}
               ref={lenisRef}
             />
-            <Provider>
-              <main className="min-h-screen bg-linear-to-b from-slate-900 to-emerald-500/40 selection:bg-emerald-500/30 bg-fixed">
-                <div className="min-h-screen bg-linear-to-br from-slate-950 via-emerald-950/30 to-slate-950 antialiased">
-                  {children}
-                </div>
+            <Provider defaultTheme="dark">
+              <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background antialiased">
+                {children}
               </main>
             </Provider>
             <Toaster closeButton position="top-center" />

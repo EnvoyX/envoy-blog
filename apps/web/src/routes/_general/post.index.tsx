@@ -63,20 +63,20 @@ function RouteComponent() {
             variant="line"
           >
             <TabsTrigger
-              className="flex items-center gap-2 after:bg-emerald-500 cursor-pointer"
+              className="flex items-center gap-2 after:bg-primary cursor-pointer"
               value="latest-post"
             >
               <h1 className="text-xl font-bold tracking-tight text-white pb-0.5">Latest Posts</h1>
             </TabsTrigger>
             <TabsTrigger
-              className="flex items-center gap-2 after:bg-emerald-500 cursor-pointer"
+              className="flex items-center gap-2 after:bg-primary cursor-pointer"
               value="for-you"
             >
               <h1 className="text-xl font-bold tracking-tight text-white pb-0.5">For You</h1>
             </TabsTrigger>
             {user && (
               <TabsTrigger
-                className="flex items-center gap-2 after:bg-emerald-500 cursor-pointer"
+                className="flex items-center gap-2 after:bg-primary cursor-pointer"
                 value="following-post"
               >
                 <h1 className="text-xl font-bold tracking-tight text-white pb-0.5">Following</h1>

@@ -246,7 +246,7 @@ function RouteComponent() {
           </CarouselContent>
           <CarouselPrevious
             className={cn(
-              "cursor-pointer ml-3 absolute top-1/2 left-0 bg-emerald-500! text-slate-900!",
+              "cursor-pointer ml-3 absolute top-1/2 left-0 bg-primary! text-primary-foreground!",
               {
                 hidden: photos.length === 1,
               },
@@ -254,24 +254,14 @@ function RouteComponent() {
           />
           <CarouselNext
             className={cn(
-              "cursor-pointer mr-3 absolute top-1/2 right-0 bg-emerald-500! text-slate-900!",
+              "cursor-pointer mr-3 absolute top-1/2 right-0 bg-primary! text-primary-foreground!",
               {
                 hidden: photos.length === 1,
               },
             )}
           />
           <div className="py-2 text-center flex items-center gap-2 font-bold absolute bottom-0">
-            {/*{photos?.map((_, index) => {
-              return (
-                <span
-                  key={index}
-                  className={cn('rounded-full w-2 h-2 bg-emerald-500/50', {
-                    'bg-emerald-500': index + 1 === current,
-                  })
-                />
-              );
-            })}*/}
-            <span key={current} className="text-emerald-600 font-normal text-shadow-lg">
+            <span key={current} className="text-zinc-400 font-normal text-shadow-lg">
               {current}/{photos?.length}
             </span>
           </div>
@@ -304,7 +294,7 @@ function RouteComponent() {
             >
               <ArrowLeft className="size-5 text-primary" />
             </Button>
-            <span className="text-lg font-bold text-emerald-400 leading-none ml-2">Post</span>
+            <span className="text-lg font-bold text-foreground leading-none ml-2">Post</span>
           </header>
           <div className="flex items-center justify-between">
             <Link
@@ -325,9 +315,6 @@ function RouteComponent() {
                 </span>
               </div>
             </Link>
-            {/* <button className="text-slate-500 hover:text-white">
-                <MoreHorizontal className="size-4" />
-              </button> */}
           </div>
           {post?.content && (
             <div className="mt-4 text-sm text-slate-300 leading-relaxed h-fit sm:max-h-37.5 overflow-y-auto scrollbar-hide">
@@ -359,12 +346,9 @@ function RouteComponent() {
                   className="relative"
                 >
                   <div className="flex justify-end items-center mb-2 px-1">
-                    {/*<span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
-                      Full Gallery View
-                    </span>*/}
                     <button
                       onClick={() => setExpanded(false)}
-                      className="text-[10px] font-bold text-emerald-500  hover:text-slate-500 transition-colors uppercase tracking-widest cursor-pointer"
+                      className="text-[10px] font-bold text-zinc-400 hover:text-zinc-200 transition-colors uppercase tracking-widest cursor-pointer"
                     >
                       Collapse ↑
                     </button>
@@ -377,7 +361,7 @@ function RouteComponent() {
                   <div className="flex justify-end items-center mt-2 px-1">
                     <button
                       onClick={() => setExpanded(false)}
-                      className="text-[10px] font-bold text-emerald-500  hover:text-slate-500 transition-colors uppercase tracking-widest cursor-pointer"
+                      className="text-[10px] font-bold text-zinc-400 hover:text-zinc-200 transition-colors uppercase tracking-widest cursor-pointer"
                     >
                       Collapse ↑
                     </button>
@@ -393,7 +377,7 @@ function RouteComponent() {
             <div className="flex items-center gap-4">
               <button
                 onClick={handleToggleLike}
-                className={`flex items-center gap-1.5 transition-colors ${user ? "cursor-pointer" : "cursor-not-allowed"} ${hasLiked ? "text-emerald-500" : "text-slate-400 hover:text-white"}`}
+                className={`flex items-center gap-1.5 transition-colors ${user ? "cursor-pointer" : "cursor-not-allowed"} ${hasLiked ? "text-rose-500" : "text-slate-400 hover:text-white"}`}
               >
                 <Heart className={`size-5 ${hasLiked && "fill-current"}`} />
                 <span className="text-xs font-bold">{likes.length}</span>
@@ -411,7 +395,7 @@ function RouteComponent() {
             <div className="relative flex items-center gap-3">
               <div className="w-full flex items-center justify-center px-4 py-3 text-sm resize-none pr-12">
                 <Button
-                  className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 cursor-pointer font-bold text-xs"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 cursor-pointer font-bold text-xs"
                   onClick={() => {
                     void navigate({
                       to: "/login",

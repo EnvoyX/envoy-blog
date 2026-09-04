@@ -63,10 +63,10 @@ export function ChatAppSidebar({
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="bg-emerald-500  hover:bg-emerald-600 transition-colors cursor-pointer "
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground transition-colors cursor-pointer"
                 >
-                  <Plus className="size-4 " />
-                  <span className="font-semibold ">New Chat</span>
+                  <Plus className="size-4" />
+                  <span className="font-semibold">New Chat</span>
                   <ChevronRight className="ml-auto size-4 opacity-50" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

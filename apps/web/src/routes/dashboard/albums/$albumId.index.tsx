@@ -116,7 +116,7 @@ function AlbumPage() {
             </Button>
             <div>
               <h1 className="text-2xl font-semibold tracking-tight line-clamp-1">{album?.name}</h1>
-              <p className="text-xs text-emerald-400">{album?._count?.images || 0} photos</p>
+              <p className="text-xs text-muted-foreground">{album?._count?.images || 0} photos</p>
             </div>
           </div>
 
@@ -124,7 +124,7 @@ function AlbumPage() {
             <Button
               variant="ghost"
               size="sm"
-              className="hidden sm:flex gap-2 rounded-full hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer"
+              className="hidden sm:flex gap-2 rounded-full hover:bg-primary/10 hover:text-primary cursor-pointer"
               onClick={() => {
                 setInitialValues({
                   name: album?.name ?? "",
@@ -271,7 +271,7 @@ function AlbumPage() {
       </header>
       <main className="w-full p-1">
         {album?.description && (
-          <p className="mb-1 text-base text-emerald-500 px-4">{album.description}</p>
+          <p className="mb-1 text-base text-muted-foreground px-4">{album.description}</p>
         )}
         <div className="flex flex-wrap items-center gap-4 mb-8 text-sm px-4">
           <div className="flex flex-row items-center gap-2 sm:gap-4 text-slate-400 ">

@@ -1,8 +1,8 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from '@tanstack/react-router';
-import { useSelector } from '@tanstack/react-store';
-import { FlipHorizontal, FlipVertical } from 'lucide-react';
-import { useRef, useState, useCallback } from 'react';
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "@tanstack/react-router";
+import { useSelector } from "@tanstack/react-store";
+import { FlipHorizontal, FlipVertical } from "lucide-react";
+import { useRef, useState, useCallback } from "react";
 import {
   Coordinates,
   Cropper,
@@ -10,12 +10,12 @@ import {
   CropperRef,
   ImageRestriction,
   RectangleStencil,
-} from 'react-advanced-cropper';
-import { toast } from 'sonner';
-import { useMediaQuery } from 'usehooks-ts';
+} from "react-advanced-cropper";
+import { toast } from "sonner";
+import { useMediaQuery } from "usehooks-ts";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -23,18 +23,18 @@ import {
   DialogTitle,
   DialogFooter,
   DialogDescription,
-} from '@/components/ui/dialog';
-import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
-import { getAlbumByIdFn } from '@/data/album';
-import { saveImageUrl } from '@/data/image';
+} from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import { getAlbumByIdFn } from "@/data/album";
+import { saveImageUrl } from "@/data/image";
 import {
   dashboardAlbumIdOptions,
   imageGalleryOptions,
-} from '@/data/query-options/dashboardQueryOptions';
-import { cn } from '@/lib/utils';
-import { imageUploadModalStore } from '@/store/imageUploadStore';
-import { useSettingStore } from '@/store/settings';
+} from "@/data/query-options/dashboardQueryOptions";
+import { cn } from "@/lib/utils";
+import { imageUploadModalStore } from "@/store/imageUploadStore";
+import { useSettingStore } from "@/store/settings";
 
 interface ImgBBResponse {
   data: {
@@ -68,25 +68,25 @@ function applyEditToCanvas(
   const rotW = swapped ? naturalH : naturalW;
   const rotH = swapped ? naturalW : naturalH;
 
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d')!;
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d")!;
 
   // draw rotated source, then crop
-  const tmpCanvas = document.createElement('canvas');
+  const tmpCanvas = document.createElement("canvas");
   tmpCanvas.width = rotW;
   tmpCanvas.height = rotH;
-  const tmpCtx = tmpCanvas.getContext('2d')!;
+  const tmpCtx = tmpCanvas.getContext("2d")!;
   tmpCtx.translate(rotW / 2, rotH / 2);
   tmpCtx.rotate(rad);
   tmpCtx.drawImage(source, -naturalW / 2, -naturalH / 2, naturalW, naturalH);
 
   ctx.drawImage(tmpCanvas, 0, 0);
-  return canvas.toDataURL('image/jpeg', 1);
+  return canvas.toDataURL("image/jpeg", 1);
 }
 
 export function ImageUploader() {
   const queryClient = useQueryClient();
-  const isMobile = useMediaQuery('(max-width: 640px)');
+  const isMobile = useMediaQuery("(max-width: 640px)");
   const isDialogOpen = useSelector(imageUploadModalStore, (state) => state.isDialogOpen);
   const albumId = useSelector(imageUploadModalStore, (state) => state.albumId);
   const { ImgbbAPIKey } = useSettingStore();
@@ -95,8 +95,6 @@ export function ImageUploader() {
   const [file, setFile] = useState<File | null>(null);
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
   const [editedSrc, setEditedSrc] = useState<string | null>(null);
-  const [editedFile, setEditedFile] = useState<File | null>(null);
-  const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
 
   const [rotation, setRotation] = useState(0);
   const [isCropping, setIsCropping] = useState(false);
@@ -113,11 +111,11 @@ export function ImageUploader() {
   const dropRef = useRef<HTMLDivElement>(null);
 
   const { data: album } = useQuery({
-    queryKey: ['album-gallery', albumId],
+    queryKey: ["album-gallery", albumId],
     queryFn: async () => {
       const album = await getAlbumByIdFn({
         data: {
-          albumId: albumId ?? '',
+          albumId: albumId ?? "",
         },
       });
       return album;
@@ -126,8 +124,8 @@ export function ImageUploader() {
   });
 
   const handleFile = (f: File) => {
-    if (!f.type.startsWith('image/')) {
-      setError('Only image files are supported.');
+    if (!f.type.startsWith("image/")) {
+      setError("Only image files are supported.");
       return;
     }
     setFile(f);
@@ -186,8 +184,8 @@ export function ImageUploader() {
     const src = editedSrc ?? previewSrc;
     if (!src || !file) return;
     if (!ImgbbAPIKey) {
-      toast.error('API Key not exist', {
-        description: 'Please set your API Key in settings',
+      toast.error("API Key not exist", {
+        description: "Please set your API Key in settings",
       });
     }
 
@@ -197,18 +195,19 @@ export function ImageUploader() {
 
     try {
       // convert data-URL to base64 string (strip prefix)
-      const base64 = src.includes(',') ? src.split(',')[1] : src;
+      const base64 = src.includes(",") ? src.split(",")[1] : src;
 
       const formData = new FormData();
-      formData.append('image', base64);
-      formData.append('name', file.name.replace(/\.[^.]+$/, ''));
+      if (!base64) return;
+      formData.append("image", base64);
+      formData.append("name", file.name.replace(/\.[^.]+$/, ""));
 
       setProgress(30);
 
       // const apiKey = import.meta.env.VITE_IMGBB_API_KEY;
       const apiKey = ImgbbAPIKey;
       const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-        method: 'POST',
+        method: "POST",
         body: formData,
       });
 
@@ -216,7 +215,7 @@ export function ImageUploader() {
 
       if (!res.ok) throw new Error(`ImgBB responded with ${res.status}`);
       const json: ImgBBResponse = await res.json();
-      if (!json.success) throw new Error('ImgBB upload failed');
+      if (!json.success) throw new Error("ImgBB upload failed");
 
       setProgress(85);
 
@@ -232,16 +231,15 @@ export function ImageUploader() {
 
       setProgress(100);
 
-      imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: false, albumId: '' }));
+      imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: false, albumId: "" }));
       setFile(null);
       setPreviewSrc(null);
       setEditedSrc(null);
-      setEditedFile(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload failed');
+      setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
       void router.invalidate();
-      void queryClient.invalidateQueries({ queryKey: ['image-gallery'] });
+      void queryClient.invalidateQueries({ queryKey: ["image-gallery"] });
       void queryClient.invalidateQueries({
         queryKey: [...imageGalleryOptions().queryKey],
       });
@@ -258,26 +256,10 @@ export function ImageUploader() {
 
   function onCrop() {
     if (cropperRef.current) {
-      setCoordinates(cropperRef.current.getCoordinates());
       // You are able to do different manipulations at a canvas
       // but there we just get a cropped image, that can be used
       // as src for <img/> to preview result
       setEditedSrc(cropperRef.current.getCanvas()?.toDataURL() as string);
-      const canvas = cropperRef.current?.getCanvas();
-      if (canvas) {
-        canvas.toBlob((blob) => {
-          console.log('Blob: ', blob);
-          if (blob) {
-            const newFile = new File([blob], `${file?.name}-cropped`, {
-              // blob.type ---> if don't specify type it defaults to png. choose either jpeg or webp for better compression
-              // type: blob.type,
-              type: 'image/jpeg',
-            });
-            console.log('New File: ', newFile);
-            setEditedFile(newFile);
-          }
-        }, 'image/jpeg');
-      }
       setIsCropping(false);
     }
   }
@@ -291,21 +273,21 @@ export function ImageUploader() {
       open={isDialogOpen}
       onOpenChange={(open) => {
         if (!uploading)
-          imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: open, albumId: '' }));
+          imageUploadModalStore.setState((prev) => ({ ...prev, isDialogOpen: open, albumId: "" }));
         resetEdits();
       }}
     >
       <DialogContent
-        className="max-w-2xl max-sm:max-w-sm bg-slate-900 border-emerald-900 text-slate-100 p-0 overflow-hidden
+        className="max-w-2xl max-sm:max-w-sm bg-slate-900 border-primary-900 text-slate-100 p-0 overflow-hidden
                      shadow-[0_0_60px_rgba(52,211,153,0.15)]"
       >
         <DialogHeader className="px-6 pt-6 pb-0">
-          <DialogTitle className="text-emerald-400 text-lg font-semibold">Upload</DialogTitle>
+          <DialogTitle className="text-primary-400 text-lg font-semibold">Upload</DialogTitle>
           <DialogDescription className="text-slate-500 text-sm flex flex-col">
             <p>Crop or edit your image before uploading.</p>
             {albumId && (
               <p>
-                Uploading to <span className="font-bold text-emerald-500">{album?.name}</span>
+                Uploading to <span className="font-bold text-primary-500">{album?.name}</span>
               </p>
             )}
           </DialogDescription>
@@ -319,16 +301,16 @@ export function ImageUploader() {
               onDrop={onDrop}
               onDragOver={(e) => e.preventDefault()}
               onClick={() => fileInputRef.current?.click()}
-              className="relative border-2 border-dashed border-emerald-700 rounded-2xl p-14 text-center cursor-pointer
-                            hover:border-emerald-400 hover:bg-emerald-950/30 transition-all duration-300 group"
+              className="relative border-2 border-dashed border-primary-700 rounded-2xl p-14 text-center cursor-pointer
+                            hover:border-primary-400 hover:bg-primary-950/30 transition-all duration-300 group"
             >
               <div className="flex flex-col items-center gap-3 pointer-events-none select-none">
                 <div
-                  className="w-16 h-16 rounded-2xl bg-emerald-900/60 flex items-center justify-center
-                                   group-hover:scale-110 transition-transform duration-300 ring-1 ring-emerald-700"
+                  className="w-16 h-16 rounded-2xl bg-primary-900/60 flex items-center justify-center
+                                   group-hover:scale-110 transition-transform duration-300 ring-1 ring-primary-700"
                 >
                   <svg
-                    className="w-8 h-8 text-emerald-400"
+                    className="w-8 h-8 text-primary-400"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -342,7 +324,7 @@ export function ImageUploader() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-emerald-300 font-semibold">Drop an image here</p>
+                  <p className="text-primary-300 font-semibold">Drop an image here</p>
                   <p className="text-slate-500 text-sm mt-1">
                     or click to browse · PNG, JPG, GIF, WebP up to 32 MB
                   </p>
@@ -356,7 +338,7 @@ export function ImageUploader() {
                 onChange={(e) => {
                   const f = e.target.files?.[0];
                   if (f) handleFile(f);
-                  e.target.value = '';
+                  e.target.value = "";
                 }}
               />
             </div>
@@ -393,12 +375,12 @@ export function ImageUploader() {
                     ref={imgRef}
                     src={displaySrc}
                     alt="preview"
-                    className={cn('w-full object-contain')}
+                    className={cn("w-full object-contain")}
                     style={{
                       transform: `rotate(${rotation}deg)`,
-                      transition: 'transform 0.3s ease',
+                      transition: "transform 0.3s ease",
                       maxHeight: 360,
-                      display: 'block',
+                      display: "block",
                     }}
                     crossOrigin="anonymous"
                   />
@@ -406,7 +388,7 @@ export function ImageUploader() {
               )}
               {editedSrc && !isCropping && (
                 <div className="absolute bottom-2 right-2">
-                  <Badge className="bg-emerald-700 text-emerald-100 text-xs">Edits applied</Badge>
+                  <Badge className="bg-primary-700 text-primary-100 text-xs">Edits applied</Badge>
                 </div>
               )}
             </div>
@@ -416,7 +398,7 @@ export function ImageUploader() {
               <Button
                 size="sm"
                 variant="outline"
-                className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+                className="border-slate-700 text-slate-300 hover:border-primary-600 hover:text-primary-300"
                 onClick={() => rotate(-90)}
               >
                 <svg
@@ -437,7 +419,7 @@ export function ImageUploader() {
               <Button
                 size="sm"
                 variant="outline"
-                className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+                className="border-slate-700 text-slate-300 hover:border-primary-600 hover:text-primary-300"
                 onClick={() => rotate(90)}
               >
                 <svg
@@ -458,7 +440,7 @@ export function ImageUploader() {
               <Separator orientation="vertical" className="h-8 bg-slate-700" />
               <Button
                 size="sm"
-                className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                className="bg-primary-600 hover:bg-primary-500 text-white"
                 onClick={() => {
                   setFile(null);
                   resetEdits();
@@ -470,7 +452,7 @@ export function ImageUploader() {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+                  className="border-slate-700 text-slate-300 hover:border-primary-600 hover:text-primary-300"
                   onClick={() => setIsCropping(true)}
                 >
                   <svg
@@ -492,7 +474,7 @@ export function ImageUploader() {
                 <>
                   <Button
                     size="sm"
-                    className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                    className="bg-primary-600 hover:bg-primary-500 text-white"
                     onClick={applyEdits}
                   >
                     Apply Crop
@@ -526,7 +508,7 @@ export function ImageUploader() {
                   <span>Uploading…</span>
                   <span>{progress}%</span>
                 </div>
-                <Progress value={progress} className="h-1.5 bg-slate-700 [&>div]:bg-emerald-500" />
+                <Progress value={progress} className="h-1.5 bg-slate-700 [&>div]:bg-primary-500" />
               </div>
             )}
           </div>
@@ -565,7 +547,7 @@ export function ImageUploader() {
             <Button
               size="sm"
               variant="outline"
-              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              className="border-slate-700 text-slate-300 hover:border-primary-600 hover:text-primary-300"
               onClick={() => rotateWhileCrop(-90)}
             >
               <svg
@@ -585,7 +567,7 @@ export function ImageUploader() {
             <Button
               size="sm"
               variant="outline"
-              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              className="border-slate-700 text-slate-300 hover:border-primary-600 hover:text-primary-300"
               onClick={() => rotateWhileCrop(90)}
             >
               <svg
@@ -605,7 +587,7 @@ export function ImageUploader() {
             <Button
               size="sm"
               variant="outline"
-              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              className="border-slate-700 text-slate-300 hover:border-primary-600 hover:text-primary-300"
               onClick={() => flipWhileCrop(true, false)}
             >
               <FlipHorizontal />
@@ -613,7 +595,7 @@ export function ImageUploader() {
             <Button
               size="sm"
               variant="outline"
-              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              className="border-slate-700 text-slate-300 hover:border-primary-600 hover:text-primary-300"
               onClick={() => flipWhileCrop(false, true)}
             >
               <FlipVertical />
@@ -624,7 +606,7 @@ export function ImageUploader() {
               <Button
                 size="sm"
                 variant="outline"
-                className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+                className="border-slate-700 text-slate-300 hover:border-primary-600 hover:text-primary-300"
                 onClick={() => setIsCropping(true)}
               >
                 <svg
@@ -679,7 +661,7 @@ export function ImageUploader() {
         <DialogFooter className="px-6 pb-6 gap-2">
           {file && !isCropping && (
             <Button
-              className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 shadow-[0_0_20px_rgba(52,211,153,0.3)]
+              className="bg-primary-600 hover:bg-primary-500 text-white px-6 shadow-[0_0_20px_rgba(52,211,153,0.3)]
                            disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={uploading || isCropping}
               onClick={onUpload}
@@ -704,7 +686,7 @@ export function ImageUploader() {
                   Uploading…
                 </span>
               ) : (
-                'Upload'
+                "Upload"
               )}
             </Button>
           )}

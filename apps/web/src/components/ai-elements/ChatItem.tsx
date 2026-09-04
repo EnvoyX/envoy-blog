@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Link, useNavigate } from '@tanstack/react-router';
-import { MessageSquare, Trash2, Edit2, Loader2, MoreVertical } from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { MessageSquare, Trash2, Edit2, Loader2, MoreVertical } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import {
   AlertDialog,
@@ -14,8 +14,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 // import { formatDistanceToNow } from 'date-fns'
 import {
   Dialog,
@@ -24,21 +24,21 @@ import {
   DialogTitle,
   DialogFooter,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { updateChatTitleFn, deleteChatFn } from '@/data/chat-ai';
-import { Chat } from '@/generated/prisma/client';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { updateChatTitleFn, deleteChatFn } from "@/data/chat-ai";
+import { Chat } from "@/generated/prisma/client";
 
 export function ChatItem({ chat }: { chat: Chat }) {
   const queryClient = useQueryClient();
-  const [newTitle, setNewTitle] = useState(chat.title || '');
+  const [newTitle, setNewTitle] = useState(chat.title || "");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -47,8 +47,8 @@ export function ChatItem({ chat }: { chat: Chat }) {
   const updateMutation = useMutation({
     mutationFn: updateChatTitleFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['chats'] });
-      toast.success('Updated chat successfully!');
+      queryClient.invalidateQueries({ queryKey: ["chats"] });
+      toast.success("Updated chat successfully!");
       setIsEditDialogOpen(false);
     },
   });
@@ -56,14 +56,14 @@ export function ChatItem({ chat }: { chat: Chat }) {
   const deleteMutation = useMutation({
     mutationFn: deleteChatFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      queryClient.invalidateQueries({ queryKey: ["chats"] });
       navigate({
-        to: '/chat/$adapter',
+        to: "/chat/$adapter",
         params: {
-          adapter: 'openrouter',
+          adapter: "openrouter",
         },
       });
-      toast.success('Delete chat successfully!');
+      toast.success("Delete chat successfully!");
     },
   });
 
@@ -73,14 +73,14 @@ export function ChatItem({ chat }: { chat: Chat }) {
         to="/chat/$adapter/$chatId"
         params={{ chatId: chat.id, adapter: chat.model as string }}
         search={{
-          model: chat.recentModel ?? '',
+          model: chat.recentModel ?? "",
         }}
-        activeProps={{ className: 'bg-zinc-800/50 border-zinc-700 text-white' }}
+        activeProps={{ className: "bg-zinc-800/50 border-zinc-700 text-white" }}
         className="flex items-center justify-between gap-2 px-3 py-0 rounded-lg text-sm text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 transition-all border border-transparent"
       >
         <div className="flex items-center gap-3 truncate">
           <MessageSquare size={14} className="shrink-0 text-zinc-600" />
-          <span className="truncate">{chat.title || 'Untitled Chat'}</span>
+          <span className="truncate">{chat.title || "Untitled Chat"}</span>
         </div>
 
         <div className="flex items-center gap-1">
@@ -123,7 +123,7 @@ export function ChatItem({ chat }: { chat: Chat }) {
             {/* <DialogTrigger asChild>
               <button
                 onClick={(e) => e.preventDefault()} // prevent Link navigation
-                className="hidden group-hover:block p-1 hover:text-emerald-400 transition-colors"
+                className="hidden group-hover:block p-1 hover:text-primary-400 transition-colors"
               >
                 <Edit2 size={12} />
               </button>

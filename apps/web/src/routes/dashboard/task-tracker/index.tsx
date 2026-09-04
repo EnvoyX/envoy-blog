@@ -137,7 +137,7 @@ function RouteComponent() {
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/20 cursor-pointer">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm cursor-pointer">
               <Plus className="mr-2 h-4 w-4" /> Create New List
             </Button>
           </DialogTrigger>
@@ -231,7 +231,7 @@ function RouteComponent() {
       <main>
         {isPendingQuery ? (
           <div className="flex flex-col items-center justify-center h-64 gap-4">
-            <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+            <Loader2 className="h-8 w-8 animate-spin text-foreground" />
             <p className="text-zinc-500 animate-pulse">Loading your tasks...</p>
           </div>
         ) : (
@@ -240,20 +240,20 @@ function RouteComponent() {
               <h1 className="text-3xl font-extrabold tracking-tight text-white border-b-">
                 Active
               </h1>
-              <div className="absolute bottom-0 w-full h-0.5 bg-linear-to-r from-transparent via-emerald-500 to-transparent" />
+              <div className="absolute bottom-0 w-full h-0.5 bg-linear-to-r from-transparent via-zinc-500 to-transparent" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
               {activeTaskLists?.map((item) => (
                 <Card
                   key={item.id}
-                  className="group relative bg-zinc-900/50 border-zinc-800 hover:border-emerald-500/50 transition-all duration-300 overflow-hidden"
+                  className="group relative bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 transition-all duration-300 overflow-hidden"
                 >
-                  <div className="absolute top-0 left-0 w-1 h-full bg-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute top-0 left-0 w-1 h-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
 
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">
-                        <h3 className="text-lg font-bold text-zinc-100 group-hover:text-emerald-400 transition-colors truncate pr-4">
+                        <h3 className="text-lg font-bold text-zinc-100 group-hover:text-white transition-colors truncate pr-4">
                           {item.title}
                         </h3>
                         <Badge
@@ -336,8 +336,8 @@ function RouteComponent() {
                               }}
                               className="cursor-pointer "
                             >
-                              <CheckCircle2Icon className="mr-2 h-4 w-4 text-green-400!" />
-                              <span className="text-green-400!">Set Active</span>
+                              <CheckCircle2Icon className="mr-2 h-4 w-4 text-primary!" />
+                              <span className="text-primary!">Set Active</span>
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem
@@ -562,7 +562,7 @@ function RouteComponent() {
                         <Button
                           size="sm"
                           variant="secondary"
-                          className="h-8 w-8 p-0 bg-zinc-800 hover:bg-emerald-600 hover:text-white cursor-pointer"
+                          className="h-8 w-8 p-0 bg-zinc-800 hover:bg-primary hover:text-primary-foreground cursor-pointer"
                         >
                           <LogIn className="h-4 w-4" />
                         </Button>
@@ -591,14 +591,14 @@ function RouteComponent() {
                 {inactiveTaskLists?.map((item) => (
                   <Card
                     key={item.id}
-                    className="group relative bg-zinc-900/50 border-zinc-800 hover:border-emerald-500/50 transition-all duration-300 overflow-hidden opacity-60"
+                    className="group relative bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 transition-all duration-300 overflow-hidden opacity-60"
                   >
-                    <div className="absolute top-0 left-0 w-1 h-full bg-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute top-0 left-0 w-1 h-full bg-zinc-600 opacity-0 group-hover:opacity-100 transition-opacity" />
 
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
-                          <h3 className="text-lg font-bold text-zinc-100 group-hover:text-emerald-400 transition-colors truncate pr-4">
+                          <h3 className="text-lg font-bold text-zinc-100 group-hover:text-white transition-colors truncate pr-4">
                             {item.title}
                           </h3>
                           <Badge
@@ -679,8 +679,8 @@ function RouteComponent() {
                                 }}
                                 className="cursor-pointer "
                               >
-                                <CheckCircle2Icon className="mr-2 h-4 w-4 text-green-400!" />
-                                <span className="text-green-400!">Set Active</span>
+                                <CheckCircle2Icon className="mr-2 h-4 w-4 text-primary!" />
+                                <span className="text-primary!">Set Active</span>
                               </DropdownMenuItem>
                             )}
                             <DropdownMenuItem
@@ -896,7 +896,7 @@ function RouteComponent() {
                         <Button
                           size="sm"
                           variant="secondary"
-                          className="h-8 w-8 p-0 bg-zinc-800 hover:bg-emerald-600 hover:text-white cursor-not-allowed"
+                          className="h-8 w-8 p-0 bg-zinc-800 hover:bg-zinc-700 hover:text-white cursor-not-allowed"
                           disabled
                         >
                           <LogIn className="h-4 w-4" />

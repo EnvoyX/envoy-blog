@@ -129,7 +129,7 @@ function RouteComponent() {
                             onCheckedChange={field.handleChange}
                             aria-invalid={isInvalid}
                           />
-                          <p className="font-bold text-emerald-500">
+                          <p className="font-bold text-foreground">
                             {field.state.value ? "Show" : "Hidden"}
                           </p>
                         </div>
@@ -148,7 +148,7 @@ function RouteComponent() {
                   <Button
                     type="submit"
                     disabled={!canSubmit || isSubmitting}
-                    className="flex max-w-xs bg-emerald-500 hover:bg-emerald-600 text-white font-bold h-12 rounded-xl transition-all shadow-lg shadow-emerald-900/20 cursor-pointer"
+                    className="flex max-w-xs bg-primary hover:bg-primary/90 text-primary-foreground font-bold h-12 rounded-xl transition-all shadow-sm cursor-pointer"
                   >
                     {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
                     Save

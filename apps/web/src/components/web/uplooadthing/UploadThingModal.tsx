@@ -273,14 +273,14 @@ export function UploadThingModal() {
       }}
     >
       <DialogContent
-        className="max-w-2xl max-sm:max-w-sm bg-slate-900 border-emerald-900 text-slate-100 p-0 overflow-auto
-                     shadow-[0_0_60px_rgba(52,211,153,0.15)] "
+        className="max-w-2xl max-sm:max-w-sm bg-zinc-950 border-zinc-800 text-zinc-100 p-0 overflow-auto
+                     shadow-2xl"
       >
         <DialogHeader className="px-6 pt-6 pb-0">
-          <DialogTitle className="text-emerald-400 text-lg font-semibold">
+          <DialogTitle className="text-foreground text-lg font-semibold">
             Edit &amp; Upload
           </DialogTitle>
-          <DialogDescription className="text-slate-500 text-sm">
+          <DialogDescription className="text-zinc-400 text-sm">
             Crop or rotate your image before uploading.
           </DialogDescription>
         </DialogHeader>
@@ -293,16 +293,16 @@ export function UploadThingModal() {
               onDrop={onDrop}
               onDragOver={(e) => e.preventDefault()}
               onClick={() => fileInputRef.current?.click()}
-              className="relative border-2 border-dashed border-emerald-700 rounded-2xl p-14 text-center cursor-pointer
-                     hover:border-emerald-400 hover:bg-emerald-950/30 transition-all duration-300 group"
+              className="relative border-2 border-dashed border-zinc-800 rounded-2xl p-14 text-center cursor-pointer
+                     hover:border-zinc-600 hover:bg-zinc-900/50 transition-all duration-300 group"
             >
               <div className="flex flex-col items-center gap-3 pointer-events-none select-none">
                 <div
-                  className="w-16 h-16 rounded-2xl bg-emerald-900/60 flex items-center justify-center
-                            group-hover:scale-110 transition-transform duration-300 ring-1 ring-emerald-700"
+                  className="w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center
+                            group-hover:scale-110 transition-transform duration-300 ring-1 ring-zinc-800"
                 >
                   <svg
-                    className="w-8 h-8 text-emerald-400"
+                    className="w-8 h-8 text-zinc-200"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -316,8 +316,8 @@ export function UploadThingModal() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-emerald-300 font-semibold">Drop an image here</p>
-                  <p className="text-slate-500 text-sm mt-1">
+                  <p className="text-zinc-200 font-semibold">Drop an image here</p>
+                  <p className="text-zinc-500 text-sm mt-1">
                     or click to browse · PNG, JPG, GIF, WebP up to 32 MB
                   </p>
                 </div>
@@ -382,7 +382,7 @@ export function UploadThingModal() {
               )}
               {editedSrc && !isCropping && (
                 <div className="absolute bottom-2 right-2">
-                  <Badge className="bg-emerald-700 text-emerald-100 text-xs">Edits applied</Badge>
+                  <Badge className="bg-zinc-800 text-zinc-200 text-xs">Edits applied</Badge>
                 </div>
               )}
             </div>
@@ -392,7 +392,7 @@ export function UploadThingModal() {
               <Button
                 size="sm"
                 variant="outline"
-                className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+                className="border-slate-700 text-slate-300 hover:border-zinc-500 hover:text-zinc-200"
                 onClick={() => rotate(-90)}
               >
                 <svg
@@ -413,7 +413,7 @@ export function UploadThingModal() {
               <Button
                 size="sm"
                 variant="outline"
-                className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+                className="border-slate-700 text-slate-300 hover:border-zinc-500 hover:text-zinc-200"
                 onClick={() => rotate(90)}
               >
                 <svg
@@ -436,7 +436,7 @@ export function UploadThingModal() {
 
               <Button
                 size="sm"
-                className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 onClick={() => {
                   setFile(null);
                   resetEdits();
@@ -449,7 +449,7 @@ export function UploadThingModal() {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+                  className="border-slate-700 text-slate-300 hover:border-zinc-500 hover:text-zinc-200"
                   onClick={() => setIsCropping(true)}
                 >
                   <svg
@@ -471,7 +471,7 @@ export function UploadThingModal() {
                 <>
                   <Button
                     size="sm"
-                    className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
                     onClick={applyEdits}
                   >
                     Apply Crop
@@ -505,7 +505,7 @@ export function UploadThingModal() {
                   <span>Uploading…</span>
                   <span>{progress}%</span>
                 </div>
-                <Progress value={progress} className="h-1.5 bg-slate-700 [&>div]:bg-emerald-500" />
+                <Progress value={progress} className="h-1.5 bg-zinc-800 [&>div]:bg-primary" />
               </div>
             )}
           </div>
@@ -545,7 +545,7 @@ export function UploadThingModal() {
             <Button
               size="sm"
               variant="outline"
-              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              className="border-slate-700 text-slate-300 hover:border-zinc-500 hover:text-zinc-200"
               onClick={() => rotateWhileCrop(-90)}
             >
               <svg
@@ -565,7 +565,7 @@ export function UploadThingModal() {
             <Button
               size="sm"
               variant="outline"
-              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              className="border-slate-700 text-slate-300 hover:border-zinc-500 hover:text-zinc-200"
               onClick={() => rotateWhileCrop(90)}
             >
               <svg
@@ -585,7 +585,7 @@ export function UploadThingModal() {
             <Button
               size="sm"
               variant="outline"
-              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              className="border-slate-700 text-slate-300 hover:border-zinc-500 hover:text-zinc-200"
               onClick={() => flipWhileCrop(true, false)}
             >
               <FlipHorizontal />
@@ -593,7 +593,7 @@ export function UploadThingModal() {
             <Button
               size="sm"
               variant="outline"
-              className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+              className="border-slate-700 text-slate-300 hover:border-zinc-500 hover:text-zinc-200"
               onClick={() => flipWhileCrop(false, true)}
             >
               <FlipVertical />
@@ -604,7 +604,7 @@ export function UploadThingModal() {
               <Button
                 size="sm"
                 variant="outline"
-                className="border-slate-700 text-slate-300 hover:border-emerald-600 hover:text-emerald-300"
+                className="border-slate-700 text-slate-300 hover:border-zinc-500 hover:text-zinc-200"
                 onClick={() => setIsCropping(true)}
               >
                 <svg
@@ -659,7 +659,7 @@ export function UploadThingModal() {
         <DialogFooter className="px-6 pb-6 gap-2">
           {file && !isCropping && (
             <Button
-              className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 shadow-[0_0_20px_rgba(52,211,153,0.3)]
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 shadow-sm
                            disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={uploading || isCropping}
               onClick={onUpload}

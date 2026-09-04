@@ -101,7 +101,7 @@ function BlogPageComponent() {
             <Button
               asChild
               size="lg"
-              className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 shadow-lg shadow-emerald-500/20 cursor-pointer"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 shadow-sm cursor-pointer"
             >
               <Link to="/dashboard/blog/create-blog" className="gap-2">
                 <Plus className="size-5" />
@@ -114,12 +114,12 @@ function BlogPageComponent() {
         <div className="flex max-sm:flex-col items-center max-sm:justify-center gap-4 mb-8">
           <div className="relative w-full  group">
             <div className="absolute inset-y-0 z-10 left-3 flex items-center  pointer-events-none">
-              <Search className="size-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+              <Search className="size-4 text-zinc-500 group-focus-within:text-zinc-200 transition-colors" />
             </div>
             <Input
               type="search"
               placeholder="Search blogs..."
-              className="pl-10 bg-emerald-900/40  focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
+              className="pl-10 bg-zinc-900/40 border border-zinc-800 focus-visible:ring-zinc-600 focus-visible:border-zinc-600 backdrop-blur-sm transition-all"
               onChange={(e) => {
                 debouncedSearch(e.target.value);
               }}

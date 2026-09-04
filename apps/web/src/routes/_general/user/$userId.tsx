@@ -176,7 +176,7 @@ function PublicProfileComponent() {
   return (
     <main className="max-w-7xl mx-auto py-12 px-6 min-h-screen text-slate-200">
       <header className="mb-12 flex flex-col md:flex-row items-center gap-8 pb-12 ">
-        <div className="size-40 rounded-3xl overflow-hidden bg-linear-to-br from-emerald-500 to-slate-600 p-1 shadow-2xl shadow-emerald-500/10 shrink-0">
+        <div className="size-40 rounded-3xl overflow-hidden bg-linear-to-br from-zinc-700 to-zinc-900 p-1 border border-zinc-800 shadow-2xl shrink-0">
           <div className="w-full h-full rounded-3xl bg-slate-950 flex items-center justify-center overflow-hidden">
             {user?.image || user?.defaultImage ? (
               <Avatar className="size-40 shrink-0 after:border-none!">
@@ -250,21 +250,21 @@ function PublicProfileComponent() {
             </div>
           )}
           <div className="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
-            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium">
+            <span className="px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-medium">
               {userBlogs?.length} Blogs
             </span>
-            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium">
+            <span className="px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-medium">
               {userPosts?.length} Posts
             </span>
-            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium flex items-center gap-1">
+            <span className="px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-medium flex items-center gap-1">
               <ImagesIcon className="size-4" />
               <p>{userImages?.length} Images</p>
             </span>
-            <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium flex items-center gap-1">
+            <span className="px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-medium flex items-center gap-1">
               <ImageIcon className="size-4" />
               <p>{userAlbums?.length} Albums</p>
             </span>
-            <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium">
+            <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
               Verified
             </span>
           </div>

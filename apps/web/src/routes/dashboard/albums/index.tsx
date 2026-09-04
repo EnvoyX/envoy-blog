@@ -52,7 +52,7 @@ function RouteComponent() {
           </h2>
           <Button
             size="lg"
-            className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 transition-all duration-300 shadow-sm group active:scale-95 cursor-pointer"
             onClick={() => {
               toggleDialog('open', '');
               setInitialValues({
@@ -89,12 +89,12 @@ function RouteComponent() {
               });
             }}
           >
-            <div className="aspect-square w-full rounded-2xl border-2 border-dashed border-emerald-800 flex items-center justify-center bg-transparent group-hover:bg-slate-900/50 group-hover:border-emerald-500 transition-all cursor-pointer">
+            <div className="aspect-square w-full rounded-2xl border-2 border-dashed border-border flex items-center justify-center bg-transparent group-hover:bg-muted/50 group-hover:border-foreground/50 transition-all cursor-pointer">
               <button className="flex flex-col items-center gap-2 cursor-pointer">
-                <div className="size-10 rounded-full bg-slate-900 flex items-center justify-center group-hover:bg-emerald-500/20 group-hover:text-emerald-500 transition-colors">
+                <div className="size-10 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                   <FolderIcon className="size-5" />
                 </div>
-                <span className="text-xs font-bold text-slate-200 group-hover:text-slate-400">
+                <span className="text-xs font-bold text-foreground group-hover:text-muted-foreground">
                   New Album
                 </span>
               </button>

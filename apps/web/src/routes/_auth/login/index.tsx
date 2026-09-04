@@ -83,12 +83,12 @@ function RouteComponent() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-transparent rounded-lg">
         <div className="relative z-10 flex flex-col items-center">
           <div className="relative h-16 w-16">
-            <div className="absolute inset-0 rounded-full border-4 border-emerald-500/20" />
-            <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin" />
+            <div className="absolute inset-0 rounded-full border-4 border-white/20" />
+            <div className="absolute inset-0 rounded-full border-4 border-white border-t-transparent animate-spin" />
           </div>
 
           <div className="mt-8 space-y-3 flex flex-col items-center">
-            <p className="text-lg font-semibold animate-pulse text-emerald-500">Redirecting...</p>
+            <p className="text-lg font-semibold animate-pulse text-zinc-200">Redirecting...</p>
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@ function RouteComponent() {
   }
 
   return (
-    <Card className="max-w-md w-full bg-emerald-950">
+    <Card className="max-w-md w-full bg-zinc-950/80 border-zinc-800 shadow-2xl backdrop-blur-xl">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>Sign in to continue</CardDescription>

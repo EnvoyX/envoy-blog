@@ -109,8 +109,8 @@ const STATUS_CONFIG: Record<
   DONE: {
     label: "Done",
     icon: <CheckCircle2 className="w-3.5 h-3.5" />,
-    color: "text-emerald-400",
-    bg: "bg-emerald-950/60 border-emerald-800/50",
+    color: "text-zinc-300",
+    bg: "bg-zinc-800/60 border-zinc-700/50",
   },
   CANCELLED: {
     label: "Cancelled",
@@ -500,7 +500,7 @@ function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
         className={`absolute left-0 top-3 bottom-3 w-0.5 rounded-full transition-opacity
           ${
             task.status === "DONE"
-              ? "bg-emerald-500"
+              ? "bg-white"
               : task.status === "IN_PROGRESS"
                 ? "bg-sky-500"
                 : task.status === "CANCELLED"
@@ -747,7 +747,7 @@ function DesktopSidebar({
               </div>
               <div className="h-1.5 rounded-full bg-zinc-800 overflow-hidden">
                 <div
-                  className="h-full bg-emerald-500 rounded-full transition-all duration-700"
+                  className="h-full bg-white rounded-full transition-all duration-700"
                   style={{ width: `${pct}%` }}
                 />
               </div>
@@ -775,8 +775,8 @@ function DesktopSidebar({
                 {
                   label: "Done",
                   value: stats.done,
-                  color: "text-emerald-400",
-                  bg: "bg-emerald-950/30 border-emerald-800/30",
+                  color: "text-zinc-300",
+                  bg: "bg-zinc-800/30 border-zinc-700/30",
                 },
                 {
                   label: "Cancelled",
@@ -1004,7 +1004,7 @@ export function TaskListPage({ taskListId }: { taskListId: string }) {
                             style={{ width: 120 }}
                           >
                             <div
-                              className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                              className="h-full bg-white rounded-full transition-all duration-500"
                               style={{
                                 width: `${stats.total ? (stats.done / stats.total) * 100 : 0}%`,
                               }}

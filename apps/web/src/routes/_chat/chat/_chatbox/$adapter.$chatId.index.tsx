@@ -78,7 +78,7 @@ function CopyButton({ content }: { content: string }) {
 
   return (
     <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8 px-2 text-zinc-400">
-      {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+      {copied ? <Check size={14} className="text-zinc-200" /> : <Copy size={14} />}
       <span className="ml-2 text-xs">{copied ? 'Copied' : 'Copy'}</span>
     </Button>
   );
@@ -223,7 +223,7 @@ function RouteComponent() {
           className="flex-1 flex overflow-y-auto scrollbar-hide space-y-8 py-8 px-4 items-center justify-center"
           key={chatId}
         >
-          <Loader2 className="animate-spin size-12 text-emerald-500" />
+          <Loader2 className="animate-spin size-12 text-zinc-200" />
         </div>
 
         <footer className="p-4 bg-linear-to-t from-[#09090b] via-[#09090b] to-transparent">
@@ -280,7 +280,7 @@ function RouteComponent() {
                 <div
                   className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${
                     message.role === 'assistant'
-                      ? 'bg-emerald-600/10 border-emerald-500/20 text-emerald-400'
+                      ? 'bg-zinc-800 border-zinc-700 text-zinc-300'
                       : 'bg-zinc-800 border-zinc-700 text-zinc-300'
                   }`}
                 >
@@ -305,7 +305,7 @@ function RouteComponent() {
                     className={`relative px-4 py-3 rounded-2xl border ${
                       message.role === 'assistant'
                         ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full'
-                        : 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/10'
+                        : 'bg-primary text-primary-foreground border-primary/80 shadow-lg shadow-black/20'
                     }`}
                   >
                     <div className="prose prose-invert prose-sm sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
@@ -338,7 +338,7 @@ function RouteComponent() {
                               className={cn(
                                 'whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800',
                                 {
-                                  'bg-emerald-600 border-none':
+                                  'bg-primary border-none text-primary-foreground':
                                     message.role === 'user',
                                 },
                               )}
@@ -384,7 +384,7 @@ function RouteComponent() {
               <div
                 className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${
                   message.role === 'assistant'
-                    ? 'bg-emerald-600/10 border-emerald-500/20 text-emerald-400'
+                    ? 'bg-zinc-800 border-zinc-700 text-zinc-200'
                     : 'bg-zinc-800 border-zinc-700 text-zinc-300'
                 }`}
               >
@@ -406,7 +406,7 @@ function RouteComponent() {
                   className={`relative px-4 py-3 rounded-2xl border ${
                     message.role === 'assistant'
                       ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full'
-                      : 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/10'
+                      : 'bg-primary text-primary-foreground border-primary shadow-sm'
                   }`}
                 >
                   <div className="prose prose-invert prose-sm sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
@@ -455,7 +455,7 @@ function RouteComponent() {
                             className={cn(
                               'whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800',
                               {
-                                'bg-emerald-600 border-none': message.role === 'user',
+                                'bg-primary text-primary-foreground border-none': message.role === 'user',
                               },
                             )}
                           >

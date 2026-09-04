@@ -21,7 +21,7 @@ export function HeaderSection() {
       >
         <motion.h3
           style={{ opacity, x }}
-          className="text-6xl max-sm:text-4xl  font-bold text-emerald-500 text-center"
+          className="text-6xl max-sm:text-4xl font-bold text-zinc-400 text-center"
         >
           About
         </motion.h3>

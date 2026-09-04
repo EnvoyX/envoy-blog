@@ -69,10 +69,10 @@ function RouteComponent() {
       <Navbar user={user as User} />
       <main className="min-h-screen w-full flex flex-col gap-4 items-center justify-center px-16 max-sm:px-8 md:p-12 overflow-y-auto">
         <div className="relative z-10 text-center mt-16 mb-16 space-y-4">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-emerald-600">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
             Let's Chat!
           </h1>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto">
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
             Choose a provider to start a new conversation.
           </p>
         </div>
@@ -100,7 +100,7 @@ function RouteComponent() {
           ))}
         </div>
 
-        <div className="mt-20 text-emerald-600 text-xs tracking-widest uppercase">
+        <div className="mt-20 text-muted-foreground text-xs tracking-widest uppercase">
           Powered by TanStack AI
         </div>
       </main>

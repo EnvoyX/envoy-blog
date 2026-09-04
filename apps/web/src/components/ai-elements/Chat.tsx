@@ -1,19 +1,19 @@
-import { useChat, fetchServerSentEvents } from '@tanstack/ai-react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { UseNavigateResult } from '@tanstack/react-router';
-import { Bot, Check, Copy, Loader, RepeatIcon, User } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import { toast } from 'sonner';
+import { useChat, fetchServerSentEvents } from "@tanstack/ai-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { UseNavigateResult } from "@tanstack/react-router";
+import { Bot, Check, Copy, Loader, RepeatIcon, User } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
-import { saveAssistantMessageFn } from '@/data/chat-ai';
-import { getUser } from '@/data/session';
-import { cn } from '@/lib/utils';
+import { saveAssistantMessageFn } from "@/data/chat-ai";
+import { getUser } from "@/data/session";
+import { cn } from "@/lib/utils";
 
-import { Button } from '../ui/button';
-import HeaderChat from '../web/HeaderChat';
-import { MarkdownRenderer } from '../web/markdown/Markdown';
-import { UserAvatar } from '../web/user-profile';
-import { ChatInput } from './ChatInput';
+import { Button } from "../ui/button";
+import HeaderChat from "../web/HeaderChat";
+import { MarkdownRenderer } from "../web/markdown/Markdown";
+import { UserAvatar } from "../web/user-profile";
+import { ChatInput } from "./ChatInput";
 
 function CopyButton({ content }: { content: string }) {
   const [copied, setCopied] = useState(false);
@@ -26,8 +26,8 @@ function CopyButton({ content }: { content: string }) {
 
   return (
     <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8 px-2 text-zinc-400">
-      {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
-      <span className="ml-2 text-xs">{copied ? 'Copied' : 'Copy'}</span>
+      {copied ? <Check size={14} className="text-primary-500" /> : <Copy size={14} />}
+      <span className="ml-2 text-xs">{copied ? "Copied" : "Copy"}</span>
     </Button>
   );
 }
@@ -40,17 +40,17 @@ export function Chat({
   navigate,
 }: {
   apiRoute: string;
-  providerAdapter: 'openrouter' | 'gemini' | 'groq';
+  providerAdapter: "openrouter" | "gemini" | "groq";
   chatId: string;
   selectedModel: string | undefined;
-  navigate: UseNavigateResult<'/chat/$adapter/'>;
+  navigate: UseNavigateResult<"/chat/$adapter/">;
 }) {
   const [targetMessageIds, setTargetMessageIds] = useState<Set<string>>(new Set());
   const currentModel = selectedModel;
   const queryClient = useQueryClient();
   const scrollRef = useRef<HTMLDivElement>(null);
   const { data } = useQuery({
-    queryKey: ['get-session'],
+    queryKey: ["get-session"],
     queryFn: async () => {
       const data = await getUser();
       return data;
@@ -58,16 +58,16 @@ export function Chat({
   });
   const { mutate } = useMutation({
     mutationFn: saveAssistantMessageFn,
-    mutationKey: ['saveAssistantMessage'],
+    mutationKey: ["saveAssistantMessage"],
     onError: (err) => {
-      console.error('Failed to sync parts:', err.message);
+      console.error("Failed to sync parts:", err.message);
     },
     onSettled: () => {
       // console.log('Assistant message synced with parts!')
-      void queryClient.invalidateQueries({ queryKey: ['chat', chatId] });
-      void queryClient.invalidateQueries({ queryKey: ['chats'] });
+      void queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
+      void queryClient.invalidateQueries({ queryKey: ["chats"] });
       void navigate({
-        to: '/chat/$adapter/$chatId',
+        to: "/chat/$adapter/$chatId",
         params: {
           adapter: providerAdapter,
           chatId: `chat-${chatId}`,
@@ -108,37 +108,37 @@ export function Chat({
       providerAdapter, // provider e.g gemini, openrouter, groq
     },
     onError(error) {
-      toast.error('Error has been occured', {
+      toast.error("Error has been occured", {
         description:
-          'Please try again or try use different model. The model you used may not available right now.',
+          "Please try again or try use different model. The model you used may not available right now.",
         duration: 5000,
       });
       console.error(error.message);
       void navigate({
-        to: '/chat/$adapter/$chatId',
+        to: "/chat/$adapter/$chatId",
         params: {
           adapter: providerAdapter,
           chatId: `chat-${chatId}`,
         },
         search: {
-          model: '',
+          model: "",
         },
       });
     },
     onFinish: (message) => {
       // console.log('Message from Client: ', message)
-      console.log('Adapter', providerAdapter);
+      console.log("Adapter", providerAdapter);
       mutate({
         data: {
           chatId: `chat-${chatId}`,
           messageId: message.id,
           parts: message.parts,
           role:
-            message.role === 'assistant'
-              ? 'ASSISTANT'
-              : message.role === 'system'
-                ? 'SYSTEM'
-                : 'USER',
+            message.role === "assistant"
+              ? "ASSISTANT"
+              : message.role === "system"
+                ? "SYSTEM"
+                : "USER",
           model: providerAdapter,
           recentModel: currentModel,
         },
@@ -147,7 +147,7 @@ export function Chat({
   });
   function onSend(input: string) {
     if (!currentModel) {
-      toast.error('Select the model first!');
+      toast.error("Select the model first!");
       return;
     }
     void sendMessage(input);
@@ -187,17 +187,17 @@ export function Chat({
             <div
               key={message.id}
               className={`flex gap-4 group animate-in fade-in slide-in-from-bottom-2 duration-300 ${
-                message.role === 'assistant' ? 'items-start' : 'items-start flex-row-reverse'
+                message.role === "assistant" ? "items-start" : "items-start flex-row-reverse"
               }`}
             >
               <div
                 className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${
-                  message.role === 'assistant'
-                    ? 'bg-emerald-600/10 border-emerald-500/20 text-emerald-400'
-                    : 'bg-zinc-800 border-zinc-700 text-zinc-300'
+                  message.role === "assistant"
+                    ? "bg-primary-600/10 border-primary-500/20 text-primary-400"
+                    : "bg-zinc-800 border-zinc-700 text-zinc-300"
                 }`}
               >
-                {message.role === 'assistant' ? (
+                {message.role === "assistant" ? (
                   <Bot size={16} />
                 ) : data?.user ? (
                   <UserAvatar src={data?.user.image as string} alt={data?.user.name as string} />
@@ -208,19 +208,19 @@ export function Chat({
 
               <div
                 className={`flex flex-col max-w-[85%] space-y-2 ${
-                  message.role === 'user' ? 'items-end' : 'items-start'
+                  message.role === "user" ? "items-end" : "items-start"
                 }`}
               >
                 <div
                   className={`relative px-4 py-3 rounded-2xl border ${
-                    message.role === 'assistant'
-                      ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full'
-                      : 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/10'
+                    message.role === "assistant"
+                      ? "bg-zinc-900/50 border-zinc-800 text-zinc-200 w-full"
+                      : "bg-primary-600 text-white border-primary-500 shadow-lg shadow-primary-600/10"
                   }`}
                 >
                   <div className="prose prose-invert prose-sm sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
                     {message.parts.map((part, idx) => {
-                      if (part.type === 'thinking') {
+                      if (part.type === "thinking") {
                         return (
                           <div
                             key={idx}
@@ -232,22 +232,22 @@ export function Chat({
                         );
                       }
 
-                      if (part.type === 'text' && !targetMessageIds.has(message.id)) {
+                      if (part.type === "text" && !targetMessageIds.has(message.id)) {
                         return (
                           <MarkdownRenderer
-                            markdown={part.content || '*Nothing to preview...*'}
+                            markdown={part.content || "*Nothing to preview...*"}
                             key={idx}
                           />
                         );
                       }
 
-                      if (part.type === 'text' && targetMessageIds.has(message.id)) {
+                      if (part.type === "text" && targetMessageIds.has(message.id)) {
                         return (
                           <pre
                             className={cn(
-                              'whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800',
+                              "whitespace-pre-wrap font-mono text-[13px] bg-zinc-950 p-3 rounded-lg border border-zinc-800",
                               {
-                                'bg-emerald-600 border-none': message.role === 'user',
+                                "bg-primary-600 border-none": message.role === "user",
                               },
                             )}
                           >
@@ -260,16 +260,16 @@ export function Chat({
                     })}
                   </div>
                 </div>
-                {message.role === 'assistant' &&
+                {message.role === "assistant" &&
                   !isLoading && (
                     // note: add opacity-0 && group-hover:opacity-100 for better ui
                     <div className="flex items-center gap-2 mt-2 transition-opacity">
                       <CopyButton
                         content={message.parts
                           .map((part) => {
-                            if (part.type === 'text') return part.content;
+                            if (part.type === "text") return part.content;
                           })
-                          .join('')}
+                          .join("")}
                       />
 
                       <Button

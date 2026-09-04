@@ -73,28 +73,28 @@ function RouteComponent() {
     ...quranTrackerOptions(),
   });
   return (
-    <div className="min-h-screen  text-zinc-100 selection:bg-emerald-500/30">
+    <div className="min-h-screen text-foreground selection:bg-foreground selection:text-background">
       <div className="max-w-4xl mx-auto px-6 py-12">
         <header className="space-y-2 mb-10">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-1 bg-emerald-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
-            <h1 className="text-4xl font-black tracking-tight text-white">Qur'an Tracker</h1>
+            <div className="h-8 w-1 bg-primary rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" />
+            <h1 className="text-4xl font-black tracking-tight text-foreground">Qur'an Tracker</h1>
           </div>
-          <p className="text-zinc-400 text-lg">Monitor your spiritual journey with precision.</p>
+          <p className="text-muted-foreground text-lg">Monitor your spiritual journey with precision.</p>
         </header>
 
         <Tabs defaultValue="saved-progress" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-zinc-900/50 border border-zinc-800 p-1 backdrop-blur-xl h-12">
             <TabsTrigger
               value="saved-progress"
-              className="gap-2 data-[state=active]:bg-zinc-800 data-[state=active]:text-emerald-400 transition-all"
+              className="gap-2 data-[state=active]:bg-zinc-800 data-[state=active]:text-foreground transition-all"
             >
               <Save className="size-4" />
               Overview
             </TabsTrigger>
             <TabsTrigger
               value="update-progress"
-              className="gap-2 data-[state=active]:bg-zinc-800 data-[state=active]:text-emerald-400 transition-all"
+              className="gap-2 data-[state=active]:bg-zinc-800 data-[state=active]:text-foreground transition-all"
             >
               <Pencil className="size-4" />
               Update
@@ -106,7 +106,7 @@ function RouteComponent() {
             className="mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500"
           >
             <Card className="bg-zinc-900/40 border-zinc-800 backdrop-blur-md shadow-2xl overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-0.5 bg-linear-to-r from-transparent via-emerald-500/50 to-transparent" />
+              <div className="absolute top-0 left-0 w-full h-0.5 bg-linear-to-r from-transparent via-zinc-600 to-transparent" />
               <CardHeader>
                 <CardTitle className="text-xl text-zinc-200">Spiritual Momentum</CardTitle>
                 <CardDescription className="text-zinc-500">
@@ -116,7 +116,7 @@ function RouteComponent() {
               <CardContent className="space-y-6">
                 {isPendingQuery ? (
                   <div className="flex justify-center py-12">
-                    <Loader2 className="size-8 animate-spin text-emerald-500" />
+                    <Loader2 className="size-8 animate-spin text-foreground" />
                   </div>
                 ) : (
                   <>
@@ -124,13 +124,13 @@ function RouteComponent() {
                       <div className="relative group overflow-hidden rounded-2xl bg-zinc-800/30 border border-zinc-700/50 p-6 transition-all hover:bg-zinc-800/50">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm font-medium text-emerald-500 mb-1">STREAK</p>
-                            <h3 className="text-5xl font-black text-white leading-none">
+                            <p className="text-sm font-medium text-muted-foreground mb-1">STREAK</p>
+                            <h3 className="text-5xl font-black text-foreground leading-none">
                               {progress?.currentStreak ?? "0"}{" "}
-                              <span className="text-2xl text-emerald-500/80">days</span>
+                              <span className="text-2xl text-muted-foreground">days</span>
                             </h3>
                           </div>
-                          <div className="h-12 w-12 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+                          <div className="h-12 w-12 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700 shadow-sm">
                             <span className="text-2xl">🔥</span>
                           </div>
                         </div>
@@ -192,7 +192,7 @@ function RouteComponent() {
 
           <TabsContent value="update-progress" className="mt-6">
             <Card className="bg-zinc-900/40 border-zinc-800 backdrop-blur-md shadow-2xl overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-0.5 bg-linear-to-r from-transparent via-emerald-500/50 to-transparent" />
+              <div className="absolute top-0 left-0 w-full h-0.5 bg-linear-to-r from-transparent via-zinc-600 to-transparent" />
               <CardHeader>
                 <CardTitle className="text-xl text-zinc-200">Log Progress</CardTitle>
               </CardHeader>

@@ -1,26 +1,26 @@
-import { createId } from '@paralleldrive/cuid2';
-import { eq, useLiveQuery } from '@tanstack/react-db';
-import { Link } from '@tanstack/react-router';
-import { formatDistanceToNow } from 'date-fns';
+import { createId } from "@paralleldrive/cuid2";
+import { eq, useLiveQuery } from "@tanstack/react-db";
+import { Link } from "@tanstack/react-router";
+import { formatDistanceToNow } from "date-fns";
 import {
   Heart,
   MessageSquare,
   // MoreHorizontal,
-} from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
-import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-import { commentCollection, likeCollection } from '@/collections/post';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User } from '@/generated/prisma/client';
-import { ShortPostPublic } from '@/lib/types';
-import { cn } from '@/lib/utils';
-import { useImageStore } from '@/store/image';
+import { commentCollection, likeCollection } from "@/collections/post";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User } from "@/generated/prisma/client";
+import { ShortPostPublic } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { useImageStore } from "@/store/image";
 
-import MasonryCollage from './MasonryCollage';
-import PostCollage from './PostCollage';
-import { PostLightBox } from './PostLightBox';
+import MasonryCollage from "./MasonryCollage";
+import PostCollage from "./PostCollage";
+import { PostLightBox } from "./PostLightBox";
 
 export function ShortPostCard({ post, user }: { post: ShortPostPublic; user: User | null }) {
   const [expanded, setExpanded] = useState(false);
@@ -32,7 +32,7 @@ export function ShortPostCard({ post, user }: { post: ShortPostPublic; user: Use
     q
       .from({ comment: commentCollection })
       .where(({ comment }) => eq(comment.shortPostId, post?.id))
-      .orderBy(({ comment }) => comment.createdAt, 'desc'),
+      .orderBy(({ comment }) => comment.createdAt, "desc"),
   );
 
   // lightbox states & variables
@@ -70,7 +70,7 @@ export function ShortPostCard({ post, user }: { post: ShortPostPublic; user: Use
   return (
     <div
       className={cn(
-        'group relative p-5 rounded-2xl bg-slate-950/40 border border-slate-800 hover:border-slate-700 transition-all space-y-4',
+        "group relative p-5 rounded-2xl bg-slate-950/40 border border-slate-800 hover:border-slate-700 transition-all space-y-4",
       )}
     >
       <Link
@@ -87,12 +87,12 @@ export function ShortPostCard({ post, user }: { post: ShortPostPublic; user: Use
           >
             <figure className="cursor-pointer">
               <Avatar className="h-10 w-10 border border-slate-800">
-                <AvatarImage src={post.author.image ?? ''} />
+                <AvatarImage src={post.author.image ?? ""} />
                 <AvatarFallback>
                   {post.author.name
-                    .split(' ')
+                    .split(" ")
                     .map((n) => n[0])
-                    .join('')}
+                    .join("")}
                 </AvatarFallback>
               </Avatar>
             </figure>
@@ -132,18 +132,18 @@ export function ShortPostCard({ post, user }: { post: ShortPostPublic; user: Use
           ) : (
             <motion.div
               key="masonry"
-              initial={{ opacity: 0, height: 'auto' }}
-              animate={{ opacity: 1, height: 'auto' }}
+              initial={{ opacity: 0, height: "auto" }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0 }}
               className="relative"
             >
               <div className="flex justify-end items-center mb-2 px-1">
-                {/*<span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
+                {/*<span className="text-[10px] font-bold text-primary uppercase tracking-widest">
                   Full Gallery View
                 </span>*/}
                 <button
                   onClick={() => setExpanded(false)}
-                  className="text-[10px] font-bold text-emerald-500  hover:text-slate-500 transition-colors uppercase tracking-widest cursor-pointer"
+                  className="text-[10px] font-bold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest cursor-pointer"
                 >
                   Collapse ↑
                 </button>
@@ -156,7 +156,7 @@ export function ShortPostCard({ post, user }: { post: ShortPostPublic; user: Use
               <div className="flex justify-end items-center mt-2 px-1">
                 <button
                   onClick={() => setExpanded(false)}
-                  className="text-[10px] font-bold text-emerald-500  hover:text-slate-500 transition-colors uppercase tracking-widest cursor-pointer"
+                  className="text-[10px] font-bold text-zinc-400 hover:text-zinc-200 transition-colors uppercase tracking-widest cursor-pointer"
                 >
                   Collapse ↑
                 </button>
@@ -168,14 +168,14 @@ export function ShortPostCard({ post, user }: { post: ShortPostPublic; user: Use
 
       <div className="relative z-20 flex items-center gap-6 pt-2">
         <button
-          className={`flex items-center gap-2 text-slate-500 hover:text-emerald-500 transition-colors group/stat ${user ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+          className={`flex items-center gap-2 text-zinc-500 hover:text-rose-400 transition-colors group/stat ${user ? "cursor-pointer" : "cursor-not-allowed"}`}
           onClick={(e) => {
             handleToggleLike();
             e.stopPropagation();
           }}
         >
-          <div className="p-1.5 rounded-full group-hover/stat:bg-emerald-500/10">
-            <Heart className={`size-4 ${hasLiked && 'fill-current text-emerald-500'}`} />
+          <div className="p-1.5 rounded-full group-hover/stat:bg-rose-500/10">
+            <Heart className={`size-4 ${hasLiked && "fill-current text-rose-500"}`} />
           </div>
           <span className="text-xs font-semibold tabular-nums">{likes.length}</span>
         </button>
@@ -183,9 +183,9 @@ export function ShortPostCard({ post, user }: { post: ShortPostPublic; user: Use
         <Link
           to="/post/$postId"
           params={{ postId: post.id }}
-          className="flex items-center gap-2 text-slate-500 hover:text-blue-500 transition-colors group/stat cursor-pointer"
+          className="flex items-center gap-2 text-zinc-500 hover:text-zinc-200 transition-colors group/stat cursor-pointer"
         >
-          <div className="p-1.5 rounded-full group-hover/stat:bg-blue-500/10">
+          <div className="p-1.5 rounded-full group-hover/stat:bg-zinc-800">
             <MessageSquare className="size-4" />
           </div>
           <span className="text-xs font-semibold tabular-nums">{comments.length}</span>
