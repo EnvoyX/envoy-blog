@@ -96,7 +96,7 @@ function RouteComponent() {
   }
 
   return (
-    <Card className="max-w-md w-full bg-zinc-950/80 border-zinc-800 shadow-2xl backdrop-blur-xl">
+    <Card className="max-w-md w-full bg-zinc-950/80 border border-white/25 shadow-2xl backdrop-blur-xl">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>Sign in to continue</CardDescription>

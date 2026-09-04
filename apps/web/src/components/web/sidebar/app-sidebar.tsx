@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from '@tanstack/react-router';
 
 import {
   Sidebar,
@@ -8,13 +8,13 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarRail,
-} from "@/components/ui/sidebar";
-import { UserSession } from "@/data/session";
+} from '@/components/ui/sidebar';
+import { UserSession } from '@/data/session';
 
-import { navItemsDashboard, navSecondayItems } from "../NavItems";
-import { NavPrimary } from "./nav-primary";
-import { NavSecondary } from "./nav-secondary";
-import { NavUser } from "./nav-user";
+import { navItemsDashboard, navSecondayItems } from '../NavItems';
+import { NavPrimary } from './nav-primary';
+import { NavSecondary } from './nav-secondary';
+import { NavUser } from './nav-user';
 
 export function AppSidebar({ user }: UserSession) {
   return (
@@ -26,12 +26,9 @@ export function AppSidebar({ user }: UserSession) {
       <SidebarHeader>
         <SidebarMenu className="rounded-lg">
           <SidebarMenuButton size="lg" asChild className="">
-            <Link to="/" className="flex items-center hover:bg-sidebar-accent! font-mono">
+            <Link to="/" className="flex items-center hover:bg-sidebar-accent! font-mono gap-3">
               <div className="flex items-center justify-center aspect-square size-8">
-                <img
-                  src="https://tanstack.com/images/logos/logo-color-600.png"
-                  alt="TanStack Logo"
-                />
+                <img src="/tanstack-emblem-white@2x.png" alt="TanStack Start logo" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="font-bold">Envoy Mindpalace</span>
