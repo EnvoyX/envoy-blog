@@ -55,7 +55,7 @@ function RouteComponent() {
           <div className="flex items-center max-sm:mx-auto gap-2">
             <Button
               size="icon-lg"
-              className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 transition-all duration-300 shadow-sm group active:scale-95 cursor-pointer"
               onClick={() => toggleDialog("import", "")}
             >
               <div className="flex items-center gap-2">
@@ -64,7 +64,7 @@ function RouteComponent() {
             </Button>
             <Button
               size="icon-lg"
-              className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 transition-all duration-300 shadow-sm group active:scale-95 cursor-pointer"
               onClick={() => toggleImageDialog("bulk-edit")}
             >
               <div className="flex items-center gap-2">
@@ -73,7 +73,7 @@ function RouteComponent() {
             </Button>
             <Button
               size="icon-lg"
-              className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 transition-all duration-300 shadow-sm group active:scale-95 cursor-pointer"
               onClick={() =>
                 imageUploadModalStore.setState((prev) => ({
                   ...prev,

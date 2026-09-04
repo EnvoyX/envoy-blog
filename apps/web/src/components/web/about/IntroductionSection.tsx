@@ -31,8 +31,8 @@ export function IntroductionSection() {
           <h1 className="max-sm:text-2xl text-5xl font-black">Hello!</h1>
           <p className="max-sm:text-base text-2xl">
             I am a third year{' '}
-            <span className="text-emerald-400 font-bold">Mechanical Engineering</span> student at{' '}
-            <span className="text-emerald-400 font-bold">Institute of Technology Bandung</span> with
+            <span className="text-white font-bold underline underline-offset-4 decoration-zinc-700">Mechanical Engineering</span> student at{' '}
+            <span className="text-white font-bold underline underline-offset-4 decoration-zinc-700">Institute of Technology Bandung</span> with
             a strong focus on integrating industrial maintenance systems with information
             technology.
           </p>
@@ -44,9 +44,9 @@ export function IntroductionSection() {
           <p className="max-sm:text-base text-2xl">
             I'd pique my curiosity and interest in programming and computer science stuff, mostly
             learning it as my hobby. Now i'm currently learning{' '}
-            <span className="text-emerald-400 font-bold">web development</span>, and building
+            <span className="text-white font-bold underline underline-offset-4 decoration-zinc-700">web development</span>, and building
             projects to learn and grow as a developer. Beside web development, i'd also learning{' '}
-            <span className="text-emerald-400 font-bold">game development</span> in Unity and Godot.
+            <span className="text-white font-bold underline underline-offset-4 decoration-zinc-700">game development</span> in Unity and Godot.
           </p>
           <p className="max-sm:text-base text-2xl">
             Other than that, in my spare time, i'd like to read books, fiction or non-fiction.

@@ -79,24 +79,24 @@ export function UserFollowDialog({ follows, session }: FollowDialogProps) {
         }));
       }}
     >
-      <DialogContent className="sm:max-w-lg p-0 gap-0 overflow-hidden bg-slate-950 border-slate-800">
-        <DialogHeader className="p-4 border-b border-slate-900">
-          <DialogTitle className="text-center text-sm font-bold uppercase tracking-widest text-emerald-400">
+      <DialogContent className="sm:max-w-lg p-0 gap-0 overflow-hidden bg-zinc-950 border-zinc-800">
+        <DialogHeader className="p-4 border-b border-zinc-900">
+          <DialogTitle className="text-center text-sm font-bold uppercase tracking-widest text-foreground">
             Connections
           </DialogTitle>
         </DialogHeader>
 
         <Tabs defaultValue={initialTab} className="w-full">
-          <TabsList className="w-full justify-start rounded-none bg-transparent border-b border-slate-900 px-2 h-12">
+          <TabsList className="w-full justify-start rounded-none bg-transparent border-b border-zinc-900 px-2 h-12">
             <TabsTrigger
               value="followers"
-              className="flex-1 h-full data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-emerald-500 text-xs font-bold cursor-pointer rounded-lg"
+              className="flex-1 h-full data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary text-xs font-bold cursor-pointer rounded-lg"
             >
               {follows.filter((follow) => follow.followingId === currentUserId).length} Followers
             </TabsTrigger>
             <TabsTrigger
               value="following"
-              className="flex-1 h-full data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-emerald-500 text-xs font-bold cursor-pointer rounded-lg"
+              className="flex-1 h-full data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary text-xs font-bold cursor-pointer rounded-lg"
             >
               {follows.filter((follow) => follow.followerId === currentUserId).length} Following
             </TabsTrigger>
@@ -196,7 +196,7 @@ function UserList({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full w-full py-12">
-        <Loader2 className="size-8 text-emerald-500 animate-spin" />
+        <Loader2 className="size-8 text-primary animate-spin" />
       </div>
     );
   }

@@ -28,8 +28,8 @@ function RouteComponent() {
   return (
     <SidebarProvider open={isSidebarOpen} onOpenChange={(open) => toggleSidebar(open)}>
       <AppSidebar user={user} />
-      <SidebarInset className="bg-linear-to-b from-slate-950 to-emerald-500/40 selection:bg-emerald-500/30 bg-fixed">
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 ">
+      <SidebarInset className="bg-background selection:bg-foreground selection:text-background">
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b border-sidebar-border">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             {/*<Separator
@@ -38,8 +38,8 @@ function RouteComponent() {
             />*/}
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 bg-linear-to-b from-slate-950 to-emerald-500/40 selection:bg-emerald-500/30 bg-fixed">
-          <div className="min-h-screen bg-linear-to-br from-slate-950 via-emerald-950/30 to-slate-950">
+        <div className="flex flex-1 flex-col gap-4 bg-background selection:bg-foreground selection:text-background">
+          <div className="min-h-screen bg-background text-foreground">
             <Outlet />
           </div>
         </div>

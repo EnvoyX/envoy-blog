@@ -1,17 +1,17 @@
-import { Link } from '@tanstack/react-router';
-import { formatDistanceToNow } from 'date-fns';
-import { FolderIcon, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { Link } from "@tanstack/react-router";
+import { formatDistanceToNow } from "date-fns";
+import { FolderIcon, MoreVertical, Pencil, Trash2 } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { AlbumPrisma } from '@/lib/types';
-import { useAlbumStore } from '@/store/album';
+} from "@/components/ui/dropdown-menu";
+import { AlbumPrisma } from "@/lib/types";
+import { useAlbumStore } from "@/store/album";
 
 export function AlbumCard({ album, inDashboard }: { album: AlbumPrisma; inDashboard: boolean }) {
   const coverImage = album.coverImageUrl || album.images?.[0]?.url;
@@ -19,11 +19,11 @@ export function AlbumCard({ album, inDashboard }: { album: AlbumPrisma; inDashbo
 
   return (
     <Link
-      to={inDashboard ? '/dashboard/albums/$albumId' : '/album/$albumId'}
+      to={inDashboard ? "/dashboard/albums/$albumId" : "/album/$albumId"}
       params={{ albumId: album.id }}
       className="group flex flex-col gap-3 outline-none"
     >
-      <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-slate-900 border border-slate-800 transition-all group-hover:shadow-2xl group-hover:shadow-emerald-500/10 group-focus:ring-2 group-focus:ring-emerald-500">
+      <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-slate-900 border border-slate-800 transition-all group-hover:shadow-2xl group-hover:shadow-primary-500/10 group-focus:ring-2 group-focus:ring-primary-500">
         {coverImage ? (
           <img
             src={coverImage}
@@ -63,19 +63,19 @@ export function AlbumCard({ album, inDashboard }: { album: AlbumPrisma; inDashbo
                 </div>
 
                 <DropdownMenuItem
-                  className="cursor-pointer focus:bg-emerald-500/10 focus:text-emerald-400"
+                  className="cursor-pointer focus:bg-primary-500/10 focus:text-primary-400"
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
                     setInitialValues({
-                      name: album?.name ?? '',
-                      description: album?.description || '',
+                      name: album?.name ?? "",
+                      description: album?.description || "",
                       published: album?.published as boolean,
-                      coverImageUrl: album?.coverImageUrl || '',
-                      type: 'edit',
+                      coverImageUrl: album?.coverImageUrl || "",
+                      type: "edit",
                       showPrivateToFollowers: album?.showPrivateToFollowers as boolean,
                     });
-                    toggleDialog('open', album?.id);
+                    toggleDialog("open", album?.id);
                   }}
                 >
                   <Pencil className="mr-2 h-4 w-4" />
@@ -87,7 +87,7 @@ export function AlbumCard({ album, inDashboard }: { album: AlbumPrisma; inDashbo
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    toggleDialog('delete', album.id);
+                    toggleDialog("delete", album.id);
                   }}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
@@ -100,7 +100,7 @@ export function AlbumCard({ album, inDashboard }: { album: AlbumPrisma; inDashbo
       </div>
 
       <div className="flex flex-col px-1">
-        <h3 className="truncate text-sm font-bold text-slate-200 transition-colors group-hover:text-emerald-400">
+        <h3 className="truncate text-sm font-bold text-slate-200 transition-colors group-hover:text-primary-400">
           {album.name}
         </h3>
         <p className="text-[10px] max-sm:text-[9px] font-medium text-slate-300 uppercase tracking-widest mt-0.5">

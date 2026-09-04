@@ -132,7 +132,7 @@ function BlogPageComponent() {
           <Button
             asChild
             size="lg"
-            className="bg-emerald-600 hover:bg-emerald-500 rounded-full px-6 shadow-lg shadow-emerald-500/20 cursor-pointer"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 shadow-sm cursor-pointer"
           >
             <Link to="/dashboard/blog/create-blog" className="gap-2">
               <Plus className="size-5" />
@@ -144,12 +144,12 @@ function BlogPageComponent() {
         <div className="flex max-sm:flex-col items-center max-sm:justify-center gap-4 mb-8">
           <div className="relative w-full  group">
             <div className="absolute inset-y-0 z-10 left-3 flex items-center  pointer-events-none">
-              <Search className="size-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+              <Search className="size-4 text-zinc-500 group-focus-within:text-zinc-200 transition-colors" />
             </div>
             <Input
               type="search"
               placeholder="Search blogs..."
-              className="pl-10 bg-emerald-900/40  focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 backdrop-blur-sm transition-all"
+              className="pl-10 bg-zinc-900/40 border border-zinc-800 focus-visible:ring-zinc-600 focus-visible:border-zinc-600 backdrop-blur-sm transition-all"
               onChange={(e) => {
                 debouncedSearch(e.target.value);
               }}
@@ -196,7 +196,7 @@ function BlogPageComponent() {
             return (
               <Card
                 key={post.id}
-                className="group relative bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0 animate-in fade-in slide-in-from-bottom-4"
+                className="group relative bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 transition-all duration-300 overflow-hidden flex flex-col hover:scale-105 max-w-xs py-0 animate-in fade-in slide-in-from-bottom-4"
               >
                 <div className="aspect-video relative overflow-hidden">
                   <img
@@ -204,7 +204,7 @@ function BlogPageComponent() {
                     alt={post.title}
                     className="object-cover w-full h-full transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
+                  <div className="absolute inset-0 bg-linear-to-t from-zinc-950/80 via-transparent to-transparent opacity-60" />
 
                   {post.authorId === session?.user?.id && (
                     <div className="absolute top-3 right-3">
@@ -276,11 +276,11 @@ function BlogPageComponent() {
                       </Badge>
                     )}
                   </span>
-                  <h2 className="text-xl font-bold leading-tight group-hover:text-emerald-400 transition-colors mb-2 mt-2 line-clamp-2">
+                  <h2 className="text-xl font-bold leading-tight group-hover:text-white transition-colors mb-2 mt-2 line-clamp-2">
                     {post.title}
                   </h2>
 
-                  <p className="text-slate-400 text-sm line-clamp-3 leading-relaxed">
+                  <p className="text-zinc-400 text-sm line-clamp-3 leading-relaxed">
                     {post.description}
                   </p>
                   <div className="flex flex-wrap gap-1.5 mt-1">
@@ -288,7 +288,7 @@ function BlogPageComponent() {
                       .map((tag) => (
                         <span
                           key={tag.id}
-                          className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/10 text-[10px] font-medium text-emerald-400 uppercase tracking-wider"
+                          className="px-2 py-0.5 rounded-md bg-zinc-800/60 border border-zinc-700/60 text-[10px] font-medium text-zinc-300 uppercase tracking-wider"
                         >
                           {tag.name}
                         </span>
@@ -297,7 +297,7 @@ function BlogPageComponent() {
                     {post.tags.length > 3 && (
                       <span
                         key="more"
-                        className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/10 text-[10px] font-medium text-emerald-400 uppercase tracking-wider"
+                        className="px-2 py-0.5 rounded-md bg-zinc-800/60 border border-zinc-700/60 text-[10px] font-medium text-zinc-300 uppercase tracking-wider"
                       >
                         +{post.tags.length - 3}
                       </span>
@@ -308,16 +308,16 @@ function BlogPageComponent() {
                 <CardFooter className="p-6 pt-0 flex flex-col justify-start items-start gap-1">
                   <span className="absolute flex flex-col items-end gap-3 bottom-6 right-3">
                     <div className="flex flex-col items-center gap-1 group">
-                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-emerald-500/30 transition-colors">
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900/50 border border-zinc-800 text-zinc-400 group-hover:border-zinc-700 transition-colors">
                         <Heart
-                          className={`size-3.5 ${hasLiked ? 'fill-emerald-500 text-emerald-500' : ''}`}
+                          className={`size-3.5 ${hasLiked ? 'fill-rose-500 text-rose-500' : ''}`}
                         />
                         <span className="text-[11px] font-bold tabular-nums">
                           {post._count.likes}
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-slate-400 group-hover:border-blue-500/30 transition-colors">
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900/50 border border-zinc-800 text-zinc-400 group-hover:border-zinc-700 transition-colors">
                         <MessageSquare className="size-3.5" />
                         <span className="text-[11px] font-bold tabular-nums">
                           {post._count.comments}
@@ -333,7 +333,7 @@ function BlogPageComponent() {
                   <Button
                     asChild
                     variant="link"
-                    className="p-0 h-auto text-emerald-400 hover:text-emerald-300 gap-2 cursor-pointer mt-3.5"
+                    className="p-0 h-auto text-foreground hover:text-muted-foreground gap-2 cursor-pointer mt-3.5"
                   >
                     <Link to="/dashboard/blog/$slug" params={{ slug: post.slug }}>
                       Read Full Blog →

@@ -1,11 +1,11 @@
-import { VirtualOrigin } from '@tanstack/react-db';
-import { Link } from '@tanstack/react-router';
-import { intlFormatDistance } from 'date-fns';
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { VirtualOrigin } from "@tanstack/react-db";
+import { Link } from "@tanstack/react-router";
+import { intlFormatDistance } from "date-fns";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { useState } from "react";
 
-import { CommentCollection } from '@/collections/blog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CommentCollection } from "@/collections/blog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,11 +14,11 @@ import {
   //   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { UserRole } from '@/generated/prisma/enums';
-import { BlogPostPublic } from '@/lib/types';
+} from "@/components/ui/dropdown-menu";
+import { UserRole } from "@/generated/prisma/enums";
+import { BlogPostPublic } from "@/lib/types";
 
-import { Button } from '../ui/button';
+import { Button } from "../ui/button";
 
 interface ChatItemProps {
   comment: {
@@ -91,7 +91,7 @@ export function CommentItem({ comment, user, commentCollection, post }: ChatItem
   const isCommentOwner = user?.id === comment.user.id;
 
   return (
-    <div className="group flex gap-4 p-4 rounded-2xl transition-all hover:bg-slate-900/40 border-l border-emerald-600">
+    <div className="group flex gap-4 p-4 rounded-2xl transition-all hover:bg-slate-900/40 border-l border-primary-600">
       <Link
         to="/user/$userId"
         params={{
@@ -104,10 +104,10 @@ export function CommentItem({ comment, user, commentCollection, post }: ChatItem
           <AvatarFallback>
             {comment.user.name
               ? comment.user.name
-                  .split(' ')
+                  .split(" ")
                   .map((n) => n[0])
-                  .join('')
-              : ''}
+                  .join("")
+              : ""}
           </AvatarFallback>
         </Avatar>
       </Link>
@@ -182,7 +182,7 @@ export function CommentItem({ comment, user, commentCollection, post }: ChatItem
             <textarea
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              className="w-full p-3 bg-slate-950 border border-emerald-500/50 rounded-xl focus:ring-1 focus:ring-emerald-500 outline-none text-sm text-slate-200 resize-none"
+              className="w-full p-3 bg-slate-950 border border-primary-500/50 rounded-xl focus:ring-1 focus:ring-primary-500 outline-none text-sm text-slate-200 resize-none"
               rows={3}
             />
             <div className="flex justify-end gap-2">
@@ -197,7 +197,7 @@ export function CommentItem({ comment, user, commentCollection, post }: ChatItem
               <Button
                 size="sm"
                 onClick={handleUpdate}
-                className="bg-emerald-600 hover:bg-emerald-500 cursor-pointer"
+                className="bg-primary-600 hover:bg-primary-500 cursor-pointer"
               >
                 Save Changes
               </Button>

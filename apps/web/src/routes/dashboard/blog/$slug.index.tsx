@@ -133,7 +133,7 @@ function PostComponent() {
             <Button
               variant="ghost"
               asChild
-              className=" text-emerald-500! hover:text-emerald-400! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
+              className=" text-muted-foreground! hover:text-foreground! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
             >
               <Link to="/dashboard/blog">
                 <ChevronLeft className="mr-2 size-4" />
@@ -171,7 +171,7 @@ function PostComponent() {
           <Button
             variant="ghost"
             asChild
-            className=" text-emerald-500! hover:text-emerald-400! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
+            className=" text-muted-foreground! hover:text-foreground! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
           >
             <Link to="/dashboard/blog">
               <ChevronLeft className="mr-2 size-4" />
@@ -181,8 +181,8 @@ function PostComponent() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className="text-sm font-medium text-slate-500 truncate max-w-48 md:max-w-none flex gap-1 items-center group">
-                <ChevronDown className={cn('size-4 group-hover:text-emerald-500 shrink-0')} />
-                <span className={cn('group-hover:text-emerald-500')}>{post.title}</span>
+                <ChevronDown className={cn('size-4 group-hover:text-foreground shrink-0')} />
+                <span className={cn('group-hover:text-foreground')}>{post.title}</span>
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="max-sm:w-48 w-64 bg-transparent backdrop-blur-lg!">
@@ -271,7 +271,7 @@ function PostComponent() {
                 {post.tags.map((tag) => (
                   <span
                     key={tag.id}
-                    className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/10 text-[10px] font-medium text-emerald-400 uppercase tracking-wider"
+                    className="px-2 py-0.5 rounded-md bg-zinc-800 border border-zinc-700 text-[10px] font-medium text-zinc-300 uppercase tracking-wider"
                   >
                     {tag.name}
                   </span>
@@ -310,7 +310,7 @@ function PostComponent() {
                       onClick={() => handleToggleLike()}
                       className={`p-3 rounded-full transition-all border cursor-pointer ${
                         hasLiked
-                          ? 'bg-emerald-500/10 border-emerald-500 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                          ? 'bg-rose-500/10 border-rose-500 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.15)]'
                           : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
                       }`}
                     >
@@ -322,7 +322,7 @@ function PostComponent() {
                 <section className="space-y-8">
                   <div className="flex gap-4">
                     <span className="flex items-center justify-center">
-                      <MessagesSquareIcon className="size-8 text-emerald-500" />
+                      <MessagesSquareIcon className="size-8 text-muted-foreground" />
                     </span>
                     <h3 className="text-xl font-bold text-white flex items-center justify-center">
                       <span>Comments ({comments.length})</span>

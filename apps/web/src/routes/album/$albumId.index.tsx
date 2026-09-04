@@ -97,7 +97,7 @@ function AlbumPage() {
                 <h1 className="text-2xl font-semibold tracking-tight line-clamp-1">
                   {album?.name}
                 </h1>
-                <p className="text-xs text-emerald-400">{album?._count?.images || 0} photos</p>
+                <p className="text-xs text-muted-foreground">{album?._count?.images || 0} photos</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -117,13 +117,13 @@ function AlbumPage() {
                 </Link>
                 <div className="flex flex-col max-sm:hidden">
                   <span className="font-medium text-slate-200">{album?.author.name}</span>
-                  <span className="text-xs text-emerald-500 uppercase tracking-wider">Author</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider">Author</span>
                 </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
-                className="hidden sm:flex gap-2 rounded-full hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer"
+                className="hidden sm:flex gap-2 rounded-full hover:bg-primary/10 hover:text-primary cursor-pointer"
                 onClick={handleDownload}
               >
                 <Download className="size-4" /> Download as ZIP
@@ -154,7 +154,7 @@ function AlbumPage() {
 
         <section className="w-full p-1">
           {album?.description && (
-            <p className="text-base text-emerald-500 px-4 mb-1">{album.description}</p>
+            <p className="text-base text-muted-foreground px-4 mb-1">{album.description}</p>
           )}
           <div className="flex flex-wrap items-center gap-4 mb-8 text-sm px-4">
             <div className="flex flex-row items-center gap-2 sm:gap-4 text-slate-400">

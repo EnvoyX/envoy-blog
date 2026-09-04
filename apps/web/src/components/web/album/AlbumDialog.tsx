@@ -1,8 +1,7 @@
-import { useForm } from '@tanstack/react-form';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from '@tanstack/react-router';
-import { Effect } from 'effect';
-import { failureOption } from 'effect/Cause';
+import { useForm } from "@tanstack/react-form";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "@tanstack/react-router";
+import { Effect } from "effect";
 import {
   CheckCircle2,
   ImageIcon,
@@ -10,11 +9,11 @@ import {
   MailboxIcon,
   MousePointer2,
   RotateCw,
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -22,19 +21,19 @@ import {
   DialogHeader,
   DialogTitle,
   // DialogTrigger,
-} from '@/components/ui/dialog';
-import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty';
-import { Field, FieldError } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
-import { createAlbumFn, editAlbumFn, getAlbumByIdFn } from '@/data/album';
-import { getImagesFn } from '@/data/image';
-import { dashboardAlbumsOptions } from '@/data/query-options/dashboardQueryOptions';
-import { cn } from '@/lib/utils';
-import { albumSchema } from '@/schemas/album';
-import { useAlbumStore } from '@/store/album';
+} from "@/components/ui/dialog";
+import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
+import { Field, FieldError } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { createAlbumFn, editAlbumFn, getAlbumByIdFn } from "@/data/album";
+import { getImagesFn } from "@/data/image";
+import { dashboardAlbumsOptions } from "@/data/query-options/dashboardQueryOptions";
+import { cn } from "@/lib/utils";
+import { albumSchema } from "@/schemas/album";
+import { useAlbumStore } from "@/store/album";
 
 export function AlbumDialog() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -52,32 +51,32 @@ export function AlbumDialog() {
   } = useAlbumStore();
 
   const { data: images, isPending } = useQuery({
-    queryKey: ['all-images'],
+    queryKey: ["all-images"],
     queryFn: async () => {
       const images = await getImagesFn();
       return images;
     },
-    enabled: isAlbumDialogOpen && initialValues?.type === 'create',
+    enabled: isAlbumDialogOpen && initialValues?.type === "create",
   });
   const { data: coverImages, isPending: isCoverImagesPending } = useQuery({
-    queryKey: ['album-gallery', currentAlbumId],
+    queryKey: ["album-gallery", currentAlbumId],
     queryFn: async () => {
       const data = await getAlbumByIdFn({
         data: { albumId: currentAlbumId },
       });
       return data?.images;
     },
-    enabled: currentAlbumId && isAlbumDialogOpen && initialValues?.type === 'edit' ? true : false,
+    enabled: currentAlbumId && isAlbumDialogOpen && initialValues?.type === "edit" ? true : false,
   });
 
   const form = useForm({
     defaultValues: {
-      name: initialValues ? initialValues.name : '',
-      description: initialValues ? initialValues.description : '',
+      name: initialValues ? initialValues.name : "",
+      description: initialValues ? initialValues.description : "",
       published: initialValues ? initialValues.published : false,
       coverImageUrl: initialValues
         ? initialValues.coverImageUrl
-        : 'https://tanstack.com/images/logos/splash-dark.png',
+        : "https://tanstack.com/images/logos/splash-dark.png",
       showPrivateToFollowers: initialValues ? initialValues.showPrivateToFollowers : false,
     },
     validators: {
@@ -104,9 +103,9 @@ export function AlbumDialog() {
                 },
               }),
             ),
-          msg: 'Creating album...',
-          successMsg: 'Album created successfully',
-          failedMsg: 'Failed to create album',
+          msg: "Creating album...",
+          successMsg: "Album created successfully",
+          failedMsg: "Failed to create album",
         },
         edit: {
           action: () =>
@@ -122,26 +121,26 @@ export function AlbumDialog() {
                 },
               }),
             ),
-          msg: 'Editing album...',
-          successMsg: 'Album edited successfully',
-          failedMsg: 'Failed to edit album',
+          msg: "Editing album...",
+          successMsg: "Album edited successfully",
+          failedMsg: "Failed to edit album",
         },
       };
       const currentMode = modeConfig[initialValues?.type as keyof typeof modeConfig];
       if (!currentMode) return;
       const albumWorkflow = Effect.gen(function* () {
         toast.loading(currentMode.msg, {
-          id: 'album-workflow',
+          id: "album-workflow",
         });
         yield* currentMode.action();
         toast.success(currentMode.successMsg, {
-          id: 'album-workflow',
+          id: "album-workflow",
         });
       }).pipe(
         Effect.catchAll((error) =>
           Effect.sync(() => {
             toast.error(currentMode.failedMsg, {
-              id: 'album-workflow',
+              id: "album-workflow",
             });
             console.error(error.message);
           }),
@@ -154,7 +153,7 @@ export function AlbumDialog() {
               ...dashboardAlbumsOptions(),
             });
             setInitialValues(null);
-            toggleDialog('close', '');
+            toggleDialog("close", "");
           }),
         ),
       );
@@ -196,7 +195,7 @@ export function AlbumDialog() {
       setLastSelectedId(null);
       if (selectedCoverImageId.has(imgId)) {
         setSelectedCoverImageId(new Set());
-        form.setFieldValue('coverImageUrl', 'https://tanstack.com/images/logos/splash-dark.png');
+        form.setFieldValue("coverImageUrl", "https://tanstack.com/images/logos/splash-dark.png");
       }
     } else {
       newSelection.add(imgId);
@@ -206,8 +205,8 @@ export function AlbumDialog() {
   }
 
   function handleCoverImages() {
-    if (initialValues?.type === 'create') return images?.filter((img) => selectedIds.has(img.id));
-    else if (initialValues?.type === 'edit') return coverImages;
+    if (initialValues?.type === "create") return images?.filter((img) => selectedIds.has(img.id));
+    else if (initialValues?.type === "edit") return coverImages;
   }
 
   const coverImageSelections = handleCoverImages();
@@ -221,16 +220,16 @@ export function AlbumDialog() {
       nextCoverImageSelection.add(imgId);
     }
     form.setFieldValue(
-      'coverImageUrl',
+      "coverImageUrl",
       images?.find((img) => nextCoverImageSelection.has(img.id))?.url ??
-        'https://tanstack.com/images/logos/splash-dark.png',
+        "https://tanstack.com/images/logos/splash-dark.png",
     );
     setSelectedCoverImageId(nextCoverImageSelection);
   }
 
   useEffect(() => {
     if (isAlbumDialogOpen) {
-      if (initialValues?.type === 'edit') {
+      if (initialValues?.type === "edit") {
         form.reset(initialValues);
       } else {
         form.reset();
@@ -241,7 +240,7 @@ export function AlbumDialog() {
     <Dialog
       open={isAlbumDialogOpen}
       onOpenChange={(open) => {
-        onOpenDialogChange('open', open);
+        onOpenDialogChange("open", open);
         setInitialValues(null);
       }}
     >
@@ -249,14 +248,14 @@ export function AlbumDialog() {
         <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
           <div className="w-full md:w-2/5 p-8 border-r border-zinc-800/50 bg-zinc-900/20 overflow-y-auto">
             <DialogHeader className="mb-8">
-              <div className="bg-emerald-500/10 w-fit p-2 rounded-lg">
-                <MailboxIcon className="text-emerald-500 size-6" />
+              <div className="bg-primary/10 w-fit p-2 rounded-lg">
+                <MailboxIcon className="text-primary size-6" />
               </div>
               <DialogTitle className="text-2xl font-bold text-zinc-100">
-                {initialValues?.type === 'edit' ? 'Edit Album' : 'New Album'}
+                {initialValues?.type === "edit" ? "Edit Album" : "New Album"}
               </DialogTitle>
               <DialogDescription className="text-zinc-400">
-                Configure to {initialValues?.type === 'edit' ? 'edit' : 'create'} your album and
+                Configure to {initialValues?.type === "edit" ? "edit" : "create"} your album and
                 visibility settings.
               </DialogDescription>
             </DialogHeader>
@@ -272,27 +271,27 @@ export function AlbumDialog() {
               <form.Field
                 name="published"
                 children={(field) => (
-                  <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30 animate-in fade-in slide-in-from-left-2 duration-300">
+                  <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-primary/30 animate-in fade-in slide-in-from-left-2 duration-300">
                     <div className="space-y-0.5">
                       <Label className="text-sm font-medium text-zinc-200">
                         Visibility:
-                        <span className={field.state.value ? 'text-emerald-400' : 'text-zinc-400'}>
-                          {field.state.value ? 'Public' : 'Private'}
+                        <span className={field.state.value ? "text-primary" : "text-zinc-400"}>
+                          {field.state.value ? "Public" : "Private"}
                         </span>
                       </Label>
                       <p className="text-xs text-zinc-500">
                         {field.state.value
-                          ? 'Album is visible to all users'
-                          : 'Album is hidden to all users'}
+                          ? "Album is visible to all users"
+                          : "Album is hidden to all users"}
                       </p>
                     </div>
                     <Switch
                       checked={field.state.value}
                       onCheckedChange={(checked) => {
                         field.handleChange(checked);
-                        if (checked === true) form.setFieldValue('showPrivateToFollowers', false);
+                        if (checked === true) form.setFieldValue("showPrivateToFollowers", false);
                       }}
-                      className="data-[state=checked]:bg-emerald-500"
+                      className="data-[state=checked]:bg-primary"
                     />
                   </div>
                 )}
@@ -305,28 +304,26 @@ export function AlbumDialog() {
                       <form.Field
                         name="showPrivateToFollowers"
                         children={(field) => (
-                          <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                          <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-primary/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="space-y-0.5">
                               <Label className="text-sm font-medium text-zinc-200">
-                                Show Private:{' '}
+                                Show Private:{" "}
                                 <span
-                                  className={
-                                    field.state.value ? 'text-emerald-400' : 'text-zinc-400'
-                                  }
+                                  className={field.state.value ? "text-primary" : "text-zinc-400"}
                                 >
-                                  {field.state.value ? 'Show' : ` Hidden`}
+                                  {field.state.value ? "Show" : ` Hidden`}
                                 </span>
                               </Label>
                               <p className="text-xs text-zinc-500">
                                 {field.state.value
-                                  ? 'Album is visible to followers'
-                                  : 'Album is hidden to followers'}
+                                  ? "Album is visible to followers"
+                                  : "Album is hidden to followers"}
                               </p>
                             </div>
                             <Switch
                               checked={field.state.value}
                               onCheckedChange={field.handleChange}
-                              className="data-[state=checked]:bg-emerald-500"
+                              className="data-[state=checked]:bg-primary"
                             />
                           </div>
                         )}
@@ -347,7 +344,7 @@ export function AlbumDialog() {
                           <div className="relative flex-1">
                             <Input
                               placeholder="Name of your album"
-                              className="bg-zinc-900! border-zinc-800 focus-visible:ring-emerald-500/50 rounded-lg h-10 transition-all"
+                              className="bg-zinc-900! border-zinc-800 focus-visible:ring-primary/50 rounded-lg h-10 transition-all"
                               value={field.state.value}
                               onChange={(e) => {
                                 field.handleChange(e.target.value);
@@ -386,8 +383,8 @@ export function AlbumDialog() {
                           <span
                             className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
                               charCount > 0
-                                ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/5'
-                                : 'text-zinc-600 border-zinc-800'
+                                ? "text-primary border-primary/20 bg-primary/5"
+                                : "text-zinc-600 border-zinc-800"
                             }`}
                           >
                             {charCount} CHARS
@@ -402,16 +399,16 @@ export function AlbumDialog() {
                               min-h-30 resize-none p-4
                               bg-zinc-900/50 border-zinc-800
                               placeholder:text-zinc-600 text-zinc-200
-                              focus-visible:ring-emerald-500/40 focus-visible:border-emerald-500/50
+                              focus-visible:ring-primary/40 focus-visible:border-primary/50
                               transition-all duration-300 rounded-xl
-                              ${isInvalid ? 'border-red-500/50 focus-visible:ring-red-500/20' : 'hover:border-zinc-700'}
+                              ${isInvalid ? "border-red-500/50 focus-visible:ring-red-500/20" : "hover:border-zinc-700"}
                             `}
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
                           />
 
-                          <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/5 group-focus-within:ring-emerald-500/10 transition-all" />
+                          <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/5 group-focus-within:ring-primary/10 transition-all" />
                         </div>
 
                         {isInvalid && (
@@ -440,16 +437,16 @@ export function AlbumDialog() {
                           <div className="relative flex-1">
                             <Input
                               placeholder="https://..."
-                              className="bg-zinc-900! border-zinc-800 focus-visible:ring-emerald-500/50 rounded-lg h-10 transition-all"
+                              className="bg-zinc-900! border-zinc-800 focus-visible:ring-primary/50 rounded-lg h-10 transition-all"
                               value={field.state.value}
                               onChange={(e) => {
                                 field.handleChange(e.target.value);
                                 setSelectedCoverImageId(new Set());
                               }}
                               onBlur={(e) => {
-                                if (e.target.value.trim() === '') {
+                                if (e.target.value.trim() === "") {
                                   field.setValue(
-                                    'https://tanstack.com/images/logos/splash-dark.png',
+                                    "https://tanstack.com/images/logos/splash-dark.png",
                                   );
                                   setSelectedCoverImageId(new Set());
                                 }
@@ -470,15 +467,15 @@ export function AlbumDialog() {
                   }}
                 </form.Field>
               </Field>
-              {((selectedIds.size > 0 && initialValues?.type === 'create') ||
-                initialValues?.type === 'edit') && (
+              {((selectedIds.size > 0 && initialValues?.type === "create") ||
+                initialValues?.type === "edit") && (
                 <Field className="-mt-8">
-                  <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-400 scrollbar-track-emerald-900 max-h-125 relative">
-                    {(isPending && initialValues?.type === 'create') ||
-                    (isCoverImagesPending && initialValues?.type === 'edit') ? (
+                  <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-primary scrollbar-track-zinc-900 max-h-125 relative">
+                    {(isPending && initialValues?.type === "create") ||
+                    (isCoverImagesPending && initialValues?.type === "edit") ? (
                       <div className="flex items-center justify-center">
                         <div className="flex flex-col items-center gap-4">
-                          <Loader2 className="animate-spin size-10 text-emerald-500" />
+                          <Loader2 className="animate-spin size-10 text-primary" />
                           <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest animate-pulse">
                             Loading Images...
                           </p>
@@ -496,27 +493,27 @@ export function AlbumDialog() {
                                 handleCoverImageSelection(img.id);
                               }}
                               className={cn(
-                                'group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300',
+                                "group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300",
                                 isSelected
-                                  ? 'ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]'
-                                  : 'hover:scale-[1.02] border border-zinc-800',
-                                form.state.isSubmitting ? 'opacity-50 cursor-not-allowed' : '',
+                                  ? "ring-4 ring-primary ring-offset-4 ring-offset-zinc-950 scale-[0.98]"
+                                  : "hover:scale-[1.02] border border-zinc-800",
+                                form.state.isSubmitting ? "opacity-50 cursor-not-allowed" : "",
                               )}
                             >
                               <img
                                 src={img.url}
                                 alt="Asset"
-                                className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
+                                className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`}
                               />
 
                               {/* selection overlay */}
                               <div
-                                className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-emerald-500/10' : 'bg-transparent group-hover:bg-black/20'}`}
+                                className={`absolute inset-0 transition-colors duration-300 ${isSelected ? "bg-primary/10" : "bg-transparent group-hover:bg-black/20"}`}
                               />
 
                               {/* status icon */}
                               <div
-                                className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? 'bg-emerald-500 scale-100 shadow-lg' : 'bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50'}`}
+                                className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? "bg-primary scale-100 shadow-lg" : "bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50"}`}
                               >
                                 <CheckCircle2 className="size-4 text-white" />
                               </div>
@@ -542,9 +539,9 @@ export function AlbumDialog() {
                   </div>
                 </Field>
               )}
-              {initialValues?.type === 'create' && (
+              {initialValues?.type === "create" && (
                 <Field>
-                  <Label className="text-sm font-semibold uppercase tracking-wider text-emerald-500 w-full flex justify-center items-center ">
+                  <Label className="text-sm font-semibold uppercase tracking-wider text-primary w-full flex justify-center items-center ">
                     Gallery Photos
                   </Label>
                   <form.Subscribe
@@ -554,12 +551,12 @@ export function AlbumDialog() {
                         <span
                           className={cn(
                             buttonVariants({
-                              variant: 'default',
+                              variant: "default",
                               className:
-                                'bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl w-fit font-bold shadow-lg shadow-emerald-900/20 animate-in fade-in zoom-in duration-300',
+                                "bg-primary hover:bg-primary text-white rounded-xl w-fit font-bold shadow-lg shadow-zinc-900/20 animate-in fade-in zoom-in duration-300",
                             }),
                             {
-                              'opacity-50 cursor-not-allowed': isSubmitting,
+                              "opacity-50 cursor-not-allowed": isSubmitting,
                             },
                           )}
                         >
@@ -574,17 +571,17 @@ export function AlbumDialog() {
                           variant="default"
                           size="icon"
                           className={cn(
-                            'bg-destructive/75 hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20 animate-in fade-in zoom-in duration-300 cursor-pointer',
+                            "bg-destructive/75 hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20 animate-in fade-in zoom-in duration-300 cursor-pointer",
                             {
-                              'opacity-50 cursor-not-allowed': isSubmitting,
+                              "opacity-50 cursor-not-allowed": isSubmitting,
                             },
                           )}
                           onClick={() => {
                             setSelectedIds(new Set());
                             setLastSelectedId(null);
                             form.setFieldValue(
-                              'coverImageUrl',
-                              'https://tanstack.com/images/logos/splash-dark.png',
+                              "coverImageUrl",
+                              "https://tanstack.com/images/logos/splash-dark.png",
                             );
                           }}
                         >
@@ -594,11 +591,11 @@ export function AlbumDialog() {
                     )}
                   />
 
-                  <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-400 scrollbar-track-emerald-900 max-h-125 relative border-t-2 border-b-2 border-emerald-400">
+                  <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-primary scrollbar-track-zinc-900 max-h-125 relative border-t-2 border-b-2 border-primary">
                     {isPending ? (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="flex flex-col items-center gap-4">
-                          <Loader2 className="animate-spin size-10 text-emerald-500" />
+                          <Loader2 className="animate-spin size-10 text-primary" />
                           <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest animate-pulse">
                             Loading Images...
                           </p>
@@ -616,27 +613,27 @@ export function AlbumDialog() {
                                 toggleSelection(img.id, e.shiftKey);
                               }}
                               className={cn(
-                                'group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300',
+                                "group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-300",
                                 isSelected
-                                  ? 'ring-4 ring-emerald-500 ring-offset-4 ring-offset-zinc-950 scale-[0.98]'
-                                  : 'hover:scale-[1.02] border border-zinc-800',
-                                form.state.isSubmitting ? 'opacity-50 cursor-not-allowed' : '',
+                                  ? "ring-4 ring-primary ring-offset-4 ring-offset-zinc-950 scale-[0.98]"
+                                  : "hover:scale-[1.02] border border-zinc-800",
+                                form.state.isSubmitting ? "opacity-50 cursor-not-allowed" : "",
                               )}
                             >
                               <img
                                 src={img.url}
                                 alt="Asset"
-                                className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
+                                className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`}
                               />
 
                               {/* selection overlay */}
                               <div
-                                className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-emerald-500/10' : 'bg-transparent group-hover:bg-black/20'}`}
+                                className={`absolute inset-0 transition-colors duration-300 ${isSelected ? "bg-primary/10" : "bg-transparent group-hover:bg-black/20"}`}
                               />
 
                               {/* status icon */}
                               <div
-                                className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? 'bg-emerald-500 scale-100 shadow-lg' : 'bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50'}`}
+                                className={`absolute top-2 right-2 p-1 rounded-full transition-all duration-300 ${isSelected ? "bg-primary scale-100 shadow-lg" : "bg-zinc-900/80 opacity-0 group-hover:opacity-100 scale-50"}`}
                               >
                                 <CheckCircle2 className="size-4 text-white" />
                               </div>
@@ -670,10 +667,10 @@ export function AlbumDialog() {
                     <Button
                       type="submit"
                       disabled={!canSubmit || isSubmitting}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 rounded-xl transition-all shadow-lg shadow-emerald-900/20 cursor-pointer"
+                      className="flex-1 bg-primary hover:bg-primary text-white font-bold h-12 rounded-xl transition-all shadow-lg shadow-zinc-900/20 cursor-pointer"
                     >
                       {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
-                      {initialValues?.type === 'edit' ? 'Edit Album' : 'Create Album'}
+                      {initialValues?.type === "edit" ? "Edit Album" : "Create Album"}
                     </Button>
                   )}
                 />
@@ -682,12 +679,12 @@ export function AlbumDialog() {
           </div>
 
           <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-[#09090b] relative overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 blur-[120px] rounded-full" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/10 blur-[120px] rounded-full" />
 
             <form.Subscribe
               selector={(state) => state.values.coverImageUrl}
               children={(image) => {
-                if (!image || image.trim() === '') {
+                if (!image || image.trim() === "") {
                   return (
                     <div className="relative z-10 text-center space-y-4">
                       <div className="mx-auto size-20 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
@@ -711,7 +708,7 @@ export function AlbumDialog() {
                           className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 "
                           onError={(e) => {
                             (e.target as HTMLImageElement).src =
-                              'https://placehold.co/600x800?text=Invalid+Image';
+                              "https://placehold.co/600x800?text=Invalid+Image";
                           }}
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

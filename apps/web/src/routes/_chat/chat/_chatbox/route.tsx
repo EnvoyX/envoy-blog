@@ -140,7 +140,7 @@ function RouteComponent() {
               <div className="p-4 space-y-4 -mt-6">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="w-full flex items-center gap-2 justify-center py-3 px-4 rounded-xl bg-emerald-500 text-emerald-950 active:bg-emerald-300 transition-colors font-semibold text-sm shadow-lg shadow-white/5">
+                    <button className="w-full flex items-center gap-2 justify-center py-3 px-4 rounded-xl bg-primary text-primary-foreground active:opacity-80 transition-colors font-semibold text-sm shadow-sm">
                       <Plus size={18} />
                       New Chat
                       <ChevronDown size={14} className="ml-1 opacity-50" />
@@ -153,7 +153,7 @@ function RouteComponent() {
                     className="w-[calc(100vw-2rem)] max-w-xs bg-zinc-950 border-zinc-800 text-zinc-200 p-2"
                   >
                     <DropdownMenuLabel className="flex items-center gap-2 text-xs text-zinc-500 py-3">
-                      <Sparkles size={14} className="text-emerald-500" />
+                      <Sparkles size={14} className="text-zinc-400" />
                       Choose a model to start
                     </DropdownMenuLabel>
 

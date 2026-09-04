@@ -24,7 +24,7 @@ export function ScrollCircle({
           fill="none"
           strokeWidth="8"
           strokeLinecap="round"
-          className="stroke-emerald-500"
+          className="stroke-primary"
           style={{ pathLength: scaleX }}
         />
       </svg>

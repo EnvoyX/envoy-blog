@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
-import { Link } from '@tanstack/react-router';
-import { Cpu, Loader2, LogOut, Menu, Sparkles } from 'lucide-react';
-import { useState, useTransition } from 'react';
-import { toast } from 'sonner';
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
+import { Cpu, Loader2, LogOut, Menu, Sparkles } from "lucide-react";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 
 import {
   DropdownMenu,
@@ -11,23 +11,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { getUser } from '@/data/session';
-import { authClient } from '@/lib/auth-client';
-import { MODEL_CONFIG } from '@/lib/constants';
-import { useSidebarMobileStore } from '@/store/sidebar';
+} from "@/components/ui/select";
+import { getUser } from "@/data/session";
+import { authClient } from "@/lib/auth-client";
+import { MODEL_CONFIG } from "@/lib/constants";
+import { useSidebarMobileStore } from "@/store/sidebar";
 
-import { Button, buttonVariants } from '../ui/button';
-import { SidebarTrigger } from '../ui/sidebar';
-import { navItemsDashboard } from './NavItems';
-import { UserAvatar } from './user-profile';
+import { Button, buttonVariants } from "../ui/button";
+import { SidebarTrigger } from "../ui/sidebar";
+import { navItemsDashboard } from "./NavItems";
+import { UserAvatar } from "./user-profile";
 
 interface ModelChange {
   model: string;
@@ -40,10 +40,10 @@ export default function HeaderChat({
   model,
   currentModel,
   onModelChange,
-  provider = 'openrouter',
+  provider = "openrouter",
 }: ModelChange) {
   const session = useQuery({
-    queryKey: ['get-session'],
+    queryKey: ["get-session"],
     queryFn: async () => {
       const data = await getUser();
       return data;
@@ -60,24 +60,24 @@ export default function HeaderChat({
       await authClient.signOut({
         fetchOptions: {
           onRequest: () => {
-            toast.loading('Logging out...', {
-              id: 'logout',
+            toast.loading("Logging out...", {
+              id: "logout",
             });
             setIsLoading(true);
           },
           onError: ({ error }) => {
             setIsLoading(false);
-            toast.dismiss('logout');
-            toast.error('Failed to log out', {
+            toast.dismiss("logout");
+            toast.error("Failed to log out", {
               description: error.message,
             });
           },
           onSuccess: () => {
             setIsLoading(false);
-            toast.dismiss('logout');
-            toast.success('Logged out successfully');
+            toast.dismiss("logout");
+            toast.success("Logged out successfully");
             navigate({
-              to: '/login',
+              to: "/login",
               reloadDocument: true,
             });
           },
@@ -117,15 +117,15 @@ export default function HeaderChat({
             </Select>
           </div>
           <div className="flex items-center gap-2 max-sm:hidden">
-            <div className="bg-emerald-600 p-1.5 rounded-lg shadow-lg shadow-blue-600/20">
-              <Sparkles size={18} className="text-white" />
+            <div className="bg-primary p-1.5 rounded-lg shadow-lg shadow-white/20">
+              <Sparkles size={18} className="text-primary-foreground" />
             </div>
             <h1 className="font-bold tracking-tight text-lg">Envoy Chat</h1>
           </div>
         </div>
         <div className="flex max-sm:flex-col max-sm:gap-1 items-center gap-4">
           <div className="flex items-center gap-2 text-xs font-medium text-zinc-500 uppercase">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse" />
             {model}
           </div>
           <div className="flex items-center max-sm:hidden">
@@ -178,7 +178,7 @@ export default function HeaderChat({
                         <Link
                           to={item.to}
                           activeProps={{
-                            'data-active': true,
+                            "data-active": true,
                           }}
                           activeOptions={item.activeOptions}
                           className="cursor-pointer hover:bg-primary/10! hover:text-primary! hover:border-r-2! hover:border-primary!"
@@ -197,14 +197,14 @@ export default function HeaderChat({
                     className="text-destructive focus:bg-destructive/10 cursor-pointer"
                   >
                     <LogOut className="text-white mr-2 size-4" />
-                    {isLoading || isTransition ? 'Logging out...' : 'Logout'}
+                    {isLoading || isTransition ? "Logging out..." : "Logout"}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
           ) : (
             <>
-              <Link to="/login" className={buttonVariants({ variant: 'secondary' })}>
+              <Link to="/login" className={buttonVariants({ variant: "secondary" })}>
                 Login
               </Link>
             </>

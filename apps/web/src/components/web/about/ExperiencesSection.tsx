@@ -1,79 +1,79 @@
-import { Calendar, MapPin, Briefcase, GraduationCap } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Calendar, MapPin, Briefcase, GraduationCap } from "lucide-react";
+import { motion } from "motion/react";
 
 const timelineData = [
   {
-    company: 'Institute of Technology Bandung',
-    location: 'Bandung, Jawa Barat',
-    category: 'Education',
+    company: "Institute of Technology Bandung",
+    location: "Bandung, Jawa Barat",
+    category: "Education",
     positions: [
       {
-        role: 'Mechanical Engineering',
-        period: 'Aug 2023 - Aug 2027',
-        description: 'Education',
+        role: "Mechanical Engineering",
+        period: "Aug 2023 - Aug 2027",
+        description: "Education",
       },
     ],
   },
   {
-    company: 'Himpunan Mahasiswa Mesin (HMM) ITB',
-    location: 'Bandung, Jawa Barat',
-    category: 'Organization',
+    company: "Himpunan Mahasiswa Mesin (HMM) ITB",
+    location: "Bandung, Jawa Barat",
+    category: "Organization",
     positions: [
       {
-        role: 'Head of Information and Technology Development Sub Bureau',
-        period: 'Present',
+        role: "Head of Information and Technology Development Sub Bureau",
+        period: "Present",
         description:
-          'Leading digital transformation and optimizing information flow across organizational stakeholders.',
+          "Leading digital transformation and optimizing information flow across organizational stakeholders.",
       },
       {
-        role: 'Web Development Engineer',
-        period: 'Aug 2025 - Jul 2026',
+        role: "Web Development Engineer",
+        period: "Aug 2025 - Jul 2026",
         description:
-          'Served as a technical bridge for digital platforms and front-end engineering.',
+          "Served as a technical bridge for digital platforms and front-end engineering.",
       },
       {
-        role: 'Member',
-        period: 'Oct 2024 - Jul 2027',
-        description: 'Active engagement in internal departments and organizational operations.',
+        role: "Member",
+        period: "Oct 2024 - Jul 2027",
+        description: "Active engagement in internal departments and organizational operations.",
       },
     ],
   },
   {
-    company: 'GIM ITB',
-    location: 'Bandung, Jawa Barat',
-    category: 'Organization',
+    company: "GIM ITB",
+    location: "Bandung, Jawa Barat",
+    category: "Organization",
     positions: [
       {
-        role: 'Frontend Web Developer Staff',
-        period: 'Jan 2025 - Jul 2026',
+        role: "Frontend Web Developer Staff",
+        period: "Jan 2025 - Jul 2026",
         description:
-          'Contributed to the development of frontend web applications for the organization.',
+          "Contributed to the development of frontend web applications for the organization.",
       },
     ],
   },
   {
-    company: 'Amateur Radio Club ITB',
-    location: 'Bandung, Jawa Barat',
-    category: 'Organization',
+    company: "Amateur Radio Club ITB",
+    location: "Bandung, Jawa Barat",
+    category: "Organization",
     positions: [
       {
-        role: 'Member',
-        period: 'Aug 2025 - Present',
+        role: "Member",
+        period: "Aug 2025 - Present",
         description:
-          'Learned wide variety of web technologies and contributed to internal projects.',
+          "Learned wide variety of web technologies and contributed to internal projects.",
       },
     ],
   },
   {
-    company: 'Mechanical Festival 2026',
-    location: 'Bandung, Jawa Barat',
-    category: 'Organization',
+    company: "Mechanical Festival 2026",
+    location: "Bandung, Jawa Barat",
+    category: "Organization",
     positions: [
       {
-        role: 'Vice Head of Web Development Divison',
-        period: 'Jun 2025 - Aug 2025',
+        role: "Vice Head of Web Development Divison",
+        period: "Jun 2025 - Aug 2025",
         description:
-          'Leading development and engineered of the official website for Mechanical Festival 2026.',
+          "Leading development and engineered of the official website for Mechanical Festival 2026.",
       },
     ],
   },
@@ -85,7 +85,7 @@ export default function ExperiencesSection() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: 'easeOut' },
+      transition: { duration: 0.5, ease: "easeOut" },
     },
   } as const;
 
@@ -97,7 +97,7 @@ export default function ExperiencesSection() {
         {/* container */}
         <main className="relative border-l border-slate-700 ml-12 sm:ml-6">
           {timelineData.map((item, idx) => {
-            const isEducation = item.category.toLowerCase() === 'education';
+            const isEducation = item.category.toLowerCase() === "education";
 
             return (
               <motion.div
@@ -105,12 +105,12 @@ export default function ExperiencesSection() {
                 variants={cardVariants}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: false, margin: '-100px' }}
+                viewport={{ once: false, margin: "-100px" }}
                 className="mb-10 ml-6 relative"
               >
                 <span
                   className={`absolute left-[-36.5px] top-1.5 flex items-center justify-center w-6 h-6 rounded-full ${
-                    isEducation ? 'bg-blue-900 text-blue-300' : 'bg-emerald-900 text-emerald-300'
+                    isEducation ? "bg-blue-900 text-blue-300" : "bg-primary-900 text-primary-300"
                   }`}
                 >
                   {isEducation ? <GraduationCap size={14} /> : <Briefcase size={14} />}
@@ -123,8 +123,8 @@ export default function ExperiencesSection() {
                     <span
                       className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         isEducation
-                          ? 'bg-blue-900/40 text-blue-400'
-                          : 'bg-emerald-900/40 text-emerald-400'
+                          ? "bg-blue-900/40 text-blue-400"
+                          : "bg-primary-900/40 text-primary-400"
                       }`}
                     >
                       {item.category}
@@ -141,7 +141,7 @@ export default function ExperiencesSection() {
                     {item.positions.map((pos, pIdx) => (
                       <div key={pIdx} className="relative group">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
-                          <h4 className="text-sm font-semibold text-slate-300 group-hover:text-emerald-400 transition-colors">
+                          <h4 className="text-sm font-semibold text-slate-300 group-hover:text-primary-400 transition-colors">
                             {pos.role}
                           </h4>
                           <span className="inline-flex items-center text-xs font-medium text-slate-500 gap-1 shrink-0">
@@ -150,7 +150,7 @@ export default function ExperiencesSection() {
                           </span>
                         </div>
 
-                        {pos.description !== 'Education' && (
+                        {pos.description !== "Education" && (
                           <p className="text-xs text-slate-400 leading-relaxed">
                             {pos.description}
                           </p>

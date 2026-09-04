@@ -120,7 +120,7 @@ function PostPageComponent() {
           </div>
           <Button
             size="lg"
-            className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 transition-all duration-300 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/40 group active:scale-95 cursor-pointer"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 transition-all duration-300 shadow-sm group active:scale-95 cursor-pointer"
             onClick={() => {
               toggleDialog('open', '');
               setInitialValues({

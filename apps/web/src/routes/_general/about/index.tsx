@@ -37,7 +37,7 @@ function RouteComponent() {
     <div className="min-h-screen p-4 font-mono">
       <motion.div
         style={{ scaleX: scrollYProgress, originX: 0 }}
-        className="fixed top-0 left-0 right-0 h-1 bg-emerald-500 z-50"
+        className="fixed top-0 left-0 right-0 h-1 bg-primary z-50"
       />
       <main className="w-full">
         <HeaderSection />

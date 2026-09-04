@@ -1,12 +1,12 @@
-import { Link } from '@tanstack/react-router';
-import { ArrowUpRight, Command, Zap } from 'lucide-react';
+import { Link } from "@tanstack/react-router";
+import { ArrowUpRight, Command, Zap } from "lucide-react";
 
-import { navItemsMain } from './NavItems';
+import { navItemsMain } from "./NavItems";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="relative border-t border-white/10 bg-background/60 backdrop-blur-md">
+    <footer className="relative border-t border-white/25 bg-background/60 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4 lg:gap-20">
           <div className="md:col-span-2 space-y-6 ">

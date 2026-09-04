@@ -15,7 +15,7 @@ function ProjectCard({ title, description, tags, imageUrl, projectUrl }: Project
   return (
     <motion.div
       whileHover={{ y: -10 }}
-      className="group relative flex flex-col overflow-hidden rounded-2xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-emerald-500/50"
+      className="group relative flex flex-col overflow-hidden rounded-2xl bg-zinc-900/50 border border-zinc-800 transition-colors hover:border-primary-500/50"
     >
       <div className="aspect-video w-full overflow-hidden">
         <img
@@ -30,7 +30,7 @@ function ProjectCard({ title, description, tags, imageUrl, projectUrl }: Project
           {tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400"
+              className="rounded-full bg-primary-500/10 px-3 py-1 text-xs font-medium text-primary-400"
             >
               {tag}
             </span>
@@ -44,7 +44,7 @@ function ProjectCard({ title, description, tags, imageUrl, projectUrl }: Project
           href={projectUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 flex items-center gap-2 text-sm font-semibold text-emerald-500 cursor-pointer hover:underline"
+          className="mt-4 flex items-center gap-2 text-sm font-semibold text-primary-500 cursor-pointer hover:underline"
         >
           View Project
           <span className="transition-transform group-hover:translate-x-1">→</span>
@@ -115,7 +115,7 @@ export function WorksSection() {
             <h1 className=" text-5xl font-black">My Works</h1>
             <ScrollCircle scrollYProgress={scrollYProgress} />
           </div>
-          <p className="text-emerald-500 font-mono text-sm uppercase tracking-widest text-center">
+          <p className="text-primary-500 font-mono text-sm uppercase tracking-widest text-center">
             Slide to view
           </p>
           <motion.div className="flex items-center gap-4 sm:gap-12 mt-8 w-max" style={{ x }}>

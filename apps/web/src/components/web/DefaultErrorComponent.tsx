@@ -1,8 +1,8 @@
-import { ErrorComponentProps, useRouter } from '@tanstack/react-router';
-import { useNavigate } from '@tanstack/react-router';
-import { useEffect } from 'react';
+import { ErrorComponentProps, useRouter } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 
-import { Button } from '../ui/button';
+import { Button } from "../ui/button";
 
 export function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
   const router = useRouter();
@@ -17,13 +17,13 @@ export function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
     <div className="flex min-h-screen flex-col items-center justify-center bg-transparent px-6 py-24 text-center">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -bottom-[20%] right-[10%] h-125 w-125 rounded-full bg-red-900/10 blur-[120px]" />
-        <div className="absolute -top-[10%] left-[10%] h-100 w-100 rounded-full bg-emerald-900/10 blur-[100px]" />
+        <div className="absolute -top-[10%] left-[10%] h-100 w-100 rounded-full bg-white/5 blur-[100px]" />
       </div>
 
       <div className="relative z-10 max-w-2xl">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-950/50 ring-1 ring-emerald-500/50">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-zinc-950/50 ring-1 ring-white/50">
           <svg
-            className="h-8 w-8 text-emerald-500"
+            className="h-8 w-8 text-white"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth="1.5"
@@ -47,8 +47,8 @@ export function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
         </p>
 
         <div className="mt-8 overflow-hidden rounded-lg bg-slate-900/50 border border-slate-800 p-4 text-left">
-          <pre className="font-mono whitespace-pre-wrap text-xs text-emerald-400 ">
-            {error.message || 'Unknown system error'}
+          <pre className="font-mono whitespace-pre-wrap text-xs text-zinc-400 ">
+            {error.message || "Unknown system error"}
           </pre>
         </div>
 
@@ -58,7 +58,7 @@ export function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
               reset();
               router.invalidate();
             }}
-            className="rounded-md bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 transition-all active:scale-95 cursor-pointer"
+            className="rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-all active:scale-95 cursor-pointer"
           >
             Try Again
           </Button>
@@ -66,7 +66,7 @@ export function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
           <Button
             onClick={() => {
               navigate({
-                to: '/',
+                to: "/",
                 replace: true,
               });
             }}

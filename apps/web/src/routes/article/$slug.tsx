@@ -43,7 +43,7 @@ function BlogPost() {
             <Button
               variant="ghost"
               asChild
-              className=" text-emerald-500! hover:text-emerald-400! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
+              className=" text-muted-foreground! hover:text-foreground! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
             >
               <Link to="/article">
                 <ChevronLeft className="mr-2 size-4" />
@@ -82,7 +82,7 @@ function BlogPost() {
           <Button
             variant="ghost"
             asChild
-            className=" text-emerald-500! hover:text-emerald-400! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
+            className=" text-muted-foreground! hover:text-foreground! hover:bg-primary/10! hover:border-primary! hover:border-r-2!"
           >
             <Link to="/article">
               <ChevronLeft className="mr-2 size-4" />
@@ -92,8 +92,8 @@ function BlogPost() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className="text-sm font-medium text-slate-500 truncate max-w-48 md:max-w-none flex gap-1 items-center group">
-                <ChevronDown className={cn('size-4 group-hover:text-emerald-500 shrink-0')} />
-                <span className={cn('group-hover:text-emerald-500')}>{post.title}</span>
+                <ChevronDown className={cn('size-4 group-hover:text-foreground shrink-0')} />
+                <span className={cn('group-hover:text-foreground')}>{post.title}</span>
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="max-sm:w-48 w-64">

@@ -1,11 +1,11 @@
-import { useForm } from '@tanstack/react-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { PencilIcon, Loader2, Copy, Check, UserIcon } from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { useForm } from "@tanstack/react-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { PencilIcon, Loader2, Copy, Check, UserIcon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -13,16 +13,16 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { profileOptions } from '@/data/query-options/dashboardQueryOptions';
-import { updateProfile } from '@/data/user';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { profileOptions } from "@/data/query-options/dashboardQueryOptions";
+import { updateProfile } from "@/data/user";
 
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { FieldError } from '../ui/field';
-import { Textarea } from '../ui/textarea';
-import { UserAvatar } from './user-profile';
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { FieldError } from "../ui/field";
+import { Textarea } from "../ui/textarea";
+import { UserAvatar } from "./user-profile";
 
 export function EditProfileDialog({ user }: { user: any }) {
   const [open, setOpen] = useState(false);
@@ -33,20 +33,20 @@ export function EditProfileDialog({ user }: { user: any }) {
     mutationFn: updateProfile,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [...profileOptions().queryKey] });
-      toast.success('Profile updated successfully');
+      toast.success("Profile updated successfully");
       setOpen(false);
     },
     onError: (error) =>
-      toast.error('Failed to update profile', {
+      toast.error("Failed to update profile", {
         description: error.message,
       }),
   });
 
   const form = useForm({
     defaultValues: {
-      name: user.name ?? '',
-      biodata: user.biodata ?? '',
-      image: user.image ?? '',
+      name: user.name ?? "",
+      biodata: user.biodata ?? "",
+      image: user.image ?? "",
     },
     validators: {
       onSubmit: z.object({
@@ -99,7 +99,7 @@ export function EditProfileDialog({ user }: { user: any }) {
           >
             <form.Field
               name="name"
-              validators={{ onChange: z.string().min(2, 'Name is too short') }}
+              validators={{ onChange: z.string().min(2, "Name is too short") }}
               children={(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
@@ -120,7 +120,7 @@ export function EditProfileDialog({ user }: { user: any }) {
             <form.Field
               name="biodata"
               validators={{
-                onChange: z.string().or(z.literal('')).nullable(),
+                onChange: z.string().or(z.literal("")).nullable(),
               }}
               children={(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
@@ -143,7 +143,7 @@ export function EditProfileDialog({ user }: { user: any }) {
             <form.Field
               name="image"
               validators={{
-                onChange: z.url().or(z.literal('')).nullable(),
+                onChange: z.url().or(z.literal("")).nullable(),
               }}
               children={(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
@@ -155,7 +155,7 @@ export function EditProfileDialog({ user }: { user: any }) {
                         <Input
                           id={field.name}
                           placeholder="https://example.com/avatar.png"
-                          value={field.state.value ?? ''}
+                          value={field.state.value ?? ""}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
                           className="w-full"
@@ -170,20 +170,20 @@ export function EditProfileDialog({ user }: { user: any }) {
                                 src={field.state.value as string}
                                 alt={user.name}
                                 onError={(e) => {
-                                  e.currentTarget.src = '';
-                                  e.currentTarget.className = 'hidden';
+                                  e.currentTarget.src = "";
+                                  e.currentTarget.className = "hidden";
                                 }}
                                 className="w-full h-full object-cover object-center rounded-lg"
                               />
 
                               <AvatarFallback>
-                                {' '}
+                                {" "}
                                 {(user.name as string)
                                   ? (user.name as string)
-                                      .split(' ')
+                                      .split(" ")
                                       .map((n) => n[0])
-                                      .join('')
-                                  : ''}
+                                      .join("")
+                                  : ""}
                               </AvatarFallback>
                             </Avatar>
                             <span className="text-xs text-slate-50 italic text-center">
@@ -211,7 +211,7 @@ export function EditProfileDialog({ user }: { user: any }) {
                 </div>
               </div>
               <Button
-                variant={'outline'}
+                variant={"outline"}
                 onClick={(e) => {
                   e.preventDefault();
                   void handleCopy(user.defaultImage ?? user.image);
@@ -219,7 +219,7 @@ export function EditProfileDialog({ user }: { user: any }) {
               >
                 {copied ? (
                   <span className="flex items-center gap-2">
-                    <Check size={12} className="text-emerald-500" />
+                    <Check size={12} className="text-primary-500" />
                     Copied!
                   </span>
                 ) : (
@@ -230,8 +230,8 @@ export function EditProfileDialog({ user }: { user: any }) {
                 )}
               </Button>
               <span className="text-xs truncate text-slate-50">
-                Default image is from:{' '}
-                <span className="uppercase">{user.accounts?.[0]?.providerId || 'Provider'}</span>
+                Default image is from:{" "}
+                <span className="uppercase">{user.accounts?.[0]?.providerId || "Provider"}</span>
               </span>
               <p className="text-[10px] text-slate-50 italic">
                 Note: This is your default SSO image and cannot be modified directly. but you can
@@ -246,7 +246,7 @@ export function EditProfileDialog({ user }: { user: any }) {
                   <Button
                     type="submit"
                     disabled={!canSubmit || mutation.isPending}
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+                    className="w-full bg-primary-600 hover:bg-primary-700 text-white cursor-pointer"
                   >
                     {mutation.isPending ||
                       (isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />)}
