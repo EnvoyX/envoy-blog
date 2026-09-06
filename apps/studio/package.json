@@ -35,5 +35,6 @@
     "printWidth": 100,
     "semi": false,
     "singleQuote": true
-  }
+  },
+  "packageManager": "pnpm@12.3.4"
 }
